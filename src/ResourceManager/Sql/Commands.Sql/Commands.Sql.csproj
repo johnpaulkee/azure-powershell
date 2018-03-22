@@ -201,8 +201,6 @@
     <Compile Include="SqlDatabaseAgent\Cmdlet\NewAzureSqlDatabaseAgent.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\RemoveAzureSqlDatabaseAgent.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\SetAzureSqlDatabaseAgent.cs" />
-    <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobExecutionModel.cs" />
-    <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentModel.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentAdapter.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentCommunicator.cs" />

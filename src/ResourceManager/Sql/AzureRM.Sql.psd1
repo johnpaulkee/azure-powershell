@@ -189,7 +189,8 @@ CmdletsToExport = 'Get-AzureRmSqlDatabaseTransparentDataEncryption',
                'Set-AzureRmSqlServerDnsAlias',
                'New-AzureRmSqlDatabaseAgent',
                'Remove-AzureRmSqlDatabaseAgent',
-               'Get-AzureRmSqlDatabaseAgent'
+               'Get-AzureRmSqlDatabaseAgent',
+               'Set-AzureRmSqlDatabaseAgent'
 
 # Variables to export from this module
 # VariablesToExport = @()
