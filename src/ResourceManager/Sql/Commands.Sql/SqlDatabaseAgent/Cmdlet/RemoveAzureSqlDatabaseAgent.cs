@@ -12,6 +12,8 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Rest.Azure;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
@@ -60,12 +62,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Gets the entity to delete
         /// </summary>
         /// <returns>The entity going to be deleted</returns>
-        protected override IEnumerable<Model.AzureSqlDatabaseAgentModel> GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
         {
-            return new List<Model.AzureSqlDatabaseAgentModel>
+            try
             {
-                ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName)
-            };
+                WriteDebugWithTimestamp("AgentName: {0}", AgentName);
+
+                return new List<AzureSqlDatabaseAgentModel>() {
+                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName)
+                };
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The sql database agent does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.ServerName),
+                        "AgentName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
 
         /// <summary>
@@ -73,7 +92,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">The result of GetEntity</param>
         /// <returns>The input model</returns>
-        protected override IEnumerable<Model.AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<Model.AzureSqlDatabaseAgentModel> model)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
         {
             return model;
         }
@@ -83,7 +102,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The job account being deleted</param>
         /// <returns>The job account that was deleted</returns>
-        protected override IEnumerable<Model.AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<Model.AzureSqlDatabaseAgentModel> entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
             ModelAdapter.RemoveSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName);
             return entity;

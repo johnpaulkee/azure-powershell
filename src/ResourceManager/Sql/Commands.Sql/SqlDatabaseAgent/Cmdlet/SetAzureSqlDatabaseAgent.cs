@@ -37,6 +37,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Server Name")]
+        [ValidateNotNullOrEmpty]
         public string ServerName { get; set; }
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Name")]
+        [ValidateNotNullOrEmpty]
         public string AgentName { get; set; }
 
         /// <summary>
@@ -65,6 +67,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "SQL Database Agent Worker Count")]
+        [ValidateNotNullOrEmpty]
         public int WorkerCount { get; set; }
 
         /// <summary>
@@ -127,7 +130,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     ServerName = this.ServerName,
                     DatabaseName = this.DatabaseName,
                     AgentName = this.AgentName,
-                    WorkerCount = this.WorkerCount,
+                    WorkerCount = (int?) this.WorkerCount,
                     Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
                 }
             };

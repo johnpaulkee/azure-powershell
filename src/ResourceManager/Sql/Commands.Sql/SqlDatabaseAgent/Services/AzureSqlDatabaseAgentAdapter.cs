@@ -63,10 +63,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 DatabaseId = databaseId
             };
 
+            // TODO: This needs to be updated to capacity when new capacity sku is updated world wide.
             if (model.WorkerCount.HasValue)
             {
                 var skuName = "Agent_" + model.WorkerCount.ToString();
-                param.Sku.Name = skuName;
+                param.Sku = new Management.Sql.Models.Sku
+                {
+                    Name = skuName
+                };
             }
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, param);
