@@ -64,6 +64,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
 
             // TODO: This needs to be updated to capacity when new capacity sku is updated world wide.
+            // Below capacity will instead be used for updating the worker count.
             if (model.WorkerCount.HasValue)
             {
                 var skuName = "Agent_" + model.WorkerCount.ToString();
