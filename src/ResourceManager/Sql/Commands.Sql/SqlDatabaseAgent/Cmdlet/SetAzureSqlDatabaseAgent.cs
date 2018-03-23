@@ -40,11 +40,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent name
+        /// Gets or sets the name of the database to use
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
+            HelpMessage = "SQL Database database name.")]
+        [ValidateNotNullOrEmpty]
+        public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
             HelpMessage = "SQL Database Agent Name")]
         public string AgentName { get; set; }
 
@@ -53,7 +63,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
-            Position = 3,
+            Position = 4,
             HelpMessage = "SQL Database Agent Worker Count")]
         public int WorkerCount { get; set; }
 
@@ -115,6 +125,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     Location = location,
                     ResourceGroupName = this.ResourceGroupName,
                     ServerName = this.ServerName,
+                    DatabaseName = this.DatabaseName,
                     AgentName = this.AgentName,
                     WorkerCount = this.WorkerCount,
                     Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
