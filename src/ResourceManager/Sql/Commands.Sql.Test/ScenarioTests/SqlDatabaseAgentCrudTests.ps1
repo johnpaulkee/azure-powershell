@@ -110,20 +110,21 @@ function Test-UpdateAgent
     # Setup
     $rg = Create-ResourceGroupForTest
     $server = Create-ServerForTest $rg "westus2"
-    $db1 = Create-DatabaseForTest $rg $server "db1"
-    $agent1 = Create-AgentForTest $rg $server $db1 "agent1"
+    $db = Create-DatabaseForTest $rg $server "db1"
+    $agent = Create-AgentForTest $rg $server $db1 "agent1"
+    $updatedWorkerCount = 200
 
     try 
     {
-        Assert-AreEqual $agent1.WorkerCount 100 # Default worker count created
-        $agent1 = Set-AzureRmSqlDatabaseAgent -ServerName $server.ServerName -AgentName $agent.AgentName -WorkerCount 200
+        Assert-AreEqual $agent.WorkerCount 100 # Default worker count created
+        $agent = Set-AzureRmSqlDatabaseAgent -ServerName $server.ServerName -AgentName $agent.AgentName -WorkerCount $updatedWorkerCount
         
-        Assert-AreEqual $resp1.AgentName $agent1.AgentName
+        Assert-AreEqual $resp1.AgentName $agent.AgentName
         Assert-AreEqual $resp1.ServerName $server.ServerName
-        Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp1.DatabaseName $db.DatabaseName
         Assert-AreEqual $resp1.ResourceGroupName $rg.ResourceGroupName
         Assert-AreEqual $resp1.Location $server.Location
-        Assert-AreEqual $resp1.WorkerCount 200
+        Assert-AreEqual $resp1.WorkerCount $updatedWorkerCount
     }
     finally
     {
