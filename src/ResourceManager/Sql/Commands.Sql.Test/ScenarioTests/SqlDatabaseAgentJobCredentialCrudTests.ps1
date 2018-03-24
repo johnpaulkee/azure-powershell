@@ -64,7 +64,7 @@ function Test-GetJobCredential
             -CredentialName $credential.CredentialName
 
         Assert-AreEqual $resp.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $resp.ServerName $rg.ServerName
+        Assert-AreEqual $resp.ServerName $server.ServerName
         Assert-AreEqual $resp.AgentName $agent.AgentName
         Assert-AreEqual $resp.CredentialName $credential.CredentialName
         Assert-AreEqual $resp.Username $credential.Username
