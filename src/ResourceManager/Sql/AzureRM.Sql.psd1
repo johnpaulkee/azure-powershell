@@ -167,7 +167,7 @@ CmdletsToExport = 'Get-AzureRmSqlDatabaseTransparentDataEncryption',
                'Get-AzureRmSqlDatabaseFailoverGroup', 
                'New-AzureRmSqlDatabaseFailoverGroup', 
                'Add-AzureRmSqlDatabaseToFailoverGroup', 
-               'Remove-AzureRmSqlDatabaseFromFailoverGroup', 
+               'Remove-AzureRmSqlDatabaseFromFailoverGroup',
                'Remove-AzureRmSqlDatabaseFailoverGroup', 
                'Set-AzureRmSqlDatabaseFailoverGroup', 
                'Switch-AzureRmSqlDatabaseFailoverGroup', 'New-AzureRmSqlSyncGroup', 
@@ -190,7 +190,11 @@ CmdletsToExport = 'Get-AzureRmSqlDatabaseTransparentDataEncryption',
                'New-AzureRmSqlDatabaseAgent',
                'Remove-AzureRmSqlDatabaseAgent',
                'Get-AzureRmSqlDatabaseAgent',
-               'Set-AzureRmSqlDatabaseAgent'
+               'Set-AzureRmSqlDatabaseAgent',
+               'New-AzureRmSqlDatabaseAgentJobCredential',
+               'Get-AzureRmSqlDatabaseAgentJobCredential',
+               'Set-AzureRmSqlDatabaseAgentJobCredential',
+               'Remove-AzureRmSqlDatabaseAgentJobCredential'
 
 # Variables to export from this module
 # VariablesToExport = @()

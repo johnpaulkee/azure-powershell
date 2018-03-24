@@ -403,7 +403,7 @@
     <value>The action group 'AUDIT_CHANGE_GROUP' is not supported. It will be removed in a future release.</value>
   </data>
   <data name="AzureSqlDatabaseAgentExists" xml:space="preserve">
-    <value>Azure SQL Database Agent with name: '{0}' already exists in server '{1}'</value>
+    <value>Azure SQL Database Agent with name '{0}' already exists in server '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
   <data name="RemoveSqlDatabaseAgentDescription" xml:space="preserve">
@@ -416,6 +416,14 @@
   </data>
   <data name="AzureSqlDatabaseAgentNotExists" xml:space="preserve">
     <value>SQL Database Agent '{0}' does not exist with in server '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentJobCredentialExists" xml:space="preserve">
+    <value>Job credential with name '{0}' already exists in agent '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentJobCredentialNotExists" xml:space="preserve">
+    <value>Job credential with name '{0}' does not exist in agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
 </root>

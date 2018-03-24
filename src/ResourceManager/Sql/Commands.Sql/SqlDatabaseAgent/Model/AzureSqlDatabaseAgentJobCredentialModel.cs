@@ -17,9 +17,9 @@ using System.Collections.Generic;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     /// <summary>
-    /// Represents the core properties of an Azure Sql Database Agent model
+    /// Represents the core properties of an Azure Sql Database Agent Job Credential model
     /// </summary>
-    public class AzureSqlDatabaseAgentModel
+    public class AzureSqlDatabaseAgentJobCredentialModel
     {
         /// <summary>
         /// Gets or sets the name of the resource group the Sql Database Agent is in
@@ -37,23 +37,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the location the sql database agent is in
+        /// Gets or sets the credential name
         /// </summary>
-        public string Location { get; set; }
+        public string CredentialName { get; set; }
 
         /// <summary>
-        /// Gets or sets the database name for the sql database agent name.
+        /// Gets or sets the user name
         /// </summary>
-        public string DatabaseName { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers.
+        /// Gets or sets the password
         /// </summary>
-        public int? WorkerCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tags associated with the server.
-        /// </summary>
-        public Dictionary<string, string> Tags { get; set; }
+        public string Password { get; set; }
     }
 }

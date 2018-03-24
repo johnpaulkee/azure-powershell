@@ -480,6 +480,18 @@ function Create-AgentForTest ($resourceGroup, $server, $db, $agentName, $workerC
 
 <#
 	.SYNOPSIS
+	Creates an Azure SQL Database Agent Job Credential
+#>
+function Create-JobCredentialForTest ($resourceGroup, $server, $agent, $credentialName, $username, $password)
+{
+    $credential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
+        -CredentialName $credentialName -Username $username -Password $password
+
+    return $credential
+}
+
+<#
+	.SYNOPSIS
 	Remove a server that is no longer needed for tests
 #>
 function Remove-ServerForTest ($server)
