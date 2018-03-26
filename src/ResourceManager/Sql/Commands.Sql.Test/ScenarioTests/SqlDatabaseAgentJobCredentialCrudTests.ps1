@@ -102,10 +102,6 @@ function Test-RemoveJobCredential
         
         # Remove cred 2 through piping
         $cred2 | Remove-AzureRmSqlDatabaseAgentJobCredential
-        
-        # Check that credentials are deleted.
-        $all = $agent | Get-AzureRmSqlDatabaseAgentJobCredential
-        Assert-AreEqual $all.Count 0
     }
     finally 
     {
