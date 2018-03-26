@@ -51,7 +51,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         {
             // Construct database id
             string databaseId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/databases/{3}",
-                AzureSqlDatabaseAgentCommunicator.Subscription.Id,
+                AzureSqlDatabaseAgentJobCredentialCommunicator.Subscription.Id,
                 model.ResourceGroupName,
                 model.ServerName,
                 model.CredentialName);

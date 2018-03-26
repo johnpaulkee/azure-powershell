@@ -93,21 +93,5 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
             return entity;
         }
-
-        /// <summary>
-        /// Entry point for the cmdlet
-        /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            if (!Force.IsPresent && !ShouldProcess(
-               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobCredentialDescription, this.CredentialName, this.AgentName),
-               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobCredentialWarning, this.CredentialName, this.AgentName),
-               Properties.Resources.ShouldProcessCaption))
-            {
-                return;
-            }
-
-            base.ExecuteCmdlet();
-        }
     }
 }

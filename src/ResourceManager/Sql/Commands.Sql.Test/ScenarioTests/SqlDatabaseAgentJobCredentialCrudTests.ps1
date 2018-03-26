@@ -91,22 +91,23 @@ function Test-RemoveJobCredential
 
     $cred1 = Create-JobCredentialForTest $rg $server $agent "cred1" "cloudSA" "Yukon900!"
     Assert-NotNull $cred1
-    $cred2 = Create-JobCredentialForTest $rg $server $agent "cred2" "booyah" "Yukon900!"
+    
+    $cred2 = Create-JobCredentialForTest $rg $server $agent "cred2" "testUser" "Yukon900!"
     Assert-NotNull $cred2
 
-    try 
+    try
     {
         # Remove cred 1
-        Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-            -CredentialName $cred1.CredentialName -Confirm:$false
-
-        # Remove cred 2 using piping
-        $cred2 | Remove-AzureRmSqlDatabaseAgentJobCredential -Force
-
+        Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName -CredentialName $cred1.CredentialName
+        
+        # Remove cred 2 through piping
+        $cred2 | Remove-AzureRmSqlDatabaseAgentJobCredential
+        
+        # Check that credentials are deleted.
         $all = $agent | Get-AzureRmSqlDatabaseAgentJobCredential
         Assert-AreEqual $all.Count 0
     }
-    finally
+    finally 
     {
         Remove-ResourceGroupForTest $rg
     }
@@ -120,26 +121,11 @@ function Test-RemoveJobCredential
 #>
 function Test-UpdateJobCredential
 {
-    # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
-    $credential = Create-JobCredentialForTest $rg $server $agent "cred1" "cloudSA" "Yukon900!"
+    $rg = Get-AzureRmResourceGroup -Name "ps8048" -Location "westus2"
+    $rg2 = Get-AzureRmResourceGroup -Name "ps407" -Location "westus2"
+    $rg3 = Get-AzureRmResourceGroup -Name "ps1234" -Location "westus2"
 
-    try 
-    {
-        $resp = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-            -CredentialName $credential.CredentialName -UserName "cloudSA" "passwordTest!"
-
-        Assert-AreEqual $resp.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $resp.ServerName $server.ServerName
-        Assert-AreEqual $resp.AgentName $agent.AgentName
-        Assert-AreEqual $resp.CredentialName $credential.CredentialName
-        Assert-AreEqual $resp.Username $credential.Username
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg
-    }
+    Remove-ResourceGroupForTest $rg
+    Remove-ResourceGroupForTest $rg2
+    Remove-ResourceGroupForTest $rg3
 }
