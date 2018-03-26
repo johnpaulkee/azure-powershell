@@ -64,7 +64,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.CredentialName, param);
 
-            return CreateAgentCredentialModelFromResponse(model.ResourceGroupName, model.ServerName, resp);
+            return CreateAgentCredentialModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         public AzureSqlDatabaseAgentJobCredentialModel GetJobCredential(string resourceGroupName, string serverName, string agentName, string credentialName)
         {
             var resp = Communicator.Get(resourceGroupName, serverName, agentName, credentialName);
-            return CreateAgentCredentialModelFromResponse(resourceGroupName, serverName, resp);
+            return CreateAgentCredentialModelFromResponse(resourceGroupName, serverName, agentName, resp);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         public List<AzureSqlDatabaseAgentJobCredentialModel> GetJobCredential(string resourceGroupName, string serverName, string agentName)
         {
             var resp = Communicator.List(resourceGroupName, serverName, agentName);
-            return resp.Select(agent => CreateAgentCredentialModelFromResponse(resourceGroupName, serverName, agent)).ToList();
+            return resp.Select(credentialName => CreateAgentCredentialModelFromResponse(resourceGroupName, serverName, agentName, credentialName)).ToList();
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server the agent is in</param>
         /// <param name="resp">The management client server response to convert</param>
         /// <returns>The converted agent model</returns>
-        private static AzureSqlDatabaseAgentJobCredentialModel CreateAgentCredentialModelFromResponse(string resourceGroupName, string serverName, Management.Sql.Models.JobCredential resp)
+        private static AzureSqlDatabaseAgentJobCredentialModel CreateAgentCredentialModelFromResponse(string resourceGroupName, string serverName, string agentName, Management.Sql.Models.JobCredential resp)
         {
             // Parse credential name from id
             // This is not expected to ever fail, but in case we have a bug here it's better to provide a more detailed error message
@@ -125,7 +125,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             {
                 ResourceGroupName = resourceGroupName,
                 ServerName = serverName,
-                AgentName = resp.Name,
+                AgentName = agentName,
                 CredentialName = resp.Name,
                 Username = resp.Username
                 // Check if password is needed. From examples it looks like it's not needed.
