@@ -76,6 +76,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string Password { get; set; }
 
         /// <summary>
+        /// Overriding to add warning message
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
@@ -90,8 +98,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // This is what we want.  We looked and there is no credential with this name.
-                    // The credential already exists
+                    // This is what we don't want.  
+                    // We looked and there is no credential with this name.
                     throw new PSArgumentException(
                         string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialNotExists, this.CredentialName, this.AgentName),
                         "CredentialName");

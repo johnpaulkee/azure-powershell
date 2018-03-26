@@ -700,6 +700,24 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Permanently removing Job credential &apos;{0}&apos; from agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string RemoveSqlDatabaseAgentJobCredentialDescription {
+            get {
+                return ResourceManager.GetString("RemoveSqlDatabaseAgentJobCredentialDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove the Job credential &apos;{0}&apos; from agent &apos;{1&apos;}.
+        /// </summary>
+        internal static string RemoveSqlDatabaseAgentJobCredentialWarning {
+            get {
+                return ResourceManager.GetString("RemoveSqlDatabaseAgentJobCredentialWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to remove the Azure Sql Database agent &apos;{0}&apos;.
         /// </summary>
         internal static string RemoveSqlDatabaseAgentWarning {

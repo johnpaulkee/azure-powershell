@@ -12,11 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
+using System.Globalization;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 
@@ -58,53 +56,31 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string CredentialName { get; set; }
 
         /// <summary>
+        /// Defines whether it is ok to skip the requesting of rule removal confirmation
+        /// </summary>
+        [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
+        public SwitchParameter Force { get; set; }
+
+        /// <summary>
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
         {
-            try
+            return new List<AzureSqlDatabaseAgentJobCredentialModel>()
             {
-                WriteDebugWithTimestamp("CredentialName: {0}", CredentialName);
-                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName);
-            }
-            catch (CloudException ex)
-            {
-                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    // This is what we want.  We looked and there is no credential with this name.
-                    return null;
-                }
-
-                // Unexpected exception encountered
-                throw;
-            }
-
-            // The credential already exists
-            throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialExists, this.CredentialName, this.AgentName),
-                "CredentialName");
+                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName)
+            };
         }
 
         /// <summary>
-        /// Generates the model from user input.
+        /// No user input to apply to the model.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
-        /// <returns>The generated model from user input</returns>
+        /// <param name="model">Model retrieved from service</param>
+        /// <returns>The model that was passed in</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> model)
         {
-            List<AzureSqlDatabaseAgentJobCredentialModel> credentialToRemove = new List<AzureSqlDatabaseAgentJobCredentialModel>
-            {
-                new AzureSqlDatabaseAgentJobCredentialModel
-                {
-                    ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.ServerName,
-                    AgentName = this.AgentName,
-                    CredentialName = this.CredentialName
-                }
-            };
-
-            return credentialToRemove;
+            return model;
         }
 
         /// <summary>
@@ -116,6 +92,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
             return entity;
+        }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            if (!Force.IsPresent && !ShouldProcess(
+               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobCredentialDescription, this.CredentialName, this.AgentName),
+               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobCredentialWarning, this.CredentialName, this.AgentName),
+               Properties.Resources.ShouldProcessCaption))
+            {
+                return;
+            }
+
+            base.ExecuteCmdlet();
         }
     }
 }
