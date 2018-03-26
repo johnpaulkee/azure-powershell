@@ -121,11 +121,32 @@ function Test-RemoveJobCredential
 #>
 function Test-UpdateJobCredential
 {
-    $rg = Get-AzureRmResourceGroup -Name "ps8048" -Location "westus2"
-    $rg2 = Get-AzureRmResourceGroup -Name "ps407" -Location "westus2"
-    $rg3 = Get-AzureRmResourceGroup -Name "ps1234" -Location "westus2"
+    # Setup
+    $rg = Create-ResourceGroupForTest
+    $server = Create-ServerForTest $rg "westus2"
+    $db = Create-DatabaseForTest $rg $server "db1"
+    $agent = Create-AgentForTest $rg $server $db "agent"
 
-    Remove-ResourceGroupForTest $rg
-    Remove-ResourceGroupForTest $rg2
-    Remove-ResourceGroupForTest $rg3
+    # Create cred 1
+    $cred1 = Create-JobCredentialForTest $rg $server $agent "cred1" "cloudSA" "Yukon900!"
+    Assert-NotNull $cred1
+    
+    # Create cred 2
+    $cred2 = Create-JobCredentialForTest $rg $server $agent "cred2" "testUser" "Yukon900!"
+    Assert-NotNull $cred2
+
+    try
+    {
+        # Update cred 1
+        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName -CredentialName $cred1.CredentialName -Username "user1" -Password "newPassword!"
+        Assert-AreEqual $resp1.Username "user1"
+        
+        # Update cred 2 through piping
+        $resp2 = $cred2 | Set-AzureRmSqlDatabaseAgentJobCredential -Username "user2" -Password "newPassword!"
+        Assert-AreEqual $resp2.Username "user2"
+    }
+    finally 
+    {
+        Remove-ResourceGroupForTest $rg
+    }
 }
