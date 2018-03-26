@@ -25,6 +25,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
+        /// Gets or sets the agent's number of workers
+        /// </summary>
+        [Parameter(Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "SQL Database Agent Job Credential")]
+        public string CredentialName { get; set; }
+
+        /// <summary>
         /// Gets one or more credentials from the Azure SQL Database Agent
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
