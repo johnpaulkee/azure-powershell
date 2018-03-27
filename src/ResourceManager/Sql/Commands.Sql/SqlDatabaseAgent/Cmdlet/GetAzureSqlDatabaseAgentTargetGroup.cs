@@ -39,7 +39,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("CredentialName"))
+            if (this.MyInvocation.BoundParameters.ContainsKey("TargetGroupName"))
             {
                 return new List<AzureSqlDatabaseAgentTargetGroupModel>
                 {
