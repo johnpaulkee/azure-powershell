@@ -21,8 +21,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true)]
-    public class RemoveAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTargetGroup", SupportsShouldProcess = true)]
+    public class RemoveAzureSqlDatabaseAgentTargetGroup: AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
         /// Gets or sets the agent's number of workers
@@ -30,8 +30,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
-        public string CredentialName { get; set; }
+            HelpMessage = "SQL Database Agent Target Group Name")]
+        public string TargetGroupName { get; set; }
 
         /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
@@ -43,11 +43,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
         {
-            return new List<AzureSqlDatabaseAgentJobCredentialModel>()
+            return new List<AzureSqlDatabaseAgentTargetGroupModel>()
             {
-                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName)
+                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName)
             };
         }
 
@@ -56,7 +56,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">Model retrieved from service</param>
         /// <returns>The model that was passed in</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> model)
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> model)
         {
             return model;
         }
@@ -66,9 +66,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> entity)
         {
-            ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
+            ModelAdapter.RemoveTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
             return entity;
         }
     }
