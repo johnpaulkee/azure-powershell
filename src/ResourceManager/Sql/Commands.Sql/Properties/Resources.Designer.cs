@@ -142,6 +142,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target with Database Name &apos;{0}&apos; and Server Name &apos;{1}&apos; already exists in Target Group &apos;{2}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About to process resource.
         /// </summary>
         internal static string BaseConfirmActionProcessMessage {

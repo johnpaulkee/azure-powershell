@@ -245,7 +245,9 @@
     <None Include="ScenarioTests\SqlDatabaseAgentJobCredentialCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.ps1" />
+    <None Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="ScenarioTests\ThreatDetectionClassicStorageTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -55,8 +55,33 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.TargetGroupName, param);
-
             return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
+        }
+
+        public Management.Sql.Models.JobTarget UpsertTarget(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string targetGroupName,
+            Management.Sql.Models.JobTarget targetToAdd)
+        {
+            // TODO: clean this up.
+            IList<Management.Sql.Models.JobTarget> existingTargets = Communicator.Get(resourceGroupName, serverName, agentName, targetGroupName).Members;
+            
+            IList<Management.Sql.Models.JobTarget> targets = new List<Management.Sql.Models.JobTarget> { targetToAdd };
+            var mergedTargets = existingTargets.Concat(targets).ToList();
+
+            var param = new Management.Sql.Models.JobTargetGroup
+            {
+                Members = mergedTargets
+            };
+
+            var resp = Communicator.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, param);
+
+            var upsertedTarget = 
+                resp.Members.Where(target => target.DatabaseName == targetToAdd.DatabaseName && target.ServerName == targetToAdd.ServerName).FirstOrDefault();
+
+            return upsertedTarget;
         }
 
         /// <summary>
@@ -83,6 +108,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         {
             var resp = Communicator.List(resourceGroupName, serverName, agentName);
             return resp.Select(targetGroup => CreateTargetGroupModelFromResponse(resourceGroupName, serverName, agentName, targetGroup)).ToList();
+        }
+
+        public Management.Sql.Models.JobTarget GetTarget(string resourceGroupName, string serverName, string agentName, string targetGroupName, string databaseTargetName, string serverTargetName)
+        {
+            return Communicator.Get(resourceGroupName, serverName, agentName, targetGroupName, databaseTargetName, serverTargetName);
         }
 
         /// <summary>
@@ -119,6 +149,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
 
             return targetGroup;
+        }
+
+        private static AzureSqlDatabaseAgentTargetModel CreateTargetModelFromResponse(string targetGroupName, string databaseTargetName, string serverTargetName)
+        {
+            AzureSqlDatabaseAgentTargetModel target = new AzureSqlDatabaseAgentTargetModel
+            {
+                TargetGroupName = targetGroupName,
+                DatabaseTargetName = databaseTargetName,
+                ServerTargetName = serverTargetName
+            };
+
+            return target;
         }
 
         #endregion

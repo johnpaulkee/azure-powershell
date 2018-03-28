@@ -197,7 +197,8 @@ CmdletsToExport = 'Get-AzureRmSqlDatabaseTransparentDataEncryption',
                'Remove-AzureRmSqlDatabaseAgentJobCredential',
                'New-AzureRmSqlDatabaseAgentTargetGroup',
                'Get-AzureRmSqlDatabaseAgentTargetGroup',
-               'Remove-AzureRmSqlDatabaseAgentTargetGroup'
+               'Remove-AzureRmSqlDatabaseAgentTargetGroup',
+               'Add-AzureRmSqlDatabaseAgentTarget'
 
 # Variables to export from this module
 # VariablesToExport = @()

@@ -196,8 +196,10 @@
     <Compile Include="ServerDnsAlias\Cmdlet\NewAzureSqlServerDnsAlias.cs" />
     <Compile Include="ServerDnsAlias\Services\AzureSqlServerDnsAliasAdapter.cs" />
     <Compile Include="ServerDnsAlias\Services\AzureSqlServerDnsAliasCommunicator.cs" />
+    <Compile Include="SqlDatabaseAgent\Cmdlet\AddAzureSqlDatabaseAgentTarget.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\AzureSqlDatabaseAgentCmdletBase.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\AzureSqlDatabaseAgentJobCredentialCmdletBase.cs" />
+    <Compile Include="SqlDatabaseAgent\Cmdlet\AzureSqlDatabaseAgentTargetCmdletBase.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\AzureSqlDatabaseAgentTargetGroupCmdletBase.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\GetAzureSqlDatabaseAgent.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\GetAzureSqlDatabaseAgentJobCredential.cs" />
@@ -213,6 +215,7 @@
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobCredentialModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentTargetGroupModel.cs" />
+    <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentTargetModel.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentAdapter.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentCommunicator.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentJobCredentialAdapter.cs" />

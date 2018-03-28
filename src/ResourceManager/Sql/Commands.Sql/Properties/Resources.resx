@@ -432,6 +432,10 @@
   </data>
   <data name="RemoveSqlDatabaseAgentJobCredentialWarning" xml:space="preserve">
     <value>Are you sure you want to remove the Job credential '{0}' from agent '{1'}</value>
-    <comment>Azure SQLDatabase Agent</comment>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentTargetExists" xml:space="preserve">
+    <value>Target with Database Name '{0}' and Server Name '{1}' already exists in Target Group '{2}'</value>
+    <comment>Azure SQL Database Agent</comment>
   </data>
 </root>

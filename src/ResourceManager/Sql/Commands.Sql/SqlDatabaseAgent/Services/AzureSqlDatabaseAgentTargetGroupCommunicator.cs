@@ -16,6 +16,8 @@ using Microsoft.Azure.Commands.Common.Authentication;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Management.Sql;
 using Microsoft.Rest.Azure;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -78,9 +80,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string resourceGroupName,
             string serverName,
             string agentName,
-            string targetGroup)
+            string targetGroupName)
         {
-            return GetCurrentSqlClient().JobTargetGroups.Get(resourceGroupName, serverName, agentName, targetGroup);
+            return GetCurrentSqlClient().JobTargetGroups.Get(resourceGroupName, serverName, agentName, targetGroupName);
+        }
+
+
+        /// <summary>
+        /// May return null if no members found.
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="targetGroupName"></param>
+        /// <param name="databaseTargetName"></param>
+        /// <param name="serverTargetName"></param>
+        /// <returns></returns>
+        public Management.Sql.Models.JobTarget Get(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string targetGroupName,
+            string databaseTargetName,
+            string serverTargetName)
+        {
+            Management.Sql.Models.JobTargetGroup tg = Get(resourceGroupName, serverName, agentName, targetGroupName);
+            return tg.Members.Where(member => member.DatabaseName == databaseTargetName && member.ServerName == serverTargetName).FirstOrDefault();
         }
 
         /// <summary>

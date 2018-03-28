@@ -29,28 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetGroupCreate()
         {
-            RunPowerShellTest("Test-CreateJobCredential");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupUpdate()
-        {
-            RunPowerShellTest("Test-UpdateJobCredential");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupGet()
-        {
-            RunPowerShellTest("Test-GetJobCredential");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupRemove()
-        {
-            RunPowerShellTest("Test-RemoveJobCredential");
+            RunPowerShellTest("Test-CreateTargetGroup");
         }
     }
 }
