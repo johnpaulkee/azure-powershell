@@ -434,8 +434,20 @@
     <value>Are you sure you want to remove the Job credential '{0}' from agent '{1'}</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
-  <data name="AzureSqlDatabaseAgentTargetExists" xml:space="preserve">
-    <value>Target with Database Name '{0}' and Server Name '{1}' already exists in Target Group '{2}'</value>
+  <data name="AzureSqlDatabaseAgentTargetDatabaseExists" xml:space="preserve">
+    <value>Target with database name '{0}' and server name '{1}' already exists in target group '{2}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentTargetElasticPoolExists" xml:space="preserve">
+    <value>Target with elastic pool name '{0}' and server name '{1}' already exists in Target Group '{2}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentTargetServerExists" xml:space="preserve">
+    <value>Target with server name '{0}' already exists in Target Group '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentTargetShardMapExists" xml:space="preserve">
+    <value>Target with shard map name '{0}' and server name '{1}' already exists in Target Group '{2}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
 </root>

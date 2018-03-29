@@ -110,9 +110,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return resp.Select(targetGroup => CreateTargetGroupModelFromResponse(resourceGroupName, serverName, agentName, targetGroup)).ToList();
         }
 
-        public Management.Sql.Models.JobTarget GetTarget(string resourceGroupName, string serverName, string agentName, string targetGroupName, string databaseTargetName, string serverTargetName)
+        public Management.Sql.Models.JobTarget GetTarget(
+            string resourceGroupName, 
+            string serverName, 
+            string agentName, 
+            string targetGroupName,
+            Management.Sql.Models.JobTarget target)
         {
-            return Communicator.Get(resourceGroupName, serverName, agentName, targetGroupName, databaseTargetName, serverTargetName);
+            return Communicator.Get(resourceGroupName, serverName, agentName, targetGroupName, target);
         }
 
         /// <summary>

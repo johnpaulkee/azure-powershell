@@ -72,7 +72,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("CredentialName: {0}", CredentialName);
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName);
+                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName);
             }
             catch (CloudException ex)
             {
@@ -102,7 +102,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 new AzureSqlDatabaseAgentJobCredentialModel
                 {
                     ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.ServerName,
+                    ServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     CredentialName = this.CredentialName,
                     Username = this.Username,

@@ -24,14 +24,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlCmdletBase<IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>, AzureSqlDatabaseAgentJobCredentialAdapter>
     {
         /// <summary>
-        /// Gets or sets the name of the server to use
+        /// Gets or sets the name of the SQL Database Agent Server to use
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database server name.")]
+            HelpMessage = "SQL Database Agent Server Name.")]
         [ValidateNotNullOrEmpty]
-        public string ServerName { get; set; }
+        public string AgentServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent to create
@@ -39,7 +39,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent name.")]
+            HelpMessage = "SQL Database Agent Name.")]
         [ValidateNotNullOrEmpty]
         public string AgentName { get; set; }
 

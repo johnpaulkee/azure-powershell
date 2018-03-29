@@ -101,11 +101,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string serverName,
             string agentName,
             string targetGroupName,
-            string databaseTargetName,
-            string serverTargetName)
+            Management.Sql.Models.JobTarget target)
         {
+            // TODO: Elastic Pool Should Check Out Properly Too
             Management.Sql.Models.JobTargetGroup tg = Get(resourceGroupName, serverName, agentName, targetGroupName);
-            return tg.Members.Where(member => member.DatabaseName == databaseTargetName && member.ServerName == serverTargetName).FirstOrDefault();
+            return tg.Members.Where(
+                member => member.DatabaseName == target.DatabaseName && 
+                          member.ServerName == target.ServerName &&
+                          member.ElasticPoolName == target.ElasticPoolName &&
+                          member.ShardMapName == target.ShardMapName &&
+                          member.RefreshCredential == target.RefreshCredential &&
+                          member.MembershipType == target.MembershipType).FirstOrDefault();
         }
 
         /// <summary>

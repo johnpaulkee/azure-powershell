@@ -44,6 +44,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string AgentName { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent's number of workers
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "SQL Database Agent Target Group Name")]
+        public string TargetGroupName { get; set; }
+
+        /// <summary>
         /// Intializes the model adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>

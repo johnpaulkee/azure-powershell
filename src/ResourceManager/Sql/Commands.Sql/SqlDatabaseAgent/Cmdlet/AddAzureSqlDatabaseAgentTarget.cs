@@ -19,6 +19,7 @@ using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -29,34 +30,83 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class NewAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Parameter set name for the SqlDatabase Target Type
         /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent Target Group Name")]
-        public string TargetGroupName { get; set; }
+        private const string SqlDatabaseSet = Management.Sql.Models.JobTargetType.SqlDatabase;
 
         /// <summary>
-        /// Gets or sets the database target name
+        /// Parameter set name for the SqlServer Target Type
         /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
-            HelpMessage = "Database Target Name")]
-        public string DatabaseName { get; set; }
+        private const string SqlServerSet = Management.Sql.Models.JobTargetType.SqlServer;
 
         /// <summary>
-        /// Gets or sets the server target name
+        /// Parameter set name for the SqlElasticPool Target Type
+        /// </summary>
+        private const string SqlElasticPoolSet = Management.Sql.Models.JobTargetType.SqlElasticPool;
+
+        /// <summary>
+        /// Parameter set name for the SqlShardMap Target Type
+        /// </summary>
+        private const string SqlShardMapSet = Management.Sql.Models.JobTargetType.SqlShardMap;
+
+        /// <summary>
+        /// Gets or sets the Target Server Name
         /// </summary>
         [Parameter(Mandatory = true,
+            Position = 4, 
             ValueFromPipelineByPropertyName = true,
-            Position = 5,
-            HelpMessage = "Server Target Name")]
+            HelpMessage = "Server Target Name",
+            ParameterSetName = SqlServerSet)]
+        [Parameter(ParameterSetName = SqlDatabaseSet)]
+        [Parameter(ParameterSetName = SqlElasticPoolSet)]
+        [Parameter(ParameterSetName = SqlShardMapSet)]
         public string ServerName { get; set; }
 
         /// <summary>
+        /// Gets or sets the Target Database Name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            Position = 5,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Database Target Name",
+            ParameterSetName = SqlDatabaseSet)]
+        public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Target Elastic Pool Name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            Position = 5,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Elastic Pool Target Name",
+            ParameterSetName = SqlElasticPoolSet)]
+        public string ElasticPoolName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Shard Map Name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            Position = 5,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Shard Map Target Name",
+            ParameterSetName = SqlShardMapSet)]
+        public string ShardMapName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Refresh Credential Name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            Position = 6,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlServerSet)]
+        [Parameter(ParameterSetName = SqlElasticPoolSet)]
+        [Parameter(ParameterSetName = SqlShardMapSet)]
+        public string RefreshCredentialName { get; set; }
+
+        /// <summary>
         /// Gets or sets the flag indicating whether we want to exclude this target.
+        /// This really represents membership type.
         /// </summary>
         [Parameter(Mandatory = false,
             ValueFromPipelineByPropertyName = true,
@@ -65,25 +115,70 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public SwitchParameter Exclude { get; set; }
 
         /// <summary>
+        /// Gets or sets the flag indicating whether we want to ignore conflict errors if target is already in target group.
+        /// </summary>
+        [Parameter(Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Ignore conflict errors if target already exists in target group.")]
+        public SwitchParameter IgnoreConflict { get; set; }
+
+        /// <summary>
         /// Check to see if the target group member already exists in the target group.
         /// </summary>
         /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<Management.Sql.Models.JobTarget> GetEntity()
         {
+            var inputTarget = new Management.Sql.Models.JobTarget
+            {
+                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
+                        Management.Sql.Models.JobTargetGroupMembershipType.Exclude :
+                        Management.Sql.Models.JobTargetGroupMembershipType.Include,
+                Type = ParameterSetName,
+                ServerName = this.ServerName,
+                DatabaseName = this.DatabaseName,
+                ElasticPoolName = this.ElasticPoolName,
+                ShardMapName = this.ShardMapName,
+                RefreshCredential = this.RefreshCredentialName
+            };
+
             Management.Sql.Models.JobTarget target = ModelAdapter.GetTarget(
                 this.ResourceGroupName, 
                 this.AgentServerName, 
                 this.AgentName, 
                 this.TargetGroupName, 
-                this.DatabaseName, 
-                this.ServerName);
+                inputTarget);
             
             // This is something we don't want. We shouldn't be able to add a new target to group if it already exists.
             if (target != null)
             {
-                throw new PSArgumentException(
-                    string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetExists, this.DatabaseName, this.ServerName, this.TargetGroupName),
-                    "CredentialName");
+                // If IgnoreConflict flag is present, we can just quit since the target already exists.
+                if (MyInvocation.BoundParameters.ContainsKey("IgnoreConflict"))
+                {
+                    Environment.Exit(0);
+                }
+
+                switch (ParameterSetName)
+                {
+                    case Management.Sql.Models.JobTargetType.SqlServer:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetServerExists, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    case Management.Sql.Models.JobTargetType.SqlDatabase:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetDatabaseExists, this.DatabaseName, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    case Management.Sql.Models.JobTargetType.SqlElasticPool:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetElasticPoolExists, this.ElasticPoolName, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    case Management.Sql.Models.JobTargetType.SqlShardMap:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetShardMapExists, this.ShardMapName, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    default:
+                        // TODO: Check if some default exception should be return if this case ever appears.
+                        break;
+                }
             }
 
             return null;
@@ -96,16 +191,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<Management.Sql.Models.JobTarget> ApplyUserInputToModel(IEnumerable<Management.Sql.Models.JobTarget> model)
         {
+            // TODO: Need to a valid resource identifier.
+
             List<Management.Sql.Models.JobTarget> newTarget = new List<Management.Sql.Models.JobTarget>
             {
                 new Management.Sql.Models.JobTarget
                 {
-                    Type = Management.Sql.Models.JobTargetType.SqlDatabase,
+                    MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
+                        Management.Sql.Models.JobTargetGroupMembershipType.Exclude :
+                        Management.Sql.Models.JobTargetGroupMembershipType.Include,
+                    Type = ParameterSetName,
                     ServerName = this.ServerName,
                     DatabaseName = this.DatabaseName,
-                    MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ? 
-                        Management.Sql.Models.JobTargetGroupMembershipType.Exclude : 
-                        Management.Sql.Models.JobTargetGroupMembershipType.Include
+                    ElasticPoolName = this.ElasticPoolName,
+                    ShardMapName = this.ShardMapName,
+                    RefreshCredential = this.RefreshCredentialName
                 }
             };
 
