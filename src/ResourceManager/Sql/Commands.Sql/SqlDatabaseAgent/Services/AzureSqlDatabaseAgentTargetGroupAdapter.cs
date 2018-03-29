@@ -78,10 +78,33 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 
             var resp = Communicator.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, param);
 
-            var upsertedTarget = 
-                resp.Members.Where(target => target.DatabaseName == targetToAdd.DatabaseName && target.ServerName == targetToAdd.ServerName).FirstOrDefault();
+            var upsertedTarget = resp.Members.Where(
+                target => target.DatabaseName == targetToAdd.DatabaseName && 
+                target.ServerName == targetToAdd.ServerName &&
+                target.ElasticPoolName == targetToAdd.ElasticPoolName &&
+                target.ShardMapName == targetToAdd.ShardMapName &&
+                target.MembershipType == targetToAdd.MembershipType &&
+                target.Type == targetToAdd.Type &&
+                target.RefreshCredential == targetToAdd.RefreshCredential).FirstOrDefault();
 
             return upsertedTarget;
+        }
+
+        public IList<Management.Sql.Models.JobTarget> UpsertTargets(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string targetGroupName,
+            IList<Management.Sql.Models.JobTarget> targetsToAdd)
+        {
+            var param = new Management.Sql.Models.JobTargetGroup
+            {
+                Members = targetsToAdd
+            };
+
+            var resp = Communicator.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, param);
+
+            return resp.Members;
         }
 
         /// <summary>

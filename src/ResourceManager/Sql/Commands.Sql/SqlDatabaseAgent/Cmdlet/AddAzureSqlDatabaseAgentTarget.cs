@@ -111,35 +111,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public SwitchParameter Exclude { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag indicating whether we want to ignore conflict errors if target is already in target group.
-        /// </summary>
-        [Parameter(Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Ignore conflict errors if target already exists in target group.")]
-        public SwitchParameter IgnoreConflict { get; set; }
-
-        /// <summary>
         /// Check to see if the target group member already exists in the target group.
         /// </summary>
         /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<Management.Sql.Models.JobTarget> GetEntity()
         {
             Management.Sql.Models.JobTarget target = ModelAdapter.GetTarget(
-                this.ResourceGroupName, 
-                this.AgentServerName, 
-                this.AgentName, 
-                this.TargetGroupName, 
+                this.ResourceGroupName,
+                this.AgentServerName,
+                this.AgentName,
+                this.TargetGroupName,
                 CreateJobTargetModel());
-            
+
             // This is something we don't want. We shouldn't be able to add a new target to group if it already exists.
             if (target != null)
             {
-                // If IgnoreConflict flag is present, we can just quit since the target already exists.
-                if (MyInvocation.BoundParameters.ContainsKey("IgnoreConflict"))
-                {
-                    Environment.Exit(0);
-                }
-
                 switch (ParameterSetName)
                 {
                     case Management.Sql.Models.JobTargetType.SqlServer:
@@ -174,9 +160,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<Management.Sql.Models.JobTarget> ApplyUserInputToModel(IEnumerable<Management.Sql.Models.JobTarget> model)
         {
-            // TODO: Need to a valid resource identifier.
-
-
             List<Management.Sql.Models.JobTarget> newTarget = new List<Management.Sql.Models.JobTarget>
             {
                 CreateJobTargetModel()
