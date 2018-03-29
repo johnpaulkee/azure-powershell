@@ -128,6 +128,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<Management.Sql.Models.JobTarget> GetEntity()
         {
+            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+                Services.AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.AgentServerName,
+                this.AgentName,
+                this.RefreshCredentialName);
+
             var inputTarget = new Management.Sql.Models.JobTarget
             {
                 MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
@@ -138,7 +145,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 DatabaseName = this.DatabaseName,
                 ElasticPoolName = this.ElasticPoolName,
                 ShardMapName = this.ShardMapName,
-                RefreshCredential = this.RefreshCredentialName
+                RefreshCredential = credentialId
             };
 
             Management.Sql.Models.JobTarget target = ModelAdapter.GetTarget(
@@ -192,6 +199,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected override IEnumerable<Management.Sql.Models.JobTarget> ApplyUserInputToModel(IEnumerable<Management.Sql.Models.JobTarget> model)
         {
             // TODO: Need to a valid resource identifier.
+            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+                Services.AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.AgentServerName,
+                this.AgentName,
+                this.RefreshCredentialName);
 
             List<Management.Sql.Models.JobTarget> newTarget = new List<Management.Sql.Models.JobTarget>
             {
@@ -205,7 +218,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     DatabaseName = this.DatabaseName,
                     ElasticPoolName = this.ElasticPoolName,
                     ShardMapName = this.ShardMapName,
-                    RefreshCredential = this.RefreshCredentialName
+                    RefreshCredential = credentialId,
                 }
             };
 
