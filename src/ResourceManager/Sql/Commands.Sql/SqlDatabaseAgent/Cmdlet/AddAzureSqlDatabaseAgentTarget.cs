@@ -12,13 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
-using Microsoft.Rest.Azure;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
@@ -128,32 +124,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<Management.Sql.Models.JobTarget> GetEntity()
         {
-            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
-                Services.AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
-                this.ResourceGroupName,
-                this.AgentServerName,
-                this.AgentName,
-                this.RefreshCredentialName);
-
-            var inputTarget = new Management.Sql.Models.JobTarget
-            {
-                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
-                        Management.Sql.Models.JobTargetGroupMembershipType.Exclude :
-                        Management.Sql.Models.JobTargetGroupMembershipType.Include,
-                Type = ParameterSetName,
-                ServerName = this.ServerName,
-                DatabaseName = this.DatabaseName,
-                ElasticPoolName = this.ElasticPoolName,
-                ShardMapName = this.ShardMapName,
-                RefreshCredential = credentialId
-            };
-
             Management.Sql.Models.JobTarget target = ModelAdapter.GetTarget(
                 this.ResourceGroupName, 
                 this.AgentServerName, 
                 this.AgentName, 
                 this.TargetGroupName, 
-                inputTarget);
+                CreateJobTargetModel());
             
             // This is something we don't want. We shouldn't be able to add a new target to group if it already exists.
             if (target != null)
@@ -199,27 +175,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected override IEnumerable<Management.Sql.Models.JobTarget> ApplyUserInputToModel(IEnumerable<Management.Sql.Models.JobTarget> model)
         {
             // TODO: Need to a valid resource identifier.
-            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
-                Services.AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
-                this.ResourceGroupName,
-                this.AgentServerName,
-                this.AgentName,
-                this.RefreshCredentialName);
+
 
             List<Management.Sql.Models.JobTarget> newTarget = new List<Management.Sql.Models.JobTarget>
             {
-                new Management.Sql.Models.JobTarget
-                {
-                    MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
-                        Management.Sql.Models.JobTargetGroupMembershipType.Exclude :
-                        Management.Sql.Models.JobTargetGroupMembershipType.Include,
-                    Type = ParameterSetName,
-                    ServerName = this.ServerName,
-                    DatabaseName = this.DatabaseName,
-                    ElasticPoolName = this.ElasticPoolName,
-                    ShardMapName = this.ShardMapName,
-                    RefreshCredential = credentialId,
-                }
+                CreateJobTargetModel()
             };
 
             return newTarget;
@@ -235,6 +195,33 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             return new List<Management.Sql.Models.JobTarget>
             {
                 ModelAdapter.UpsertTarget(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName, entity.First())
+            };
+        }
+
+        /// <summary>
+        /// Helper to create a job target model from user input.
+        /// </summary>
+        /// <returns>Job target model</returns>
+        private Management.Sql.Models.JobTarget CreateJobTargetModel()
+        {
+            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+                Services.AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.AgentServerName,
+                this.AgentName,
+                this.RefreshCredentialName);
+
+            return new Management.Sql.Models.JobTarget
+            {
+                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
+                    Management.Sql.Models.JobTargetGroupMembershipType.Exclude :
+                    Management.Sql.Models.JobTargetGroupMembershipType.Include,
+                Type = ParameterSetName,
+                ServerName = this.ServerName,
+                DatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
+                ElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
+                ShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
+                RefreshCredential = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? credentialId : null,
             };
         }
     }
