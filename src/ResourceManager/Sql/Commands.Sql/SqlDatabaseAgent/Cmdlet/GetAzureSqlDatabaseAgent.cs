@@ -30,8 +30,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Server Name")]
-        public string ServerName { get; set; }
+            HelpMessage = "SQL Database Agent Server Name")]
+        public string AgentServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the agent name
@@ -52,12 +52,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 return new List<AzureSqlDatabaseAgentModel>
                 {
-                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName)
+                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName)
                 };
             }
             else
             {
-                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName);
+                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName);
             }
         }
     }

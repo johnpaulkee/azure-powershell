@@ -32,9 +32,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Server Name.")]
+            HelpMessage = "SQL Database Agent Server Name.")]
         [ValidateNotNullOrEmpty]
-        public string ServerName { get; set; }
+        public string AgentServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent to use.
@@ -69,7 +69,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 WriteDebugWithTimestamp("AgentName: {0}", AgentName);
 
                 return new List<AzureSqlDatabaseAgentModel>() {
-                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName)
+                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName)
                 };
             }
             catch (CloudException ex)
@@ -78,7 +78,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 {
                     // The sql database agent does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.ServerName),
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.AgentServerName),
                         "AgentName");
                 }
 
@@ -104,7 +104,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The job account that was deleted</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
-            ModelAdapter.RemoveSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName);
+            ModelAdapter.RemoveSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
             return entity;
         }
 
@@ -114,8 +114,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override void ExecuteCmdlet()
         {
             if (!Force.IsPresent && !ShouldProcess(
-               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.AgentName, this.ServerName),
-               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.AgentName, this.ServerName),
+               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.AgentName, this.AgentServerName),
+               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.AgentName, this.AgentServerName),
                Properties.Resources.ShouldProcessCaption))
             {
                 return;

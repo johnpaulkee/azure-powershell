@@ -36,9 +36,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Server Name")]
+            HelpMessage = "SQL Database Agent Server Name")]
         [ValidateNotNullOrEmpty]
-        public string ServerName { get; set; }
+        public string AgentServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the database to use
@@ -46,9 +46,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database database name.")]
+            HelpMessage = "SQL Database Agent Control Database Name.")]
         [ValidateNotNullOrEmpty]
-        public string DatabaseName { get; set; }
+        public string AgentDatabaseName { get; set; }
 
         /// <summary>
         /// Gets or sets the agent name
@@ -94,7 +94,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 WriteDebugWithTimestamp("AgentName: {0}", AgentName);
 
                 return new List<AzureSqlDatabaseAgentModel>() {
-                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.AgentName)
+                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName)
                 };
             }
             catch (CloudException ex)
@@ -103,7 +103,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 {
                     // The sql database agent does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.ServerName),
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.AgentServerName),
                         "AgentName");
                 }
 
@@ -119,7 +119,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
         {
-            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
+            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.AgentServerName);
 
             List<AzureSqlDatabaseAgentModel> updatedEntity = new List<AzureSqlDatabaseAgentModel>
             {
@@ -127,8 +127,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 {
                     Location = location,
                     ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.ServerName,
-                    DatabaseName = this.DatabaseName,
+                    AgentServerName = this.AgentServerName,
+                    AgentDatabaseName = this.AgentDatabaseName,
                     AgentName = this.AgentName,
                     WorkerCount = (int?) this.WorkerCount,
                     Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),

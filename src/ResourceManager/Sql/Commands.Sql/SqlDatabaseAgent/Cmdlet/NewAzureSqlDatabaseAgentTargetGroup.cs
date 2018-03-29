@@ -46,7 +46,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("TargetGroupName: {0}", TargetGroupName);
-                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
+                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName);
             }
             catch (CloudException ex)
             {
@@ -78,7 +78,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 new AzureSqlDatabaseAgentTargetGroupModel
                 {
                     ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.ServerName,
+                    AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     TargetGroupName = this.TargetGroupName
                 }

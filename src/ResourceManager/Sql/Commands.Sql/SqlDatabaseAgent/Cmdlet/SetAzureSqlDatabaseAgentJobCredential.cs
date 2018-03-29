@@ -102,7 +102,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 new AzureSqlDatabaseAgentJobCredentialModel
                 {
                     ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.AgentServerName,
+                    AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     CredentialName = this.CredentialName,
                     Username = this.Username,

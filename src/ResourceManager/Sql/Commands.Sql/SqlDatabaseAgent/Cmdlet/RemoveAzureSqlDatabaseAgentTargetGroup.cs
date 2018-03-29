@@ -47,7 +47,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             return new List<AzureSqlDatabaseAgentTargetGroupModel>()
             {
-                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName)
+                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName)
             };
         }
 
@@ -68,7 +68,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The created job credential</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> entity)
         {
-            ModelAdapter.RemoveTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
+            ModelAdapter.RemoveTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName);
             return entity;
         }
     }

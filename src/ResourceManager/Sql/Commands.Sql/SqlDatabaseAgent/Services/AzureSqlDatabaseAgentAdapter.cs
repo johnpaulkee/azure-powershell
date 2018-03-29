@@ -53,8 +53,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string databaseId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/databases/{3}",
                 AzureSqlDatabaseAgentCommunicator.Subscription.Id,
                 model.ResourceGroupName,
-                model.ServerName,
-                model.DatabaseName);
+                model.AgentServerName,
+                model.AgentDatabaseName);
 
             var param = new Management.Sql.Models.JobAgent
             {
@@ -74,9 +74,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 };
             }
 
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, param);
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, param);
 
-            return CreateAgentModelFromResponse(model.ResourceGroupName, model.ServerName, resp);
+            return CreateAgentModelFromResponse(model.ResourceGroupName, model.AgentServerName, resp);
         }
 
         /// <summary>
@@ -139,10 +139,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             AzureSqlDatabaseAgentModel agent = new AzureSqlDatabaseAgentModel
             {
                 ResourceGroupName = resourceGroupName,
-                ServerName = serverName,
+                AgentServerName = serverName,
                 AgentName = resp.Name,
                 Location = resp.Location,
-                DatabaseName = databaseName,
+                AgentDatabaseName = databaseName,
                 WorkerCount = workerCount // This should be resp.Sku.Capacity.Value
             };
 

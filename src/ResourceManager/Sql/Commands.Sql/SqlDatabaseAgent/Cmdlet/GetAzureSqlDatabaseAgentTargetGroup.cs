@@ -43,12 +43,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 return new List<AzureSqlDatabaseAgentTargetGroupModel>
                 {
-                    ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName)
+                    ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName)
                 };
             }
             else
             {
-                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName);
+                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName);
             }
         }
     }

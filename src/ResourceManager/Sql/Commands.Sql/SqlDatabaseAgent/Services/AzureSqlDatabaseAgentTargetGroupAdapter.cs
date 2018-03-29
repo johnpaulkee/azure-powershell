@@ -54,8 +54,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 Members = new List<Management.Sql.Models.JobTarget>{},
             };
 
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.TargetGroupName, param);
-            return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, model.TargetGroupName, param);
+            return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.AgentServerName, model.AgentName, resp);
         }
 
         public Management.Sql.Models.JobTarget UpsertTarget(
@@ -170,25 +170,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             AzureSqlDatabaseAgentTargetGroupModel targetGroup = new AzureSqlDatabaseAgentTargetGroupModel
             {
                 ResourceGroupName = resourceGroupName,
-                ServerName = serverName,
+                AgentServerName = serverName,
                 AgentName = agentName,
                 TargetGroupName = resp.Name,
                 Members = resp.Members
             };
 
             return targetGroup;
-        }
-
-        private static AzureSqlDatabaseAgentTargetModel CreateTargetModelFromResponse(string targetGroupName, string databaseTargetName, string serverTargetName)
-        {
-            AzureSqlDatabaseAgentTargetModel target = new AzureSqlDatabaseAgentTargetModel
-            {
-                TargetGroupName = targetGroupName,
-                DatabaseTargetName = databaseTargetName,
-                ServerTargetName = serverTargetName
-            };
-
-            return target;
         }
 
         #endregion

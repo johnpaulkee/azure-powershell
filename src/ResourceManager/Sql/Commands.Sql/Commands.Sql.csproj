@@ -215,7 +215,6 @@
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobCredentialModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentTargetGroupModel.cs" />
-    <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentTargetModel.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentAdapter.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentCommunicator.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentJobCredentialAdapter.cs" />
