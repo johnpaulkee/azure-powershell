@@ -66,6 +66,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
             ParameterSetName = SqlDatabaseSet)]
+        [Parameter(
+            Position = 6,
+            ParameterSetName = SqlShardMapSet)]
         public string DatabaseName { get; set; }
 
         /// <summary>
