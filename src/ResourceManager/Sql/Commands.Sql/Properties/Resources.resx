@@ -411,7 +411,7 @@
     <comment>Azure SQL Database Agent</comment>
   </data>
   <data name="RemoveSqlDatabaseAgentWarning" xml:space="preserve">
-    <value>Are you sure you want to remove the Azure Sql Database agent '{0}'</value>
+    <value>Are you sure you want to remove the agent '{0}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
   <data name="AzureSqlDatabaseAgentNotExists" xml:space="preserve">
@@ -448,6 +448,10 @@
   </data>
   <data name="AzureSqlDatabaseAgentTargetShardMapExists" xml:space="preserve">
     <value>Target with shard map name '{0}' and server name '{1}' already exists in Target Group '{2}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentTargetGroupExists" xml:space="preserve">
+    <value>Target group '{0}' already exists in agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
 </root>

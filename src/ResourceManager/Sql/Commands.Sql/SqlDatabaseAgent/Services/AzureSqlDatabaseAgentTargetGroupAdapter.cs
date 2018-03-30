@@ -48,46 +48,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <returns>The upserted Azure SQL Database Agent</returns>
         public AzureSqlDatabaseAgentTargetGroupModel UpsertTargetGroup(AzureSqlDatabaseAgentTargetGroupModel model)
         {
-            // Empty list of members
             var param = new Management.Sql.Models.JobTargetGroup
             {
-                Members = new List<Management.Sql.Models.JobTarget>{},
+                Members = model.Members,
             };
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, model.TargetGroupName, param);
             return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.AgentServerName, model.AgentName, resp);
-        }
-
-        public Management.Sql.Models.JobTarget UpsertTarget(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string targetGroupName,
-            Management.Sql.Models.JobTarget targetToAdd)
-        {
-            // TODO: clean this up.
-            IList<Management.Sql.Models.JobTarget> existingTargets = Communicator.Get(resourceGroupName, serverName, agentName, targetGroupName).Members;
-            
-            IList<Management.Sql.Models.JobTarget> targets = new List<Management.Sql.Models.JobTarget> { targetToAdd };
-            var mergedTargets = existingTargets.Concat(targets).ToList();
-
-            var param = new Management.Sql.Models.JobTargetGroup
-            {
-                Members = mergedTargets
-            };
-
-            var resp = Communicator.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, param);
-
-            var upsertedTarget = resp.Members.Where(
-                target => target.DatabaseName == targetToAdd.DatabaseName && 
-                target.ServerName == targetToAdd.ServerName &&
-                target.ElasticPoolName == targetToAdd.ElasticPoolName &&
-                target.ShardMapName == targetToAdd.ShardMapName &&
-                target.MembershipType == targetToAdd.MembershipType &&
-                target.Type == targetToAdd.Type &&
-                target.RefreshCredential == targetToAdd.RefreshCredential).FirstOrDefault();
-
-            return upsertedTarget;
         }
 
         public IList<Management.Sql.Models.JobTarget> UpsertTargets(
@@ -131,16 +98,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         {
             var resp = Communicator.List(resourceGroupName, serverName, agentName);
             return resp.Select(targetGroup => CreateTargetGroupModelFromResponse(resourceGroupName, serverName, agentName, targetGroup)).ToList();
-        }
-
-        public Management.Sql.Models.JobTarget GetTarget(
-            string resourceGroupName, 
-            string serverName, 
-            string agentName, 
-            string targetGroupName,
-            Management.Sql.Models.JobTarget target)
-        {
-            return Communicator.Get(resourceGroupName, serverName, agentName, targetGroupName, target);
         }
 
         /// <summary>

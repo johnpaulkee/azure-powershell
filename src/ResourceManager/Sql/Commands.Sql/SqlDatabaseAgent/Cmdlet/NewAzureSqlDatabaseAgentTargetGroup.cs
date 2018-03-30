@@ -62,8 +62,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
             // The credential already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialExists, this.TargetGroupName, this.AgentName),
-                "CredentialName");
+                string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupExists, this.TargetGroupName, this.AgentName),
+                "TargetGroupName");
         }
 
         /// <summary>
@@ -73,18 +73,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> model)
         {
-            List<AzureSqlDatabaseAgentTargetGroupModel> newCredential = new List<AzureSqlDatabaseAgentTargetGroupModel>
+            List<AzureSqlDatabaseAgentTargetGroupModel> targetGroup = new List<AzureSqlDatabaseAgentTargetGroupModel>
             {
                 new AzureSqlDatabaseAgentTargetGroupModel
                 {
                     ResourceGroupName = this.ResourceGroupName,
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
-                    TargetGroupName = this.TargetGroupName
+                    TargetGroupName = this.TargetGroupName,
+                    Members = new List<Management.Sql.Models.JobTarget>{},
                 }
             };
 
-            return newCredential;
+            return targetGroup;
         }
 
         /// <summary>

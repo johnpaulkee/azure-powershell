@@ -85,33 +85,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return GetCurrentSqlClient().JobTargetGroups.Get(resourceGroupName, serverName, agentName, targetGroupName);
         }
 
-
-        /// <summary>
-        /// May return null if no members found.
-        /// </summary>
-        /// <param name="resourceGroupName"></param>
-        /// <param name="serverName"></param>
-        /// <param name="agentName"></param>
-        /// <param name="targetGroupName"></param>
-        /// <param name="databaseTargetName"></param>
-        /// <param name="serverTargetName"></param>
-        /// <returns></returns>
-        public Management.Sql.Models.JobTarget Get(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string targetGroupName,
-            Management.Sql.Models.JobTarget target)
-        {
-            Management.Sql.Models.JobTargetGroup tg = Get(resourceGroupName, serverName, agentName, targetGroupName);
-            return tg.Members.Where(
-                member => member.DatabaseName == target.DatabaseName && 
-                          member.ServerName == target.ServerName &&
-                          member.ElasticPoolName == target.ElasticPoolName &&
-                          member.ShardMapName == target.ShardMapName &&
-                          member.RefreshCredential == target.RefreshCredential).FirstOrDefault();
-        }
-
         /// <summary>
         /// Lists the target groups associated to the Azure SQL Database Agent.
         /// </summary>

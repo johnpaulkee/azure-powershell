@@ -160,6 +160,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target group &apos;{0}&apos; already exists in agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetGroupExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetGroupExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target with server name &apos;{0}&apos; already exists in Target Group &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentTargetServerExists {
@@ -754,7 +763,7 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to remove the Azure Sql Database agent &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Are you sure you want to remove the agent &apos;{0}&apos;.
         /// </summary>
         internal static string RemoveSqlDatabaseAgentWarning {
             get {
