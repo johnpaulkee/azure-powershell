@@ -17,6 +17,7 @@ using System.Linq;
 using System.Management.Automation;
 using System;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Sql.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -56,14 +57,84 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Removes a target from the target group
+        /// Adds a new target to the target group
         /// </summary>
-        /// <param name="targetToRemove">The new target to be added.</param>
+        /// <param name="target">The new target to be added.</param>
         /// <returns>The target that was added.</returns>
-        public Management.Sql.Models.JobTarget RemoveTarget(
-            Management.Sql.Models.JobTarget targetToRemove)
+        protected JobTarget RemoveTarget(JobTarget target)
         {
-            return null;
+            // Step 1 : Get Existing Targets
+            IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
+
+            // Step 2 : Remove Target From Existing Targetss
+            List<JobTarget> targets = RemoveTargetFromTargets(existingTargets, target);
+
+            // Step 3: Upsert Target Group with Removed Target From Targets
+            AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                AgentServerName = this.AgentServerName,
+                AgentName = this.AgentName,
+                TargetGroupName = this.TargetGroupName,
+                Members = targets
+            };
+
+            AzureSqlDatabaseAgentTargetGroupModel resp = ModelAdapter.UpsertTargetGroup(model);
+
+            return target;
+        }
+
+        /// <summary>
+        /// This merges the target group members list with the new target that customer wants added.
+        /// Throws PSArgumentException if the target for it's target type already exists.s
+        /// </summary>
+        /// <param name="existingTargets">The existing target group members</param>
+        /// <param name="target">The target we want to add to the group</param>
+        /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
+        public List<JobTarget> RemoveTargetFromTargets(
+            IList<JobTarget> existingTargets,
+            JobTarget target)
+        {
+            var targets = existingTargets.ToList();
+            int initialCount = targets.Count;
+
+            targets.RemoveAll(
+                tg => tg.MembershipType == target.MembershipType &&
+                tg.Type == target.Type &&
+                tg.ServerName == target.ServerName &&
+                tg.DatabaseName == target.DatabaseName &&
+                tg.ElasticPoolName == target.ElasticPoolName &&
+                tg.ShardMapName == target.ShardMapName &&
+                tg.RefreshCredential == target.RefreshCredential);
+
+            // Give appropriate error message if target wasn't removed.
+            if (targets.Count >= initialCount)
+            {
+                switch (ParameterSetName)
+                {
+                    case JobTargetType.SqlServer:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetServerExists, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    case JobTargetType.SqlDatabase:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetDatabaseExists, this.DatabaseName, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    case JobTargetType.SqlElasticPool:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetElasticPoolExists, this.ElasticPoolName, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    case JobTargetType.SqlShardMap:
+                        throw new PSArgumentException(
+                            string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetShardMapExists, this.ShardMapName, this.ServerName, this.TargetGroupName),
+                            "Target");
+                    default:
+                        break;
+                }
+            };
+
+
+            return targets;
         }
     }
 }
