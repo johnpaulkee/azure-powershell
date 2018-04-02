@@ -34,7 +34,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database server name.")]
+            HelpMessage = "SQL Database Agent Server name.")]
         [ValidateNotNullOrEmpty]
         public string AgentServerName { get; set; }
 
@@ -44,7 +44,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Control Database Name.")]
+            HelpMessage = "SQL Database Agent Database Name.")]
         [ValidateNotNullOrEmpty]
         public string AgentDatabaseName { get; set; }
 
@@ -62,7 +62,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// The tags to assocciate wit the Azure SQL Database Server
         /// </summary>
         [Parameter(Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure Sql Job Account")]
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
         public Hashtable Tag { get; set; }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public SwitchParameter AsJob { get; set; }
 
         /// <summary>
-        /// Check to see if the job account already exists in this resource group.
+        /// Check to see if the agent already exists in this resource group.
         /// </summary>
-        /// <returns>Null if the job account doesn't exist. Otherwise throws exception</returns>
+        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
         {
             try
@@ -86,7 +86,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // This is what we want.  We looked and there is no job account with this name.
+                    // This is what we want.  We looked and there is no agent with this name.
                     return null;
                 }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 throw;
             }
 
-            // The job account already exists
+            // The agent already exists
             throw new PSArgumentException(
                 string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.AgentName, this.AgentServerName),
                 "AgentName");
@@ -125,10 +125,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the job account
+        /// Sends the changes to the service -> Creates the agent
         /// </summary>
-        /// <param name="entity">The job account to create</param>
-        /// <returns>The created job account</returns>
+        /// <param name="entity">The agent to create</param>
+        /// <returns>The created agent</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
             return new List<AzureSqlDatabaseAgentModel>
