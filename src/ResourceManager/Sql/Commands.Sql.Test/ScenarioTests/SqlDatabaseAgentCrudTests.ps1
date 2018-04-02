@@ -44,32 +44,6 @@ function Test-CreateAgent
     }
 }
 
-function Test-CreateAgentWithWorkerCount
-{
-    # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agentName = "agent1"
-    $agentWorkerCount = 200
-
-    try 
-    {
-    	$agent = New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName -WorkerCount $agentWorkerCount
-
-        Assert-AreEqual $agent.AgentName $agentName
-        Assert-AreEqual $agent.ServerName $server.ServerName
-        Assert-AreEqual $agent.DatabaseName $db.DatabaseName
-        Assert-AreEqual $agent.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $agent.Location $server.Location
-        Assert-AreEqual $agent.WorkerCount $agentWorkerCount
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg
-    }
-}
-
 <#
 	.SYNOPSIS
 	Tests getting one or more agents
@@ -96,39 +70,6 @@ function Test-GetAgent
     finally
     {
     	Remove-ResourceGroupForTest $rg
-    }
-}
-
-<#
-	.SYNOPSIS
-	Tests updating Azure SQL Database Agents. TODO: Need to update management client with latest changes
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-UpdateAgent
-{
-    # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db"
-    $agent = Create-AgentForTest $rg $server $db "agent1"
-    $updatedWorkerCount = 200
-
-    try 
-    {
-        Assert-AreEqual $agent.WorkerCount 100 # Default worker count created
-        $resp1 = Set-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agent.AgentName -WorkerCount $updatedWorkerCount
-        
-        Assert-AreEqual $resp1.AgentName $agent.AgentName
-        Assert-AreEqual $resp1.ServerName $server.ServerName
-        Assert-AreEqual $resp1.DatabaseName $db.DatabaseName
-        Assert-AreEqual $resp1.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $resp1.Location $server.Location
-        Assert-AreEqual $resp1.WorkerCount $updatedWorkerCount
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg
     }
 }
 

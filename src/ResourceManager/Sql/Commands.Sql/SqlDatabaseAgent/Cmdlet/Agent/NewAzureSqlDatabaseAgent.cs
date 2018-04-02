@@ -59,15 +59,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers
-        /// </summary>
-        [Parameter(Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
-            HelpMessage = "SQL Database Agent Worker Count")]
-        public int? WorkerCount { get; set; }
-
-        /// <summary>
         /// The tags to assocciate wit the Azure SQL Database Server
         /// </summary>
         [Parameter(Mandatory = false,
@@ -127,7 +118,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     AgentDatabaseName = this.AgentDatabaseName,
-                    WorkerCount = MyInvocation.BoundParameters.ContainsKey("WorkerCount") ? this.WorkerCount : null,
                     Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
                 }
             };

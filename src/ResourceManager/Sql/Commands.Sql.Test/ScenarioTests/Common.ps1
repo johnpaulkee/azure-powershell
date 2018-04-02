@@ -466,16 +466,9 @@ function Create-DatabaseForTest ($resourceGroup, $server, $dbName)
 	.SYNOPSIS
 	Creates an Azure SQL Database Agent with test params
 #>
-function Create-AgentForTest ($resourceGroup, $server, $db, $agentName, $workerCount = $null)
+function Create-AgentForTest ($resourceGroup, $server, $db, $agentName)
 {
-    if ($workerCount)
-    {
-        return New-AzureRmSqlDatabaseAgent -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName -WorkerCount $workerCount
-    }
-    else
-    {
-    	return New-AzureRmSqlDatabaseAgent -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
-    }
+    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
 }
 
 <#
