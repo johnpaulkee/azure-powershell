@@ -90,7 +90,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     CredentialName = this.CredentialName,
-                    Username = this.Credential.UserName,
+                    UserName = this.Credential.UserName,
                     Password = this.Credential.Password,
                 }
             };

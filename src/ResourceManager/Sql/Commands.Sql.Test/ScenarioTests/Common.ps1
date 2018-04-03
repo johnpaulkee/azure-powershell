@@ -475,10 +475,10 @@ function Create-AgentForTest ($resourceGroup, $server, $db, $agentName)
 	.SYNOPSIS
 	Creates an Azure SQL Database Agent Job Credential
 #>
-function Create-JobCredentialForTest ($resourceGroup, $server, $agent, $credentialName, $username, $password)
+function Create-JobCredentialForTest ($resourceGroup, $server, $agent, $credentialName, $credential)
 {
     $credential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-        -CredentialName $credentialName -Username $username -Password $password
+        -CredentialName $credentialName -Credential $credential
 
     return $credential
 }

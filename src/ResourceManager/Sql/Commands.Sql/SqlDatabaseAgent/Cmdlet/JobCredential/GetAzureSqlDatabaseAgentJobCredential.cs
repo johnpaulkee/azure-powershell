@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the name of the agent to create
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Credential Name.")]

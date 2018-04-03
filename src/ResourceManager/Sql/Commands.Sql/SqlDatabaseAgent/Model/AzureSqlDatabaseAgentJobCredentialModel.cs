@@ -45,7 +45,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// Gets or sets the user name
         /// </summary>
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// Gets or sets the password

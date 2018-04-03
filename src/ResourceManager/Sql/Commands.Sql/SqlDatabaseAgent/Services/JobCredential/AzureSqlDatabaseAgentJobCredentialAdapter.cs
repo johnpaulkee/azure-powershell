@@ -60,7 +60,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 
             var param = new Management.Sql.Models.JobCredential
             {
-                Username = model.Username,
+                Username = model.UserName,
                 Password = model.Password != null ? Decrypt(model.Password) : null
             };
 
@@ -125,7 +125,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 AgentServerName = serverName,
                 AgentName = agentName,
                 CredentialName = resp.Name,
-                Username = resp.Username
+                UserName = resp.Username
                 // Check if password is needed. From examples it looks like it's not needed.
             };
 
