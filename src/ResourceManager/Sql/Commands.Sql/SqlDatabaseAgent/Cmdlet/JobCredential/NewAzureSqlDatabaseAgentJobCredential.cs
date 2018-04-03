@@ -43,17 +43,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
-            HelpMessage = "SQL Database Agent Job Credential Username")]
-        public string Username { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job credential password
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 5,
-            HelpMessage = "SQL Database Agent Job Credential Password")]
-        public string Password { get; set; }
+            HelpMessage = "SQL Database Agent Job Credential with Username and Password")]
+        public PSCredential Credential { get; set; }
 
         /// <summary>
         /// Check to see if the credential already exists for the agent.
@@ -99,8 +90,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     CredentialName = this.CredentialName,
-                    Username = this.Username,
-                    Password = this.Password
+                    Username = this.Credential.UserName,
+                    Password = this.Credential.Password,
                 }
             };
 

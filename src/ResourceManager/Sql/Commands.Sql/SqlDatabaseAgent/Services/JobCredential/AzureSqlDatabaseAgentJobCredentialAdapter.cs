@@ -16,6 +16,10 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Commands.Sql.Server.Services;
+using System.Security.Permissions;
+using System.Security;
+using System;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -40,8 +44,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator = new AzureSqlDatabaseAgentJobCredentialCommunicator(Context);
         }
 
-        #region Agent APIs
-
         /// <summary>
         /// Upserts an Azure SQL Database Agent to a server
         /// </summary>
@@ -59,7 +61,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             var param = new Management.Sql.Models.JobCredential
             {
                 Username = model.Username,
-                Password = model.Password
+                Password = model.Password != null ? Decrypt(model.Password) : null
             };
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, model.CredentialName, param);
@@ -103,10 +105,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator.Remove(resourceGroupName, serverName, agentName, credentialName);
         }
 
-        #endregion
-
-        #region Agent Helpers
-
         /// <summary>
         /// Convert a Management.Sql.Models.JobAgent to AzureSqlDatabaseAgentJobCredentialModel
         /// </summary>
@@ -134,6 +132,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return credential;
         }
 
-        #endregion
+        /// <summary>
+        /// Convert a <see cref="SecureString"/> to a plain-text string representation.
+        /// This should only be used in a proetected context, and must be done in the same logon and process context
+        /// in which the <see cref="SecureString"/> was constructed.
+        /// </summary>
+        /// <param name="secureString">The encrypted <see cref="SecureString"/>.</param>
+        /// <returns>The plain-text string representation.</returns>
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        internal static string Decrypt(SecureString secureString)
+        {
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(secureString);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
     }
 }

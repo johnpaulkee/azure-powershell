@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Security;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
@@ -49,6 +50,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// Gets or sets the password
         /// </summary>
-        public string Password { get; set; }
+        public SecureString Password { get; set; }
     }
 }
