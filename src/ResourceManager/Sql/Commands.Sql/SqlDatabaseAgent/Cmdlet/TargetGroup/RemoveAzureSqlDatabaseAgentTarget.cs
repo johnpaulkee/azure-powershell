@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the target group member already exists in the target group.
         /// </summary>
         /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<Management.Sql.Models.JobTarget> GetEntity()
+        protected override IEnumerable<JobTarget> GetEntity()
         {
             return null;
         }
@@ -41,9 +41,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<Management.Sql.Models.JobTarget> ApplyUserInputToModel(IEnumerable<Management.Sql.Models.JobTarget> model)
+        protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> model)
         {
-            return new List<Management.Sql.Models.JobTarget> { CreateJobTargetModel() }; ;
+            return new List<JobTarget> { CreateJobTargetModel() }; ;
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override IEnumerable<Management.Sql.Models.JobTarget> PersistChanges(IEnumerable<Management.Sql.Models.JobTarget> entity)
+        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> entity)
         {
-            return new List<Management.Sql.Models.JobTarget> { this.RemoveTarget(entity.First()) };
+            return new List<JobTarget> { this.RemoveTarget(entity.First()) };
         }
 
         /// <summary>

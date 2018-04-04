@@ -46,6 +46,39 @@ function Test-CreateAgent
 
 <#
 	.SYNOPSIS
+	Tests updating an agent
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateAgent
+{
+    # Setup
+    $rg = Create-ResourceGroupForTest
+    $server = Create-ServerForTest $rg "westus2"
+    $db = Create-DatabaseForTest $rg $server "db1"
+    $agent = Create-AgentForTest $rg $server $db1 "agent1" @{ Dept="Finance" }
+
+    try 
+    {
+    	$agent = New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
+
+        # Default create agent
+        Assert-AreEqual $agent.AgentName $agentName
+        Assert-AreEqual $agent.ServerName $server.ServerName
+        Assert-AreEqual $agent.DatabaseName $db.DatabaseName
+        Assert-AreEqual $agent.ResourceGroupName $rg.ResourceGroupName
+        Assert-AreEqual $agent.Location $server.Location
+        Assert-AreEqual $agent.WorkerCount 100
+
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg
+    }
+}
+
+<#
+	.SYNOPSIS
 	Tests getting one or more agents
     .DESCRIPTION
 	SmokeTest

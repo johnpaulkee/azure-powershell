@@ -31,6 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name.")]
         [ValidateNotNullOrEmpty]
+        [Alias("ServerName")]
         public string AgentServerName { get; set; }
 
         /// <summary>

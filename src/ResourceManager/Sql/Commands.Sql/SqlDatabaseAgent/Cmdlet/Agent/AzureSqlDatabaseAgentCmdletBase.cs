@@ -17,11 +17,22 @@ using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
+using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     public abstract class AzureSqlDatabaseAgentCmdletBase : AzureSqlCmdletBase<IEnumerable<AzureSqlDatabaseAgentModel>, AzureSqlDatabaseAgentAdapter>
     {
+        /// <summary>
+        /// Gets or sets the agent server name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "SQL Database Agent Server Name")]
+        [Alias("ServerName")]
+        public string AgentServerName { get; set; }
+
         /// <summary>
         /// Intializes the model adapter
         /// </summary>

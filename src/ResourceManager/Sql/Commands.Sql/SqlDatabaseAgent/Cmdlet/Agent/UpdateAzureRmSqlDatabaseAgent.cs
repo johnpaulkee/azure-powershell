@@ -23,28 +23,17 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Update-AzureRmSqlDatabaseAgent Cmdlet - This cmdlet is mainly for updating tags
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
-    public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    [Cmdlet(VerbsData.Update, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    public class UpdateAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
-        /// <summary>
-        /// Gets or sets the name of the database to use
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "SQL Database Agent Database Name.")]
-        [ValidateNotNullOrEmpty]
-        [Alias("DatabaseName")]
-        public string AgentDatabaseName { get; set; }
-
         /// <summary>
         /// Gets or sets the name of the agent to create
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
-            Position = 3,
+            Position = 2,
             HelpMessage = "SQL Database Agent name.")]
         [ValidateNotNullOrEmpty]
         public string AgentName { get; set; }
@@ -58,12 +47,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public Hashtable Tags { get; set; }
 
         /// <summary>
-        /// Gets or sets whether or not to run this cmdlet in the background as a job
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
-        public SwitchParameter AsJob { get; set; }
-
-        /// <summary>
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
@@ -72,24 +55,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("AgentName: {0}", AgentName);
-                ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                return new List<AzureSqlDatabaseAgentModel> {
+                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName)
+                };
             }
             catch (CloudException ex)
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // This is what we want.  We looked and there is no agent with this name.
-                    return null;
+                    // The agent does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.AgentServerName),
+                        "AgentName");
                 }
 
                 // Unexpected exception encountered
                 throw;
             }
-
-            // The agent already exists
-            throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.AgentName, this.AgentServerName),
-                "AgentName");
         }
 
         /// <summary>
@@ -109,10 +91,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     ResourceGroupName = this.ResourceGroupName,
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
-                    AgentDatabaseName = this.AgentDatabaseName,
-                    Tags = TagsConversionHelper.CreateTagDictionary(Tags, validate: true),
+                    AgentDatabaseName = model.FirstOrDefault().AgentDatabaseName,
+                    Tags = TagsConversionHelper.ReadOrFetchTags(this, model.FirstOrDefault().Tags),
                 }
             };
+
             return newEntity;
         }
 
@@ -125,7 +108,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             return new List<AzureSqlDatabaseAgentModel>
             {
-                ModelAdapter.UpsertSqlDatabaseAgent(entity.First())
+                ModelAdapter.UpdateSqlDatabaseAgent(entity.First())
             };
         }
     }

@@ -27,16 +27,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the name of server name to use.
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Server Name.")]
-        [ValidateNotNullOrEmpty]
-        public string AgentServerName { get; set; }
-
-        /// <summary>
         /// Gets or sets the name of the agent to use.
         /// </summary>
         [Parameter(Mandatory = true,
@@ -51,12 +41,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
         public SwitchParameter Force { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether or not to run this cmdlet in the background as a job
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
-        public SwitchParameter AsJob { get; set; }
 
         /// <summary>
         /// Gets the entity to delete

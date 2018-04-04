@@ -25,15 +25,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent server name
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Server Name")]
-        public string AgentServerName { get; set; }
-
-        /// <summary>
         /// Gets or sets the agent name
         /// </summary>
         [Parameter(Mandatory = false,

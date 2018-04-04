@@ -62,15 +62,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             try
             {
-                WriteDebugWithTimestamp("CredentialName: {0}", CredentialName);
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                return new List<AzureSqlDatabaseAgentJobCredentialModel>() {
+                    ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.CredentialName)
+                };
             }
             catch (CloudException ex)
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // This is what we don't want.  
-                    // We looked and there is no credential with this name.
+                    // The credential does not exist
                     throw new PSArgumentException(
                         string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialNotExists, this.CredentialName, this.AgentName),
                         "CredentialName");
@@ -84,7 +84,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <param name="model">The existing job credential entity</param>
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> model)
         {
