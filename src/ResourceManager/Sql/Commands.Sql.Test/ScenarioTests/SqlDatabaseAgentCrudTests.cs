@@ -35,13 +35,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentCreateWithWorkerCount()
-        {
-            RunPowerShellTest("Test-CreateAgentWithWorkerCount");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestAgentUpdate()
         {
             RunPowerShellTest("Test-UpdateAgent");
