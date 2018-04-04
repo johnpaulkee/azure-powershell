@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true), OutputType(typeof(AzureSqlDatabaseAgentModel))]
     public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>

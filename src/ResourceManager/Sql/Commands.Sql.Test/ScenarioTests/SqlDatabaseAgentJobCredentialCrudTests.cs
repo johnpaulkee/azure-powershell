@@ -35,16 +35,16 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialUpdate()
+        public void TestJobCredentialGet()
         {
-            RunPowerShellTest("Test-UpdateJobCredential");
+            RunPowerShellTest("Test-GetJobCredential");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialGet()
+        public void TestJobCredentialUpdate()
         {
-            RunPowerShellTest("Test-GetJobCredential");
+            RunPowerShellTest("Test-UpdateJobCredential");
         }
 
         [Fact]
