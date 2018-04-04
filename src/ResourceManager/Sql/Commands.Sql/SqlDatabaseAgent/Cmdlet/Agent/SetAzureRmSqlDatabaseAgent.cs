@@ -23,10 +23,10 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Update-AzureRmSqlDatabaseAgent Cmdlet - This cmdlet is mainly for updating tags
+    /// Defines the Set-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsData.Update, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
-    public class UpdateAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
         /// Gets or sets the name of the agent to create
@@ -106,6 +106,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The created agent</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
+            // Note: We are currently using PATCH, but in the future we plan on exposing worker count for public preview.
+            // Hence the reason we are using Set instead of Update as we will call a PUT in the future instead of current PATCH request.
             return new List<AzureSqlDatabaseAgentModel>
             {
                 ModelAdapter.UpdateSqlDatabaseAgent(entity.First())

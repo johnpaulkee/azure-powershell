@@ -169,6 +169,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target group &apos;{0}&apos; does not exist in agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetGroupNotExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetGroupNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target with server name &apos;{0}&apos; already exists in Target Group &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentTargetServerExists {

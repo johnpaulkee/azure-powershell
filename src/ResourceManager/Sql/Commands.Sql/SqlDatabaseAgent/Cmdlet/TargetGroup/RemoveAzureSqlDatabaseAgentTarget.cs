@@ -27,23 +27,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTarget", SupportsShouldProcess = true)]
     public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
-        /// <summary>
-        /// Check to see if the target group member already exists in the target group.
-        /// </summary>
-        /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<JobTarget> GetEntity()
-        {
-            return null;
-        }
+        private JobTarget Target;
+
+        private const string TargetIdSet = "TargetIdSet";
+
+        // TODO: Once target id is exposed it Target Group Member Resource, we can then include this as an option to delete target by target id
+        ///// <summary>
+        ///// Gets or sets the Target Server Name
+        ///// </summary>
+        //[Parameter(Mandatory = true,
+        //    Position = 4,
+        //    ValueFromPipelineByPropertyName = true,
+        //    HelpMessage = "Target Id",
+        //    ParameterSetName = TargetIdSet)]
+        //public string TargetId { get; set; }
 
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> model)
+        protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> existingTargets)
         {
-            return new List<JobTarget> { CreateJobTargetModel() }; ;
+            this.Target = CreateJobTargetModel();
+
+            List<JobTarget> updatedTargets = RemoveTargetFromTargets(existingTargets.ToList(), this.Target);
+            return updatedTargets;
         }
 
         /// <summary>
@@ -51,37 +60,20 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> entity)
+        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
         {
-            return new List<JobTarget> { this.RemoveTarget(entity.First()) };
-        }
-
-        /// <summary>
-        /// Adds a new target to the target group
-        /// </summary>
-        /// <param name="target">The new target to be added.</param>
-        /// <returns>The target that was added.</returns>
-        protected JobTarget RemoveTarget(JobTarget target)
-        {
-            // Step 1 : Get Existing Targets
-            IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
-
-            // Step 2 : Remove Target From Existing Targetss
-            List<JobTarget> targets = RemoveTargetFromTargets(existingTargets, target);
-
-            // Step 3: Upsert Target Group with Removed Target From Targets
             AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
             {
                 ResourceGroupName = this.ResourceGroupName,
                 AgentServerName = this.AgentServerName,
                 AgentName = this.AgentName,
                 TargetGroupName = this.TargetGroupName,
-                Members = targets
+                Members = updatedTargets.ToList()
             };
 
-            AzureSqlDatabaseAgentTargetGroupModel resp = ModelAdapter.UpsertTargetGroup(model);
+            IList<JobTarget> resp = ModelAdapter.UpsertTargetGroup(model).Members;
 
-            return target;
+            return new List<JobTarget> { this.Target };
         }
 
         /// <summary>
@@ -91,9 +83,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <param name="existingTargets">The existing target group members</param>
         /// <param name="target">The target we want to add to the group</param>
         /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
-        public List<JobTarget> RemoveTargetFromTargets(
-            IList<JobTarget> existingTargets,
-            JobTarget target)
+        public List<JobTarget> RemoveTargetFromTargets(IList<JobTarget> existingTargets, JobTarget target)
         {
             var targets = existingTargets.ToList();
             int initialCount = targets.Count;
@@ -132,7 +122,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                         break;
                 }
             };
-
 
             return targets;
         }

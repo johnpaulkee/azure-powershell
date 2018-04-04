@@ -19,30 +19,32 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Linq;
+using Microsoft.Azure.Management.Sql.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlCmdletBase<IEnumerable<Management.Sql.Models.JobTarget>, AzureSqlDatabaseAgentTargetGroupAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlCmdletBase<IEnumerable<JobTarget>, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
         /// <summary>
         /// Parameter set name for the SqlDatabase Target Type
         /// </summary>
-        private const string SqlDatabaseSet = Management.Sql.Models.JobTargetType.SqlDatabase;
+        private const string SqlDatabaseSet = JobTargetType.SqlDatabase;
 
         /// <summary>
         /// Parameter set name for the SqlServer Target Type
         /// </summary>
-        private const string SqlServerSet = Management.Sql.Models.JobTargetType.SqlServer;
+        private const string SqlServerSet = JobTargetType.SqlServer;
 
         /// <summary>
         /// Parameter set name for the SqlElasticPool Target Type
         /// </summary>
-        private const string SqlElasticPoolSet = Management.Sql.Models.JobTargetType.SqlElasticPool;
+        private const string SqlElasticPoolSet = JobTargetType.SqlElasticPool;
 
         /// <summary>
         /// Parameter set name for the SqlShardMap Target Type
         /// </summary>
-        private const string SqlShardMapSet = Management.Sql.Models.JobTargetType.SqlShardMap;
+        private const string SqlShardMapSet = JobTargetType.SqlShardMap;
 
         /// <summary>
         /// Gets or sets the name of the server to use
@@ -52,7 +54,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name.")]
         [ValidateNotNullOrEmpty]
-        [Alias("ServerName")]
         public string AgentServerName { get; set; }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Helper to create a job target model from user input.
         /// </summary>
         /// <returns>Job target model</returns>
-        protected Management.Sql.Models.JobTarget CreateJobTargetModel()
+        protected JobTarget CreateJobTargetModel()
         {
             string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
                 AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
@@ -175,11 +176,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 this.AgentName,
                 this.RefreshCredentialName);
 
-            return new Management.Sql.Models.JobTarget
+            return new JobTarget
             {
                 MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
-                    Management.Sql.Models.JobTargetGroupMembershipType.Exclude :
-                    Management.Sql.Models.JobTargetGroupMembershipType.Include,
+                    JobTargetGroupMembershipType.Exclude :
+                    JobTargetGroupMembershipType.Include,
                 Type = ParameterSetName,
                 ServerName = this.ServerName,
                 DatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
@@ -187,6 +188,51 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 ShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
                 RefreshCredential = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? credentialId : null,
             };
+        }
+
+        /// <summary>
+        /// This merges the target group members list with the new target that customer wants added.
+        /// Throws PSArgumentException if the target for it's target type already exists.s
+        /// </summary>
+        /// <param name="existingTargets">The existing target group members</param>
+        /// <param name="target">The target we want to add to the group</param>
+        /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
+        protected List<JobTarget> MergeTargets(IList<JobTarget> existingTargets, JobTarget target)
+        {
+            // Merge Targets and Remove Duplicates Just In Case
+            // https://stackoverflow.com/questions/16983618/how-to-remove-duplicates-from-collection-using-iequalitycomparer-linq-distinct
+            var mergedTargets = existingTargets
+                .Concat(new List<JobTarget> { target })
+                .GroupBy(t => new { t.ServerName, t.DatabaseName, t.ElasticPoolName, t.ShardMapName, t.MembershipType, t.Type, t.RefreshCredential })
+                .Select(t => t.First())
+                .ToList();
+
+            return mergedTargets;
+        }
+
+        /// <summary>
+        /// Check to see if the target group member already exists in the target group.
+        /// </summary>
+        /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
+        protected override IEnumerable<JobTarget> GetEntity()
+        {
+            try
+            {
+                IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
+
+                return existingTargets;
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The target group does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.TargetGroupName, this.AgentName),
+                        "TargetGroupName");
+                }
+                throw;
+            }
         }
     }
 }

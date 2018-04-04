@@ -196,7 +196,7 @@
     <Compile Include="ServerDnsAlias\Cmdlet\NewAzureSqlServerDnsAlias.cs" />
     <Compile Include="ServerDnsAlias\Services\AzureSqlServerDnsAliasAdapter.cs" />
     <Compile Include="ServerDnsAlias\Services\AzureSqlServerDnsAliasCommunicator.cs" />
-    <Compile Include="SqlDatabaseAgent\Cmdlet\Agent\UpdateAzureRmSqlDatabaseAgent.cs" />
+    <Compile Include="SqlDatabaseAgent\Cmdlet\Agent\SetAzureRmSqlDatabaseAgent.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\TargetGroup\AddAzureSqlDatabaseAgentTarget.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\Agent\AzureSqlDatabaseAgentCmdletBase.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobCredential\AzureSqlDatabaseAgentJobCredentialCmdletBase.cs" />

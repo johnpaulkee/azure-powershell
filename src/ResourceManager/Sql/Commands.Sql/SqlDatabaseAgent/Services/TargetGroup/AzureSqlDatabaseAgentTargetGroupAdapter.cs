@@ -57,23 +57,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.AgentServerName, model.AgentName, resp);
         }
 
-        public IList<Management.Sql.Models.JobTarget> UpsertTargets(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string targetGroupName,
-            IList<Management.Sql.Models.JobTarget> targetsToAdd)
-        {
-            var param = new Management.Sql.Models.JobTargetGroup
-            {
-                Members = targetsToAdd
-            };
-
-            var resp = Communicator.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, param);
-
-            return resp.Members;
-        }
-
         /// <summary>
         /// Gets a SQL Database Agent associated to a server
         /// </summary>
