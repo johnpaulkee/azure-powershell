@@ -29,22 +29,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Parameter set name for the SqlDatabase Target Type
         /// </summary>
-        private const string SqlDatabaseSet = JobTargetType.SqlDatabase;
+        protected const string SqlDatabaseSet = JobTargetType.SqlDatabase;
 
         /// <summary>
         /// Parameter set name for the SqlServer Target Type
         /// </summary>
-        private const string SqlServerSet = JobTargetType.SqlServer;
+        protected const string SqlServerSet = JobTargetType.SqlServer;
 
         /// <summary>
         /// Parameter set name for the SqlElasticPool Target Type
         /// </summary>
-        private const string SqlElasticPoolSet = JobTargetType.SqlElasticPool;
+        protected const string SqlElasticPoolSet = JobTargetType.SqlElasticPool;
 
         /// <summary>
         /// Parameter set name for the SqlShardMap Target Type
         /// </summary>
-        private const string SqlShardMapSet = JobTargetType.SqlShardMap;
+        protected const string SqlShardMapSet = JobTargetType.SqlShardMap;
 
         /// <summary>
         /// Gets or sets the name of the server to use
@@ -122,38 +122,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string ShardMapName { get; set; }
 
         /// <summary>
-        /// Gets or sets the Refresh Credential Name
-        /// </summary>
-        [Parameter(Mandatory = true,
-            Position = 5,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Refresh Credential Name",
-            ParameterSetName = SqlServerSet)]
-        [Parameter(
-            Mandatory = true,
-            Position = 5,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Refresh Credential Name",
-            ParameterSetName = SqlElasticPoolSet)]
-        [Parameter(
-            Mandatory = true,
-            Position = 7,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Refresh Credential Name",
-            ParameterSetName = SqlShardMapSet)]
-        public string RefreshCredentialName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the flag indicating whether we want to exclude this target.
-        /// This really represents membership type.
-        /// </summary>
-        [Parameter(Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Exclude this target from the target group.")]
-        [ValidateNotNullOrEmpty]
-        public SwitchParameter Exclude { get; set; }
-
-        /// <summary>
         /// Intializes the model adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
@@ -167,15 +135,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Helper to create a job target model from user input.
         /// </summary>
         /// <returns>Job target model</returns>
-        protected JobTarget CreateJobTargetModel()
+        protected JobTarget CreateJobTargetModel(string credentialId = null)
         {
-            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
-                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
-                this.ResourceGroupName,
-                this.AgentServerName,
-                this.AgentName,
-                this.RefreshCredentialName);
-
             return new JobTarget
             {
                 MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
@@ -191,6 +152,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
+        /// Returns the job credential id
+        /// </summary>
+        /// <param name="refreshCredentialName"></param>
+        /// <returns>The job credential id</returns>
+        protected string GetJobCredentialId(string refreshCredentialName)
+        {
+            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.AgentServerName,
+                this.AgentName,
+                refreshCredentialName);
+
+            return credentialId;
+        }
+
+        /// <summary>
         /// This merges the target group members list with the new target that customer wants added.
         /// Throws PSArgumentException if the target for it's target type already exists.s
         /// </summary>
@@ -199,6 +177,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
         protected List<JobTarget> MergeTargets(IList<JobTarget> existingTargets, JobTarget target)
         {
+            int initialCount = existingTargets.Count;
+
             // Merge Targets and Remove Duplicates Just In Case
             // https://stackoverflow.com/questions/16983618/how-to-remove-duplicates-from-collection-using-iequalitycomparer-linq-distinct
             var mergedTargets = existingTargets
@@ -206,6 +186,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 .GroupBy(t => new { t.ServerName, t.DatabaseName, t.ElasticPoolName, t.ShardMapName, t.MembershipType, t.Type, t.RefreshCredential })
                 .Select(t => t.First())
                 .ToList();
+
+            if (initialCount >= mergedTargets.Count)
+            {
+                return null;
+            }
 
             return mergedTargets;
         }
@@ -216,23 +201,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<JobTarget> GetEntity()
         {
-            try
-            {
-                IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
+            IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
 
-                return existingTargets;
-            }
-            catch (CloudException ex)
-            {
-                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    // The target group does not exist
-                    throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.TargetGroupName, this.AgentName),
-                        "TargetGroupName");
-                }
-                throw;
-            }
+            return existingTargets;
         }
     }
 }

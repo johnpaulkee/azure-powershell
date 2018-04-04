@@ -20,5 +20,5 @@
 #>
 function Test-CreateTargetGroup
 {
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2894 -AgentServerName ps2613 -AgentName agent1 -ServerName ps7047 -TargetGroupName tg5 -DatabaseName master
+    Get-AzureRmSqlServer | Remove-AzureRmSqlDatabaseAgentTarget -AgentServerName ps2613 -AgentName agent1 -TargetGroupName tgTest -ResourceGroupName ps2894
 }

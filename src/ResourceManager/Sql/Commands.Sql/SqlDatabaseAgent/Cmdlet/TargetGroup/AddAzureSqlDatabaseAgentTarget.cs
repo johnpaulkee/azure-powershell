@@ -19,6 +19,7 @@ using System;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Sql.Models;
 using Microsoft.Rest.Azure;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -28,6 +29,38 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.Add, "AzureRmSqlDatabaseAgentTarget", SupportsShouldProcess = true)]
     public class AddAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
+        /// <summary>
+        /// Gets or sets the Refresh Credential Name
+        /// </summary>
+        [Parameter(Mandatory = true,
+            Position = 5,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlServerSet)]
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlElasticPoolSet)]
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlShardMapSet)]
+        public string RefreshCredentialName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag indicating whether we want to exclude this target.
+        /// This really represents membership type.
+        /// </summary>
+        [Parameter(Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Exclude this target from the target group.")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter Exclude { get; set; }
+
         private JobTarget Target;
 
         /// <summary>
@@ -37,10 +70,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> existingTargets)
         {
-            this.Target = CreateJobTargetModel();
+            string credentialId = GetJobCredentialId(this.RefreshCredentialName);
+            this.Target = CreateJobTargetModel(credentialId);
 
-            List<JobTarget> mergedTargets = MergeTargets(existingTargets.ToList(), this.Target);
-            return mergedTargets;
+            List<JobTarget> updatedTargets = MergeTargets(existingTargets.ToList(), this.Target);
+
+            // If there were no updates, just return null to indicate that no changes were made.
+            if (updatedTargets == null)
+            {
+                return new List<JobTarget>();
+            }
+
+            return updatedTargets;
         }
 
         /// <summary>
@@ -48,15 +89,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> targets)
+        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
         {
+            // If the list of targets weren't updated at this point, just return null;
+            if (updatedTargets.Count() == 0)
+            {
+                return null;
+            }
+
             AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
             {
                 ResourceGroupName = this.ResourceGroupName,
                 AgentServerName = this.AgentServerName,
                 AgentName = this.AgentName,
                 TargetGroupName = this.TargetGroupName,
-                Members = targets.ToList()
+                Members = updatedTargets.ToList()
             };
 
             IList<JobTarget> resp = ModelAdapter.UpsertTargetGroup(model).Members;
