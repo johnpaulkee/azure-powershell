@@ -143,6 +143,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 Location = resp.Location,
                 AgentDatabaseName = databaseName,
                 WorkerCount = workerCount,
+                Id = resp.Id,
                 Tags = TagsConversionHelper.CreateTagDictionary(TagsConversionHelper.CreateTagHashtable(resp.Tags), false),
             };
 

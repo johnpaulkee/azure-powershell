@@ -32,7 +32,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 2,
             HelpMessage = "SQL Database Agent Name")]
         public string AgentName { get; set; }
-        
+
         /// <summary>
         /// Gets one or more Azure SQL Database Agents from the service.
         /// </summary>

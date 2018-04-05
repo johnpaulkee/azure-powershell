@@ -189,3 +189,29 @@ function Test-RemoveAgent
         Remove-ResourceGroupForTest $rg1
     }
 }
+
+<#
+	.SYNOPSIS
+	Tests removing Azure SQL Database Agent using Input Object
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-RemoveAgentByInputObject
+{
+    # Setup TODO
+     $a1 = Get-AzureRmSqlDatabaseAgent -AgentName jpagenttest -AgentServerName ps9823 -ResourceGroupName ps2398
+     Remove-AzureRmSqlDatabaseAgent -InputObject $a1
+}
+
+<#
+	.SYNOPSIS
+	Tests removing Azure SQL Database Agent using resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-RemoveAgentByResourceId
+{
+    # Setup TODO
+     $a1 = Get-AzureRmSqlDatabaseAgent -AgentName jpagenttest -AgentServerName ps9823 -ResourceGroupName ps2398
+     Remove-AzureRmSqlDatabaseAgent -ResourceId $a1.Id -Force
+}

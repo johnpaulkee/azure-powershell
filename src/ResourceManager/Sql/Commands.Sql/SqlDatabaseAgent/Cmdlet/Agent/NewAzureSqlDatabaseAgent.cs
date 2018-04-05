@@ -54,8 +54,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
-        [Alias("Tag")]
-        public Hashtable Tags { get; set; }
+        public Hashtable Tag { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to run this cmdlet in the background as a job
@@ -110,7 +109,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     AgentDatabaseName = this.AgentDatabaseName,
-                    Tags = TagsConversionHelper.CreateTagDictionary(Tags, validate: true),
+                    Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
                 }
             };
             return newEntity;

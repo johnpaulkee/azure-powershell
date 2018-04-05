@@ -53,5 +53,19 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-RemoveAgent");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentRemoveByInputObject()
+        {
+            RunPowerShellTest("Test-RemoveAgentByInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentRemoveByResourceId()
+        {
+            RunPowerShellTest("Test-RemoveAgentByResourceId");
+        }
     }
 }

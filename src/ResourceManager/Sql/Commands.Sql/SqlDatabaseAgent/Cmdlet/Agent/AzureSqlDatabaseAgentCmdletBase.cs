@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name")]
         [Alias("ServerName")]
-        public string AgentServerName { get; set; }
+        public virtual string AgentServerName { get; set; }
 
         /// <summary>
         /// Intializes the model adapter
