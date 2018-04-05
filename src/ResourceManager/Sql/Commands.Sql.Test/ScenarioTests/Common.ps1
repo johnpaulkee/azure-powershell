@@ -466,26 +466,35 @@ function Create-DatabaseForTest ($resourceGroup, $server, $dbName)
 	.SYNOPSIS
 	Creates an Azure SQL Database Agent with test params
 #>
-function Create-AgentForTest ($resourceGroup, $server, $db, $agentName, $tags = $null)
+function Create-AgentForTest ($rg, $s, $db, $a, $tags = $null)
 {
     if ($tags)
     {
-        return New-AzureRmSqlDatabaseAgent -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName -Tags $tags
+        return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $a -Tags $tags
     }
 
-    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
+    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $a
 }
 
 <#
 	.SYNOPSIS
 	Creates an Azure SQL Database Agent Job Credential
 #>
-function Create-JobCredentialForTest ($resourceGroup, $server, $agent, $credentialName, $credential)
+function Create-JobCredentialForTest ($rg, $s, $a, $cn, $c)
 {
-    $credential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-        -CredentialName $credentialName -Credential $credential
+    $jc = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName `
+        -CredentialName $cn -Credential $c
+    return $jc
+}
 
-    return $credential
+<#
+	.SYNOPSIS
+	Creates an Azure SQL Database Agent Job Target Group
+#>
+function Create-TargetGroupForTest ($rg, $s, $a, $tg)
+{
+    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -TargetGroupName $tg
+    return $tg
 }
 
 <#

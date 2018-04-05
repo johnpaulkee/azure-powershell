@@ -38,14 +38,14 @@ function Test-CreateJobCredential
     	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName `
             -CredentialName $cn1 -Credential $c1
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentServerName $s1.ServerName
         Assert-AreEqual $resp1.CredentialName $cn1
         Assert-AreEqual $resp1.UserName $c1.UserName
 
         # Test piping
         $resp2 = $a1 | New-AzureRmSqlDatabaseAgentJobCredential -CredentialName $cn2 -Credential $c1
         Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.AgentServerName $s1.ServerName
         Assert-AreEqual $resp2.CredentialName $cn2
         Assert-AreEqual $resp2.UserName $c1.UserName
     }
@@ -85,7 +85,7 @@ function Test-GetJobCredential
         $resp1 = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName `
             -CredentialName $cn1
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentServerName $s1.ServerName
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
         Assert-AreEqual $resp1.UserName $c1.UserName
@@ -134,22 +134,20 @@ function Test-UpdateJobCredential
         # Test parameters
         $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -CredentialName $cn1 -Credential $c2
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentServerName $s1.ServerName
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
-        Assert-AreEqual $resp1.UserName $c1.UserName
+        Assert-AreEqual $resp1.UserName $c2.UserName
 
         # Test piping
         $resp2 = $jc2 | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $c2
-        Assert-AreEqual $resp2.UserName $newUserName
+        Assert-AreEqual $resp2.UserName $c2.UserName
 
         $u3 = "oneMoreUserName"
         $p3 = "oneMoreTime"
       	$c3 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
 
-        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
-        Assert-AreEqual $all.Count 2
-
+        $all = $a | Get-AzureRmSqlDatabaseAgentJobCredential
         $setAll = $all | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $c3
         Assert-AreEqual $setAll.Count 2
         $setAll | % { Assert-AreEqual $_.UserName $c3.UserName }
@@ -177,18 +175,28 @@ function Test-RemoveJobCredential
     # Credential params
     $cn1 = "credName1"
     $cn2 = "credName2"
+    $cn3 = "credName3"
     $u1 = "testusername"
 	$p1 = "t357ingP@s5w0rd!"
 	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
 
     $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn1 $c1
     $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn2 $c1
+    $jc3 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn3 $c1
 
     try
     {
+        # Check 3 credential are left
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
+        Assert-AreEqual $all.Count 3
+
         # Test using params
         Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -CredentialName $cn1
         
+        # Check only 2 credential are left
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
+        Assert-AreEqual $all.Count 2
+
         # Test using piping
         $jc2 | Remove-AzureRmSqlDatabaseAgentJobCredential
         
@@ -196,7 +204,7 @@ function Test-RemoveJobCredential
         $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
         Assert-AreEqual $all.Count 1
 
-        # Check that no creds are left
+        # Check no more credentials
         $all | Remove-AzureRmSqlDatabaseAgentJobCredential
         $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
         Assert-AreEqual $all.Count 0
