@@ -21,7 +21,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the Get-AzureRmSqlDatabaseAgent cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true), OutputType(typeof (AzureSqlDatabaseAgentModel))]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
@@ -34,22 +36,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string AgentName { get; set; }
 
         /// <summary>
+        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            // Lets us return a list of agents
+            if (!this.MyInvocation.BoundParameters.ContainsKey("AgentName"))
+            {
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
         /// Gets one or more Azure SQL Database Agents from the service.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
+        protected override AzureSqlDatabaseAgentModel GetEntity()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("AgentName"))
-            {
-                return new List<AzureSqlDatabaseAgentModel>
-                {
-                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName)
-                };
-            }
-            else
-            {
-                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName);
-            }
+            return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
         }
     }
 }

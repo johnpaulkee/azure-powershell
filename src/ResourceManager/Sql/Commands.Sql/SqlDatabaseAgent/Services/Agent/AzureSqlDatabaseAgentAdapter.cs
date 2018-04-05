@@ -103,7 +103,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agents are in</param>
         /// <returns>The converted agent model(s)</returns>
-        public List<AzureSqlDatabaseAgentModel> GetSqlDatabaseAgent(string resourceGroupName, string serverName)
+        public IEnumerable<AzureSqlDatabaseAgentModel> GetSqlDatabaseAgent(string resourceGroupName, string serverName)
         {
             var resp = Communicator.List(resourceGroupName, serverName);
             return resp.Select(agent => CreateAgentModelFromResponse(resourceGroupName, serverName, agent)).ToList();

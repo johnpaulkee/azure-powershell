@@ -67,5 +67,12 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-RemoveAgentByResourceId");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetAllAgents()
+        {
+            RunPowerShellTest("Test-GetAllAgents");
+        }
     }
 }

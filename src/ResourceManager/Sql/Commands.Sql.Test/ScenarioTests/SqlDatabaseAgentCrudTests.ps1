@@ -215,3 +215,14 @@ function Test-RemoveAgentByResourceId
      $a1 = Get-AzureRmSqlDatabaseAgent -AgentName jpagenttest -AgentServerName ps9823 -ResourceGroupName ps2398
      Remove-AzureRmSqlDatabaseAgent -ResourceId $a1.Id -Force
 }
+
+<#
+	.SYNOPSIS
+	Tests removing Azure SQL Database Agent using resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetAllAgents
+{
+    Get-AzureRmSqlDatabaseAgent -AgentServerName sjobaccount35 -ResourceGroupName Job_Account_Test
+}

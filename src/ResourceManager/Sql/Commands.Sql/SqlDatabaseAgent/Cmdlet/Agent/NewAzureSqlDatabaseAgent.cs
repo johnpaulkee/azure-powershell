@@ -25,7 +25,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true), OutputType(typeof(AzureSqlDatabaseAgentModel))]
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
     public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
@@ -66,7 +67,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
+        protected override AzureSqlDatabaseAgentModel GetEntity()
         {
             try
             {
@@ -96,22 +97,20 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
+        protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
         {
             string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.AgentServerName);
 
-            List<AzureSqlDatabaseAgentModel> newEntity = new List<AzureSqlDatabaseAgentModel>
+            AzureSqlDatabaseAgentModel newEntity = new AzureSqlDatabaseAgentModel
             {
-                new AzureSqlDatabaseAgentModel
-                {
                     Location = location,
                     ResourceGroupName = this.ResourceGroupName,
                     AgentServerName = this.AgentServerName,
                     AgentName = this.AgentName,
                     AgentDatabaseName = this.AgentDatabaseName,
-                    Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
-                }
+                    Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true)
             };
+
             return newEntity;
         }
 
@@ -120,12 +119,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
+        protected override AzureSqlDatabaseAgentModel PersistChanges(AzureSqlDatabaseAgentModel entity)
         {
-            return new List<AzureSqlDatabaseAgentModel>
-            {
-                ModelAdapter.UpsertSqlDatabaseAgent(entity.First())
-            };
+            return ModelAdapter.UpsertSqlDatabaseAgent(entity);
         }
     }
 }

@@ -21,6 +21,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
     /// </summary>
     public class AzureSqlDatabaseAgentModel
     {
+        public AzureSqlDatabaseAgentModel()
+        {
+        }
+
         /// <summary>
         /// Gets or sets the name of the resource group the Sql Database Agent is in
         /// </summary>
