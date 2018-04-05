@@ -28,20 +28,26 @@ function Test-CreateJobCredential
 
     # Credential params
     $cn1 = "credName1"
+    $cn2 = "credName2"
     $u1 = "testusername"
 	$p1 = "t357ingP@s5w0rd!"
-	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force)) 
+	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
 
     try 
     {
     	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName `
             -CredentialName $cn1 -Credential $c1
-
-        # Default create agent
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp1.ServerName $s1.ServerName
         Assert-AreEqual $resp1.CredentialName $cn1
         Assert-AreEqual $resp1.UserName $c1.UserName
+
+        # Test piping
+        $resp2 = $a1 | New-AzureRmSqlDatabaseAgentJobCredential -CredentialName $cn2 -Credential $c1
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.CredentialName $cn2
+        Assert-AreEqual $resp2.UserName $c1.UserName
     }
     finally
     {
@@ -58,28 +64,36 @@ function Test-CreateJobCredential
 function Test-GetJobCredential
 {
     # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
+    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
 
-    $credName = "cred1"
-    $userName = "testusername"
-	$password = "t357ingP@s5w0rd!"
-    $cred = new-object System.Management.Automation.PSCredential($userName, ($password | ConvertTo-SecureString -asPlainText -Force))
+    # Credential params
+    $cn1 = "credName1"
+    $cn2 = "credName2"
+    $u1 = "testusername"
+	$p1 = "t357ingP@s5w0rd!"
+	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
 
-    $jobCredential = Create-JobCredentialForTest $rg $server $agent $credName $cred
-
+    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn1 $c1
+    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn2 $c1
+        
     try 
     {
-        $resp = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-            -CredentialName $credName
+        # Test parameters
+        $resp1 = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName `
+            -CredentialName $cn1
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $c1.UserName
 
-        Assert-AreEqual $resp.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $resp.ServerName $server.ServerName
-        Assert-AreEqual $resp.AgentName $agent.AgentName
-        Assert-AreEqual $resp.CredentialName $jobCredential.CredentialName
-        Assert-AreEqual $resp.UserName $jobCredential.UserName
+        # Test piping - Get all credentials in agent
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
+        Assert-AreEqual $resp2.Count 2
+		($jc1, $jc2) | ForEach-Object { Assert-True {$_.UserName -in $all.UserName} }
     }
     finally
     {
@@ -96,38 +110,49 @@ function Test-GetJobCredential
 function Test-UpdateJobCredential
 {
     # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
+    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
 
-    # Create cred 1
-    $credName = "cred1"
-    $userName = "testusername"
-	$password = "t357ingP@s5w0rd!"
-    $cred = new-object System.Management.Automation.PSCredential($userName, ($password | ConvertTo-SecureString -asPlainText -Force))
+    # Credential params
+    $cn1 = "credName1"
+    $cn2 = "credName2"
+    $u1 = "testusername"
+	$p1 = "t357ingP@s5w0rd!"
+	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
 
-    $jobCredential1 = Create-JobCredentialForTest $rg $server $agent $credName $cred
-    Assert-NotNull $jobCredential1
-
-    # Create cred 2
-    $credName = "cred2"    
-    $jobCredential2 = Create-JobCredentialForTest $rg $server $agent $credName $cred
-    Assert-NotNull $cred2
+    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn1 $c1
+    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn2 $c1
 
     try
     {
-        # Update cred 1
-        $newUserName = "newUser"
-        $newPassword = "Yukon900!"
-        $newCred = new-object System.Management.Automation.PSCredential($jobCredential1.newUserName, ($newPassword | ConvertTo-SecureString -asPlainText -Force))
+        $u2 = "newUserName"
+        $p2 = "newPassword"
+      	$c2 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
 
-        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName -CredentialName $cred1.CredentialName -Credential $newCred
-        Assert-AreEqual $resp1.UserName $newUserName
-        
-        # Update cred 2 through piping
-        $resp2 = $cred2 | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $newCred
+        # Test parameters
+        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -CredentialName $cn1 -Credential $c2
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $c1.UserName
+
+        # Test piping
+        $resp2 = $jc2 | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $c2
         Assert-AreEqual $resp2.UserName $newUserName
+
+        $u3 = "oneMoreUserName"
+        $p3 = "oneMoreTime"
+      	$c3 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
+
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
+        Assert-AreEqual $all.Count 2
+
+        $setAll = $all | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $c3
+        Assert-AreEqual $setAll.Count 2
+        $setAll | % { Assert-AreEqual $_.UserName $c3.UserName }
     }
     finally 
     {
@@ -144,35 +169,36 @@ function Test-UpdateJobCredential
 function Test-RemoveJobCredential
 {
     # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
+    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
 
-    # Create cred 1
-    $credName = "cred1"
-    $userName = "testusername"
-	$password = "t357ingP@s5w0rd!"
-    $cred = new-object System.Management.Automation.PSCredential($userName, ($password | ConvertTo-SecureString -asPlainText -Force))
+    # Credential params
+    $cn1 = "credName1"
+    $cn2 = "credName2"
+    $u1 = "testusername"
+	$p1 = "t357ingP@s5w0rd!"
+	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
 
-    $jobCredential1 = Create-JobCredentialForTest $rg $server $agent $credName $cred
-    Assert-NotNull $jobCredential1
-
-    # Create cred 2
-    $credName = "cred2"    
-    $jobCredential2 = Create-JobCredentialForTest $rg $server $agent $credName $cred
-    Assert-NotNull $cred2
+    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn1 $c1
+    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn2 $c1
 
     try
     {
-        # Remove cred 1
-        Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName -CredentialName $cred1.CredentialName
+        # Test using params
+        Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -CredentialName $cn1
         
-        # Remove cred 2 through piping
-        $cred2 | Remove-AzureRmSqlDatabaseAgentJobCredential
+        # Test using piping
+        $jc2 | Remove-AzureRmSqlDatabaseAgentJobCredential
         
-        # Check that credentials are deleted.
-        $all = $agent | Get-AzureRmSqlDatabaseAgentJobCredential
+        # Check only 1 credential is left
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
+        Assert-AreEqual $all.Count 1
+
+        # Check that no creds are left
+        $all | Remove-AzureRmSqlDatabaseAgentJobCredential
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
         Assert-AreEqual $all.Count 0
     }
     finally 
