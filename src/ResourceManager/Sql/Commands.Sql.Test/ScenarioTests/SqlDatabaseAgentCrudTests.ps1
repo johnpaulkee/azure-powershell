@@ -233,3 +233,22 @@ function Test-SetAgentWithInputObject
     $agent = Get-AzureRmSqlDatabaseAgent -Name agent -ServerName ps6926 -ResourceGroupName ps2525
     Set-AzureRmSqlDatabaseAgent -InputObject $agent -Tag @{ Dept="CS" }
 }
+
+function Test-NewAgentWithInputObject
+{
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
+    $a1 = New-AzureRmSqlDatabaseAgent -InputObject $db1 -Name "agent"
+    Assert-AreEqual $a1.AgentName "agent"
+    Assert-AreEqual $a1.ServerName $s1.ServerName
+    Assert-AreEqual $a1.DatabaseName $db1.DatabaseName
+    Assert-AreEqual $a1.ResourceGroupName $rg1.ResourceGroupName
+    Assert-AreEqual $a1.Location $s1.Location
+    Assert-AreEqual $a1.WorkerCount 100
+}
+
+function Test-NewAgentWithResourceId
+{
+    New-AzureRmSqlDatabaseAgent -ResourceId /subscriptions/1b132fbc-df61-4dd8-bba0-71d7d4277eda/resourceGroups/ps2525/providers/Microsoft.Sql/servers/ps6926/databases/db1 -Name "agent"
+}

@@ -19,6 +19,8 @@ using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Commands.Sql.Database.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -35,10 +37,34 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "SQL Database Agent Resource Group Name.")]
+        [ValidateNotNullOrEmpty]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the database to use
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            ParameterSetName = DefaultParameterSet,
             HelpMessage = "SQL Database Agent Database Name.")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentDatabaseName")]
         public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the database to use
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "SQL Database Agent Server Name.")]
+        [ValidateNotNullOrEmpty]
+        [Alias("AgentServerName")]
+        public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent to create
@@ -46,7 +72,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent name.")]
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 1,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 1,
+            HelpMessage = "SQL Database Agent Name.")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
@@ -57,6 +94,53 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
         public Hashtable Tag { get; set; }
+
+        /// <summary>
+        /// The Azure SQL Database Input Object
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Object ID")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseModel InputObject { get; set; }
+
+        /// <summary>
+        /// The Azure SQL Database Resource Id
+        /// </summary>
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Resource ID")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.DatabaseName = InputObject.DatabaseName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.DatabaseName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the agent already exists in this resource group.
