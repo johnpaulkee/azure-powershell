@@ -32,25 +32,31 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             HelpMessage = "SQL Database Agent Job Credential")]
         [Alias("TargetGroup")]
-        public string TargetGroupName { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            // Lets us return a list of agents
+            if (this.Name == null)
+            {
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets one or more credentials from the Azure SQL Database Agent
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
+        protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("TargetGroupName"))
-            {
-                return new List<AzureSqlDatabaseAgentTargetGroupModel>
-                {
-                    ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName)
-                };
-            }
-            else
-            {
-                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName);
-            }
+            return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
         }
     }
 }

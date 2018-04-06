@@ -21,7 +21,7 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlCmdletBase<IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>, AzureSqlDatabaseAgentTargetGroupAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
         /// <summary>
         /// Gets or sets the name of the server to use

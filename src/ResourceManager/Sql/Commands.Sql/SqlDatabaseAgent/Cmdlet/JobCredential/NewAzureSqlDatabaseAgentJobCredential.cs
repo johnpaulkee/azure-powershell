@@ -19,6 +19,7 @@ using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -29,6 +30,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
     public class NewAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
+        /// <summary>
+        /// Server Dns Alias object to remove
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+
+        /// <summary>
+		/// Gets or sets the resource id of the SQL Database Agent
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource id of the credential to remove")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
         /// <summary>
         /// Gets or sets the agent's number of workers
         /// </summary>
@@ -47,8 +70,44 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
-            HelpMessage = "SQL Database Agent Job Credential with Username and Password")]
+            HelpMessage = "The Job Credential")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The Job Credential")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The Job Credential")]
+        [ValidateNotNullOrEmpty]
         public PSCredential Credential { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.AgentName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the credential already exists for the agent.

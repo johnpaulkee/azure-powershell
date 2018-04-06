@@ -44,12 +44,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
+        protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
         {
-            return new List<AzureSqlDatabaseAgentTargetGroupModel>()
-            {
-                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName)
-            };
+            return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
         }
 
         /// <summary>
@@ -57,7 +54,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">Model retrieved from service</param>
         /// <returns>The model that was passed in</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> model)
+        protected override AzureSqlDatabaseAgentTargetGroupModel ApplyUserInputToModel(AzureSqlDatabaseAgentTargetGroupModel model)
         {
             return model;
         }
@@ -67,7 +64,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> entity)
+        protected override AzureSqlDatabaseAgentTargetGroupModel PersistChanges(AzureSqlDatabaseAgentTargetGroupModel entity)
         {
             ModelAdapter.RemoveTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
             return entity;
