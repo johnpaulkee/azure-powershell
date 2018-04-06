@@ -125,8 +125,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 ServerName = serverName,
                 AgentName = agentName,
                 CredentialName = resp.Name,
-                UserName = resp.Username
-                // Check if password is needed. From examples it looks like it's not needed.
+                UserName = resp.Username,
+                ResourceId = resp.Id
             };
 
             return credential;

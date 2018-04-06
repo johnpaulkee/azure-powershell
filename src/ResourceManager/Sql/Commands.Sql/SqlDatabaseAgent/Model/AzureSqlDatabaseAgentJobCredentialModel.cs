@@ -51,5 +51,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// Gets or sets the password
         /// </summary>
         public SecureString Password { get; set; }
+
+        /// <summary>
+        /// The credential resource id
+        /// </summary>
+        public string ResourceId { get; set; }
     }
 }

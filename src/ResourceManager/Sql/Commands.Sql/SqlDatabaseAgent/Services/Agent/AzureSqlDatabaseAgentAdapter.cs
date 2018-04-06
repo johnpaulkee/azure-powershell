@@ -145,6 +145,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 WorkerCount = workerCount,
                 ResourceId = resp.Id,
                 Tags = TagsConversionHelper.CreateTagDictionary(TagsConversionHelper.CreateTagHashtable(resp.Tags), false),
+                DatabaseId = resp.DatabaseId
             };
 
             return agent;

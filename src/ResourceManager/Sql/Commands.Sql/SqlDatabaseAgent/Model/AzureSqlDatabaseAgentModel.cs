@@ -56,6 +56,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string ResourceId { get; set; }
 
         /// <summary>
+        ///  The SQL Database Agent Control Database Id
+        /// </summary>
+        public string DatabaseId { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent's number of workers.
         /// </summary>
         public int? WorkerCount { get; set; }
