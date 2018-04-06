@@ -21,12 +21,28 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlCmdletBase<IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>, AzureSqlDatabaseAgentJobCredentialAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentJobCredentialAdapter>
     {
+        protected const string DefaultParameterSet = "Job Credential Default Parameter Set";
+        protected const string InputObjectParameterSet = "Job Credential Input Object Parameter Set";
+        protected const string ResourceIdParameterSet = "Job Credential Resource Id Parameter Set";
+
         /// <summary>
         /// Gets or sets the name of the SQL Database Agent Server to use
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "SQL Database Agent Resource Group Name.")]
+        [ValidateNotNullOrEmpty]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the SQL Database Agent Server to use
+        /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name.")]
@@ -37,7 +53,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the name of the agent to create
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "SQL Database Agent Name.")]

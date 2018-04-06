@@ -30,10 +30,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string InputObjectParameterSet = "SQL Database Agent Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "SQL Database Agent Resource Id Parameter Set";
 
+
+        /// <summary>
+        /// Gets or sets the resource group name
+        /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "SQL Database Agent Server Name")]
+        public override string ResourceGroupName { get; set; }
+
         /// <summary>
         /// Gets or sets the agent server name
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name")]

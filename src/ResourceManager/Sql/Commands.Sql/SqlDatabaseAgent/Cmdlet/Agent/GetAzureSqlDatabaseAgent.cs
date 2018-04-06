@@ -29,7 +29,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the agent name
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "SQL Database Agent Name")]

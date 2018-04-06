@@ -32,70 +32,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the name of the database to use
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            ParameterSetName = DefaultParameterSet,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
-        [ValidateNotNullOrEmpty]
-        public override string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the database to use
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            ParameterSetName = DefaultParameterSet,
-            HelpMessage = "SQL Database Agent Database Name.")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentDatabaseName")]
-        public string DatabaseName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the database to use
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            ParameterSetName = DefaultParameterSet,
-            HelpMessage = "SQL Database Agent Server Name.")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentServerName")]
-        public override string ServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the agent to create
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            ParameterSetName = DefaultParameterSet,
-            HelpMessage = "SQL Database Agent Name.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Name.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Name.")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentName")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The tags to assocciate wit the Azure SQL Database Server
-        /// </summary>
-        [Parameter(Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
-        public Hashtable Tag { get; set; }
-
-        /// <summary>
         /// The Azure SQL Database Input Object
         /// </summary>
         [Parameter(ParameterSetName = InputObjectParameterSet,
@@ -116,6 +52,58 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The SQL Database Resource ID")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the database to use
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "SQL Database Agent Database Name.")]
+        [ValidateNotNullOrEmpty]
+        [Alias("AgentDatabaseName")]
+        public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the agent to create
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 1,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 1,
+            HelpMessage = "SQL Database Agent Name.")]
+        [ValidateNotNullOrEmpty]
+        [Alias("AgentName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The tags to assocciate wit the Azure SQL Database Server
+        /// </summary>
+        [Parameter(Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 4)]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = false,
+            Position = 2,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = false,
+            Position = 2,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
+        [ValidateNotNullOrEmpty]
+        public Hashtable Tag { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet

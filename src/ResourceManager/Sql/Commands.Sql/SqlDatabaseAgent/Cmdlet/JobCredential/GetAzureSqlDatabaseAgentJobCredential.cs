@@ -21,36 +21,45 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the Get-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true), OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true)]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
     public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
         /// Gets or sets the name of the agent to create
         /// </summary>
         [Parameter(Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Credential Name.")]
         [ValidateNotNullOrEmpty]
-        public string CredentialName { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            // Lets us return a list of agents
+            if (this.Name == null)
+            {
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.Name), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets one or more credentials from the Azure SQL Database Agent
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
+        protected override AzureSqlDatabaseAgentJobCredentialModel GetEntity()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("CredentialName"))
-            {
-                return new List<AzureSqlDatabaseAgentJobCredentialModel>
-                {
-                    ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName)
-                };
-            }
-            else
-            {
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName);
-            }
+            return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
         }
     }
 }

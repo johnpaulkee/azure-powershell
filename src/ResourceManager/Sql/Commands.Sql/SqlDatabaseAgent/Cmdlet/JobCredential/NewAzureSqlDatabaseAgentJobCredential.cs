@@ -25,22 +25,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true), OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true)]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
     public class NewAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
         /// Gets or sets the agent's number of workers
         /// </summary>
         [Parameter(Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Job Credential")]
-        public string CredentialName { get; set; }
+        [Alias("CredentialName")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job credential user name
         /// </summary>
         [Parameter(Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "SQL Database Agent Job Credential with Username and Password")]
@@ -50,12 +54,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
+        protected override AzureSqlDatabaseAgentJobCredentialModel GetEntity()
         {
             try
             {
-                WriteDebugWithTimestamp("CredentialName: {0}", CredentialName);
-                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
+                WriteDebugWithTimestamp("CredentialName: {0}", Name);
+                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -71,7 +75,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
             // The credential already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialExists, this.CredentialName, this.AgentName),
+                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialExists, this.Name, this.AgentName),
                 "CredentialName");
         }
 
@@ -80,19 +84,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> model)
+        protected override AzureSqlDatabaseAgentJobCredentialModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobCredentialModel model)
         {
-            List<AzureSqlDatabaseAgentJobCredentialModel> newCredential = new List<AzureSqlDatabaseAgentJobCredentialModel>
+            AzureSqlDatabaseAgentJobCredentialModel newCredential = new AzureSqlDatabaseAgentJobCredentialModel
             {
-                new AzureSqlDatabaseAgentJobCredentialModel
-                {
-                    ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.ServerName,
-                    AgentName = this.AgentName,
-                    CredentialName = this.CredentialName,
-                    UserName = this.Credential.UserName,
-                    Password = this.Credential.Password,
-                }
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.AgentName,
+                CredentialName = this.Name,
+                UserName = this.Credential.UserName,
+                Password = this.Credential.Password,
             };
 
             return newCredential;
@@ -103,12 +104,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> entity)
+        protected override AzureSqlDatabaseAgentJobCredentialModel PersistChanges(AzureSqlDatabaseAgentJobCredentialModel entity)
         {
-            return new List<AzureSqlDatabaseAgentJobCredentialModel>
-            {
-                ModelAdapter.UpsertJobCredential(entity.First())
-            };
+            return ModelAdapter.UpsertJobCredential(entity);
         }
     }
 }

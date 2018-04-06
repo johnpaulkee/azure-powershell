@@ -31,27 +31,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Server Dns Alias object to remove
         /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultParameterSet,
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "SQL Database Agent name.")]
+            HelpMessage = "The SQL Database Agent object to remove")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceGroupName { get; set; }
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
-        /// </summary>
-        [Parameter(Mandatory = true,
+		/// Gets or sets the resource id of the SQL Database Agent
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultParameterSet,
-            Position = 1,
-            HelpMessage = "SQL Database Agent name.")]
+            Position = 0,
+            HelpMessage = "The resource id of the SQL Database Agent object to remove")]
         [ValidateNotNullOrEmpty]
-        [Alias("AgentServerName")]
-        public override string ServerName { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent to create
@@ -83,28 +82,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 1,
             ParameterSetName = ResourceIdParameterSet)]
         public Hashtable Tag { get; set; }
-
-        /// <summary>
-        /// Server Dns Alias object to remove
-        /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The SQL Database Agent object to remove")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
-
-        /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource id of the SQL Database Agent object to remove")]
-        [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
