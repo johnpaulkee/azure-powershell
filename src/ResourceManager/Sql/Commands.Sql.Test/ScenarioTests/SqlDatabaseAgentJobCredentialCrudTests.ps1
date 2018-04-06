@@ -214,3 +214,29 @@ function Test-RemoveJobCredential
         Remove-ResourceGroupForTest $rg
     }
 }
+
+<#
+	.SYNOPSIS
+	Tests updating a job credential with input object
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateJobCredentialWithInputObject
+{
+ 	$c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
+    $cred = Get-AzureRmSqlDatabaseAgentJobCredential -Name cred1 -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
+    Set-AzureRmSqlDatabaseAgentJobCredential -InputObject $cred -Credential $c1
+}
+
+<#
+	.SYNOPSIS
+	Tests updating a job credential with resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateJobCredentialWithResourceId
+{
+ 	$c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
+    $cred = Get-AzureRmSqlDatabaseAgentJobCredential -Name cred1 -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
+    Set-AzureRmSqlDatabaseAgentJobCredential -ResourceId $cred.ResourceId -Credential $c1
+}

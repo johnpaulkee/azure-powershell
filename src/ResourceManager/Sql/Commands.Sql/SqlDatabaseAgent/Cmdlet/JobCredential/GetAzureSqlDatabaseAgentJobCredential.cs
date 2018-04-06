@@ -35,6 +35,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             HelpMessage = "SQL Database Agent Credential Name.")]
         [ValidateNotNullOrEmpty]
+        [Alias("CredentialName")]
         public string Name { get; set; }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             if (this.Name == null)
             {
                 ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
-                WriteObject(ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.Name), true);
+                WriteObject(ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName), true);
                 return;
             }
 

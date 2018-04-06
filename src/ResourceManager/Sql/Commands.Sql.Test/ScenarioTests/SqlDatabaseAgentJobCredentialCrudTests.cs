@@ -53,5 +53,20 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-RemoveJobCredential");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestCredentialUpdateWithInputObject()
+        {
+            RunPowerShellTest("Test-UpdateJobCredentialWithInputObject");
+        }
+
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestCredentialUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateJobCredentialWithResourceId");
+        }
     }
 }

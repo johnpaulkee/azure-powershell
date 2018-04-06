@@ -20,6 +20,7 @@ using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -55,7 +56,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the agent's number of workers
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet, 
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Job Credential")]
@@ -65,10 +67,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the job credential user name
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
-            HelpMessage = "SQL Database Agent Job Credential with Username and Password")]
+            HelpMessage = "The credential to update")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The credential to update")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The credential to update")]
         public PSCredential Credential { get; set; }
 
         /// <summary>
@@ -81,13 +94,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 case InputObjectParameterSet:
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
-                    this.Name = InputObject.AgentName;
+                    this.AgentName = InputObject.AgentName;
+                    this.Name = InputObject.CredentialName;
                     break;
                 case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.Name = resourceInfo.ResourceName;
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.Name = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;

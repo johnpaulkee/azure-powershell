@@ -60,6 +60,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Job Credential")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The Job Credential")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The Job Credential")]
         [Alias("CredentialName")]
         public string Name { get; set; }
 
@@ -74,12 +84,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
-            Position = 1,
+            Position = 2,
             HelpMessage = "The Job Credential")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
-            Position = 1,
+            Position = 2,
             HelpMessage = "The Job Credential")]
         [ValidateNotNullOrEmpty]
         public PSCredential Credential { get; set; }
