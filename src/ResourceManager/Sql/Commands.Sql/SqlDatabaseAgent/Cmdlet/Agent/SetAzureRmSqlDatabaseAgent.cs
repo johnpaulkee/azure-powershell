@@ -19,6 +19,7 @@ using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -34,18 +35,101 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
+            ParameterSetName = DefaultParameterSet,
+            Position = 0,
+            HelpMessage = "SQL Database Agent name.")]
+        [ValidateNotNullOrEmpty]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the agent to create
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = DefaultParameterSet,
+            Position = 1,
+            HelpMessage = "SQL Database Agent name.")]
+        [ValidateNotNullOrEmpty]
+        [Alias("AgentServerName")]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the agent to create
+        /// </summary>
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = DefaultParameterSet,
             Position = 2,
             HelpMessage = "SQL Database Agent name.")]
         [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
+        [Alias("AgentName")]
+        public string Name { get; set; }
 
         /// <summary>
         /// The tags to assocciate wit the Azure SQL Database Server
+        /// Note: Tag is default mandatory right now for public preview.
+        /// When WorkerCount is exposed, this doesn't need to be mandatory.
         /// </summary>
         [Parameter(Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
-        [Alias("Tag")]
-        public Hashtable Tags { get; set; }
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 3,
+            ParameterSetName = DefaultParameterSet)]
+        [Parameter(Mandatory = false,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 1,
+            ParameterSetName = InputObjectParameterSet)]
+        [Parameter(Mandatory = false,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 1,
+            ParameterSetName = ResourceIdParameterSet)]
+        public Hashtable Tag { get; set; }
+
+        /// <summary>
+        /// Server Dns Alias object to remove
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent object to remove")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+
+        /// <summary>
+		/// Gets or sets the resource id of the SQL Database Agent
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource id of the SQL Database Agent object to remove")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.Name = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.Name = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the agent already exists in this resource group.
@@ -55,8 +139,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             try
             {
-                WriteDebugWithTimestamp("AgentName: {0}", AgentName);
-                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                WriteDebugWithTimestamp("AgentName: {0}", Name);
+                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -64,7 +148,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 {
                     // The agent does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.AgentServerName),
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.Name, this.ServerName),
                         "AgentName");
                 }
 
@@ -80,15 +164,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
         {
-            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.AgentServerName);
+            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
 
             AzureSqlDatabaseAgentModel newEntity = new AzureSqlDatabaseAgentModel
             {
                 Location = location,
                 ResourceGroupName = this.ResourceGroupName,
-                AgentServerName = this.AgentServerName,
-                AgentName = this.AgentName,
-                AgentDatabaseName = model.AgentDatabaseName,
+                ServerName = this.ServerName,
+                AgentName = this.Name,
+                DatabaseName = model.DatabaseName,
                 Tags = TagsConversionHelper.ReadOrFetchTags(this, model.Tags),
             };
 

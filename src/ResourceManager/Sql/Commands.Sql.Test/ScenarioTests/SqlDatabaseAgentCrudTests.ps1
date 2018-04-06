@@ -226,3 +226,10 @@ function Test-GetAllAgents
 {
     Get-AzureRmSqlDatabaseAgent -AgentServerName sjobaccount35 -ResourceGroupName Job_Account_Test
 }
+
+
+function Test-SetAgentWithInputObject
+{
+    $agent = Get-AzureRmSqlDatabaseAgent -Name agent -ServerName ps6926 -ResourceGroupName ps2525
+    Set-AzureRmSqlDatabaseAgent -InputObject $agent -Tag @{ Dept="CS" }
+}

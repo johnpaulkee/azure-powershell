@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Rest.Azure;
 using System.Collections.Generic;
@@ -25,21 +25,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// Defines the Remove-AzureRmSqlDatabaseAgent cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
-    [OutputType(typeof(Model.AzureSqlDatabaseAgentModel))]
+    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
     public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Parameter sets
-        /// </summary>
-        protected const string RemoveDefaultParameterSet = "Remove a SQL Database Agent using default parameters";
-        protected const string RemoveByInputObjectParameterSet = "Remove a SQL Database Agent from Model.AzureSqlDatabaseAgentModel instance definition";
-        protected const string RemoveByResourceIdParameterSet = "Remove a  SQL Database Agent from an Azure resource id";
-
-
-        /// <summary>
         /// Gets or sets the agent server name
         /// </summary>
-        [Parameter(ParameterSetName = RemoveDefaultParameterSet,
+        [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -49,40 +41,41 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the agent server name
         /// </summary>
-        [Parameter(ParameterSetName = RemoveDefaultParameterSet,
+        [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name")]
         [Alias("ServerName")]
-        public override string AgentServerName { get; set; }
+        public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent to use.
         /// </summary>
-        [Parameter(ParameterSetName = RemoveDefaultParameterSet,
+        [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "SQL Database Agent Name.")]
         [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
+        [Alias("AgentName")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Server Dns Alias object to remove
         /// </summary>
-        [Parameter(ParameterSetName = RemoveByInputObjectParameterSet,
+        [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The SQL Database Agent object to remove")]
         [ValidateNotNullOrEmpty]
-        public Model.AzureSqlDatabaseAgentModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the resource id of the SQL Database Agent
 		/// </summary>
-		[Parameter(ParameterSetName = RemoveByResourceIdParameterSet,
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -101,26 +94,30 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
+
             if (!Force.IsPresent && 
-                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.AgentName, this.AgentServerName),
-                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.AgentName, this.AgentServerName),
+                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.Name, this.ServerName),
+                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.Name, this.ServerName),
                                Properties.Resources.ShouldProcessCaption))
             {
                 return;
             }
 
-            if (string.Equals(ParameterSetName, RemoveByInputObjectParameterSet, System.StringComparison.OrdinalIgnoreCase))
+            switch (ParameterSetName)
             {
-                this.ResourceGroupName = InputObject.ResourceGroupName;
-                this.AgentServerName = InputObject.AgentServerName;
-                this.AgentName = InputObject.AgentName;
-            }
-            else if (string.Equals(this.ParameterSetName, RemoveByResourceIdParameterSet, System.StringComparison.OrdinalIgnoreCase))
-            {
-                var resourceInfo = new ResourceIdentifier(ResourceId);
-                this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                this.AgentServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                this.AgentName = resourceInfo.ResourceName;
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.Name = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.Name = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
             }
 
             base.ExecuteCmdlet();
@@ -130,13 +127,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Gets the entity to delete
         /// </summary>
         /// <returns>The entity going to be deleted</returns>
-        protected override Model.AzureSqlDatabaseAgentModel GetEntity()
+        protected override AzureSqlDatabaseAgentModel GetEntity()
         {
             try
             {
-                WriteDebugWithTimestamp("AgentName: {0}", AgentName);
+                WriteDebugWithTimestamp("AgentName: {0}", Name);
 
-                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -144,7 +141,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 {
                     // The sql database agent does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.AgentName, this.AgentServerName),
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.Name, this.ServerName),
                         "AgentName");
                 }
 
@@ -158,7 +155,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">The result of GetEntity</param>
         /// <returns>The input model</returns>
-        protected override Model.AzureSqlDatabaseAgentModel ApplyUserInputToModel(Model.AzureSqlDatabaseAgentModel model)
+        protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
         {
             return model;
         }
@@ -168,9 +165,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The job account being deleted</param>
         /// <returns>The job account that was deleted</returns>
-        protected override Model.AzureSqlDatabaseAgentModel PersistChanges(Model.AzureSqlDatabaseAgentModel entity)
+        protected override AzureSqlDatabaseAgentModel PersistChanges(AzureSqlDatabaseAgentModel entity)
         {
-            ModelAdapter.RemoveSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+            ModelAdapter.RemoveSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
             return entity;
         }
     }

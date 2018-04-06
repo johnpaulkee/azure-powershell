@@ -24,14 +24,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public abstract class AzureSqlDatabaseAgentCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
+        /// Parameter sets
+        /// </summary>
+        protected const string DefaultParameterSet = "SQL Database Agent Default Parameter Set";
+        protected const string InputObjectParameterSet = "SQL Database Agent Input Object Parameter Set";
+        protected const string ResourceIdParameterSet = "SQL Database Agent Resource Id Parameter Set";
+
+        /// <summary>
         /// Gets or sets the agent server name
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name")]
-        [Alias("ServerName")]
-        public virtual string AgentServerName { get; set; }
+        [Alias("AgentServerName")]
+        public virtual string ServerName { get; set; }
 
         /// <summary>
         /// Intializes the model adapter

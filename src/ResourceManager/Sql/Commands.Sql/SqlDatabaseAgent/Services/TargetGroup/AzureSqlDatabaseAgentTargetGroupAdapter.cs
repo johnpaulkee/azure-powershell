@@ -53,8 +53,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 Members = model.Members,
             };
 
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, model.TargetGroupName, param);
-            return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.AgentServerName, model.AgentName, resp);
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.TargetGroupName, param);
+            return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             AzureSqlDatabaseAgentTargetGroupModel targetGroup = new AzureSqlDatabaseAgentTargetGroupModel
             {
                 ResourceGroupName = resourceGroupName,
-                AgentServerName = serverName,
+                ServerName = serverName,
                 AgentName = agentName,
                 TargetGroupName = resp.Name,
                 Members = resp.Members

@@ -44,12 +44,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 return new List<AzureSqlDatabaseAgentJobCredentialModel>
                 {
-                    ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.CredentialName)
+                    ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName)
                 };
             }
             else
             {
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName);
             }
         }
     }

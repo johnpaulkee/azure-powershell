@@ -63,7 +63,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
             {
                 ResourceGroupName = this.ResourceGroupName,
-                AgentServerName = this.AgentServerName,
+                ServerName = this.AgentServerName,
                 AgentName = this.AgentName,
                 TargetGroupName = this.TargetGroupName,
                 Members = updatedTargets.ToList()

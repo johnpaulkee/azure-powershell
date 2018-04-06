@@ -33,7 +33,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "SQL Database Agent Name")]
-        public string AgentName { get; set; }
+        [Alias("AgentName")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
@@ -41,10 +42,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override void ExecuteCmdlet()
         {
             // Lets us return a list of agents
-            if (!this.MyInvocation.BoundParameters.ContainsKey("AgentName"))
+            if (this.Name == null)
             {
                 ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
-                WriteObject(ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName), true);
+                WriteObject(ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName), true);
                 return;
             }
 
@@ -57,7 +58,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns></returns>
         protected override AzureSqlDatabaseAgentModel GetEntity()
         {
-            return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+            return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// Gets or sets the name of the server
         /// </summary>
-        public string AgentServerName { get; set; }
+        public string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the azure sql database agent name

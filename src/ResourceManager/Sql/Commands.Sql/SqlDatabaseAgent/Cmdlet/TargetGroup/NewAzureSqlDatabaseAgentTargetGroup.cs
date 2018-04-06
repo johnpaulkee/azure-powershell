@@ -35,6 +35,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Target Group Name")]
+        [Alias("TargetGroup")]
         public string TargetGroupName { get; set; }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("TargetGroupName: {0}", TargetGroupName);
-                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName);
+                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
             }
             catch (CloudException ex)
             {
@@ -78,7 +79,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 new AzureSqlDatabaseAgentTargetGroupModel
                 {
                     ResourceGroupName = this.ResourceGroupName,
-                    AgentServerName = this.AgentServerName,
+                    ServerName = this.ServerName,
                     AgentName = this.AgentName,
                     TargetGroupName = this.TargetGroupName,
                     Members = new List<Management.Sql.Models.JobTarget>{},

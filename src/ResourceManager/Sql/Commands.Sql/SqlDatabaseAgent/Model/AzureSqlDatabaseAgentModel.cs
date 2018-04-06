@@ -33,7 +33,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// Gets or sets the name of the server
         /// </summary>
-        public string AgentServerName { get; set; }
+        public string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the azure sql database agent name
@@ -48,12 +48,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// Gets or sets the database name for the sql database agent name.
         /// </summary>
-        public string AgentDatabaseName { get; set; }
+        public string DatabaseName { get; set; }
 
         /// <summary>
         /// The SQL Database Agent Resource Id
         /// </summary>
-        public string Id { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent's number of workers.

@@ -73,6 +73,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Target Group Name")]
+        [Alias("TargetGroup")]
         public string TargetGroupName { get; set; }
 
         /// <summary>

@@ -52,8 +52,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string databaseId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/databases/{3}",
                 AzureSqlDatabaseAgentCommunicator.Subscription.Id,
                 model.ResourceGroupName,
-                model.AgentServerName,
-                model.AgentDatabaseName);
+                model.ServerName,
+                model.DatabaseName);
 
             var param = new Management.Sql.Models.JobAgent
             {
@@ -62,9 +62,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 DatabaseId = databaseId
             };
 
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, param);
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, param);
 
-            return CreateAgentModelFromResponse(model.ResourceGroupName, model.AgentServerName, resp);
+            return CreateAgentModelFromResponse(model.ResourceGroupName, model.ServerName, resp);
         }
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 Tags = model.Tags
             };
 
-            var resp = Communicator.Update(model.ResourceGroupName, model.AgentServerName, model.AgentName, param);
+            var resp = Communicator.Update(model.ResourceGroupName, model.ServerName, model.AgentName, param);
 
-            return CreateAgentModelFromResponse(model.ResourceGroupName, model.AgentServerName, resp);
+            return CreateAgentModelFromResponse(model.ResourceGroupName, model.ServerName, resp);
         }
 
         /// <summary>
@@ -138,12 +138,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             AzureSqlDatabaseAgentModel agent = new AzureSqlDatabaseAgentModel
             {
                 ResourceGroupName = resourceGroupName,
-                AgentServerName = serverName,
+                ServerName = serverName,
                 AgentName = resp.Name,
                 Location = resp.Location,
-                AgentDatabaseName = databaseName,
+                DatabaseName = databaseName,
                 WorkerCount = workerCount,
-                Id = resp.Id,
+                ResourceId = resp.Id,
                 Tags = TagsConversionHelper.CreateTagDictionary(TagsConversionHelper.CreateTagHashtable(resp.Tags), false),
             };
 

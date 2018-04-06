@@ -47,7 +47,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             return new List<AzureSqlDatabaseAgentJobCredentialModel>()
             {
-                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.CredentialName)
+                ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName)
             };
         }
 
@@ -68,7 +68,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The created job credential</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> entity)
         {
-            ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.CredentialName);
+            ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
             return entity;
         }
     }

@@ -37,8 +37,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 2,
             HelpMessage = "SQL Database Agent Database Name.")]
         [ValidateNotNullOrEmpty]
-        [Alias("DatabaseName")]
-        public string AgentDatabaseName { get; set; }
+        [Alias("AgentDatabaseName")]
+        public string DatabaseName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent to create
@@ -48,7 +48,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             HelpMessage = "SQL Database Agent name.")]
         [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
+        [Alias("AgentName")]
+        public string Name { get; set; }
 
         /// <summary>
         /// The tags to assocciate wit the Azure SQL Database Server
@@ -58,12 +59,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public Hashtable Tag { get; set; }
 
         /// <summary>
-        /// Gets or sets whether or not to run this cmdlet in the background as a job
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
-        public SwitchParameter AsJob { get; set; }
-
-        /// <summary>
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
@@ -71,8 +66,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             try
             {
-                WriteDebugWithTimestamp("AgentName: {0}", AgentName);
-                ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                WriteDebugWithTimestamp("AgentName: {0}", Name);
+                ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -88,7 +83,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
             // The agent already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.AgentName, this.AgentServerName),
+                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.Name, this.ServerName),
                 "AgentName");
         }
 
@@ -99,15 +94,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
         {
-            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.AgentServerName);
+            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
 
             AzureSqlDatabaseAgentModel newEntity = new AzureSqlDatabaseAgentModel
             {
                     Location = location,
                     ResourceGroupName = this.ResourceGroupName,
-                    AgentServerName = this.AgentServerName,
-                    AgentName = this.AgentName,
-                    AgentDatabaseName = this.AgentDatabaseName,
+                    ServerName = this.ServerName,
+                    AgentName = this.Name,
+                    DatabaseName = this.DatabaseName,
                     Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true)
             };
 
