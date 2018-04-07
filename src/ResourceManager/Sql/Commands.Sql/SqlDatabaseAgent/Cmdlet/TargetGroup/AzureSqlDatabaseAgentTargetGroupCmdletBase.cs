@@ -23,10 +23,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
+        protected const string DefaultParameterSet = "Target Group Default Parameter Set";
+        protected const string InputObjectParameterSet = "Target Group Input Object Parameter Set";
+        protected const string ResourceIdParameterSet = "Target Group Resource Id Parameter Set";
+
+        /// <summary>
+        /// Gets or sets the name of the resource group name to use
+        /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "Resource Group Name.")]
+        [ValidateNotNullOrEmpty]
+        public override string ResourceGroupName { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the server to use
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet, 
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Server Name.")]
@@ -37,7 +53,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the name of the agent to create
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = DefaultParameterSet, 
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "SQL Database Agent Name.")]

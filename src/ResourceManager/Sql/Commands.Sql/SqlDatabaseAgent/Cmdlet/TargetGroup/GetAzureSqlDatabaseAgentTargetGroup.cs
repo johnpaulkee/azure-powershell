@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -25,13 +26,48 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class GetAzureSqlDatabaseAgentTargetGroup : AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
+        /// Server Dns Alias object to remove
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+
+        /// <summary>
+		/// Gets or sets the resource id of the SQL Database Agent
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource id of the credential to remove")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent's number of workers
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(
+            ParameterSetName = DefaultParameterSet,
+            Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "SQL Database Agent Job Credential")]
-        [Alias("TargetGroup")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = false,
+            ValueFromPipeline = true,
+            Position = 1,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The resource id of the credential to remove")]
+        [ValidateNotNullOrEmpty]
+        [Alias("TargetGroupName")]
         public string Name { get; set; }
 
         /// <summary>
@@ -39,6 +75,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.AgentName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
             // Lets us return a list of agents
             if (this.Name == null)
             {

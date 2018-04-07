@@ -26,9 +26,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Parameter sets
         /// </summary>
-        protected const string DefaultParameterSet = "SQL Database Agent Default Parameter Set";
-        protected const string InputObjectParameterSet = "SQL Database Agent Input Object Parameter Set";
-        protected const string ResourceIdParameterSet = "SQL Database Agent Resource Id Parameter Set";
+        protected const string DefaultParameterSet = "Agent Default Parameter Set";
+        protected const string InputObjectParameterSet = "Agent Input Object Parameter Set";
+        protected const string ResourceIdParameterSet = "Agent Resource Id Parameter Set";
 
 
         /// <summary>

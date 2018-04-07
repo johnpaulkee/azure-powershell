@@ -42,6 +42,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string TargetGroupName { get; set; }
 
         /// <summary>
+        /// Gets or sets the target group resource id
+        /// </summary>
+        public string ResourceId { get; set; }
+
+        /// <summary>
         /// Gets or sets the target group members
         /// </summary>
         public IList<Management.Sql.Models.JobTarget> Members { get; set; }

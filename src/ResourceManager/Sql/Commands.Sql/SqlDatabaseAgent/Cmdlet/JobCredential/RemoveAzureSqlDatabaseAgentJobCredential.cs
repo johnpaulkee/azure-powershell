@@ -12,6 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
@@ -85,13 +86,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 case InputObjectParameterSet:
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
-                    this.Name = InputObject.AgentName;
+                    this.AgentName = InputObject.AgentName;
+                    this.Name = InputObject.CredentialName;
                     break;
                 case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.Name = resourceInfo.ResourceName;
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.Name = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;
