@@ -58,7 +58,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "SQL Database Agent Job Credential")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The SQL Database Agent Parent Object")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,

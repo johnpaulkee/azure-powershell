@@ -43,7 +43,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
+            ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The resource id of the credential to remove")]
         [ValidateNotNullOrEmpty]
@@ -59,7 +59,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "SQL Database Agent Credential Name.")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The SQL Database Agent Parent Object")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,

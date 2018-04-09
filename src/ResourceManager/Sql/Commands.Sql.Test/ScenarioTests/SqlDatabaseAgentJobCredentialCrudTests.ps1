@@ -302,3 +302,14 @@ function Test-RemoveJobCredentialWithResourceId
     $cred = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name testCred -Credential $c1
     Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceId $cred.ResourceId
 }
+
+<#
+	.SYNOPSIS
+	Tests getting all job credentials from all agents in all servers
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetJobCredentialPipingWithInputObject
+{
+    Get-AzureRmSqlServer | Get-AzureRmSqlDatabaseAgent | Get-AzureRmSqlDatabaseAgentJobCredential
+}

@@ -47,7 +47,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The SQL Database Resource ID")]
         [ValidateNotNullOrEmpty]
@@ -75,12 +75,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "SQL Database Agent Name.")]
         [ValidateNotNullOrEmpty]
