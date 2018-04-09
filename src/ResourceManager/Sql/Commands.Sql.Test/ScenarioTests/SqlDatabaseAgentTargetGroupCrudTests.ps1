@@ -18,7 +18,7 @@
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-CreateTargetGroup
+function Test-CreateServerTarget
 {
     # Setup
     $rg1 = Create-ResourceGroupForTest
