@@ -90,6 +90,40 @@ function Test-GetTargetGroup
 
 <#
 	.SYNOPSIS
+	Tests getting a target group
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetTargetGroupWithInputObject
+{
+    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
+    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tgTestPS
+
+    Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $agent
+    Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $agent -Name tgTestPS
+
+    Remove-AzureRmSqlDatabaseAgentTargetGroup -InputObject $agent -Name tgTestPS
+}
+
+<#
+	.SYNOPSIS
+	Tests getting a target group
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetTargetGroupWithResourceId
+{
+    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
+    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tgTestPS
+
+    Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $agent.ResourceId
+    Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $agent.ResourceId -Name tgTestPS
+
+    Remove-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $agent.ResourceId -Name tgTestPS
+}
+
+<#
+	.SYNOPSIS
 	Tests removing a target group
     .DESCRIPTION
 	SmokeTest

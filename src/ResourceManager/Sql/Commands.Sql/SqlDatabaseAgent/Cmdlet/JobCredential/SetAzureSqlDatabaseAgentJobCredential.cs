@@ -27,7 +27,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the Set-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJobCredential", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
     public class SetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {

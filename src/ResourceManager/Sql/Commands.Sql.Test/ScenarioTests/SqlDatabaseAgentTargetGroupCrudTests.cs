@@ -41,6 +41,20 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupGetWithInputObject()
+        {
+            RunPowerShellTest("Test-GetTargetGroupWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupGetWithResourceId()
+        {
+            RunPowerShellTest("Test-GetTargetGroupWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetGroupUpdate()
         {
             RunPowerShellTest("Test-UpdateTargetGroup");

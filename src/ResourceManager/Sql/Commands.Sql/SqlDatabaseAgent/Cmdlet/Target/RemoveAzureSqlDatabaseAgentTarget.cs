@@ -24,7 +24,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTarget", SupportsShouldProcess = true), OutputType(typeof(JobTarget))]
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTarget", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = SqlDatabaseSet), 
+        OutputType(typeof(JobTarget))]
     public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
         private JobTarget Target;

@@ -21,7 +21,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the Get-AzureRmSqlDatabaseAgent cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent", 
+        SupportsShouldProcess = true, 
+        DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentModel))]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase

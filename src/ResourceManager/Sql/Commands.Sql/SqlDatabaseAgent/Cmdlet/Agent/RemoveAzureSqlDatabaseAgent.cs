@@ -24,7 +24,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the Remove-AzureRmSqlDatabaseAgent cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgent", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentModel))]
     public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {

@@ -26,7 +26,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Add, "AzureRmSqlDatabaseAgentTarget", SupportsShouldProcess = true), OutputType(typeof(JobTarget))]
+    [Cmdlet(VerbsCommon.Add, "AzureRmSqlDatabaseAgentTarget", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = SqlDatabaseSet), 
+        OutputType(typeof(JobTarget))]
     public class AddAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
         /// <summary>
@@ -37,9 +40,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = SqlServerSet)]
-        [Parameter(
-            Mandatory = true,
-            Position = 5,
+        [Parameter(Mandatory = true,
+            Position = 6,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = SqlElasticPoolSet)]
@@ -49,6 +51,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = SqlShardMapSet)]
+        [Parameter(Mandatory = true,
+            Position = 2,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = InputObjectSqlServerSet)]
+        [Parameter(Mandatory = true,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = InputObjectSqlElasticPoolSet)]
+        [Parameter(Mandatory = true,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = InputObjectSqlShardMapSet)]
         public string RefreshCredentialName { get; set; }
 
         /// <summary>
@@ -61,7 +78,42 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [ValidateNotNullOrEmpty]
         public SwitchParameter Exclude { get; set; }
 
+        /// <summary>
+        /// The target to add
+        /// </summary>
         private JobTarget Target;
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectSqlDatabaseSet:
+                case InputObjectSqlServerSet:
+                case InputObjectSqlElasticPoolSet:
+                case InputObjectSqlShardMapSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.AgentServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdSqlDatabaseSet:
+                case ResourceIdSqlServerSet:
+                case ResourceIdSqlElasticPoolSet:
+                case ResourceIdSqlShardMapSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.AgentServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.TargetGroupName = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Generates the model from user input.
