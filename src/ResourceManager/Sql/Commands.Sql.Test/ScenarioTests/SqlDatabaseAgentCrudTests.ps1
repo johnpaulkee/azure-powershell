@@ -14,7 +14,7 @@
 
 <#
 	.SYNOPSIS
-	Tests creating an agent
+	Tests creating an agent using default parameters
     .DESCRIPTION
 	SmokeTest
 #>
@@ -44,6 +44,37 @@ function Test-CreateAgent
     {
         Remove-ResourceGroupForTest $rg1
     }
+}
+
+<#
+	.SYNOPSIS
+	Tests creating an agent using control database object
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-CreateAgentWithInputObject
+{
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
+    $a1 = New-AzureRmSqlDatabaseAgent -InputObject $db1 -Name "agent"
+    Assert-AreEqual $a1.AgentName "agent"
+    Assert-AreEqual $a1.ServerName $s1.ServerName
+    Assert-AreEqual $a1.DatabaseName $db1.DatabaseName
+    Assert-AreEqual $a1.ResourceGroupName $rg1.ResourceGroupName
+    Assert-AreEqual $a1.Location $s1.Location
+    Assert-AreEqual $a1.WorkerCount 100
+}
+
+<#
+	.SYNOPSIS
+	Tests creating an agent using control database resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-CreateAgentWithResourceId
+{
+    New-AzureRmSqlDatabaseAgent -ResourceId /subscriptions/1b132fbc-df61-4dd8-bba0-71d7d4277eda/resourceGroups/ps2525/providers/Microsoft.Sql/servers/ps6926/databases/db1 -Name "agent"
 }
 
 <#
@@ -94,6 +125,30 @@ function Test-UpdateAgent
     {
         Remove-ResourceGroupForTest $rg1
     }
+}
+
+<#
+	.SYNOPSIS
+	Tests updating an agent with agent input object
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateAgentWithInputObject
+{
+    $agent = Get-AzureRmSqlDatabaseAgent -Name agent -ServerName ps6926 -ResourceGroupName ps2525
+    Set-AzureRmSqlDatabaseAgent -InputObject $agent -Tag @{ Dept="CS" }
+}
+
+<#
+	.SYNOPSIS
+	Tests updating an agent with agent resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateAgentWithResourceId
+{
+    $agent = Get-AzureRmSqlDatabaseAgent -Name agent -ServerName ps6926 -ResourceGroupName ps2525
+    Set-AzureRmSqlDatabaseAgent -InputObject $agent -Tag @{ Dept="CS" }
 }
 
 <#
@@ -158,6 +213,45 @@ function Test-GetAgent
 
 <#
 	.SYNOPSIS
+	Tests removing Azure SQL Database Agent using resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetAgentWithInputObject
+{
+    # Setup TODO
+    $s1 = Get-AzureRmSqlServer -ResourceGroupName ps2525 -ServerName ps6926
+    Get-AzureRmSqlDatabaseAgent -InputObject $s1
+    Get-AzureRmSqlDatabaseAgent -InputObject $s1 -Name agent
+}
+
+<#
+	.SYNOPSIS
+	Tests removing Azure SQL Database Agent using resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetAgentWithResourceId
+{
+    # Setup TODO
+    $s1 = Get-AzureRmSqlServer -ResourceGroupName ps2525 -ServerName ps6926
+    Get-AzureRmSqlDatabaseAgent -ResourceId $s1.ResourceId
+    Get-AzureRmSqlDatabaseAgent -ResourceId $s1.ResourceId -Name agent
+}
+
+<#
+	.SYNOPSIS
+	Tests removing Azure SQL Database Agent using resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetAllAgents
+{
+    Get-AzureRmSqlDatabaseAgent -AgentServerName sjobaccount35 -ResourceGroupName Job_Account_Test
+}
+
+<#
+	.SYNOPSIS
 	Tests removing Azure SQL Database Agents
     .DESCRIPTION
 	SmokeTest
@@ -192,34 +286,6 @@ function Test-RemoveAgent
 
 <#
 	.SYNOPSIS
-	Tests removing Azure SQL Database Agent using resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetAgentWithInputObject
-{
-    # Setup TODO
-    $s1 = Get-AzureRmSqlServer -ResourceGroupName ps2525 -ServerName ps6926
-    Get-AzureRmSqlDatabaseAgent -InputObject $s1
-    Get-AzureRmSqlDatabaseAgent -InputObject $s1 -Name agent
-}
-
-<#
-	.SYNOPSIS
-	Tests removing Azure SQL Database Agent using resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetAgentWithResourceId
-{
-    # Setup TODO
-    $s1 = Get-AzureRmSqlServer -ResourceGroupName ps2525 -ServerName ps6926
-    Get-AzureRmSqlDatabaseAgent -ResourceId $s1.ResourceId
-    Get-AzureRmSqlDatabaseAgent -ResourceId $s1.ResourceId -Name agent
-}
-
-<#
-	.SYNOPSIS
 	Tests removing Azure SQL Database Agent using Input Object
     .DESCRIPTION
 	SmokeTest
@@ -242,41 +308,4 @@ function Test-RemoveAgentByResourceId
     # Setup TODO
      $a1 = Get-AzureRmSqlDatabaseAgent -AgentName jpagenttest -AgentServerName ps9823 -ResourceGroupName ps2398
      Remove-AzureRmSqlDatabaseAgent -ResourceId $a1.Id -Force
-}
-
-<#
-	.SYNOPSIS
-	Tests removing Azure SQL Database Agent using resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetAllAgents
-{
-    Get-AzureRmSqlDatabaseAgent -AgentServerName sjobaccount35 -ResourceGroupName Job_Account_Test
-}
-
-
-function Test-SetAgentWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -Name agent -ServerName ps6926 -ResourceGroupName ps2525
-    Set-AzureRmSqlDatabaseAgent -InputObject $agent -Tag @{ Dept="CS" }
-}
-
-function Test-NewAgentWithInputObject
-{
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
-    $a1 = New-AzureRmSqlDatabaseAgent -InputObject $db1 -Name "agent"
-    Assert-AreEqual $a1.AgentName "agent"
-    Assert-AreEqual $a1.ServerName $s1.ServerName
-    Assert-AreEqual $a1.DatabaseName $db1.DatabaseName
-    Assert-AreEqual $a1.ResourceGroupName $rg1.ResourceGroupName
-    Assert-AreEqual $a1.Location $s1.Location
-    Assert-AreEqual $a1.WorkerCount 100
-}
-
-function Test-NewAgentWithResourceId
-{
-    New-AzureRmSqlDatabaseAgent -ResourceId /subscriptions/1b132fbc-df61-4dd8-bba0-71d7d4277eda/resourceGroups/ps2525/providers/Microsoft.Sql/servers/ps6926/databases/db1 -Name "agent"
 }

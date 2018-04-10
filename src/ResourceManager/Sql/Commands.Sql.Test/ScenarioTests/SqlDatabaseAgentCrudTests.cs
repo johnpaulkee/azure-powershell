@@ -26,12 +26,32 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
+        #region Create Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestAgentCreate()
         {
             RunPowerShellTest("Test-CreateAgent");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentCreateWithInputObject()
+        {
+            RunPowerShellTest("Test-CreateAgentWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentCreateWithResourceId()
+        {
+            RunPowerShellTest("Test-CreateAgentWithResourceId");
+        }
+
+        #endregion
+
+        #region Update Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
@@ -42,10 +62,53 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentUpdateWithInputObject()
+        {
+            RunPowerShellTest("Test-UpdateAgentWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateAgentWithResourceId");
+        }
+
+        #endregion
+
+        #region Get Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestAgentGet()
         {
             RunPowerShellTest("Test-GetAgent");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithInputObject()
+        {
+            RunPowerShellTest("Test-GetAgentWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithResourceId()
+        {
+            RunPowerShellTest("Test-GetAgentWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetAllAgents()
+        {
+            RunPowerShellTest("Test-GetAllAgents");
+        }
+
+        #endregion
+
+        #region Remove Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
@@ -68,46 +131,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-RemoveAgentByResourceId");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGetAllAgents()
-        {
-            RunPowerShellTest("Test-GetAllAgents");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentSetWithInputObject()
-        {
-            RunPowerShellTest("Test-SetAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentNewWithInputObject()
-        {
-            RunPowerShellTest("Test-NewAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentNewWithResourceId()
-        {
-            RunPowerShellTest("Test-NewAgentWithResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGetWithInputObject()
-        {
-            RunPowerShellTest("Test-GetAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGetWithResourceId()
-        {
-            RunPowerShellTest("Test-GetAgentWithResourceId");
-        }
+        #endregion
     }
 }
