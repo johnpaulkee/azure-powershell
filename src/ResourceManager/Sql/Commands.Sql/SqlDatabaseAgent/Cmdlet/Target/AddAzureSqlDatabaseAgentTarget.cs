@@ -310,6 +310,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = InputObjectSqlShardMapSet)]
+        [Parameter(Mandatory = true,
+            Position = 2,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = ResourceIdSqlServerSet)]
+        [Parameter(Mandatory = true,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = ResourceIdSqlElasticPoolSet)]
+        [Parameter(Mandatory = true,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = ResourceIdSqlShardMapSet)]
         public override string RefreshCredentialName { get; set; }
 
         /// <summary>

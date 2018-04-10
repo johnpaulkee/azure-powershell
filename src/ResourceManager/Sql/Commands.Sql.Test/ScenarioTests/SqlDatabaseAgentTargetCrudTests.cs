@@ -38,5 +38,159 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-RemoveServerTarget");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddServerWithInputObject()
+        {
+            RunPowerShellTest("Test-AddServerTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveServerWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddServerWithResourceId()
+        {
+            RunPowerShellTest("Test-AddServerTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveServerWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddDatabase()
+        {
+            RunPowerShellTest("Test-AddDatabaseTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveDatabase()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddDatabaseWithInputObject()
+        {
+            RunPowerShellTest("Test-AddDatabaseTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveDatabaseWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddDatabaseWithResourceId()
+        {
+            RunPowerShellTest("Test-AddDatabaseTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveDatabaseWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddElasticPool()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveElasticPool()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddElasticPoolWithInputObject()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveElasticPoolWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddElasticPoolWithResourceId()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveElasticPoolWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddShardMap()
+        {
+            RunPowerShellTest("Test-AddShardMapTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveShardMap()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddShardMapWithInputObject()
+        {
+            RunPowerShellTest("Test-AddShardMapTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveShardMapWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetAddShardMapWithResourceId()
+        {
+            RunPowerShellTest("Test-AddShardMapTargetWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveShardMapWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithResourceId");
+        }
     }
 }
