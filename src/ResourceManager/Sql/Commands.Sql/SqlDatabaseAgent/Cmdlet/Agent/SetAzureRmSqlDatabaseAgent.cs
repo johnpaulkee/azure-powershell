@@ -33,35 +33,38 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the Agent object
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent object to remove")]
+            HelpMessage = "The Agent Object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the Agent resource id
 		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+		[Parameter(
             Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the SQL Database Agent object to remove")]
+            HelpMessage = "The Agent Resource Id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Gets or sets the Agent name
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultParameterSet,
             Position = 2,
-            HelpMessage = "SQL Database Agent name.")]
+            HelpMessage = "The Agent Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
@@ -71,15 +74,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Note: Tag is default mandatory right now for public preview.
         /// When WorkerCount is exposed, this doesn't need to be mandatory.
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(
+            Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 3,
             ParameterSetName = DefaultParameterSet)]
-        [Parameter(Mandatory = false,
+        [Parameter(
+            Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
             ParameterSetName = InputObjectParameterSet)]
-        [Parameter(Mandatory = false,
+        [Parameter(
+            Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
             ParameterSetName = ResourceIdParameterSet)]

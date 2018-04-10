@@ -31,34 +31,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent server name
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "SQL Database Agent Resource Group Name")]
-        public override string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent server name
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Server Name")]
-        [Alias("AgentServerName")]
-        public override string ServerName { get; set; }
-
-        /// <summary>
         /// Gets or sets the name of the agent to use.
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Name.")]
+            HelpMessage = "The Agent Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
@@ -66,22 +46,24 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Server Dns Alias object to remove
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent object to remove")]
+            HelpMessage = "The Agent Object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the resource id of the SQL Database Agent
 		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+		[Parameter(
             Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the SQL Database Agent object to remove")]
+            HelpMessage = "The Agent Resource Id to remove")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 

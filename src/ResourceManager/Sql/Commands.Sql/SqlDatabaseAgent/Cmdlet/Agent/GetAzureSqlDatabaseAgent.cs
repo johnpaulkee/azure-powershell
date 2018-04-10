@@ -31,50 +31,55 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the Agent Server Object
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The Agent Server Object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlServerModel InputObject { get; set; }
 
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the Agent Server Resource Id
         /// </summary>
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The Agent Server Resource Id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent name
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = false,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The SQL Database Agent Parent Object")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The Agent Name")]
+        [Parameter(
             Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The SQL Database Agent Parent Object")]
-        [Parameter(ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The Agent Name")]
+        [Parameter(
             Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Name")]
+            HelpMessage = "The Agent Name")]
         [Alias("AgentName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// Cmdlet execution starts here
         /// </summary>
         public override void ExecuteCmdlet()
         {

@@ -34,76 +34,85 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// The Azure SQL Database Input Object
+        /// Gets or sets the Agent's Control Database Object
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Object ID")]
+            HelpMessage = "The Agent Control Database Object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseModel InputObject { get; set; }
 
         /// <summary>
-        /// The Azure SQL Database Resource Id
+        /// Gets or sets the Agent's Control Database Resource Id
         /// </summary>
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The SQL Database Resource ID")]
+            HelpMessage = "The Agent Control Database Resource Id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the database to use
+        /// Gets or sets the Agent's Control Database Name
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "SQL Database Agent Database Name.")]
+            HelpMessage = "The Agent Control Database Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentDatabaseName")]
         public string DatabaseName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Gets or sets the Agent's Name
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "SQL Database Agent Name.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The Agent Name")]
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Name.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The Agent Name")]
+        [Parameter(
             Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Name.")]
+            HelpMessage = "The Agent Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// The tags to assocciate wit the Azure SQL Database Server
+        /// Gets or sets the Agent's Tags
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(
+            Mandatory = false,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            HelpMessage = "The Agent Tags",
             Position = 4)]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = false,
+            ParameterSetName = InputObjectParameterSet,
             Position = 2,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The Agent Tags")]
+        [Parameter(
             Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
             Position = 2,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
+            HelpMessage = "The Agent Tags")]
         [ValidateNotNullOrEmpty]
         public Hashtable Tag { get; set; }
 
