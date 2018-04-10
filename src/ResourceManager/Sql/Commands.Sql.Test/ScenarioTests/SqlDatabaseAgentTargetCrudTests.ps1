@@ -37,7 +37,7 @@ function Test-RemoveServerTarget
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1
 }
 
 <#
@@ -65,7 +65,7 @@ function Test-RemoveServerTargetWithInputObject
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1
+    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -RefreshCredentialName cred1
 }
 
 <#
@@ -93,7 +93,7 @@ function Test-RemoveServerTargetWithResourceId
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -RefreshCredentialName cred1
 }
 
 <#
@@ -205,7 +205,7 @@ function Test-RemoveElasticPoolTarget
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
 }
 
 <#
@@ -234,7 +234,7 @@ function Test-RemoveElasticPoolTargetWithInputObject
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ElasticPoolName ep2
+    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
 }
 
 <#
@@ -263,7 +263,7 @@ function Test-RemoveElasticPoolTargetWithResourceId
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ElasticPoolName ep2
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
 }
 
 <#
@@ -291,7 +291,7 @@ function Test-RemoveShardMapTarget
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ShardMapName sm1 -DatabaseName db1
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
 }
 
 <#
@@ -319,7 +319,7 @@ function Test-RemoveShardMapTargetWithInputObject
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ShardMapName sm1 -DatabaseName db1
+    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
 }
 
 <#
@@ -347,5 +347,5 @@ function Test-RemoveShardMapTargetWithResourceId
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ShardMapName sm1 -DatabaseName db1
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
 }
