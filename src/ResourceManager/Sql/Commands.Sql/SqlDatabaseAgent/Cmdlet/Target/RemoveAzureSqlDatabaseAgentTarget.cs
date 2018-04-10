@@ -119,24 +119,33 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>A merged list of targets if the target doesn't already exist in the group or null if there </returns>
         public List<JobTarget> RemoveTargetFromTargets(IList<JobTarget> existingTargets, JobTarget target)
         {
-            var targets = existingTargets.ToList();
+            bool removedTarget = false;
 
-            int numRemoved = targets.RemoveAll(
-                    tg => tg.MembershipType == target.MembershipType &&
-                    tg.Type == target.Type &&
-                    tg.ServerName == target.ServerName &&
-                    tg.DatabaseName == target.DatabaseName &&
-                    tg.ElasticPoolName == target.ElasticPoolName &&
-                    tg.ShardMapName == target.ShardMapName &&
-                    tg.RefreshCredential == target.RefreshCredential);
-
-            // Return an empty list if none were removed.
-            if (numRemoved == 0)
+            for (int i = 0; i < existingTargets.Count; i++)
             {
-                return null;
-            };
+                JobTarget t = existingTargets[i];
 
-            return targets;
+                if (t.ServerName == target.ServerName &&
+                    t.DatabaseName == target.DatabaseName &&
+                    t.ElasticPoolName == target.ElasticPoolName &&
+                    t.ShardMapName == target.ShardMapName &&
+                    t.Type == target.Type &&
+                    t.RefreshCredential == target.RefreshCredential)
+                {
+                    // Update this target's membership type to reflect existing target membership type.
+                    this.Target.MembershipType = t.MembershipType;
+
+                    existingTargets.RemoveAt(i);
+                    removedTarget = true;
+                }
+            }
+
+            if (removedTarget)
+            {
+                return existingTargets.ToList();
+            }
+
+            return null;
         }
     }
 }

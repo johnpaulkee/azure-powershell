@@ -485,22 +485,41 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
         protected List<JobTarget> MergeTargets(IList<JobTarget> existingTargets, JobTarget target)
         {
-            int initialCount = existingTargets.Count;
-
-            // Merge Targets and Remove Duplicates Just In Case
-            // https://stackoverflow.com/questions/16983618/how-to-remove-duplicates-from-collection-using-iequalitycomparer-linq-distinct
-            var mergedTargets = existingTargets
-                .Concat(new List<JobTarget> { target })
-                .GroupBy(t => new { t.ServerName, t.DatabaseName, t.ElasticPoolName, t.ShardMapName, t.MembershipType, t.Type, t.RefreshCredential })
-                .Select(t => t.First())
-                .ToList();
-
-            if (initialCount >= mergedTargets.Count)
+            bool updatedMembershipType = false;
+            bool targetExists = false;
+            foreach (JobTarget t in existingTargets)
             {
-                return null;
+                if (t.ServerName == target.ServerName &&  
+                    t.DatabaseName == target.DatabaseName &&
+                    t.ElasticPoolName == target.ElasticPoolName &&
+                    t.ShardMapName == target.ShardMapName &&
+                    t.Type == target.Type &&
+                    t.RefreshCredential == target.RefreshCredential)
+                {
+                    targetExists = true;
+                    if (t.MembershipType != target.MembershipType)
+                    {
+                        updatedMembershipType = true;
+                        t.MembershipType = target.MembershipType;
+                    }
+                }
             }
 
-            return mergedTargets;
+            // If target didn't exist, add this new target
+            if (!targetExists)
+            {
+                existingTargets.Add(target);
+                return existingTargets.ToList();
+            }
+
+            // If target already existed but it's membership type was updated, update existing target
+            if (updatedMembershipType)
+            {
+                return existingTargets.ToList();
+            }
+
+            // If target to be added already exists and wasn't updated, return null to indicate no changes were made.
+            return null;
         }
 
         /// <summary>

@@ -23,7 +23,8 @@ function Test-AddServerTarget
     $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
     $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
-    Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1
+    $t = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1
+    $t = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1 -Exclude
 }
 
 <#
