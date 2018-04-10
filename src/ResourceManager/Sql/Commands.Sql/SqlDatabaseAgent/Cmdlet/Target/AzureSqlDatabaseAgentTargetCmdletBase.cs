@@ -21,6 +21,7 @@ using System.Management.Automation;
 using System.Linq;
 using Microsoft.Azure.Management.Sql.Models;
 using Microsoft.Rest.Azure;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -30,24 +31,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Parameter set name for default sets
         /// </summary>
         protected const string SqlDatabaseSet = "Sql Database Target Type";
-        protected const string SqlServerSet = "Sql Server Target Type";
-        protected const string SqlElasticPoolSet = "Sql Elastic Pool Target Type";
+        protected const string SqlServerOrElasticPoolSet = "Sql Server or Elastic Pool Target Type";
         protected const string SqlShardMapSet = "Sql Shard Map Target Type";
 
         /// <summary>
         /// Parameter sets for input object
         /// </summary>
         protected const string InputObjectSqlDatabaseSet = "Sql Database Input Object Parameter Set";
-        protected const string InputObjectSqlServerSet = "Sql Server Input Object Parameter Set";
-        protected const string InputObjectSqlElasticPoolSet = "Sql Elastic Pool Input Object Parameter Set";
+        protected const string InputObjectSqlServerOrElasticPoolSet = "Sql Server or Elastic Pool Input Object Parameter Set";
         protected const string InputObjectSqlShardMapSet = "Sql Shard Map Input Object Parameter Set";
 
         /// <summary>
         /// Parameter sets for resource id
         /// </summary>
         protected const string ResourceIdSqlDatabaseSet = "Sql Database ResourceId Parameter Set";
-        protected const string ResourceIdSqlServerSet = "Sql Server ResourceId Parameter Set";
-        protected const string ResourceIdSqlElasticPoolSet = "Sql Elastic Pool ResourceId Parameter Set";
+        protected const string ResourceIdSqlServerOrElasticPoolSet = "Sql Server or Elastic Pool ResourceId Parameter Set";
         protected const string ResourceIdSqlShardMapSet = "Sql Shard Map ResourceId Parameter Set";
 
         /// <summary>
@@ -58,12 +56,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The SQL Database Agent Target Group Object")]
-        [Parameter(ParameterSetName = InputObjectSqlServerSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The SQL Database Agent Target Group Object")]
-        [Parameter(ParameterSetName = InputObjectSqlElasticPoolSet,
+        [Parameter(ParameterSetName = InputObjectSqlServerOrElasticPoolSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
@@ -84,12 +77,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource id of the target group")]
-        [Parameter(ParameterSetName = ResourceIdSqlServerSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource id of the target group")]
-        [Parameter(ParameterSetName = ResourceIdSqlElasticPoolSet,
+        [Parameter(ParameterSetName = ResourceIdSqlServerOrElasticPoolSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -108,17 +96,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            ParameterSetName = SqlServerSet,
+            ParameterSetName = SqlServerOrElasticPoolSet,
             HelpMessage = "Resource Group Name")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             ParameterSetName = SqlDatabaseSet,
-            HelpMessage = "Resource Group Name")]
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            ParameterSetName = SqlElasticPoolSet,
             HelpMessage = "Resource Group Name")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -134,17 +117,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            ParameterSetName = SqlServerSet,
+            ParameterSetName = SqlServerOrElasticPoolSet,
             HelpMessage = "SQL Database Agent Server Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             ParameterSetName = SqlDatabaseSet,
-            HelpMessage = "SQL Database Agent Server Name.")]
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            ParameterSetName = SqlElasticPoolSet,
             HelpMessage = "SQL Database Agent Server Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -160,17 +138,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            ParameterSetName = SqlServerSet,
+            ParameterSetName = SqlServerOrElasticPoolSet,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             ParameterSetName = SqlDatabaseSet,
-            HelpMessage = "SQL Database Agent Name.")]
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            ParameterSetName = SqlElasticPoolSet,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -186,17 +159,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            ParameterSetName = SqlServerSet,
+            ParameterSetName = SqlServerOrElasticPoolSet,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = SqlDatabaseSet,
-            HelpMessage = "SQL Database Agent Name.")]
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            ParameterSetName = SqlElasticPoolSet,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -212,17 +180,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 4,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
-            ParameterSetName = SqlServerSet)]
+            ParameterSetName = SqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
             ParameterSetName = SqlDatabaseSet)]
-        [Parameter(Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Server Target Name",
-            ParameterSetName = SqlElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
@@ -233,12 +196,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        [Parameter(ParameterSetName = InputObjectSqlServerSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "Server Target Name")]
-        [Parameter(ParameterSetName = InputObjectSqlElasticPoolSet,
+        [Parameter(ParameterSetName = InputObjectSqlServerOrElasticPoolSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
@@ -253,12 +211,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        [Parameter(ParameterSetName = ResourceIdSqlServerSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "Server Target Name")]
-        [Parameter(ParameterSetName = ResourceIdSqlElasticPoolSet,
+        [Parameter(ParameterSetName = ResourceIdSqlServerOrElasticPoolSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
@@ -273,21 +226,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the Target Elastic Pool Name
         /// </summary>
-        [Parameter(Mandatory = true,
-            Position = 5,
+        [Parameter(Mandatory = false,
+            Position = 6,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
-            ParameterSetName = SqlElasticPoolSet)]
-        [Parameter(Mandatory = true,
-            Position = 2,
+            ParameterSetName = SqlServerOrElasticPoolSet)]
+        [Parameter(Mandatory = false,
+            Position = 3,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
-            ParameterSetName = InputObjectSqlElasticPoolSet)]
-        [Parameter(Mandatory = true,
-            Position = 2,
+            ParameterSetName = InputObjectSqlServerOrElasticPoolSet)]
+        [Parameter(Mandatory = false,
+            Position = 3,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
-            ParameterSetName = ResourceIdSqlElasticPoolSet)]
+            ParameterSetName = ResourceIdSqlServerOrElasticPoolSet)]
         public string ElasticPoolName { get; set; }
 
         /// <summary>
@@ -353,12 +306,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 5,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
-            ParameterSetName = SqlServerSet)]
-        [Parameter(Mandatory = true,
-            Position = 6,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Refresh Credential Name",
-            ParameterSetName = SqlElasticPoolSet)]
+            ParameterSetName = SqlServerOrElasticPoolSet)]
         [Parameter(
             Mandatory = true,
             Position = 7,
@@ -369,12 +317,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
-            ParameterSetName = InputObjectSqlServerSet)]
-        [Parameter(Mandatory = true,
-            Position = 3,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Refresh Credential Name",
-            ParameterSetName = InputObjectSqlElasticPoolSet)]
+            ParameterSetName = InputObjectSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
@@ -384,12 +327,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
-            ParameterSetName = ResourceIdSqlServerSet)]
-        [Parameter(Mandatory = true,
-            Position = 3,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Refresh Credential Name",
-            ParameterSetName = ResourceIdSqlElasticPoolSet)]
+            ParameterSetName = ResourceIdSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
@@ -407,6 +345,37 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected override AzureSqlDatabaseAgentTargetGroupAdapter InitModelAdapter(IAzureSubscription subscription)
         {
             return new AzureSqlDatabaseAgentTargetGroupAdapter(DefaultContext);
+        }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectSqlDatabaseSet:
+                case InputObjectSqlServerOrElasticPoolSet:
+                case InputObjectSqlShardMapSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.AgentServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    this.TargetGroupName = InputObject.TargetGroupName;
+                    break;
+                case ResourceIdSqlDatabaseSet:
+                case ResourceIdSqlServerOrElasticPoolSet:
+                case ResourceIdSqlShardMapSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.AgentServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.TargetGroupName = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
         }
 
         /// <summary>

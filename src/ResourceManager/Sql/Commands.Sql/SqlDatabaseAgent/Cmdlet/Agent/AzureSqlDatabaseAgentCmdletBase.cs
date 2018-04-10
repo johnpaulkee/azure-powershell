@@ -30,7 +30,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string InputObjectParameterSet = "Agent Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "Agent Resource Id Parameter Set";
 
-
         /// <summary>
         /// Gets or sets the resource group name
         /// </summary>

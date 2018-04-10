@@ -47,39 +47,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override SwitchParameter Exclude { get; set; }
 
         /// <summary>
-        /// Entry point for the cmdlet
-        /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectSqlDatabaseSet:
-                case InputObjectSqlServerSet:
-                case InputObjectSqlElasticPoolSet:
-                case InputObjectSqlShardMapSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.AgentServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.TargetGroupName = InputObject.TargetGroupName;
-                    break;
-                case ResourceIdSqlDatabaseSet:
-                case ResourceIdSqlServerSet:
-                case ResourceIdSqlElasticPoolSet:
-                case ResourceIdSqlShardMapSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.AgentServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.TargetGroupName = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
-            }
-
-            base.ExecuteCmdlet();
-        }
-
-        /// <summary>
         /// Generates the model from user input.
         /// </summary>
         /// <param name="model">The existing target group members</param>
