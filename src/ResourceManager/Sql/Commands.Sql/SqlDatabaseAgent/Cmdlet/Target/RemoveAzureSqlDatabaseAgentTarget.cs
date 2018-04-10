@@ -26,7 +26,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTarget", 
         SupportsShouldProcess = true,
-        DefaultParameterSetName = SqlServerDatabaseShardMapSet), 
+        DefaultParameterSetName = SqlDatabaseSet), 
         OutputType(typeof(JobTarget))]
     public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
@@ -36,12 +36,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            ParameterSetName = SqlServerDatabaseShardMapSet,
+            ParameterSetName = SqlServerSet,
+            HelpMessage = "Resource Group Name")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            ParameterSetName = SqlDatabaseSet,
             HelpMessage = "Resource Group Name")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             ParameterSetName = SqlElasticPoolSet,
+            HelpMessage = "Resource Group Name")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            ParameterSetName = SqlShardMapSet,
             HelpMessage = "Resource Group Name")]
         [ValidateNotNullOrEmpty]
         public override string ResourceGroupName { get; set; }
@@ -52,12 +62,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            ParameterSetName = SqlServerDatabaseShardMapSet,
+            ParameterSetName = SqlServerSet,
+            HelpMessage = "SQL Database Agent Server Name.")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            ParameterSetName = SqlDatabaseSet,
             HelpMessage = "SQL Database Agent Server Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             ParameterSetName = SqlElasticPoolSet,
+            HelpMessage = "SQL Database Agent Server Name.")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            ParameterSetName = SqlShardMapSet,
             HelpMessage = "SQL Database Agent Server Name.")]
         [ValidateNotNullOrEmpty]
         public override string AgentServerName { get; set; }
@@ -68,12 +88,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            ParameterSetName = SqlServerDatabaseShardMapSet,
+            ParameterSetName = SqlServerSet,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            ParameterSetName = SqlDatabaseSet,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             ParameterSetName = SqlElasticPoolSet,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            ParameterSetName = SqlShardMapSet,
             HelpMessage = "SQL Database Agent Name.")]
         [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
@@ -84,117 +114,216 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            ParameterSetName = SqlServerDatabaseShardMapSet,
+            ParameterSetName = SqlServerSet,
+            HelpMessage = "SQL Database Agent Name.")]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            ParameterSetName = SqlDatabaseSet,
             HelpMessage = "SQL Database Agent Name.")]
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = SqlElasticPoolSet,
             HelpMessage = "SQL Database Agent Name.")]
-        [ValidateNotNullOrEmpty]
+        [Parameter(Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            ParameterSetName = SqlShardMapSet,
+            HelpMessage = "SQL Database Agent Name.")]
         public override string TargetGroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the Target Server Name
         /// </summary>
-        [Parameter(
-            Mandatory = true,
+        [Parameter(Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
-            ParameterSetName = SqlServerDatabaseShardMapSet)]
-        [Parameter(
-            Mandatory = true,
+            ParameterSetName = SqlServerSet)]
+        [Parameter(Mandatory = true,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Server Target Name",
+            ParameterSetName = SqlDatabaseSet)]
+        [Parameter(Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
             ParameterSetName = SqlElasticPoolSet)]
-        [Parameter(
-            ParameterSetName = InputObjectSqlServerDatabaseShardMapSet,
+        [Parameter(Mandatory = true,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Server Target Name",
+            ParameterSetName = SqlShardMapSet)]
+        [Parameter(ParameterSetName = InputObjectSqlDatabaseSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        [Parameter(
-            ParameterSetName = InputObjectSqlElasticPoolSet,
+        [Parameter(ParameterSetName = InputObjectSqlServerSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        [Parameter(
-            ParameterSetName = ResourceIdSqlServerDatabaseShardMapSet,
+        [Parameter(ParameterSetName = InputObjectSqlElasticPoolSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        [Parameter(
-            ParameterSetName = ResourceIdSqlElasticPoolSet,
+        [Parameter(ParameterSetName = InputObjectSqlShardMapSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        [ValidateNotNullOrEmpty]
+        [Parameter(ParameterSetName = ResourceIdSqlDatabaseSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "Server Target Name")]
+        [Parameter(ParameterSetName = ResourceIdSqlServerSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "Server Target Name")]
+        [Parameter(ParameterSetName = ResourceIdSqlElasticPoolSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "Server Target Name")]
+        [Parameter(ParameterSetName = ResourceIdSqlShardMapSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "Server Target Name")]
         public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the Target Elastic Pool Name
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = true,
             Position = 5,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
             ParameterSetName = SqlElasticPoolSet)]
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = true,
             Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
             ParameterSetName = InputObjectSqlElasticPoolSet)]
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = true,
             Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
             ParameterSetName = ResourceIdSqlElasticPoolSet)]
-        [ValidateNotNullOrEmpty]
         public override string ElasticPoolName { get; set; }
 
         /// <summary>
         /// Gets or sets the Shard Map Name
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = true,
+            Position = 5,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
-            ParameterSetName = SqlServerDatabaseShardMapSet)]
-        [Parameter(Mandatory = false,
+            ParameterSetName = SqlShardMapSet)]
+        [Parameter(Mandatory = true,
+            Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
-            ParameterSetName = InputObjectSqlServerDatabaseShardMapSet)]
-        [Parameter(Mandatory = false,
+            ParameterSetName = InputObjectSqlShardMapSet)]
+        [Parameter(Mandatory = true,
+            Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
-            ParameterSetName = ResourceIdSqlServerDatabaseShardMapSet)]
-        [ValidateNotNullOrEmpty]
+            ParameterSetName = ResourceIdSqlShardMapSet)]
         public override string ShardMapName { get; set; }
 
         /// <summary>
         /// Gets or sets the Target Database Name
         /// </summary>
-        [Parameter(
-            Mandatory = false,
+        [Parameter(Mandatory = false,
+            Position = 5,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
-            ParameterSetName = SqlServerDatabaseShardMapSet)]
+            ParameterSetName = SqlDatabaseSet)]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
+            Position = 6,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Shard Map Database Target Name",
+            ParameterSetName = SqlShardMapSet)]
+        [Parameter(Mandatory = true,
+            Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
-            ParameterSetName = InputObjectSqlServerDatabaseShardMapSet)]
-        [Parameter(
-            Mandatory = false,
+            ParameterSetName = InputObjectSqlDatabaseSet)]
+        [Parameter(Mandatory = true,
+            Position = 2,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
-            ParameterSetName = ResourceIdSqlServerDatabaseShardMapSet)]
-        [ValidateNotNullOrEmpty]
+            ParameterSetName = ResourceIdSqlDatabaseSet)]
+        [Parameter(Mandatory = true,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Database Target Name",
+            ParameterSetName = InputObjectSqlShardMapSet)]
+        [Parameter(Mandatory = true,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Database Target Name",
+            ParameterSetName = ResourceIdSqlShardMapSet)]
         public override string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Refresh Credential Name
+        /// </summary>
+        [Parameter(Mandatory = false,
+            Position = 5,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlServerSet)]
+        [Parameter(Mandatory = false,
+            Position = 6,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlElasticPoolSet)]
+        [Parameter(
+            Mandatory = false,
+            Position = 7,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = SqlShardMapSet)]
+        [Parameter(Mandatory = false,
+            Position = 2,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = InputObjectSqlServerSet)]
+        [Parameter(Mandatory = false,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = InputObjectSqlElasticPoolSet)]
+        [Parameter(Mandatory = false,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = InputObjectSqlShardMapSet)]
+        [Parameter(Mandatory = false,
+            Position = 2,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = ResourceIdSqlServerSet)]
+        [Parameter(Mandatory = false,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = ResourceIdSqlElasticPoolSet)]
+        [Parameter(Mandatory = false,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "Refresh Credential Name",
+            ParameterSetName = ResourceIdSqlShardMapSet)]
+        public override string RefreshCredentialName { get; set; }
 
         private JobTarget Target;
 
@@ -205,7 +334,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             switch (ParameterSetName)
             {
-                case InputObjectSqlServerDatabaseShardMapSet:
+                case InputObjectSqlDatabaseSet:
+                case InputObjectSqlServerSet:
                 case InputObjectSqlElasticPoolSet:
                 case InputObjectSqlShardMapSet:
                     this.ResourceGroupName = InputObject.ResourceGroupName;
@@ -213,7 +343,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     this.AgentName = InputObject.AgentName;
                     this.TargetGroupName = InputObject.TargetGroupName;
                     break;
-                case ResourceIdSqlServerDatabaseShardMapSet:
+                case ResourceIdSqlDatabaseSet:
+                case ResourceIdSqlServerSet:
                 case ResourceIdSqlElasticPoolSet:
                 case ResourceIdSqlShardMapSet:
                     string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -285,13 +416,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             var targets = existingTargets.ToList();
 
-            int numRemoved = targets.RemoveAll(
-                tg => tg.MembershipType == target.MembershipType &&
-                tg.Type == target.Type &&
-                tg.ServerName == target.ServerName &&
-                tg.DatabaseName == target.DatabaseName &&
-                tg.ElasticPoolName == target.ElasticPoolName &&
-                tg.ShardMapName == target.ShardMapName);
+            int numRemoved;
+            
+            if (this.RefreshCredentialName == null)
+            {
+                numRemoved = targets.RemoveAll(
+                    tg => tg.MembershipType == target.MembershipType &&
+                    tg.Type == target.Type &&
+                    tg.ServerName == target.ServerName &&
+                    tg.DatabaseName == target.DatabaseName &&
+                    tg.ElasticPoolName == target.ElasticPoolName &&
+                    tg.ShardMapName == target.ShardMapName);
+            }
+            else
+            {
+                numRemoved = targets.RemoveAll(
+                    tg => tg.MembershipType == target.MembershipType &&
+                    tg.Type == target.Type &&
+                    tg.ServerName == target.ServerName &&
+                    tg.DatabaseName == target.DatabaseName &&
+                    tg.ElasticPoolName == target.ElasticPoolName &&
+                    tg.ShardMapName == target.ShardMapName &&
+                    tg.RefreshCredential == target.RefreshCredential);
+            }
 
             // Return an empty list if none were removed.
             if (numRemoved == 0)

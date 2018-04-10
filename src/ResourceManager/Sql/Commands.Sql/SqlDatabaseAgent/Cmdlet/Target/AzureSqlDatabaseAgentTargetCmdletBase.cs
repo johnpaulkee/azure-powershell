@@ -51,13 +51,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string ResourceIdSqlShardMapSet = "Sql Shard Map ResourceId Parameter Set";
 
         /// <summary>
-        /// Unique case for removing parameter set for Server or Database
-        /// </summary>
-        protected const string SqlServerDatabaseShardMapSet = "Sql Server Or Database Target Type";
-        protected const string InputObjectSqlServerDatabaseShardMapSet = "Input Object Sql Server Or Database Target Type";
-        protected const string ResourceIdSqlServerDatabaseShardMapSet = "Resource Id Sql Server Or Database Target Type";
-
-        /// <summary>
         /// Server Dns Alias object to remove
         /// </summary>
         [Parameter(ParameterSetName = InputObjectSqlDatabaseSet,
