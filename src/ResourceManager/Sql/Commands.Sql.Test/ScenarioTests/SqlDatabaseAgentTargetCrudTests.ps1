@@ -194,7 +194,6 @@ function Test-AddElasticPoolTarget
     Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
 }
 
-
 <#
 	.SYNOPSIS
 	Tests creating a target group

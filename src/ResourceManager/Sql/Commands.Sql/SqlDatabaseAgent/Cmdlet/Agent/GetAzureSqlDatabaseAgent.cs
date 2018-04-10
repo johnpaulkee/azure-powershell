@@ -12,7 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using Microsoft.Azure.Commands.Sql.Server.Model;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -29,8 +31,40 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
+        /// Server Dns Alias object to remove
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlServerModel InputObject { get; set; }
+
+        /// <summary>
+        /// Server Dns Alias object to remove
+        /// </summary>
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent name
         /// </summary>
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The SQL Database Agent Parent Object")]
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
@@ -44,6 +78,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
             // Lets us return a list of agents
             if (this.Name == null)
             {

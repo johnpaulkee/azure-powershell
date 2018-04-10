@@ -95,5 +95,19 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-NewAgentWithResourceId");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithInputObject()
+        {
+            RunPowerShellTest("Test-GetAgentWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithResourceId()
+        {
+            RunPowerShellTest("Test-GetAgentWithResourceId");
+        }
     }
 }
