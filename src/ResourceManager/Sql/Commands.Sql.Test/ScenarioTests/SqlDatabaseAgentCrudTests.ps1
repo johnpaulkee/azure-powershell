@@ -121,7 +121,7 @@ function Test-UpdateAgent
 
     try
     {
-    	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Tags $tags1
+    	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Tag $tags1
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.ServerName $s1.ServerName
@@ -156,7 +156,7 @@ function Test-UpdateAgentWithInputObject
 
     try
     {
-    	$resp1 = Set-AzureRmSqlDatabaseAgent -InputObject $a1 -Tags $tags1
+    	$resp1 = Set-AzureRmSqlDatabaseAgent -InputObject $a1 -Tag $tags1
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.ServerName $s1.ServerName
@@ -191,7 +191,7 @@ function Test-UpdateAgentWithInputObject
 
     try
     {
-    	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceId $a1.ResourceId -Tags $tags1
+    	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceId $a1.ResourceId -Tag $tags1
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.ServerName $s1.ServerName

@@ -26,6 +26,8 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
+        #region Create Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestJobCredentialCreate()
@@ -35,25 +37,21 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialGet()
+        public void TestJobCredentialCreateWithInputObject()
         {
-            RunPowerShellTest("Test-GetJobCredential");
+            RunPowerShellTest("Test-CreateJobCredentialWithInputObject");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestCredentialUpdateWithInputObject()
+        public void TestJobCredentialCreateWithResourceId()
         {
-            RunPowerShellTest("Test-GetJobCredentialWithInputObject");
+            RunPowerShellTest("Test-CreateJobCredentialWithResourceId");
         }
 
+        #endregion
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestCredentialUpdateWithResourceId()
-        {
-            RunPowerShellTest("Test-GetJobCredentialWithResourceId");
-        }
+        #region Update Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
@@ -64,9 +62,27 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestCredentialRemove()
+        public void TestJobCredentialUpdateWithInputObject()
         {
-            RunPowerShellTest("Test-RemoveJobCredential");
+            RunPowerShellTest("Test-UpdateJobCredentialWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateJobCredentialWithResourceId");
+        }
+
+        #endregion
+
+        #region Get Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialGet()
+        {
+            RunPowerShellTest("Test-GetJobCredential");
         }
 
         [Fact]
@@ -76,12 +92,22 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-GetJobCredentialWithInputObject");
         }
 
-
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestCredentialGetWithResourceId()
         {
             RunPowerShellTest("Test-GetJobCredentialWithResourceId");
+        }
+
+        #endregion
+
+        #region Remove Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestCredentialRemove()
+        {
+            RunPowerShellTest("Test-RemoveJobCredential");
         }
 
         [Fact]
@@ -98,11 +124,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-RemoveJobCredentialWithResourceId");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestCredentialGetPipingWithInputObject()
-        {
-            RunPowerShellTest("Test-GetJobCredentialPipingWithInputObject");
-        }
+        #endregion
     }
 }
