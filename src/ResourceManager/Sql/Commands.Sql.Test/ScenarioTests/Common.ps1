@@ -312,6 +312,15 @@ function Get-ServerName
 
 <#
 .SYNOPSIS
+Gets valid user name
+#>
+function Get-UserName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
 Gets valid database name
 #>
 function Get-DatabaseName
@@ -452,6 +461,18 @@ function Remove-ResourceGroupForTest ($rg)
 function Get-ServerCredential
 {
 	$serverLogin = "testusername"
+	$serverPassword = "t357ingP@s5w0rd!"
+	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force)) 
+	return $credentials
+}
+
+<#
+	.SYNOPSIS
+	Gets a random credential
+#>
+function Get-Credential
+{
+	$serverLogin = Get-UserName
 	$serverPassword = "t357ingP@s5w0rd!"
 	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force)) 
 	return $credentials

@@ -101,6 +101,12 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         #endregion
 
+        #region Get List Tests
+
+        // TODO
+
+        #endregion
+
         #region Remove Tests
 
         [Fact]
