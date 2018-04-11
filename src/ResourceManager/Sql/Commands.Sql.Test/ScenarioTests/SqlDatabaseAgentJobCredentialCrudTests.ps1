@@ -276,6 +276,5 @@ function Test-RemoveJobCredential
 
 function Test-Cleanup
 {
-	Remove-AzureRmResourceGroup -Name ps7559 -Force
-   	Remove-AzureRmResourceGroup -Name ps9242 -Force
+	Remove-AzureRmResourceGroup -Name ps8957 -Force
 }

@@ -529,9 +529,10 @@ function Create-JobCredentialForTest ($rg, $s, $a)
 	.SYNOPSIS
 	Creates a sql database agent target group with test params
 #>
-function Create-TargetGroupForTest ($rg, $s, $a, $tg)
+function Create-TargetGroupForTest ($rg, $s, $a)
 {
-    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -TargetGroupName $tg
+    $targetGroupName = Get-TargetGroupName
+    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
     return $tg
 }
 

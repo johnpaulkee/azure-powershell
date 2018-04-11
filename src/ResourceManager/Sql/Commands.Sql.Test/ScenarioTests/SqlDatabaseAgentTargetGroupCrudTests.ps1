@@ -18,33 +18,51 @@
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-CreateServerTarget
+function Test-CreateTargetGroup
 {
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
-    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
-    $tg1 = "tg1"
-
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $tgName1 = Get-TargetGroupName
+    $tgName2 = Get-TargetGroupName
+    $tgName3 = Get-TargetGroupName
+    $tgName4 = Get-TargetGroupName
+    
     try
     {
-        # Test using parameters
-        $resp1 = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1
+        # Test using default parameters
+        $resp1 = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $tgName1
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.AgentServerName $a1.AgentServerName
-        Assert-AreEqual $resp1.TargetGroupName $tg1
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.TargetGroupName $tgName1
         Assert-AreEqual $resp1.Members.Count 0
 
-        # Test piping
-        $tg2 = "tg2"
-        $resp2 = $a1 |  New-AzureRmSqlDatabaseAgentTargetGroup -TargetGroupName $tg2
+        # Test using input object
+        $resp2 = New-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tgName2
         Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp2.AgentName $a1.AgentName
-        Assert-AreEqual $resp2.AgentServerName $a1.AgentServerName
-        Assert-AreEqual $resp2.TargetGroupName $tg2
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.TargetGroupName $tgName2
         Assert-AreEqual $resp2.Members.Count 0
+
+        # Test using resource id
+        $resp3 = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId -Name $tgName3
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.AgentName $a1.AgentName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.TargetGroupName $tgName3
+        Assert-AreEqual $resp3.Members.Count 0
+
+        # Test piping
+        $resp4 = $a1 | New-AzureRmSqlDatabaseAgentTargetGroup -Name $tgName4
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.AgentName $a1.AgentName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.TargetGroupName $tgName4
+        Assert-AreEqual $resp4.Members.Count 0
     }
     finally
     {
@@ -63,24 +81,63 @@ function Test-GetTargetGroup
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
-    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1 "tg1"
-    $tg2 = Create-TargetGroupForTest $rg1 $s1 $a1 "tg2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg2 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg3 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg4 = Create-TargetGroupForTest $rg1 $s1 $a1
 
     try
     {
-        # Test using parameters
-        $resp1 = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1
+        # Test using default parameters
+        $resp1 = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $tg1.TargetGroupName
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.AgentServerName $s1.AgentServerName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
         Assert-AreEqual $resp1.TargetGroupName $tg1.TargetGroupName
         Assert-AreEqual $resp1.Members.Count 0
 
+        # Test get all target groups
+        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName
+        Assert-AreEqual 4 $all.Count
+
+        # Test using input object
+        $resp2 = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg2.TargetGroupName
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.AgentName $a1.AgentName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.TargetGroupName $tg2.TargetGroupName
+        Assert-AreEqual $resp2.Members.Count 0
+
+        # Test get all target groups - using input object
+        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1
+        Assert-AreEqual 4 $all.Count
+
+        # Test using resource id
+        $resp3 = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId -Name $tg3.TargetGroupName
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.AgentName $a1.AgentName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.TargetGroupName $tg3.TargetGroupName
+        Assert-AreEqual $resp3.Members.Count 0
+
+        # Test get all target groups - using resource id
+        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId
+        Assert-AreEqual 4 $all.Count
+
         # Test piping
+        $resp4 = $a1 | Get-AzureRmSqlDatabaseAgentTargetGroup -Name $tg4.TargetGroupName
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.AgentName $a1.AgentName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.TargetGroupName $tg4.TargetGroupName
+        Assert-AreEqual $resp4.Members.Count 0
+        
+        # Test get all using piping
         $all = $a1 | Get-AzureRmSqlDatabaseAgentTargetGroup
-        Assert-AreEqual $all.Count 2
+        Assert-AreEqual 4 $all.Count
     }
     finally
     {
@@ -90,91 +147,11 @@ function Test-GetTargetGroup
 
 <#
 	.SYNOPSIS
-	Tests getting a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetTargetGroupWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tgTestPS
-
-    Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $agent
-    Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $agent -Name tgTestPS
-
-    Remove-AzureRmSqlDatabaseAgentTargetGroup -InputObject $agent -Name tgTestPS
-}
-
-<#
-	.SYNOPSIS
-	Tests getting a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetTargetGroupWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tgTestPS
-
-    Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $agent.ResourceId
-    Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $agent.ResourceId -Name tgTestPS
-
-    Remove-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $agent.ResourceId -Name tgTestPS
-}
-
-<#
-	.SYNOPSIS
 	Tests removing a target group
     .DESCRIPTION
 	SmokeTest
 #>
 function Test-RemoveTargetGroup
-{
-	Remove-AzureRmResourceGroup -Name ps659 -Force
-    Remove-AzureRmResourceGroup -Name ps8435 -Force
-    Remove-AzureRmResourceGroup -Name ps6442 -Force
-    Remove-AzureRmResourceGroup -Name ps4804 -Force
-    Remove-AzureRmResourceGroup -Name ps6511 -Force
-}
-
-
-<#
-	.SYNOPSIS
-	Tests removing a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddTarget
-{
-	Remove-AzureRmResourceGroup -Name ps659 -Force
-    Remove-AzureRmResourceGroup -Name ps8435 -Force
-    Remove-AzureRmResourceGroup -Name ps6442 -Force
-    Remove-AzureRmResourceGroup -Name ps4804 -Force
-    Remove-AzureRmResourceGroup -Name ps6511 -Force
-}
-
-<#
-	.SYNOPSIS
-	Tests removing a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveTarget
-{
-	Remove-AzureRmResourceGroup -Name ps659 -Force
-    Remove-AzureRmResourceGroup -Name ps8435 -Force
-    Remove-AzureRmResourceGroup -Name ps6442 -Force
-    Remove-AzureRmResourceGroup -Name ps4804 -Force
-    Remove-AzureRmResourceGroup -Name ps6511 -Force
-}
-
-<#
-	.SYNOPSIS
-	Tests removing a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-Cleanup
 {
 	Remove-AzureRmResourceGroup -Name ps659 -Force
     Remove-AzureRmResourceGroup -Name ps8435 -Force

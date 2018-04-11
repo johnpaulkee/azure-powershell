@@ -64,8 +64,8 @@ function Test-CreateAgent
         Assert-AreEqual $resp3.Location $s1.Location
         Assert-AreEqual $resp3.WorkerCount 100
 
-        # Test piping
-        $resp4 = $s1 | New-AzureRmSqlDatabaseAgent -Name $agentName4
+        # Test piping - Create using piping
+        $resp4 = $db4 | New-AzureRmSqlDatabaseAgent -Name $agentName4
 
         Assert-AreEqual $resp4.AgentName $agentName4
         Assert-AreEqual $resp4.ServerName $s1.ServerName
