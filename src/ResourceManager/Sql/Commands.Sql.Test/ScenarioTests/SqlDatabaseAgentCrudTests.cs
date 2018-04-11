@@ -114,16 +114,16 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentRemoveByInputObject()
+        public void TestAgentRemoveWithInputObject()
         {
-            RunPowerShellTest("Test-RemoveAgentByInputObject");
+            RunPowerShellTest("Test-RemoveAgentWithInputObject");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentRemoveByResourceId()
+        public void TestAgentRemoveWithResourceId()
         {
-            RunPowerShellTest("Test-RemoveAgentByResourceId");
+            RunPowerShellTest("Test-RemoveAgentWithResourceId");
         }
 
         #endregion
