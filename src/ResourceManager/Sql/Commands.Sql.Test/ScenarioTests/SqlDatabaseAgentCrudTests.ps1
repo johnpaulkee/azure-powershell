@@ -179,7 +179,7 @@ function Test-UpdateAgentWithInputObject
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-UpdateAgentWithInputObject
+function Test-UpdateAgentWithResourceId
 {
     # Setup
     $rg1 = Create-ResourceGroupForTest

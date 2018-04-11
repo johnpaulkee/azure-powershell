@@ -14,7 +14,7 @@
 
 <#
 	.SYNOPSIS
-	Tests creating an Azure Sql Database Agent Job Credential
+	Tests creating a job credential
     .DESCRIPTION
 	SmokeTest
 #>
@@ -23,33 +23,197 @@ function Test-CreateJobCredential
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
-    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
 
     # Credential params
-    $cn1 = "credName1"
-    $cn2 = "credName2"
-    $u1 = "testusername"
-	$p1 = "t357ingP@s5w0rd!"
-	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
+    $cn1 = Get-JobCredentialName
+    $c1 = Get-ServerCredential
 
     try 
     {
-    	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName `
-            -CredentialName $cn1 -Credential $c1
+    	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $cn1 -Credential $c1
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.AgentServerName $s1.ServerName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
         Assert-AreEqual $resp1.CredentialName $cn1
         Assert-AreEqual $resp1.UserName $c1.UserName
-
-        # Test piping
-        $resp2 = $a1 | New-AzureRmSqlDatabaseAgentJobCredential -CredentialName $cn2 -Credential $c1
-        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp2.AgentServerName $s1.ServerName
-        Assert-AreEqual $resp2.CredentialName $cn2
-        Assert-AreEqual $resp2.UserName $c1.UserName
     }
     finally
+    {
+        Remove-ResourceGroupForTest $rg
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests creating a job credential with agent input object
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-CreateJobCredentialWithInputObject
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    # Credential params
+    $cn1 = Get-JobCredentialName
+    $c1 = Get-ServerCredential
+
+    try 
+    {
+    	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1 -Name $cn1 -Credential $c1
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.CredentialName $cn1
+        Assert-AreEqual $resp1.UserName $c1.UserName
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests creating a job credential with agent resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-CreateJobCredentialWithResourceId
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    # Credential params
+    $cn1 = Get-JobCredentialName
+    $c1 = Get-ServerCredential
+
+    try 
+    {
+    	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceId $a1.ResourceId -Name $cn1 -Credential $c1
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.CredentialName $cn1
+        Assert-AreEqual $resp1.UserName $c1.UserName
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests updating a job credential
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateJobCredential
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    $jc1 = Create-JobCredentialForTest $rg1 $s1, $a1
+
+    try
+    {
+        $u2 = "newUserName"
+        $p2 = "newPassword"
+      	$c2 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
+
+        # Test parameters
+        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $jc1.CredentialName -Credential $c2
+
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $c2.UserName
+    }
+    finally 
+    {
+        Remove-ResourceGroupForTest $rg
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests updating a job credential with credential input object
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateJobCredentialWithInputObject
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    $jc1 = Create-JobCredentialForTest $rg1 $s1, $a1
+
+    try
+    {
+        $u2 = "newUserName"
+        $p2 = "newPassword"
+      	$c2 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
+
+        # Test parameters
+        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc1 -Credential $c2
+
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $c2.UserName
+    }
+    finally 
+    {
+        Remove-ResourceGroupForTest $rg
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests updating a job credential with credential resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-UpdateJobCredentialWithResourceId
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    $jc1 = Create-JobCredentialForTest $rg1 $s1, $a1
+
+    try
+    {
+        $u2 = "newUserName"
+        $p2 = "newPassword"
+      	$c2 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
+
+        # Test parameters
+        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceId $jc1.ResourceId -Credential $c2
+
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $c2.UserName
+    }
+    finally 
     {
         Remove-ResourceGroupForTest $rg
     }
@@ -85,7 +249,7 @@ function Test-GetJobCredential
         $resp1 = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName `
             -CredentialName $cn1
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.AgentServerName $s1.ServerName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
         Assert-AreEqual $resp1.UserName $c1.UserName
@@ -103,59 +267,49 @@ function Test-GetJobCredential
 
 <#
 	.SYNOPSIS
-	Tests removing an Azure Sql Database Agent Job Credential
+	Tests getting a job credential with input object
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-UpdateJobCredential
+function Test-GetJobCredentialWithInputObject
 {
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 "db1"
-    $a1 = Create-AgentForTest $rg1 $s1 $db1 "agent1"
+    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
+    $c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
+    $cred = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name testCred -Credential $c1
 
-    # Credential params
-    $cn1 = "credName1"
-    $cn2 = "credName2"
-    $u1 = "testusername"
-	$p1 = "t357ingP@s5w0rd!"
-	$c1 = new-object System.Management.Automation.PSCredential($u1, ($p1 | ConvertTo-SecureString -asPlainText -Force))
+    Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $agent
+    Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $agent -Name cred1
 
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn1 $c1
-    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1 $cn2 $c1
+    Remove-AzureRmSqlDatabaseAgentJobCredential -InputObject $cred
+}
 
-    try
-    {
-        $u2 = "newUserName"
-        $p2 = "newPassword"
-      	$c2 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
+<#
+	.SYNOPSIS
+	Tests getting a job credential with resource id
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetJobCredentialWithResourceId
+{
+    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
+    $c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
+    $cred = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name testCred -Credential $c1
 
-        # Test parameters
-        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -CredentialName $cn1 -Credential $c2
-        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.AgentServerName $s1.ServerName
-        Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
-        Assert-AreEqual $resp1.UserName $c2.UserName
+    Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $agent.ResourceId
+    Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $agent.ResourceId -Name cred1
 
-        # Test piping
-        $resp2 = $jc2 | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $c2
-        Assert-AreEqual $resp2.UserName $c2.UserName
+    Remove-AzureRmSqlDatabaseAgentJobCredential -InputObject $cred
+}
 
-        $u3 = "oneMoreUserName"
-        $p3 = "oneMoreTime"
-      	$c3 = new-object System.Management.Automation.PSCredential($u2, ($p2 | ConvertTo-SecureString -asPlainText -Force))
-
-        $all = $a | Get-AzureRmSqlDatabaseAgentJobCredential
-        $setAll = $all | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $c3
-        Assert-AreEqual $setAll.Count 2
-        $setAll | % { Assert-AreEqual $_.UserName $c3.UserName }
-    }
-    finally 
-    {
-        Remove-ResourceGroupForTest $rg
-    }
+<#
+	.SYNOPSIS
+	Tests getting all job credentials from all agents in all servers
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetJobCredentialPipingWithInputObject
+{
+    Get-AzureRmSqlServer | Get-AzureRmSqlDatabaseAgent | Get-AzureRmSqlDatabaseAgentJobCredential
 }
 
 <#
@@ -217,68 +371,6 @@ function Test-RemoveJobCredential
 
 <#
 	.SYNOPSIS
-	Tests getting a job credential with input object
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetJobCredentialWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
-    $cred = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name testCred -Credential $c1
-
-    Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $agent
-    Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $agent -Name cred1
-
-    Remove-AzureRmSqlDatabaseAgentJobCredential -InputObject $cred
-}
-
-<#
-	.SYNOPSIS
-	Tests getting a job credential with resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetJobCredentialWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
-    $cred = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name testCred -Credential $c1
-
-    Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $agent.ResourceId
-    Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $agent.ResourceId -Name cred1
-
-    Remove-AzureRmSqlDatabaseAgentJobCredential -InputObject $cred
-}
-
-<#
-	.SYNOPSIS
-	Tests updating a job credential with input object
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-UpdateJobCredentialWithInputObject
-{
- 	$c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
-    $cred = Get-AzureRmSqlDatabaseAgentJobCredential -Name cred1 -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    Set-AzureRmSqlDatabaseAgentJobCredential -InputObject $cred -Credential $c1
-}
-
-<#
-	.SYNOPSIS
-	Tests updating a job credential with resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-UpdateJobCredentialWithResourceId
-{
- 	$c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
-    $cred = Get-AzureRmSqlDatabaseAgentJobCredential -Name cred1 -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    Set-AzureRmSqlDatabaseAgentJobCredential -ResourceId $cred.ResourceId -Credential $c1
-}
-
-<#
-	.SYNOPSIS
 	Tests updating a job credential with input object
     .DESCRIPTION
 	SmokeTest
@@ -301,15 +393,4 @@ function Test-RemoveJobCredentialWithResourceId
  	$c1 = new-object System.Management.Automation.PSCredential("newUser", ("password" | ConvertTo-SecureString -asPlainText -Force))
     $cred = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name testCred -Credential $c1
     Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceId $cred.ResourceId
-}
-
-<#
-	.SYNOPSIS
-	Tests getting all job credentials from all agents in all servers
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetJobCredentialPipingWithInputObject
-{
-    Get-AzureRmSqlServer | Get-AzureRmSqlDatabaseAgent | Get-AzureRmSqlDatabaseAgentJobCredential
 }
