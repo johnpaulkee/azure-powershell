@@ -164,7 +164,7 @@ function Test-GetJobCredential
         Assert-AreEqual 4 $all.Count
 
         # Test job credential input object
-        $resp2 = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc2 -Name $jc2.CredentialName
+        $resp2 = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1 -Name $jc2.CredentialName
 
         Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp2.ServerName $s1.ServerName
@@ -173,11 +173,11 @@ function Test-GetJobCredential
         Assert-AreEqual $resp2.UserName $jc2.UserName
         
         # Test job credential input object - get all credentials
-        $all = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc2
+        $all = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1
         Assert-AreEqual 4 $all.Count
 
         # Test job credential resource id
-        $resp3 = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc3 -Name $jc3.CredentialName
+        $resp3 = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1 -Name $jc3.CredentialName
 
         Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp3.ServerName $s1.ServerName
@@ -186,7 +186,7 @@ function Test-GetJobCredential
         Assert-AreEqual $resp3.UserName $jc3.UserName
         
         # Test job credential resource id - get all credentials
-        $all = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $jc3.ResourceId
+        $all = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $a1.ResourceId
         Assert-AreEqual 4 $all.Count
 
         # Test piping - get job credential

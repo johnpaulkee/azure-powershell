@@ -35,20 +35,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-CreateAgent");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentCreateWithInputObject()
-        {
-            RunPowerShellTest("Test-CreateAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentCreateWithResourceId()
-        {
-            RunPowerShellTest("Test-CreateAgentWithResourceId");
-        }
-
         #endregion
 
         #region Update Tests
@@ -58,20 +44,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         public void TestAgentUpdate()
         {
             RunPowerShellTest("Test-UpdateAgent");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentUpdateWithInputObject()
-        {
-            RunPowerShellTest("Test-UpdateAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentUpdateWithResourceId()
-        {
-            RunPowerShellTest("Test-UpdateAgentWithResourceId");
         }
 
         #endregion
@@ -85,22 +57,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-GetAgent");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGetWithInputObject()
-        {
-            RunPowerShellTest("Test-GetAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGetWithResourceId()
-        {
-            RunPowerShellTest("Test-GetAgentWithResourceId");
-        }
-
-        // TODO: Get list of agents tests
-
         #endregion
 
         #region Remove Tests
@@ -110,20 +66,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         public void TestAgentRemove()
         {
             RunPowerShellTest("Test-RemoveAgent");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentRemoveWithInputObject()
-        {
-            RunPowerShellTest("Test-RemoveAgentWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentRemoveWithResourceId()
-        {
-            RunPowerShellTest("Test-RemoveAgentWithResourceId");
         }
 
         #endregion

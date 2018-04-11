@@ -24,78 +24,55 @@ function Test-CreateAgent
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $rg1 $s1
-    $agentName = Get-AgentName
+    $db2 = Create-DatabaseForTest $rg1 $s1
+    $db3 = Create-DatabaseForTest $rg1 $s1
+    $db4 = Create-DatabaseForTest $rg1 $s1
+    $agentName1 = Get-AgentName
+    $agentName2 = Get-AgentName
+    $agentName3 = Get-AgentName
+    $agentName4 = Get-AgentName
 
     try 
     {
-    	$resp1 = New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -DatabaseName $db1.DatabaseName -AgentName $agentName
+        # Test using default parameters
+    	$resp1 = New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -DatabaseName $db1.DatabaseName -AgentName $agentName1
 
-        Assert-AreEqual $resp1.AgentName $agentName
+        Assert-AreEqual $resp1.AgentName $agentName1
         Assert-AreEqual $resp1.ServerName $s1.ServerName
         Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp1.Location $s1.Location
         Assert-AreEqual $resp1.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg1
-    }
-}
 
-<#
-	.SYNOPSIS
-	Tests creating an agent using control database object
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-CreateAgentWithInputObject
-{
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $agentName = Get-AgentName
+        # Test using input object
+        $resp2 = New-AzureRmSqlDatabaseAgent -InputObject $db2 -Name $agentName2
 
-    try
-    {
-        $a1 = New-AzureRmSqlDatabaseAgent -InputObject $db1 -Name $agentName
+        Assert-AreEqual $resp2.AgentName $agentName2
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.DatabaseName $db2.DatabaseName
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.Location $s1.Location
+        Assert-AreEqual $resp2.WorkerCount 100
 
-        Assert-AreEqual $a1.AgentName $agentName
-        Assert-AreEqual $a1.ServerName $s1.ServerName
-        Assert-AreEqual $a1.DatabaseName $db1.DatabaseName
-        Assert-AreEqual $a1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $a1.Location $s1.Location
-        Assert-AreEqual $a1.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg1
-    }
-}
+        # Test using resource id
+        $resp3 = New-AzureRmSqlDatabaseAgent -ResourceId $db3.ResourceId -Name $agentName3
 
-<#
-	.SYNOPSIS
-	Tests creating an agent using control database resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-CreateAgentWithResourceId
-{
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $agentName = Get-AgentName
+        Assert-AreEqual $resp3.AgentName $agentName3
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.DatabaseName $db3.DatabaseName
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.Location $s1.Location
+        Assert-AreEqual $resp3.WorkerCount 100
 
-    try
-    {
-        $a1 = New-AzureRmSqlDatabaseAgent -ResourceId $db1.ResourceId -Name $agentName
+        # Test piping
+        $resp4 = $s1 | New-AzureRmSqlDatabaseAgent -Name $agentName4
 
-        Assert-AreEqual $a1.AgentName $agentName
-        Assert-AreEqual $a1.ServerName $s1.ServerName
-        Assert-AreEqual $a1.DatabaseName $db1.DatabaseName
-        Assert-AreEqual $a1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $a1.Location $s1.Location
-        Assert-AreEqual $a1.WorkerCount 100
+        Assert-AreEqual $resp4.AgentName $agentName4
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.DatabaseName $db4.DatabaseName
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.Location $s1.Location
+        Assert-AreEqual $resp4.WorkerCount 100
     }
     finally
     {
@@ -118,9 +95,13 @@ function Test-UpdateAgent
     $a1 = Create-AgentForTest $rg1 $s1 $db1
 
     $tags1 = @{ Dept="Finance"; AnotherTag="WOOHOO" }
+    $tags2 = @{ Dept="CS" }
+    $tags3 = @{ Job="Agent"}
+    $tags4 = @{ Octopus="Agent"}
 
     try
     {
+        # Test using default parameters
     	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Tag $tags1
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
@@ -131,76 +112,40 @@ function Test-UpdateAgent
         Assert-AreEqual $resp1.WorkerCount 100
         Assert-AreEqual $resp1.Tags.Dept "Finance"
         Assert-AreEqual $resp1.Tags.AnotherTag "WOOHOO"
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg1
-    }
-}
 
-<#
-	.SYNOPSIS
-	Tests updating an agent with agent input object
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-UpdateAgentWithInputObject
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+        # Test using input object
+        $resp2 = Set-AzureRmSqlDatabaseAgent -InputObject $a1 -Tag $tags2
 
-    $tags1 = @{ Dept="Finance"; AnotherTag="WOOHOO" }
+        Assert-AreEqual $resp2.AgentName $a1.AgentName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.Location $s1.Location
+        Assert-AreEqual $resp2.WorkerCount 100
+        Assert-AreEqual $resp2.Tags.Dept "CS"
+        Assert-Null $resp2.AnotherTag
+        
+        # Test using resource id
+        $resp3 = Set-AzureRmSqlDatabaseAgent -ResourceId $a1.ResourceId -Tag $tags3
 
-    try
-    {
-    	$resp1 = Set-AzureRmSqlDatabaseAgent -InputObject $a1 -Tag $tags1
+        Assert-AreEqual $resp3.AgentName $a1.AgentName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.Location $s1.Location
+        Assert-AreEqual $resp3.WorkerCount 100
+        Assert-AreEqual $resp3.Tags.Job "Agent"
 
-        Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
-        Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
-        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.Location $s1.Location
-        Assert-AreEqual $resp1.WorkerCount 100
-        Assert-AreEqual $resp1.Tags.Dept "Finance"
-        Assert-AreEqual $resp1.Tags.AnotherTag "WOOHOO"
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg1
-    }
-}
+        # Test using piping
+        $resp4 = $a1 | Set-AzureRmSqlDatabaseAgent -Tag $tags4
 
-<#
-	.SYNOPSIS
-	Tests updating an agent with agent resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-UpdateAgentWithResourceId
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-
-    $tags1 = @{ Dept="Finance"; AnotherTag="WOOHOO" }
-
-    try
-    {
-    	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceId $a1.ResourceId -Tag $tags1
-
-        Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
-        Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
-        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.Location $s1.Location
-        Assert-AreEqual $resp1.WorkerCount 100
-        Assert-AreEqual $resp1.Tags.Dept "Finance"
-        Assert-AreEqual $resp1.Tags.AnotherTag "WOOHOO"
+        Assert-AreEqual $resp4.AgentName $a1.AgentName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.Location $s1.Location
+        Assert-AreEqual $resp4.WorkerCount 100
+        Assert-AreEqual $resp4.Tags.Octopus "Agent"
     }
     finally
     {
@@ -219,11 +164,16 @@ function Test-GetAgent
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 
+    $s2 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $db2 = Create-DatabaseForTest $rg1 $s1
+    $db3 = Create-DatabaseForTest $rg1 $s1
     $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $a2 = Create-AgentForTest $rg1 $s1 $db2
+    $a3 = Create-AgentForTest $rg1 $s2 $db3
     
     try {
-        # Basic get
+        # Test using default parameters
         $resp1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
@@ -232,68 +182,46 @@ function Test-GetAgent
         Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp1.Location $s1.Location
         Assert-AreEqual $resp1.WorkerCount 100
-    }
-    finally
-    {
-    	Remove-ResourceGroupForTest $rg1
-    }
-}
 
-<#
-	.SYNOPSIS
-	Tests getting an agent with a server input object
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetAgentWithInputObject
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    
-    try {
-        # Basic get
-        $resp1 = Get-AzureRmSqlDatabaseAgent -InputObject $s1 -AgentName $a1.AgentName
+        # Test get all agents in s1
+        $all = Get-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName
+        Assert-AreEqual 2 $all.Count
 
-        Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
-        Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
-        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.Location $s1.Location
-        Assert-AreEqual $resp1.WorkerCount 100
-    }
-    finally
-    {
-    	Remove-ResourceGroupForTest $rg1
-    }
-}
+        # Test using input object
+        $resp2 = Get-AzureRmSqlDatabaseAgent -InputObject $s1 -AgentName $a2.AgentName
 
-<#
-	.SYNOPSIS
-	Tests getting an agent with a server resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetAgentWithResourceId
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1 
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    
-    try {
-        # Basic get
-        $resp1 = Get-AzureRmSqlDatabaseAgent -ResourceId $s1.ResourceId -AgentName $a1.AgentName
+        Assert-AreEqual $resp2.AgentName $a2.AgentName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.DatabaseName $db2.DatabaseName
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.Location $s1.Location
+        Assert-AreEqual $resp2.WorkerCount 100
 
-        Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
-        Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
-        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.Location $s1.Location
-        Assert-AreEqual $resp1.WorkerCount 100
+        # Test get all agents in s1 using input object
+        $all = Get-AzureRmSqlDatabaseAgent -InputObject $s1
+        Assert-AreEqual 2 $all.Count
+
+        # Test using resource id
+        $resp3 = Get-AzureRmSqlDatabaseAgent -ResourceId $s2.ResourceId -AgentName $a3.AgentName
+
+        Assert-AreEqual $resp3.AgentName $a3.AgentName
+        Assert-AreEqual $resp3.ServerName $s2.ServerName
+        Assert-AreEqual $resp3.DatabaseName $db3.DatabaseName
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.Location $s1.Location
+        Assert-AreEqual $resp3.WorkerCount 100
+        
+        # Test get all agents in s2 using resource id
+        $all = Get-AzureRmSqlDatabaseAgent -InputObject $s3
+        Assert-AreEqual 1 $all.Count
+
+        # Test piping - Get all agents in s1
+        $all = $s1 | Get-AzureRmSqlDatabaseAgent
+        Assert-AreEqual 2 $all.Count
+        
+        # Test piping - Get all agents in servers with resource group $rg1
+        $all = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlDatabaseAgent
+        Assert-AreEqual 3 $all.Count
     }
     finally
     {
@@ -313,62 +241,51 @@ function Test-RemoveAgent
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $rg1 $s1
+    $db2 = Create-DatabaseForTest $rg1 $s1
+    $db3 = Create-DatabaseForTest $rg1 $s1
+    $db4 = Create-DatabaseForTest $rg1 $s1
     $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $a2 = Create-AgentForTest $rg1 $s1 $db2
+    $a3 = Create-AgentForTest $rg1 $s1 $db3
+    $a4 = Create-AgentForTest $rg1 $s1 $db4
 
     try
     {
         # Test using parameters
-        Remove-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName
-    }
-    finally 
-    {
-        Remove-ResourceGroupForTest $rg1
-    }
-}
+        $resp1 = Remove-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.Location $s1.Location
+        Assert-AreEqual $resp1.WorkerCount 100
 
-<#
-	.SYNOPSIS
-	Tests removing an agent with an agent input object
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveAgentWithInputObject
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+        # Test using input object
+        $resp2 = Remove-AzureRmSqlDatabaseAgent -InputObject $a2
+        Assert-AreEqual $resp2.AgentName $a2.AgentName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.DatabaseName $db2.DatabaseName
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.Location $s1.Location
+        Assert-AreEqual $resp2.WorkerCount 100
 
-    try
-    {
-        # Test using parameters
-        Remove-AzureRmSqlDatabaseAgent -InputObject $a1
-    }
-    finally 
-    {
-        Remove-ResourceGroupForTest $rg1
-    }
-}
+        # Test using resource id
+        $resp3 = Remove-AzureRmSqlDatabaseAgent -ResourceId $a3.ResourceId
+        Assert-AreEqual $resp3.AgentName $a3.AgentName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.DatabaseName $db3.DatabaseName
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.Location $s1.Location
+        Assert-AreEqual $resp3.WorkerCount 100
 
-<#
-	.SYNOPSIS
-	Tests removing an agent with an agent resource id
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveAgentWithResourceId
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-
-    try
-    {
-        # Test using parameters
-        Remove-AzureRmSqlDatabaseAgent -ResourceId $a1.ResourceId
+        # Test using piping
+        $resp4 = $a4 | Remove-AzureRmSqlDatabaseAgent
+        Assert-AreEqual $resp4.AgentName $a4.AgentName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.DatabaseName $db4.DatabaseName
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.Location $s1.Location
+        Assert-AreEqual $resp4.WorkerCount 100
     }
     finally 
     {
