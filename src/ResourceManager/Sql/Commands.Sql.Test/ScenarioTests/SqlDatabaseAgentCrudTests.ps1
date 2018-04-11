@@ -286,7 +286,7 @@ function Test-GetAgentWithResourceId
     
     try {
         # Basic get
-        $resp1 = Get-AzureRmSqlDatabaseAgent -InputObject $s1.ResourceId -AgentName $a1.AgentName
+        $resp1 = Get-AzureRmSqlDatabaseAgent -ResourceId $s1.ResourceId -AgentName $a1.AgentName
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.ServerName $s1.ServerName
