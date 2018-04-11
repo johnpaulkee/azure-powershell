@@ -99,12 +99,7 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-GetAgentWithResourceId");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGetAllAgents()
-        {
-            RunPowerShellTest("Test-GetAllAgents");
-        }
+        // TODO: Get list of agents tests
 
         #endregion
 

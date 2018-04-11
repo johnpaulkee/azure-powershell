@@ -70,9 +70,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string Name { get; set; }
 
         /// <summary>
-        /// The tags to assocciate wit the Azure SQL Database Server
-        /// Note: Tag is default mandatory right now for public preview.
-        /// When WorkerCount is exposed, this doesn't need to be mandatory.
+        /// Gets or sets the Agent tags
         /// </summary>
         [Parameter(
             Mandatory = false,

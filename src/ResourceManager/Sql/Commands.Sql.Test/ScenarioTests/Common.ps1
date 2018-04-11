@@ -330,6 +330,25 @@ function Get-ElasticPoolName
 
 <#
 .SYNOPSIS
+Gets valid agent name
+#>
+function Get-AgentName
+{
+    return getAssetName
+}
+
+function Get-TargetGroupName
+{
+    return getAssetName
+}
+
+function Get-JobCredentialName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
 Gets valid failover group name
 #>
 function Get-FailoverGroupName
@@ -455,41 +474,39 @@ function Create-ServerForTest ($resourceGroup, $location = "Japan East")
 	.SYNOPSIS
 	Creates a database with test params
 #>
-function Create-DatabaseForTest ($resourceGroup, $server, $dbName)
+function Create-DatabaseForTest ($resourceGroup, $server)
 {
-	$db = New-AzureRmSqlDatabase -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName `
-            -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
+    $dbName = Get-DatabaseName
+	$db = New-AzureRmSqlDatabase -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
 	return $db
 }
 
 <#
 	.SYNOPSIS
-	Creates an Azure SQL Database Agent with test params
+	Creates a sql database agent with test params
 #>
-function Create-AgentForTest ($rg, $s, $db, $a, $tags = $null)
+function Create-AgentForTest ($rg, $s, $db)
 {
-    if ($tags)
-    {
-        return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $a -Tags $tags
-    }
-
-    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $a
+    $agentName = Get-AgentName
+    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
 }
 
 <#
 	.SYNOPSIS
-	Creates an Azure SQL Database Agent Job Credential
+	Creates a sql database agent job credential with test params
 #>
-function Create-JobCredentialForTest ($rg, $s, $a, $cn, $c)
+function Create-JobCredentialForTest ($rg, $s, $a)
 {
-    $jc = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName `
-        -CredentialName $cn -Credential $c
-    return $jc
+    $credentialName = Get-JobCredentialName
+    $credential = Get-ServerCredential
+
+    $jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
+    return $jobCredential
 }
 
 <#
 	.SYNOPSIS
-	Creates an Azure SQL Database Agent Job Target Group
+	Creates a sql database agent target group with test params
 #>
 function Create-TargetGroupForTest ($rg, $s, $a, $tg)
 {
