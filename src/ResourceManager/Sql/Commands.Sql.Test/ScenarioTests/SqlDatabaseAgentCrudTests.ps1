@@ -167,7 +167,7 @@ function Test-GetAgent
     $s2 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $rg1 $s1
     $db2 = Create-DatabaseForTest $rg1 $s1
-    $db3 = Create-DatabaseForTest $rg1 $s1
+    $db3 = Create-DatabaseForTest $rg1 $s2
     $a1 = Create-AgentForTest $rg1 $s1 $db1
     $a2 = Create-AgentForTest $rg1 $s1 $db2
     $a3 = Create-AgentForTest $rg1 $s2 $db3
@@ -212,7 +212,7 @@ function Test-GetAgent
         Assert-AreEqual $resp3.WorkerCount 100
         
         # Test get all agents in s2 using resource id
-        $all = Get-AzureRmSqlDatabaseAgent -InputObject $s3
+        $all = Get-AzureRmSqlDatabaseAgent -InputObject $s2
         Assert-AreEqual 1 $all.Count
 
         # Test piping - Get all agents in s1

@@ -18,240 +18,63 @@
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-AddServerTarget
+function Test-AddTarget
 {
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $jc1 = Create-JobCredentialForTest $rg1 $s1
+    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+    
+    # Target Helper Objects
+    $st1 =  @{ ServerName = "s1"; RefreshCredentialName = $jc1.CredentialName }
+    $dbt1 = @{ ServerName = "s1"; DatabaseName = "db1" }
+    $ep1 =  @{ ServerName = "s1"; ElasticPoolName = "ep1"; RefreshCredentialName = $jc1.CredentialName }
+    $sm1 =  @{ ServerName = "s1"; ShardMapName="sm1"; DatabaseName="db1"; RefreshCredentialName = $jc1.CredentialName }
 
-    $t = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1
-    $t = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1 -Exclude
-}
+    try
+    {
+        # Test default parameters - Server target
+        $resp1 = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.ServerName $st1.ServerName
+        Assert-AreEqual $resp1.
 
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveServerTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+        # Test input object parameters - Server target
 
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1
-}
+        # Test resource id parameters - Server target
 
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddServerTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+        # Test piping - Server target
 
-    Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -RefreshCredentialName cred1
-}
+        Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1 -Exclude
 
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveServerTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+        Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -RefreshCredentialName cred1
+            Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -RefreshCredentialName cred1
 
-    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddServerTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveServerTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddDatabaseTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -DatabaseName db1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveDatabaseTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -DatabaseName db1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddDatabaseTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+                Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -DatabaseName db1
 
     Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -DatabaseName db1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveDatabaseTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -DatabaseName db1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddDatabaseTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
     Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -DatabaseName db1
-}
 
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveDatabaseTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -DatabaseName db1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddElasticPoolTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveElasticPoolTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddElasticPoolTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+        Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
 
     Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
-}
-
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveElasticPoolTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddElasticPoolTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
     Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
-}
 
+        Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+    Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+
+        Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
+}
 
 <#
 	.SYNOPSIS
@@ -259,94 +82,45 @@ function Test-AddElasticPoolTargetWithResourceId
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-RemoveElasticPoolTargetWithResourceId
+function Test-RemoveTarget
 {
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+
+    try
+    {
+        Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -RefreshCredentialName cred1
+
+        Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -RefreshCredentialName cred1
+
+        Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -RefreshCredentialName cred1
+
+        
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -DatabaseName db1
+
+    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -DatabaseName db1
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -DatabaseName db1
+
+    
+    Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
+
+    Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
 
     Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ElasticPoolName ep2 -RefreshCredentialName cred1
-}
 
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddShardMapTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveShardMapTarget
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
+    
     Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName ps2525 -AgentServerName ps6926 -AgentName agent -TargetGroupName tg1 -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddShardMapTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveShardMapTargetWithInputObject
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
 
     Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
-}
 
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-AddShardMapTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
-}
-
-<#
-	.SYNOPSIS
-	Tests creating a target group
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveShardMapTargetWithResourceId
-{
-    $agent = Get-AzureRmSqlDatabaseAgent -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent
-    $tg = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName ps2525 -ServerName ps6926 -AgentName agent -Name tg1
-
-    Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+        Remove-AzureRmSqlDatabaseAgentTarget -ResourceId $tg.ResourceId -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
