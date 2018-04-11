@@ -25,18 +25,13 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
+        #region Server Target Type
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetAddServer()
         {
             RunPowerShellTest("Test-AddServerTarget");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveServer()
-        {
-            RunPowerShellTest("Test-RemoveServerTarget");
         }
 
         [Fact]
@@ -48,16 +43,23 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveServerWithInputObject()
+        public void TestTargetAddServerWithResourceId()
         {
-            RunPowerShellTest("Test-RemoveServerTargetWithInputObject");
+            RunPowerShellTest("Test-AddServerTargetWithResourceId");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetAddServerWithResourceId()
+        public void TestTargetRemoveServer()
         {
-            RunPowerShellTest("Test-AddServerTargetWithResourceId");
+            RunPowerShellTest("Test-RemoveServerTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveServerWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithInputObject");
         }
 
         [Fact]
@@ -67,18 +69,15 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-RemoveServerTargetWithResourceId");
         }
 
+        #endregion
+
+        #region Database Target Type
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetAddDatabase()
         {
             RunPowerShellTest("Test-AddDatabaseTarget");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveDatabase()
-        {
-            RunPowerShellTest("Test-RemoveDatabaseTarget");
         }
 
         [Fact]
@@ -90,16 +89,23 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveDatabaseWithInputObject()
+        public void TestTargetAddDatabaseWithResourceId()
         {
-            RunPowerShellTest("Test-RemoveDatabaseTargetWithInputObject");
+            RunPowerShellTest("Test-AddDatabaseTargetWithResourceId");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetAddDatabaseWithResourceId()
+        public void TestTargetRemoveDatabase()
         {
-            RunPowerShellTest("Test-AddDatabaseTargetWithResourceId");
+            RunPowerShellTest("Test-RemoveDatabaseTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveDatabaseWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithInputObject");
         }
 
         [Fact]
@@ -109,18 +115,15 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-RemoveDatabaseTargetWithResourceId");
         }
 
+        #endregion
+
+        #region Elastic Pool Target Type
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetAddElasticPool()
         {
             RunPowerShellTest("Test-AddElasticPoolTarget");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveElasticPool()
-        {
-            RunPowerShellTest("Test-RemoveElasticPoolTarget");
         }
 
         [Fact]
@@ -132,16 +135,23 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveElasticPoolWithInputObject()
+        public void TestTargetAddElasticPoolWithResourceId()
         {
-            RunPowerShellTest("Test-RemoveElasticPoolTargetWithInputObject");
+            RunPowerShellTest("Test-AddElasticPoolTargetWithResourceId");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetAddElasticPoolWithResourceId()
+        public void TestTargetRemoveElasticPool()
         {
-            RunPowerShellTest("Test-AddElasticPoolTargetWithResourceId");
+            RunPowerShellTest("Test-RemoveElasticPoolTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveElasticPoolWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithInputObject");
         }
 
         [Fact]
@@ -151,18 +161,15 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-RemoveElasticPoolTargetWithResourceId");
         }
 
+        #endregion
+
+        #region Shard Map Target Type
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetAddShardMap()
         {
             RunPowerShellTest("Test-AddShardMapTarget");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveShardMap()
-        {
-            RunPowerShellTest("Test-RemoveShardMapTarget");
         }
 
         [Fact]
@@ -174,16 +181,23 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveShardMapWithInputObject()
+        public void TestTargetAddShardMapWithResourceId()
         {
-            RunPowerShellTest("Test-RemoveShardMapTargetWithInputObject");
+            RunPowerShellTest("Test-AddShardMapTargetWithResourceId");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetAddShardMapWithResourceId()
+        public void TestTargetRemoveShardMap()
         {
-            RunPowerShellTest("Test-AddShardMapTargetWithResourceId");
+            RunPowerShellTest("Test-RemoveShardMapTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetRemoveShardMapWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithInputObject");
         }
 
         [Fact]
@@ -192,5 +206,8 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-RemoveShardMapTargetWithResourceId");
         }
+
+        #endregion
+
     }
 }

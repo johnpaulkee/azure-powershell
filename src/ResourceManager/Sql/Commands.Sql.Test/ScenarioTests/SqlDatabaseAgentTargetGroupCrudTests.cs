@@ -25,12 +25,32 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
+        #region Create Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetGroupCreate()
         {
             RunPowerShellTest("Test-CreateTargetGroup");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupCreateWithInputObject()
+        {
+            RunPowerShellTest("Test-CreateTargetGroupWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupCreateWithResourceId()
+        {
+            RunPowerShellTest("Test-CreateTargetGroupWithResourceId");
+        }
+
+        #endregion
+
+        #region Get Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
@@ -53,13 +73,35 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-GetTargetGroupWithResourceId");
         }
 
+        #endregion
+
+        #region Update Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetGroupUpdate()
         {
             RunPowerShellTest("Test-UpdateTargetGroup");
         }
-        
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupUpdateWithInputObject()
+        {
+            RunPowerShellTest("Test-UpdateTargetGroupWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateTargetGroupWithResourceId");
+        }
+
+        #endregion
+
+        #region Remove Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetGroupRemove()
@@ -69,9 +111,18 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestCleanup()
+        public void TestTargetGroupRemoveWithInputObject()
         {
-            RunPowerShellTest("Test-Cleanup");
+            RunPowerShellTest("Test-RemoveTargetGroupWithInputObject");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupRemoveWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveTargetGroupWithResourceId");
+        }
+
+        #endregion
     }
 }
