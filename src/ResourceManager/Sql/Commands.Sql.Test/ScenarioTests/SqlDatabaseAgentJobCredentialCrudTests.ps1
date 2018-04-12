@@ -240,11 +240,11 @@ function Test-RemoveJobCredential
         # Test input object 
         $resp2 = Remove-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc2
 
-        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
-        Assert-AreEqual $resp1.ServerName $s1.ServerName
-        Assert-AreEqual $resp1.AgentName $a1.AgentName
-        Assert-AreEqual $resp1.CredentialName $jc2.CredentialName
-        Assert-AreEqual $resp1.UserName $jc2.UserName
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.AgentName $a1.AgentName
+        Assert-AreEqual $resp2.CredentialName $jc2.CredentialName
+        Assert-AreEqual $resp2.UserName $jc2.UserName
 
         # Test resource id
         $resp3 = Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceId $jc3.ResourceId
