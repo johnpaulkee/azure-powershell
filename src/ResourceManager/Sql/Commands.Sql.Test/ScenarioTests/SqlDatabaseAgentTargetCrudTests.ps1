@@ -24,20 +24,19 @@ function Test-AddTarget
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $rg1 $s1
-    #$ep1 = Create-ElasticPoolForTest $rg1 $s1
+    $ep1 = Create-ElasticPoolForTest $rg1 $s1
     $a1 = Create-AgentForTest $rg1 $s1 $db1
     $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-
     $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
-    #$tg2 = Create-TargetGroupForTest $rg1 $s1 $a1
-    #$tg3 = Create-TargetGroupForTest $rg1 $s1 $a1
-    #$tg4 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg2 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg3 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg4 = Create-TargetGroupForTest $rg1 $s1 $a1
 
     try
     {
-        #Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
-        Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg2)
-        #Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg3)
+        #Test-AddServerTarget $rg1 $s1 $a1 $jc1 $tg1
+        #Test-AddDatabaseTarget $rg1 $s1 $a1 $jc1 $tg2
+        Test-AddElasticPoolTarget $rg1 $s1 $a1 $jc1 $tg3
         #Test-AddShardMapTarget()
     }
     finally
@@ -46,6 +45,12 @@ function Test-AddTarget
     }
 }
 
+<#
+	.SYNOPSIS
+	Tests adding server targets to target group
+    .DESCRIPTION
+	SmokeTest
+#>
 function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
 {
     # Server Target Helper Objects
@@ -61,7 +66,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $st1.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
 
@@ -69,7 +74,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $st1.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlServer"
 
@@ -82,9 +87,12 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $st1.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 1
 
     ## Test input object
 
@@ -92,7 +100,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $st2.ServerName -RefreshCredentialName $jc1.CredentialName
         
     Assert-AreEqual $resp.ServerName $st2.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
 
@@ -100,7 +108,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $st2.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
         
     Assert-AreEqual $resp.ServerName $st2.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlServer"
 
@@ -112,9 +120,12 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $st2.ServerName -RefreshCredentialName $jc1.CredentialName
         
     Assert-AreEqual $resp.ServerName $st2.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 2
 
     ## Test resource id
 
@@ -122,7 +133,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $st3.ServerName -RefreshCredentialName $jc1.CredentialName
         
     Assert-AreEqual $resp.ServerName $st3.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
 
@@ -130,7 +141,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $st3.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
         
     Assert-AreEqual $resp.ServerName $st3.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlServer"
 
@@ -142,22 +153,31 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1)
     $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $st3.ServerName -RefreshCredentialName $jc1.CredentialName
         
     Assert-AreEqual $resp.ServerName $st3.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 3
 
     ## Test piping
 
     # Add s4 to tg1
     $resp = $tg1 | Add-AzureRmSqlDatabaseAgentTarget -ServerName $st4.ServerName -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual $resp.ServerName $st4.ServerName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlServer"
 
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 4
+
     # Add all servers from rg1 to tg1 - Could also add other servers from all resource groups but unsure what count would be otherwise
-    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName cred1
+    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual 1 $added.Count
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 5
 }
 
 <#
@@ -170,9 +190,9 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1)
 {
     # Target Helper Objects
     $dbt1 = @{ ServerName = "s1"; DatabaseName = "db1" }
-    $dbt2 = @{ ServerName = "s1"; DatabaseName = "db2" }
-    $dbt3 = @{ ServerName = "s1"; DatabaseName = "db3" }
-    $dbt4 = @{ ServerName = "s1"; DatabaseName = "db3" }
+    $dbt2 = @{ ServerName = "s2"; DatabaseName = "db2" }
+    $dbt3 = @{ ServerName = "s3"; DatabaseName = "db3" }
+    $dbt4 = @{ ServerName = "s4"; DatabaseName = "db4" }
 
     ## --------- Database Target Tests -------------
     ## Test default parameters
@@ -190,7 +210,6 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1)
 
     Assert-AreEqual $resp.ServerName $dbt1.ServerName
     Assert-AreEqual $resp.DatabaseName $dbt1.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlDatabase"
 
@@ -207,6 +226,9 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1)
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlDatabase"
 
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 1
+
     ## Test input object
 
     # Include db2
@@ -237,6 +259,9 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1)
     Assert-AreEqual $resp.DatabaseName $dbt2.DatabaseName
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlDatabase"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 2
 
     ## Test resource id
 
@@ -269,6 +294,9 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1)
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlDatabase"
 
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 3
+
     ## Test piping
 
     # Add db4 to tg1
@@ -278,9 +306,15 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1)
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlDatabase"
 
-    # Add all servers from rg1 to tg1 - Could also add other servers from all resource groups but unsure what count would be otherwise
-    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlDatabase | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 4
+
+    # Add all databases from server in rg1 to tg1 (should be master & 1 user db)
+    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlDatabase | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1
     Assert-AreEqual 2 $added.Count
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 6
 }
 
 <#
@@ -293,126 +327,141 @@ function Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1)
 {
     # Target Helper Objects
     $ept1 = @{ ServerName = "s1"; ElasticPoolName = "ep1"; }
-    $ept2 = @{ ServerName = "s1"; ElasticPoolName = "ep2"; }
-    $ept3 = @{ ServerName = "s1"; ElasticPoolName = "ep3"; }
-    $ept4 = @{ ServerName = "s1"; ElasticPoolName = "ep4"; }
+    $ept2 = @{ ServerName = "s2"; ElasticPoolName = "ep2"; }
+    $ept3 = @{ ServerName = "s3"; ElasticPoolName = "ep3"; }
+    $ept4 = @{ ServerName = "s4"; ElasticPoolName = "ep4"; }
 
     ## --------- Elastic Pool Target Tests -------------
     ## Test default parameters
 
     # Include ep1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $ept1.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept1.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
     # Exclude ep1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $ept1.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept1.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
     # Exclude ep1 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include ep1 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $ept1.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept1.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 1
 
     ## Test input object
 
-    # Include db2
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    # Include ep2
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $ept2.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept2.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
-    # Exclude db2
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.ResourceId -Exclude
+    # Exclude ep2
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $ept2.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept2.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
-    # Exclude db2 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.ResourceId -Exclude
+    # Exclude ep2 again - no errors and no resp
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
-    # Include db2 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    # Include ep2 - no errors and resp
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $ept2.ServerName -ElasticPoolName $ept2.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $ept2.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept2.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 2
 
     ## Test resource id
 
-    # Include db3
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    # Include ep3
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $ept3.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept3.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
-    # Exclude db3
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.ResourceId -Exclude
+    # Exclude ep3
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $ept3.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept3.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
-    # Exclude db3 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.ResourceId -Exclude
+    # Exclude ep3 again - no errors and no resp
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
-    # Include db3 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    # Include ep3 - no errors and resp
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $ept3.ServerName -ElasticPoolName $ept3.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $ept3.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept3.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 3
 
     ## Test piping
 
-    # Add db4 to tg1
-    $resp = $tg1 | Add-AzureRmSqlDatabaseAgentTarget -ServerName $ept4.ServerName -ElasticPoolName $ept4.ElasticPoolName -RefreshCredentialName $jc1.ResourceId
+    # Add ep4 to tg1
+    $resp = $tg1 | Add-AzureRmSqlDatabaseAgentTarget -ServerName $ept4.ServerName -ElasticPoolName $ept4.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual $resp.ServerName $ept4.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept4.ElasticPoolName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 4
+
     # Add all elastic pools from rg1 to tg1
-    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlElasticPool | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg -RefreshCredentialName $jc1.ResourceId
+    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlElasticPool | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual 1 $added.Count
+
+    $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
+    Assert-AreEqual $all.Members.Count 5
 }
 
 <#
@@ -433,122 +482,122 @@ function Test-AddShardMapTarget($rg1, $s1, $a1, $jc1, $tg1)
     ## Test default parameters
 
     # Include ep1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $smt1.ServerName
     Assert-AreEqual $resp.ShardMapName $smt1.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt1.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude ep1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName  -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName  -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $smt1.ServerName
     Assert-AreEqual $resp.ShardMapName $smt1.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt1.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude ep1 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include ep1 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $smt1.ServerName
     Assert-AreEqual $resp.ShardMapName $smt1.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt1.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     ## Test input object
 
     # Include db2
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName -DatabaseName $smt2.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $smt2.ServerName
     Assert-AreEqual $resp.ShardMapName $smt2.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt2.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude db2
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName  -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName  -DatabaseName $smt2.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $smt2.ServerName
     Assert-AreEqual $resp.ShardMapName $smt2.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt2.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude db2 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName -DatabaseName $smt2.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include db2 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -ServerName $smt2.ServerName -ShardMapName $smt2.ShardMapName -DatabaseName $smt2.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $smt2.ServerName
     Assert-AreEqual $resp.ShardMapName $smt2.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt2.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     ## Test resource id
 
     # Include db3
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt3.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $smt3.ServerName
     Assert-AreEqual $resp.ShardMapName $smt3.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt3.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude db3
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt3.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $smt3.ServerName
     Assert-AreEqual $resp.ShardMapName $smt3.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt3.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Exclude"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude db3 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt3.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include db3 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceId $tg1.ResourceId -ServerName $smt3.ServerName -ShardMapName $smt3.ShardMapName -DatabaseName $smt3.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $smt3.ServerName
     Assert-AreEqual $resp.ShardMapName $smt3.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt3.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     ## Test piping
 
     # Add db4 to tg1
-    $resp = $tg1 | Add-AzureRmSqlDatabaseAgentTarget -ServerName $smt4.ServerName -ShardMapName $smt4.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.ResourceId
+    $resp = $tg1 | Add-AzureRmSqlDatabaseAgentTarget -ServerName $smt4.ServerName -ShardMapName $smt4.ShardMapName -DatabaseName $smt4.DatabaseName -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual $resp.ServerName $smt4.ServerName
     Assert-AreEqual $resp.ShardMapName $smt4.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt4.DatabaseName
-    Assert-AreEqual $resp.RefreshCredentialName $jc1.ResourceId
+    Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 }

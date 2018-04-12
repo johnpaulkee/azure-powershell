@@ -499,7 +499,7 @@ function Create-ElasticPoolForTest ($resourceGroup, $server)
 {
 	$epName = Get-ElasticPoolName
 
-	$ep = New-AzureRmSqlElasticPool -ResourceGroupName  $resourceGroup.ResourceGroupName -ServerName $server.ServerName
+	$ep = New-AzureRmSqlElasticPool -ResourceGroupName  $resourceGroup.ResourceGroupName -ServerName $server.ServerName -ElasticPoolName $epName
 	return $ep
 }
 
