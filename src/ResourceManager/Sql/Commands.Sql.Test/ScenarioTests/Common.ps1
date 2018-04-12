@@ -493,6 +493,18 @@ function Create-ServerForTest ($resourceGroup, $location = "Japan East")
 
 <#
 	.SYNOPSIS
+	Creates the test environment needed to perform the Sql elastic pool CRUD tests
+#>
+function Create-ElasticPoolForTest ($resourceGroup, $server)
+{
+	$epName = Get-ElasticPoolName
+
+	$ep = New-AzureRmSqlElasticPool -ResourceGroupName  $resourceGroup.ResourceGroupName -ServerName $server.ServerName
+	return $ep
+}
+
+<#
+	.SYNOPSIS
 	Creates a database with test params
 #>
 function Create-DatabaseForTest ($resourceGroup, $server)

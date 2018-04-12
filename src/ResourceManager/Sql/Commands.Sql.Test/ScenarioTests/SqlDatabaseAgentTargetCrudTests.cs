@@ -38,5 +38,12 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-RemoveTarget");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestClear()
+        {
+            RunPowerShellTest("Test-Clear");
+        }
     }
 }
