@@ -68,13 +68,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-RemoveJobCredential");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestCleanup()
-        {
-            RunPowerShellTest("Test-Cleanup");
-        }
-
         #endregion
     }
 }

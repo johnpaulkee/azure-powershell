@@ -273,8 +273,3 @@ function Test-RemoveJobCredential
         Remove-ResourceGroupForTest $rg1
     }
 }
-
-function Test-Cleanup
-{
-	Remove-AzureRmResourceGroup -Name ps5706 -Force
-}
