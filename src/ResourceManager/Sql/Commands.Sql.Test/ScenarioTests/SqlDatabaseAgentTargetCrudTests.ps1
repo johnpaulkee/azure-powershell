@@ -24,7 +24,7 @@ function Test-AddTarget
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $rg1 $s1
-    $ep1 = Create-ElasticPoolForTest $rg1 $s1
+    #$ep1 = Create-ElasticPoolForTest $rg1 $s1
     $a1 = Create-AgentForTest $rg1 $s1 $db1
     $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
     $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
@@ -36,8 +36,8 @@ function Test-AddTarget
     {
         #Test-AddServerTarget $rg1 $s1 $a1 $jc1 $tg1
         #Test-AddDatabaseTarget $rg1 $s1 $a1 $jc1 $tg2
-        Test-AddElasticPoolTarget $rg1 $s1 $a1 $jc1 $tg3
-        #Test-AddShardMapTarget()
+        #Test-AddElasticPoolTarget $rg1 $s1 $a1 $jc1 $tg3
+        Test-AddShardMapTarget $rg1 $s1 $a1 $jc1 $tg4
     }
     finally
     {
