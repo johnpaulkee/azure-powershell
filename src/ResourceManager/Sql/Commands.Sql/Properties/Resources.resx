@@ -455,7 +455,7 @@
     <comment>Azure SQL Database Agent</comment>
   </data>
   <data name="RemoveSqlDatabaseAgentTargetGroupWarning" xml:space="preserve">
-    <value>Are you sure you want to remove the target group '{0}' from agent '{1'}</value>
+    <value>Are you sure you want to remove the target group '{0}' from agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
 </root>
