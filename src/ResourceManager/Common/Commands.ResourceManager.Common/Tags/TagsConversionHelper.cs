@@ -103,6 +103,11 @@ namespace Microsoft.Azure.Commands.ResourceManager.Common.Tags
                 Hashtable tags = tagsFromCli as Hashtable;
                 return TagsConversionHelper.CreateTagDictionary(tags, validate: true);
             }
+            else if (cmdlet.MyInvocation.BoundParameters.TryGetValue("Tag", out tagsFromCli))
+            {
+                Hashtable tags = tagsFromCli as Hashtable;
+                return TagsConversionHelper.CreateTagDictionary(tags, validate: true);
+            }
             else
             {
                 return tagsFromModel;

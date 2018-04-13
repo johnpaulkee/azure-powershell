@@ -12,43 +12,122 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Get-AzureRmSqlDatabaseAgentTargetGroup Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentTargetGroup", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentTargetGroup", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
     public class GetAzureSqlDatabaseAgentTargetGroup : AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the agent input object model
         /// </summary>
-        [Parameter(Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
-        public string TargetGroupName { get; set; }
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-        /// Gets one or more credentials from the Azure SQL Database Agent
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource id of the credential to remove")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target group name
         /// </summary>
-        /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
+        [Parameter(
+            ParameterSetName = DefaultParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The target group name")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The target group name")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The target group name")]
+        [ValidateNotNullOrEmpty]
+        [Alias("TargetGroupName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Execution starts here
+        /// </summary>
+        public override void ExecuteCmdlet()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("TargetGroupName"))
+            switch (ParameterSetName)
             {
-                return new List<AzureSqlDatabaseAgentTargetGroupModel>
-                {
-                    ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName)
-                };
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.AgentName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
             }
-            else
+
+            // Lets us return a list of target groups
+            if (this.Name == null)
             {
-                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Check to see if the target group exists
+        /// </summary>
+        /// <returns>Throws exception if the target group doesn't exist.<returns>
+        protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
+        {
+            try
+            {
+                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The target group does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.Name, this.AgentName),
+                        "TargetGroupName");
+                }
+
+                // Unexpected exception encountered
+                throw;
             }
         }
     }

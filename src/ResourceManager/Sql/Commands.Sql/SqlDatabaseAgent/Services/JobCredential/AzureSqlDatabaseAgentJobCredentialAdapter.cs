@@ -16,6 +16,10 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Commands.Sql.Server.Services;
+using System.Security.Permissions;
+using System.Security;
+using System;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -40,8 +44,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator = new AzureSqlDatabaseAgentJobCredentialCommunicator(Context);
         }
 
-        #region Agent APIs
-
         /// <summary>
         /// Upserts an Azure SQL Database Agent to a server
         /// </summary>
@@ -53,18 +55,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string databaseId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/databases/{3}",
                 AzureSqlDatabaseAgentJobCredentialCommunicator.Subscription.Id,
                 model.ResourceGroupName,
-                model.AgentServerName,
+                model.ServerName,
                 model.CredentialName);
 
             var param = new Management.Sql.Models.JobCredential
             {
-                Username = model.Username,
-                Password = model.Password
+                Username = model.UserName,
+                Password = model.Password != null ? Decrypt(model.Password) : null
             };
 
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, model.CredentialName, param);
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.CredentialName, param);
 
-            return CreateAgentCredentialModelFromResponse(model.ResourceGroupName, model.AgentServerName, model.AgentName, resp);
+            return CreateAgentCredentialModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
         }
 
         /// <summary>
@@ -103,10 +105,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator.Remove(resourceGroupName, serverName, agentName, credentialName);
         }
 
-        #endregion
-
-        #region Agent Helpers
-
         /// <summary>
         /// Convert a Management.Sql.Models.JobAgent to AzureSqlDatabaseAgentJobCredentialModel
         /// </summary>
@@ -124,16 +122,36 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             AzureSqlDatabaseAgentJobCredentialModel credential = new AzureSqlDatabaseAgentJobCredentialModel
             {
                 ResourceGroupName = resourceGroupName,
-                AgentServerName = serverName,
+                ServerName = serverName,
                 AgentName = agentName,
                 CredentialName = resp.Name,
-                Username = resp.Username
-                // Check if password is needed. From examples it looks like it's not needed.
+                UserName = resp.Username,
+                ResourceId = resp.Id
             };
 
             return credential;
         }
 
-        #endregion
+        /// <summary>
+        /// Convert a <see cref="SecureString"/> to a plain-text string representation.
+        /// This should only be used in a proetected context, and must be done in the same logon and process context
+        /// in which the <see cref="SecureString"/> was constructed.
+        /// </summary>
+        /// <param name="secureString">The encrypted <see cref="SecureString"/>.</param>
+        /// <returns>The plain-text string representation.</returns>
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        internal static string Decrypt(SecureString secureString)
+        {
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(secureString);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
     }
 }

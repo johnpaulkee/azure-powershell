@@ -21,18 +21,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
     /// </summary>
     public class AzureSqlDatabaseAgentModel
     {
+        public AzureSqlDatabaseAgentModel()
+        {
+        }
+
         /// <summary>
-        /// Gets or sets the name of the resource group the Sql Database Agent is in
+        /// Gets or sets the name of the resource group name
         /// </summary>
         public string ResourceGroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the server
         /// </summary>
-        public string AgentServerName { get; set; }
+        public string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the azure sql database agent name
+        /// Gets or sets the agent name
         /// </summary>
         public string AgentName { get; set; }
 
@@ -44,7 +48,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// Gets or sets the database name for the sql database agent name.
         /// </summary>
-        public string AgentDatabaseName { get; set; }
+        public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// The SQL Database Agent Resource Id
+        /// </summary>
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        ///  The SQL Database Agent Control Database Id
+        /// </summary>
+        public string DatabaseId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent's number of workers.

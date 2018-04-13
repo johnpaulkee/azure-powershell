@@ -25,11 +25,37 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
+        #region Create Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetGroupCreate()
         {
             RunPowerShellTest("Test-CreateTargetGroup");
         }
+
+        #endregion
+
+        #region Get Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupGet()
+        {
+            RunPowerShellTest("Test-GetTargetGroup");
+        }
+
+        #endregion
+
+        #region Remove Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupRemove()
+        {
+            RunPowerShellTest("Test-RemoveTargetGroup");
+        }
+
+        #endregion
     }
 }

@@ -12,7 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using Microsoft.Azure.Commands.Sql.Server.Model;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -21,44 +23,99 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// <summary>
     /// Defines the Get-AzureRmSqlDatabaseAgent cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent", 
+        SupportsShouldProcess = true, 
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent server name
+        /// Gets or sets the Agent Server Object
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent's server input object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlServerModel InputObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Agent Server Resource Id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Server Name")]
-        public string AgentServerName { get; set; }
+            Position = 0,
+            HelpMessage = "The agent's server resource id")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent name
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Name")]
-        public string AgentName { get; set; }
-        
+            HelpMessage = "The agent name")]
+        [Alias("AgentName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Cmdlet execution starts here
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
+            // Lets us return a list of agents
+            if (this.Name == null)
+            {
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
         /// <summary>
         /// Gets one or more Azure SQL Database Agents from the service.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
+        protected override AzureSqlDatabaseAgentModel GetEntity()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("AgentName"))
-            {
-                return new List<AzureSqlDatabaseAgentModel>
-                {
-                    ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName)
-                };
-            }
-            else
-            {
-                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName);
-            }
+            return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
         }
     }
 }

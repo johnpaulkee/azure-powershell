@@ -26,6 +26,8 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
+        #region Create Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestAgentCreate()
@@ -33,12 +35,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-CreateAgent");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentCreateWithWorkerCount()
-        {
-            RunPowerShellTest("Test-CreateAgentWithWorkerCount");
-        }
+        #endregion
+
+        #region Update Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
@@ -47,6 +46,10 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-UpdateAgent");
         }
 
+        #endregion
+
+        #region Get Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestAgentGet()
@@ -54,11 +57,17 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-GetAgent");
         }
 
+        #endregion
+
+        #region Remove Tests
+
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestAgentRemove()
         {
             RunPowerShellTest("Test-RemoveAgent");
         }
+
+        #endregion
     }
 }

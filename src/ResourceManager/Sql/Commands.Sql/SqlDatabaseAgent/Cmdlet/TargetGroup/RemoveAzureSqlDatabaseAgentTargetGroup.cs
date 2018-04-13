@@ -12,26 +12,65 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System.Globalization;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Remove-AzureRmSqlDatabaseAgentTargetGroup Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTargetGroup", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTargetGroup",
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
     public class RemoveAzureSqlDatabaseAgentTargetGroup: AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the agent input object
         /// </summary>
-        [Parameter(Mandatory = true,
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent input object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+
+        /// <summary>
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target group name
+        /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet, 
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Target Group Name")]
-        public string TargetGroupName { get; set; }
+            HelpMessage = "The target group name")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The target group name")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The target group name")]
+        [Alias("TargetGroupName")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
@@ -40,15 +79,61 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public SwitchParameter Force { get; set; }
 
         /// <summary>
-        /// Check to see if the credential already exists for the agent.
+        /// Execution starts here
         /// </summary>
-        /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
+        public override void ExecuteCmdlet()
         {
-            return new List<AzureSqlDatabaseAgentTargetGroupModel>()
+            // Warning confirmation for deletion for target group
+            if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupDescription, this.Name, this.AgentName),
+                   string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupWarning, this.Name, this.AgentName),
+                   Properties.Resources.ShouldProcessCaption))
             {
-                ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName)
-            };
+                return;
+            }
+
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.AgentName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Check to see if the target group already exists.
+        /// </summary>
+        /// <returns>Throws error if the target group doesn't exist. Otherwise returns the target group</returns>
+        protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
+        {
+            try
+            {
+                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The target group does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.Name, this.AgentName),
+                        "CredentialName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
 
         /// <summary>
@@ -56,19 +141,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">Model retrieved from service</param>
         /// <returns>The model that was passed in</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> model)
+        protected override AzureSqlDatabaseAgentTargetGroupModel ApplyUserInputToModel(AzureSqlDatabaseAgentTargetGroupModel model)
         {
             return model;
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the job credential
+        /// Sends the changes to the service -> Removes the target group
         /// </summary>
-        /// <param name="entity">The credential to create</param>
-        /// <returns>The created job credential</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> entity)
+        /// <param name="entity">The target group to remove</param>
+        /// <returns>The removed target group</returns>
+        protected override AzureSqlDatabaseAgentTargetGroupModel PersistChanges(AzureSqlDatabaseAgentTargetGroupModel entity)
         {
-            ModelAdapter.RemoveTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName);
+            ModelAdapter.RemoveTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
             return entity;
         }
     }

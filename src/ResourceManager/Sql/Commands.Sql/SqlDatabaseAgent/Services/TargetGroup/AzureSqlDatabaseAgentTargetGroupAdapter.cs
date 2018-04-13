@@ -39,9 +39,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator = new AzureSqlDatabaseAgentTargetGroupCommunicator(Context);
         }
 
-        #region Target Group APIs
-
-        /// <summary>14
+        /// <summary>
         /// Upserts an Azure SQL Database Agent to a server
         /// </summary>
         /// <param name="model"></param>
@@ -53,25 +51,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 Members = model.Members,
             };
 
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.AgentServerName, model.AgentName, model.TargetGroupName, param);
-            return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.AgentServerName, model.AgentName, resp);
-        }
-
-        public IList<Management.Sql.Models.JobTarget> UpsertTargets(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string targetGroupName,
-            IList<Management.Sql.Models.JobTarget> targetsToAdd)
-        {
-            var param = new Management.Sql.Models.JobTargetGroup
-            {
-                Members = targetsToAdd
-            };
-
-            var resp = Communicator.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, param);
-
-            return resp.Members;
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.TargetGroupName, param);
+            return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
         }
 
         /// <summary>
@@ -111,10 +92,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator.Remove(resourceGroupName, serverName, agentName, targetGroupName);
         }
 
-        #endregion
-
-        #region Agent Helpers
-
         /// <summary>
         /// Convert a Management.Sql.Models.JobAgent to AzureSqlDatabaseAgentTargetGroupModel
         /// </summary>
@@ -127,15 +104,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             AzureSqlDatabaseAgentTargetGroupModel targetGroup = new AzureSqlDatabaseAgentTargetGroupModel
             {
                 ResourceGroupName = resourceGroupName,
-                AgentServerName = serverName,
+                ServerName = serverName,
                 AgentName = agentName,
                 TargetGroupName = resp.Name,
-                Members = resp.Members
+                Members = resp.Members,
+                ResourceId = resp.Id
             };
 
             return targetGroup;
         }
-
-        #endregion
     }
 }

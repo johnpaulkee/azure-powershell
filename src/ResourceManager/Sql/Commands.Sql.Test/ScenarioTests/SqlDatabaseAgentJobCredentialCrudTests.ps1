@@ -14,139 +14,262 @@
 
 <#
 	.SYNOPSIS
-	Tests creating an Azure Sql Database Agent Job Credential
+	Tests creating a job credential
     .DESCRIPTION
 	SmokeTest
 #>
 function Test-CreateJobCredential
 {
     # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    # Credential params
+    $cn1 = Get-JobCredentialName
+    $cn2 = Get-JobCredentialName
+    $cn3 = Get-JobCredentialName
+    $cn4 = Get-JobCredentialName
+    $c1 = Get-ServerCredential
 
     try 
     {
-    	$credential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-            -CredentialName "cred1" -Username "cloudSA" -Password "Yukon900!"
+        # Create using default params
+    	$resp1 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $cn1 -Credential $c1
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.CredentialName $cn1
+        Assert-AreEqual $resp1.UserName $c1.UserName
+        
+        # Create using agent input object
+    	$resp2 = New-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1 -Name $cn2 -Credential $c1
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.CredentialName $cn2
+        Assert-AreEqual $resp2.UserName $c1.UserName
 
-        # Default create agent
-        Assert-AreEqual $credential.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $credential.ServerName $server.ServerName
-        Assert-AreEqual $credential.CredentialName "cred1"
-        Assert-AreEqual $credential.Username "cloudSA"
+        # Create using agent resource id
+        $resp3 = New-AzureRmSqlDatabaseAgentJobCredential -ResourceId $a1.ResourceId -Name $cn3 -Credential $c1
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.CredentialName $cn3
+        Assert-AreEqual $resp3.UserName $c1.UserName
+
+        # Tests using piping
+        $resp4 = $a1 | New-AzureRmSqlDatabaseAgentJobCredential -Name $cn4 -Credential $c1
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.CredentialName $cn4
+        Assert-AreEqual $resp4.UserName $c1.UserName
     }
     finally
     {
-        Remove-ResourceGroupForTest $rg
+        Remove-ResourceGroupForTest $rg1
     }
 }
 
 <#
 	.SYNOPSIS
-	Tests getting an Azure Sql Database Agent Job Credential
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-GetJobCredential
-{
-    # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
-    $credential = Create-JobCredentialForTest $rg $server $agent "cred1" "cloudSA" "Yukon900!"
-
-    try 
-    {
-        $resp = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-            -CredentialName $credential.CredentialName
-
-        Assert-AreEqual $resp.ResourceGroupName $rg.ResourceGroupName
-        Assert-AreEqual $resp.ServerName $server.ServerName
-        Assert-AreEqual $resp.AgentName $agent.AgentName
-        Assert-AreEqual $resp.CredentialName $credential.CredentialName
-        Assert-AreEqual $resp.Username $credential.Username
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $rg
-    }
-}
-
-<#
-	.SYNOPSIS
-	Tests removing an Azure Sql Database Agent Job Credential
-    .DESCRIPTION
-	SmokeTest
-#>
-function Test-RemoveJobCredential
-{
-    # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
-
-    $cred1 = Create-JobCredentialForTest $rg $server $agent "cred1" "cloudSA" "Yukon900!"
-    Assert-NotNull $cred1
-    
-    $cred2 = Create-JobCredentialForTest $rg $server $agent "cred2" "testUser" "Yukon900!"
-    Assert-NotNull $cred2
-
-    try
-    {
-        # Remove cred 1
-        Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName -CredentialName $cred1.CredentialName
-        
-        # Remove cred 2 through piping
-        $cred2 | Remove-AzureRmSqlDatabaseAgentJobCredential
-        
-        # Check that credentials are deleted.
-        $all = $agent | Get-AzureRmSqlDatabaseAgentJobCredential
-        Assert-AreEqual $all.Count 0
-    }
-    finally 
-    {
-        Remove-ResourceGroupForTest $rg
-    }
-}
-
-<#
-	.SYNOPSIS
-	Tests removing an Azure Sql Database Agent Job Credential
+	Tests updating a job credential
     .DESCRIPTION
 	SmokeTest
 #>
 function Test-UpdateJobCredential
 {
     # Setup
-    $rg = Create-ResourceGroupForTest
-    $server = Create-ServerForTest $rg "westus2"
-    $db = Create-DatabaseForTest $rg $server "db1"
-    $agent = Create-AgentForTest $rg $server $db "agent"
-
-    # Create cred 1
-    $cred1 = Create-JobCredentialForTest $rg $server $agent "cred1" "cloudSA" "Yukon900!"
-    Assert-NotNull $cred1
-    
-    # Create cred 2
-    $cred2 = Create-JobCredentialForTest $rg $server $agent "cred2" "testUser" "Yukon900!"
-    Assert-NotNull $cred2
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
 
     try
     {
-        # Update cred 1
-        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName -CredentialName $cred1.CredentialName -Username "user1" -Password "newPassword!"
-        Assert-AreEqual $resp1.Username "user1"
-        
-        # Update cred 2 through piping
-        $resp2 = $cred2 | Set-AzureRmSqlDatabaseAgentJobCredential -Username "user2" -Password "newPassword!"
-        Assert-AreEqual $resp2.Username "user2"
+        # Test default parameters
+        $newCred = Get-Credential
+        $resp1 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $jc1.CredentialName -Credential $newCred
+
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $newCred.UserName
+
+        # Test job credential input object
+        $newCred = Get-Credential
+        $resp2 = Set-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc1 -Credential $newCred
+
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.AgentName $a1.AgentName
+        Assert-AreEqual $resp2.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp2.UserName $newCred.UserName
+
+        # Test job credential resource id
+        $newCred = Get-Credential
+        $resp3 = Set-AzureRmSqlDatabaseAgentJobCredential -ResourceId $jc1.ResourceId -Credential $newCred
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.AgentName $a1.AgentName
+        Assert-AreEqual $resp3.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp3.UserName $newCred.UserName
+
+        # Test piping
+        $newCred = Get-Credential
+        $resp4 = $jc1 | Set-AzureRmSqlDatabaseAgentJobCredential -Credential $newCred
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.AgentName $a1.AgentName
+        Assert-AreEqual $resp4.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp4.UserName $newCred.UserName
     }
     finally 
     {
-        Remove-ResourceGroupForTest $rg
+        Remove-ResourceGroupForTest $rg1
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests getting a job credential
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-GetJobCredential
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc3 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc4 = Create-JobCredentialForTest $rg1 $s1 $a1
+
+    try
+    {
+        # Test default parameters - get specific credential
+        $resp1 = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $jc1.CredentialName
+
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $jc1.UserName
+
+        # Test default parameters - get all credentials
+        $all = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName
+        Assert-AreEqual 4 $all.Count
+
+        # Test job credential input object
+        $resp2 = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1 -Name $jc2.CredentialName
+
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.AgentName $a1.AgentName
+        Assert-AreEqual $resp2.CredentialName $jc2.CredentialName
+        Assert-AreEqual $resp2.UserName $jc2.UserName
+        
+        # Test job credential input object - get all credentials
+        $all = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1
+        Assert-AreEqual 4 $all.Count
+
+        # Test job credential resource id
+        $resp3 = Get-AzureRmSqlDatabaseAgentJobCredential -InputObject $a1 -Name $jc3.CredentialName
+
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.AgentName $a1.AgentName
+        Assert-AreEqual $resp3.CredentialName $jc3.CredentialName
+        Assert-AreEqual $resp3.UserName $jc3.UserName
+        
+        # Test job credential resource id - get all credentials
+        $all = Get-AzureRmSqlDatabaseAgentJobCredential -ResourceId $a1.ResourceId
+        Assert-AreEqual 4 $all.Count
+
+        # Test piping - get job credential
+        $resp4 = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential -Name $jc4.CredentialName
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.AgentName $a1.AgentName
+        Assert-AreEqual $resp4.CredentialName $jc4.CredentialName
+        Assert-AreEqual $resp4.UserName $jc4.UserName
+
+        # Test piping - get all credentials from agent
+        $all = $a1 | Get-AzureRmSqlDatabaseAgentJobCredential
+        Assert-AreEqual 4 $all.Count
+    }
+    finally 
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
+}
+
+<#
+	.SYNOPSIS
+	Tests removing a job credential
+    .DESCRIPTION
+	SmokeTest
+#>
+function Test-RemoveJobCredential
+{
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $rg1 $s1
+    $a1 = Create-AgentForTest $rg1 $s1 $db1
+
+    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc3 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc4 = Create-JobCredentialForTest $rg1 $s1 $a1
+
+    try
+    {
+        # Test default parameters - Remove credential
+        $resp1 = Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Name $jc1.CredentialName
+
+        Assert-AreEqual $resp1.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp1.ServerName $s1.ServerName
+        Assert-AreEqual $resp1.AgentName $a1.AgentName
+        Assert-AreEqual $resp1.CredentialName $jc1.CredentialName
+        Assert-AreEqual $resp1.UserName $jc1.UserName
+
+        # Test input object 
+        $resp2 = Remove-AzureRmSqlDatabaseAgentJobCredential -InputObject $jc2
+
+        Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp2.ServerName $s1.ServerName
+        Assert-AreEqual $resp2.AgentName $a1.AgentName
+        Assert-AreEqual $resp2.CredentialName $jc2.CredentialName
+        Assert-AreEqual $resp2.UserName $jc2.UserName
+
+        # Test resource id
+        $resp3 = Remove-AzureRmSqlDatabaseAgentJobCredential -ResourceId $jc3.ResourceId
+
+        Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp3.ServerName $s1.ServerName
+        Assert-AreEqual $resp3.AgentName $a1.AgentName
+        Assert-AreEqual $resp3.CredentialName $jc3.CredentialName
+        Assert-AreEqual $resp3.UserName $jc3.UserName
+
+        # Test piping
+        $resp4 = $jc4 | Remove-AzureRmSqlDatabaseAgentJobCredential
+
+        Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
+        Assert-AreEqual $resp4.ServerName $s1.ServerName
+        Assert-AreEqual $resp4.AgentName $a1.AgentName
+        Assert-AreEqual $resp4.CredentialName $jc4.CredentialName
+        Assert-AreEqual $resp4.UserName $jc4.UserName
+
+        # Confirm no more credentials
+   		$all = Get-AzureRmSqlDatabaseAgent -InputObject $s1 -Name $a1.AgentName | Get-AzureRmSqlDatabaseAgentJobCredential
+		Assert-AreEqual $all.Count 0
+    }
+    finally 
+    {
+        Remove-ResourceGroupForTest $rg1
     }
 }

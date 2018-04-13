@@ -15,40 +15,120 @@
 using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Get-AzureRmSqlDatabaseAgentJobCredential Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobCredential", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobCredential", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
     public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the agent model input object
         /// </summary>
-        [Parameter(Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
-        public string CredentialName { get; set; }
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent input object model")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-        /// Gets one or more credentials from the Azure SQL Database Agent
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the credential name
         /// </summary>
-        /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
+        [Parameter(Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job credential name")]
+        [Parameter(ParameterSetName = InputObjectParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The job credential name")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The job credential name")]
+        [ValidateNotNullOrEmpty]
+        [Alias("CredentialName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
         {
-            if (this.MyInvocation.BoundParameters.ContainsKey("CredentialName"))
+            switch (ParameterSetName)
             {
-                return new List<AzureSqlDatabaseAgentJobCredentialModel>
-                {
-                    ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.CredentialName)
-                };
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.AgentName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
             }
-            else
+
+            // Returns a list of credentials
+            if (this.Name == null)
             {
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Check to see if the credential already exists for the agent.
+        /// </summary>
+        /// <returns>Throws exception if the credential doesn't exist.<returns>
+        protected override AzureSqlDatabaseAgentJobCredentialModel GetEntity()
+        {
+            try
+            {
+                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The credential does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialNotExists, this.Name, this.AgentName),
+                        "CredentialName");
+                }
+
+                // Unexpected exception encountered
+                throw;
             }
         }
     }

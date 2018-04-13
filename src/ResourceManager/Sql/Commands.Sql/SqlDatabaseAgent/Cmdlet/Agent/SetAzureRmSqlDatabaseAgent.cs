@@ -12,45 +12,33 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System.Collections;
+using System.Management.Automation;
+using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
+using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
-using Microsoft.Rest.Azure;
-using System.Globalization;
-using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Remove-AzureRmSqlDatabaseAgent cmdlet
+    /// Defines the Set-AzureRmSqlDatabaseAgent Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgent", 
+    [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgent", 
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentModel))]
-    public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the name of the agent to use.
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentName")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent input object model
+        /// Gets or sets the agent input object
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The agent object")]
+            HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
@@ -67,25 +55,44 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Defines whether it is ok to skip the requesting of rule removal confirmation
+        /// Gets or sets the agent name
         /// </summary>
-        [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
-        public SwitchParameter Force { get; set; }
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = DefaultParameterSet,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
+        [Alias("AgentName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Agent tags
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 3,
+            ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 1,
+            ParameterSetName = InputObjectParameterSet)]
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            Position = 1,
+            ParameterSetName = ResourceIdParameterSet)]
+        [Alias("Tags")]
+        public Hashtable Tag { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            // Warning confirmation for agent when deleting
-            if (!Force.IsPresent && 
-                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.Name, this.ServerName),
-                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.Name, this.ServerName),
-                               Properties.Resources.ShouldProcessCaption))
-            {
-                return;
-            }
-
             switch (ParameterSetName)
             {
                 case InputObjectParameterSet:
@@ -107,9 +114,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Gets the entity to delete
+        /// Check to see if the agent already exists in this resource group.
         /// </summary>
-        /// <returns>The entity going to be deleted</returns>
+        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
         protected override AzureSqlDatabaseAgentModel GetEntity()
         {
             try
@@ -121,7 +128,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // The agent doesn't exist
+                    // The agent does not exist
                     throw new PSArgumentException(
                         string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.Name, this.ServerName),
                         "AgentName");
@@ -133,24 +140,37 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Apply user input.  Here nothing to apply
+        /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">The result of GetEntity</param>
-        /// <returns>The input model</returns>
+        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
         {
-            return model;
+            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
+
+            AzureSqlDatabaseAgentModel newEntity = new AzureSqlDatabaseAgentModel
+            {
+                Location = location,
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.Name,
+                DatabaseName = model.DatabaseName,
+                Tags = TagsConversionHelper.ReadOrFetchTags(this, model.Tags),
+            };
+
+            return newEntity;
         }
 
         /// <summary>
-        /// Deletes the agent.
+        /// Sends the changes to the service -> Creates the agent
         /// </summary>
-        /// <param name="entity">The job account being deleted</param>
-        /// <returns>The job account that was deleted</returns>
+        /// <param name="entity">The agent to create</param>
+        /// <returns>The created agent</returns>
         protected override AzureSqlDatabaseAgentModel PersistChanges(AzureSqlDatabaseAgentModel entity)
         {
-            ModelAdapter.RemoveSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
-            return entity;
+            // Note: We are currently using PATCH, but in the future we plan on exposing worker count for public preview.
+            // Hence the reason we are using Set instead of Update as we will call a PUT in the future instead of current PATCH request.
+            return ModelAdapter.UpdateSqlDatabaseAgent(entity);
         }
     }
 }

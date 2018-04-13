@@ -312,6 +312,15 @@ function Get-ServerName
 
 <#
 .SYNOPSIS
+Gets valid user name
+#>
+function Get-UserName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
 Gets valid database name
 #>
 function Get-DatabaseName
@@ -324,6 +333,25 @@ function Get-DatabaseName
 Gets valid elastic pool name
 #>
 function Get-ElasticPoolName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
+Gets valid agent name
+#>
+function Get-AgentName
+{
+    return getAssetName
+}
+
+function Get-TargetGroupName
+{
+    return getAssetName
+}
+
+function Get-JobCredentialName
 {
     return getAssetName
 }
@@ -440,6 +468,18 @@ function Get-ServerCredential
 
 <#
 	.SYNOPSIS
+	Gets a random credential
+#>
+function Get-Credential
+{
+	$serverLogin = Get-UserName
+	$serverPassword = "t357ingP@s5w0rd!"
+	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force)) 
+	return $credentials
+}
+
+<#
+	.SYNOPSIS
 	Creates the test environment needed to perform the Sql server CRUD tests
 #>
 function Create-ServerForTest ($resourceGroup, $location = "Japan East")
@@ -453,34 +493,59 @@ function Create-ServerForTest ($resourceGroup, $location = "Japan East")
 
 <#
 	.SYNOPSIS
+	Creates the test environment needed to perform the Sql elastic pool CRUD tests
+#>
+function Create-ElasticPoolForTest ($resourceGroup, $server)
+{
+	$epName = Get-ElasticPoolName
+
+	$ep = New-AzureRmSqlElasticPool -ResourceGroupName  $resourceGroup.ResourceGroupName -ServerName $server.ServerName -ElasticPoolName $epName
+	return $ep
+}
+
+<#
+	.SYNOPSIS
 	Creates a database with test params
 #>
-function Create-DatabaseForTest ($resourceGroup, $server, $dbName)
+function Create-DatabaseForTest ($resourceGroup, $server)
 {
-	$db = New-AzureRmSqlDatabase -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName `
-            -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
+    $dbName = Get-DatabaseName
+	$db = New-AzureRmSqlDatabase -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
 	return $db
 }
 
 <#
 	.SYNOPSIS
-	Creates an Azure SQL Database Agent with test params
+	Creates a sql database agent with test params
 #>
-function Create-AgentForTest ($resourceGroup, $server, $db, $agentName)
+function Create-AgentForTest ($rg, $s, $db)
 {
-    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
+    $agentName = Get-AgentName
+    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
 }
 
 <#
 	.SYNOPSIS
-	Creates an Azure SQL Database Agent Job Credential
+	Creates a sql database agent job credential with test params
 #>
-function Create-JobCredentialForTest ($resourceGroup, $server, $agent, $credentialName, $username, $password)
+function Create-JobCredentialForTest ($rg, $s, $a)
 {
-    $credential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -AgentName $agent.AgentName `
-        -CredentialName $credentialName -Username $username -Password $password
+    $credentialName = Get-JobCredentialName
+    $credential = Get-ServerCredential
 
-    return $credential
+    $jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
+    return $jobCredential
+}
+
+<#
+	.SYNOPSIS
+	Creates a sql database agent target group with test params
+#>
+function Create-TargetGroupForTest ($rg, $s, $a)
+{
+    $targetGroupName = Get-TargetGroupName
+    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
+    return $tg
 }
 
 <#

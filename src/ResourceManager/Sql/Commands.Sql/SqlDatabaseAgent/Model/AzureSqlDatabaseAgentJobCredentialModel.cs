@@ -12,43 +12,48 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System.Security;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     /// <summary>
-    /// Represents the core properties of an Azure Sql Database Agent Job Credential model
+    /// Represents the core properties of a job credential
     /// </summary>
     public class AzureSqlDatabaseAgentJobCredentialModel
     {
         /// <summary>
-        /// Gets or sets the name of the resource group the Sql Database Agent is in
+        /// Gets or sets the name of the resource group name
         /// </summary>
         public string ResourceGroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the server
         /// </summary>
-        public string AgentServerName { get; set; }
+        public string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the azure sql database agent name
+        /// Gets or sets the name of the agent
         /// </summary>
         public string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the credential name
+        /// Gets or sets the job credential name
         /// </summary>
         public string CredentialName { get; set; }
 
         /// <summary>
         /// Gets or sets the user name
         /// </summary>
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// Gets or sets the password
         /// </summary>
-        public string Password { get; set; }
+        public SecureString Password { get; set; }
+
+        /// <summary>
+        /// The credential resource id
+        /// </summary>
+        public string ResourceId { get; set; }
     }
 }

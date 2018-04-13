@@ -13,61 +13,44 @@
 // ----------------------------------------------------------------------------------
 
 using Microsoft.Azure.Commands.ScenarioTest.SqlTests;
-using Microsoft.Azure.ServiceManagemenet.Common.Models;
 using Microsoft.WindowsAzure.Commands.ScenarioTest;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 {
-    public class SqlDatabaseAgentJobCredentialCrudTests : SqlTestsBase
+    public class SqlDatabaseAgentTargetCrudTests : SqlTestsBase
     {
-        public SqlDatabaseAgentJobCredentialCrudTests(ITestOutputHelper output) : base(output)
+        public SqlDatabaseAgentTargetCrudTests(ITestOutputHelper output) : base(output)
         {
         }
-
-        #region Create Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialCreate()
+        public void TestTargetDatabase()
         {
-            RunPowerShellTest("Test-CreateJobCredential");
+            RunPowerShellTest("Test-DatabaseTarget");
         }
-
-        #endregion
-
-        #region Update Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialUpdate()
+        public void TestTargetServer()
         {
-            RunPowerShellTest("Test-UpdateJobCredential");
+            RunPowerShellTest("Test-ServerTarget");
         }
-
-        #endregion
-
-        #region Get Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialGet()
+        public void TestTargetElasticPool()
         {
-            RunPowerShellTest("Test-GetJobCredential");
+            RunPowerShellTest("Test-ElasticPoolTarget");
         }
-
-        #endregion
-
-        #region Remove Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialRemove()
+        public void TestTargetShardMap()
         {
-            RunPowerShellTest("Test-RemoveJobCredential");
+            RunPowerShellTest("Test-ShardMapTarget");
         }
-
-        #endregion
     }
 }
