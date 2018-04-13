@@ -133,6 +133,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Job with name &apos;{0}&apos; already exists in agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentJobExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentJobExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SQL Database Agent &apos;{0}&apos; does not exist with in server &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentNotExists {

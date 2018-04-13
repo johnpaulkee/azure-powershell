@@ -12,8 +12,11 @@
 // limitations under the License.
 
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Sql.Models;
 using Microsoft.Rest.Azure;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -51,42 +54,50 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="jobName">The job name</param>
         /// <param name="model">The job parameters</param>
         /// <returns></returns>
-        public Job UpsertJob(
-            string resourceGroupName,
-            string agentServerName,
-            string agentName,
-            string jobName,
-            Job model)
+        public AzureSqlDatabaseAgentJobModel UpsertJob(AzureSqlDatabaseAgentJobModel model)
         {
-            var resp = Communicator.CreateOrUpdate(resourceGroupName, agentServerName, agentName, jobName, model);
-            return resp;
+            var param = new Job
+            {
+                Description = "",
+                Schedule = new JobSchedule
+                {
+                    Enabled = false,
+                    EndTime = null,
+                    StartTime = null,
+                    Interval = null,
+                    Type = null
+                }
+            };
+
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.JobName, param);
+            return CreateJobModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
         }
 
         /// <summary>
         /// Gets a job from agent
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>
-        /// <param name="agentServerName">The agent server name</param>
+        /// <param name="serverName">The agent server name</param>
         /// <param name="agentName">The agent name</param>
         /// <param name="jobName">The job name</param>
         /// <returns>A job</returns>
-        public Job GetJob(string resourceGroupName, string agentServerName, string agentName, string jobName)
+        public AzureSqlDatabaseAgentJobModel GetJob(string resourceGroupName, string serverName, string agentName, string jobName)
         {
-            var resp = Communicator.Get(resourceGroupName, agentServerName, agentName, jobName);
-            return resp;
+            var resp = Communicator.Get(resourceGroupName, serverName, agentName, jobName);
+            return CreateJobModelFromResponse(resourceGroupName, serverName, agentName, resp);
         }
 
         /// <summary>
         /// Gets a list of jobs owned by agent
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>
-        /// <param name="agentServerName">The agent server name</param>
+        /// <param name="serverName">The agent server name</param>
         /// <param name="agentName">The agent name</param>
         /// <returns>A list of jobs</returns>
-        public IPage<Job> GetJob(string resourceGroupName, string agentServerName, string agentName)
+        public List<AzureSqlDatabaseAgentJobModel> GetJob(string resourceGroupName, string serverName, string agentName)
         {
-            var resp = Communicator.List(resourceGroupName, agentServerName, agentName);
-            return resp;
+            var resp = Communicator.List(resourceGroupName, serverName, agentName);
+            return resp.Select(job => CreateJobModelFromResponse(resourceGroupName, serverName, agentName, job)).ToList();
         }
 
         /// <summary>
@@ -99,6 +110,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         public void RemoveJob(string resourceGroupName, string agentServerName, string agentName, string jobName)
         {
             Communicator.Remove(resourceGroupName, agentServerName, agentName, jobName);
+        }
+
+        public AzureSqlDatabaseAgentJobModel CreateJobModelFromResponse(string resourceGroupName, string serverName, string agentName, Job resp)
+        {
+            return new AzureSqlDatabaseAgentJobModel
+            {
+                ResourceGroupName = resourceGroupName,
+                ServerName = serverName,
+                AgentName = agentName,
+                JobName = resp.Name
+            };
         }
     }
 }

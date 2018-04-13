@@ -23,64 +23,20 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the New-AzureRmSqlDatabaseAgentJob Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJob", SupportsShouldProcess = true)]
-    public class NewAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentCmdletBase
+    public class NewAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
-        /// <summary>
-        /// Gets or sets the name of the server to use
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Server name.")]
-        [ValidateNotNullOrEmpty]
-        public string AgentServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the database to use
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "SQL Database Agent Database Name.")]
-        [ValidateNotNullOrEmpty]
-        public string AgentDatabaseName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the agent to create
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent name.")]
-        [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
-
-        /// <summary>
-        /// The tags to assocciate wit the Azure SQL Database Server
-        /// </summary>
-        [Parameter(Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent")]
-        public Hashtable Tag { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether or not to run this cmdlet in the background as a job
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
-        public SwitchParameter AsJob { get; set; }
-
         /// <summary>
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
+        protected override AzureSqlDatabaseAgentJobModel GetEntity()
         {
             try
             {
-                WriteDebugWithTimestamp("AgentName: {0}", AgentName);
-                ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.AgentServerName, this.AgentName);
+                ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -94,10 +50,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 throw;
             }
 
-            // The agent already exists
+            // The job already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.AgentName, this.AgentServerName),
-                "AgentName");
+                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobExists, this.Name, this.AgentName),
+                "JobName");
         }
 
         /// <summary>
@@ -105,22 +61,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
+        protected override AzureSqlDatabaseAgentJobModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobModel model)
         {
-            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.AgentServerName);
-
-            List<AzureSqlDatabaseAgentModel> newEntity = new List<AzureSqlDatabaseAgentModel>
+            AzureSqlDatabaseAgentJobModel newEntity = new AzureSqlDatabaseAgentJobModel
             {
-                new AzureSqlDatabaseAgentModel
-                {
-                    Location = location,
-                    ResourceGroupName = this.ResourceGroupName,
-                    AgentServerName = this.AgentServerName,
-                    AgentName = this.AgentName,
-                    AgentDatabaseName = this.AgentDatabaseName,
-                    Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
-                }
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.AgentName,
+                JobName = this.Name
             };
+
             return newEntity;
         }
 
@@ -129,12 +79,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
+        protected override AzureSqlDatabaseAgentJobModel PersistChanges(AzureSqlDatabaseAgentJobModel entity)
         {
-            return new List<AzureSqlDatabaseAgentModel>
-            {
-                ModelAdapter.UpsertSqlDatabaseAgent(entity.First())
-            };
+            return ModelAdapter.UpsertJob(entity);
         }
     }
 }
