@@ -31,6 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
         private JobTarget Target;
+        private bool RemovedTarget;
 
         /// <summary>
         /// Generates the model from user input.
@@ -42,11 +43,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             this.Target = CreateJobTargetModel();
             List<JobTarget> updatedTargets = RemoveTargetFromTargets(existingTargets.ToList(), this.Target);
 
-            if (updatedTargets == null)
-            {
-                return new List<JobTarget>();
-            }
-
             return updatedTargets;
         }
 
@@ -57,8 +53,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The created job credential</returns>
         protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
         {
-            // If the list of updated targets is 0, then we know nothing was updated, so just return null.
-            if (updatedTargets.Count() == 0)
+            // If the updated list has no targets and no targets were removed
+            // then we know nothing was updated, so just return null.
+            if (updatedTargets.Count() == 0 && !this.RemovedTarget)
             {
                 return null;
             }
@@ -86,7 +83,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>A merged list of targets if the target doesn't already exist in the group or null if there </returns>
         public List<JobTarget> RemoveTargetFromTargets(IList<JobTarget> existingTargets, JobTarget target)
         {
-            bool removedTarget = false;
+            this.RemovedTarget = false;
 
             for (int i = 0; i < existingTargets.Count; i++)
             {
@@ -103,16 +100,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     this.Target.MembershipType = t.MembershipType;
 
                     existingTargets.RemoveAt(i);
-                    removedTarget = true;
+                    this.RemovedTarget = true;
                 }
             }
 
-            if (removedTarget)
+            if (this.RemovedTarget)
             {
                 return existingTargets.ToList();
             }
 
-            return null;
+            return new List<JobTarget>();
         }
     }
 }

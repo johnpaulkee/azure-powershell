@@ -27,16 +27,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetAddTarget()
+        public void TestTargetDatabase()
         {
-            RunPowerShellTest("Test-AddTarget");
+            RunPowerShellTest("Test-DatabaseTarget");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetRemoveTarget()
+        public void TestTargetServer()
         {
-            RunPowerShellTest("Test-RemoveTarget");
+            RunPowerShellTest("Test-ServerTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPool()
+        {
+            RunPowerShellTest("Test-ElasticPoolTarget");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMap()
+        {
+            RunPowerShellTest("Test-ShardMapTarget");
         }
 
         [Fact]
