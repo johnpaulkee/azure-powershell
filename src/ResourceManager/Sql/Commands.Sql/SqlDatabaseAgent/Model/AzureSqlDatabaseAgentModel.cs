@@ -26,7 +26,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         }
 
         /// <summary>
-        /// Gets or sets the name of the resource group the Sql Database Agent is in
+        /// Gets or sets the name of the resource group name
         /// </summary>
         public string ResourceGroupName { get; set; }
 
@@ -36,7 +36,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the azure sql database agent name
+        /// Gets or sets the agent name
         /// </summary>
         public string AgentName { get; set; }
 

@@ -17,12 +17,12 @@ using System.Collections.Generic;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     /// <summary>
-    /// Represents the core properties of an Azure Sql Database Agent Job Credential model
+    /// Represents the core properties of a target group
     /// </summary>
     public class AzureSqlDatabaseAgentTargetGroupModel
     {
         /// <summary>
-        /// Gets or sets the name of the resource group the Sql Database Agent is in
+        /// Gets or sets the name of the resource group name
         /// </summary>
         public string ResourceGroupName { get; set; }
 
@@ -37,7 +37,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the credential name
+        /// Gets or sets the target group name
         /// </summary>
         public string TargetGroupName { get; set; }
 
