@@ -64,6 +64,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
             List<JobTarget> updatedTargets = MergeTargets(existingTargets.ToList(), this.Target);
 
+            // If there were no updates, just return an empty list to user to indicate no changes were made.
+            if (updatedTargets == null)
+            {
+                return new List<JobTarget>();
+            }
+
             return updatedTargets;
         }
 
@@ -74,7 +80,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The target that was created/updated or null if nothing changed.</returns>
         protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
         {
-            // If this target already existed and it's membership wasn't updated, return null.
+            // If the target existed and it's membership wasn't updated, then return null.
             if (this.TargetExists && !this.UpdatedMembership)
             {
                 return null;
@@ -140,7 +146,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 return existingTargets.ToList();
             }
 
-            return existingTargets.ToList();
+            // If target did exist but membership was updated, return the new list.
+            if (this.UpdatedMembership)
+            {
+                return existingTargets.ToList();
+            }
+
+            return null;
         }
     }
 }
