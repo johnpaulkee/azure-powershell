@@ -15,14 +15,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using System;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Sql.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Remove-AzureRmSqlDatabaseAgentTarget Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentTarget", 
         SupportsShouldProcess = true,
@@ -30,14 +29,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         OutputType(typeof(JobTarget))]
     public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
+        /// <summary>
+        /// The target to remove
+        /// </summary>
         private JobTarget Target;
+
+        /// <summary>
+        /// Represents whether target in question was removed from existing list of targets
+        /// </summary>
         private bool RemovedTarget;
 
         /// <summary>
-        /// Generates the model from user input.
+        /// Updates the existing targets list by removing the target in question if necessary.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
-        /// <returns>The generated model from user input</returns>
+        /// <param name="existingTargets">The existing target group members</param>
+        /// <returns>The updated list of targets - or an empty list if nothing was updated.</returns>
         protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> existingTargets)
         {
             this.Target = CreateJobTargetModel();
@@ -47,14 +53,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the job credential
+        /// Sends to the service the list of updated targets if it was updated.
         /// </summary>
-        /// <param name="entity">The credential to create</param>
-        /// <returns>The created job credential</returns>
+        /// <param name="updatedTargets">The list of updated targets</param>
+        /// <returns>The target removed or null if the list wasn't updated.</returns>
         protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
         {
             // If the updated list has no targets and no targets were removed
-            // then we know nothing was updated, so just return null.
+            // then we know nothing was updated during this session, so just return null.
             if (updatedTargets.Count() == 0 && !this.RemovedTarget)
             {
                 return null;
@@ -71,6 +77,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
             IList<JobTarget> resp = ModelAdapter.UpsertTargetGroup(model).Members;
 
+            // Return the target that was deleted.
             return new List<JobTarget> { this.Target };
         }
 
@@ -104,11 +111,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 }
             }
 
+            // If a target was removed, return the updated list.
+            // Note that we can still return an empty list here if it's the last target in the list.
             if (this.RemovedTarget)
             {
                 return existingTargets.ToList();
             }
 
+            // If no targets were removed, then return an empty list.
             return new List<JobTarget>();
         }
     }

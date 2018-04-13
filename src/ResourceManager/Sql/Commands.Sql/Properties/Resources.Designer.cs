@@ -754,20 +754,20 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Permanently removing Job credential &apos;{0}&apos; from agent &apos;{1}&apos;.
+        ///   Looks up a localized string similar to Permanently removing target group &apos;{0}&apos; from agent &apos;{1}&apos;.
         /// </summary>
-        internal static string RemoveSqlDatabaseAgentJobCredentialDescription {
+        internal static string RemoveSqlDatabaseAgentTargetGroupDescription {
             get {
-                return ResourceManager.GetString("RemoveSqlDatabaseAgentJobCredentialDescription", resourceCulture);
+                return ResourceManager.GetString("RemoveSqlDatabaseAgentTargetGroupDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to remove the Job credential &apos;{0}&apos; from agent &apos;{1&apos;}.
+        ///   Looks up a localized string similar to Are you sure you want to remove the target group &apos;{0}&apos; from agent &apos;{1&apos;}.
         /// </summary>
-        internal static string RemoveSqlDatabaseAgentJobCredentialWarning {
+        internal static string RemoveSqlDatabaseAgentTargetGroupWarning {
             get {
-                return ResourceManager.GetString("RemoveSqlDatabaseAgentJobCredentialWarning", resourceCulture);
+                return ResourceManager.GetString("RemoveSqlDatabaseAgentTargetGroupWarning", resourceCulture);
             }
         }
         

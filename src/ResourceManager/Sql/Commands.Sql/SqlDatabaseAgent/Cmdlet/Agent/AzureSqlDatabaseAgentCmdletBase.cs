@@ -23,7 +23,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public abstract class AzureSqlDatabaseAgentCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
-        /// Azure SQL Database Agent
         /// Parameter sets
         /// </summary>
         protected const string DefaultParameterSet = "Agent Default Parameter Set";

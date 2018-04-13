@@ -16,11 +16,12 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Get-AzureRmSqlDatabaseAgentJobCredential Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobCredential", 
         SupportsShouldProcess = true,
@@ -30,51 +31,51 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the agent model input object
         /// </summary>
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The agent input object model")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Gets or sets the credential name
         /// </summary>
         [Parameter(Mandatory = false,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Credential Name.")]
+            HelpMessage = "The job credential name")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The job credential name")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The job credential name")]
         [ValidateNotNullOrEmpty]
         [Alias("CredentialName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
@@ -95,7 +96,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     break;
             }
 
-            // Lets us return a list of agents
+            // Returns a list of credentials
             if (this.Name == null)
             {
                 ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
@@ -107,12 +108,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Gets one or more credentials from the Azure SQL Database Agent
+        /// Check to see if the credential already exists for the agent.
         /// </summary>
-        /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
+        /// <returns>Throws exception if the credential doesn't exist.<returns>
         protected override AzureSqlDatabaseAgentJobCredentialModel GetEntity()
         {
-            return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            try
+            {
+                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The credential does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialNotExists, this.Name, this.AgentName),
+                        "CredentialName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
     }
 }

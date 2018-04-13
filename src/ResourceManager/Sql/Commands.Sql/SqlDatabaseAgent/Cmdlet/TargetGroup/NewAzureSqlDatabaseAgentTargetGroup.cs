@@ -12,11 +12,8 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
@@ -24,58 +21,61 @@ using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the New-AzureRmSqlDatabaseAgentTargetGroup Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentTargetGroup", SupportsShouldProcess = true), OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentTargetGroup",
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
     public class NewAzureSqlDatabaseAgentTargetGroup : AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the agent input object
         /// </summary>
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the target group name
         /// </summary>
         [Parameter(
             ParameterSetName = DefaultParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
+            HelpMessage = "The target group name")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The target group name")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The target group name")]
         [ValidateNotNullOrEmpty]
         [Alias("TargetGroupName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// Writes a list of target groups if name is not given, otherwise returns the target group asked for.
         /// </summary>
         public override void ExecuteCmdlet()
         {
@@ -100,9 +100,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Check to see if the credential already exists for the agent.
+        /// Check to see if the target group already exists for the agent.
         /// </summary>
-        /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
+        /// <returns>Null if the target group doesn't exist. Otherwise throws exception</returns>
         protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
         {
             try
@@ -131,7 +131,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <param name="model">This is null since the target group doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentTargetGroupModel ApplyUserInputToModel(AzureSqlDatabaseAgentTargetGroupModel model)
         {
@@ -141,17 +141,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 ServerName = this.ServerName,
                 AgentName = this.AgentName,
                 TargetGroupName = this.Name,
-                Members = new List<Management.Sql.Models.JobTarget> { },
+                Members = new List<Management.Sql.Models.JobTarget> { }, // We create an empty list of targets on creation of new target group
             };
 
             return targetGroup;
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the job credential
+        /// Sends the changes to the service -> Creates the target group
         /// </summary>
-        /// <param name="entity">The credential to create</param>
-        /// <returns>The created job credential</returns>
+        /// <param name="entity">The target group to create</param>
+        /// <returns>The created target group</returns>
         protected override AzureSqlDatabaseAgentTargetGroupModel PersistChanges(AzureSqlDatabaseAgentTargetGroupModel entity)
         {
             return ModelAdapter.UpsertTargetGroup(entity);

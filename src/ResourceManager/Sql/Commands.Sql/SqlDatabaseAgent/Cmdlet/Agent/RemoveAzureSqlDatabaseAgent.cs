@@ -15,7 +15,6 @@
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Rest.Azure;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
 
@@ -38,32 +37,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the agent input object model
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The Agent Object")]
+            HelpMessage = "The agent object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The Agent Resource Id to remove")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
@@ -115,14 +114,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("AgentName: {0}", Name);
-
                 return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
             }
             catch (CloudException ex)
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // The sql database agent does not exist
+                    // The agent doesn't exist
                     throw new PSArgumentException(
                         string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.Name, this.ServerName),
                         "AgentName");
@@ -144,7 +142,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Deletes the job account.
+        /// Deletes the agent.
         /// </summary>
         /// <param name="entity">The job account being deleted</param>
         /// <returns>The job account that was deleted</returns>

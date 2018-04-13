@@ -13,8 +13,6 @@
 // ----------------------------------------------------------------------------------
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
@@ -114,6 +112,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 2,
             HelpMessage = "The Agent Tags")]
         [ValidateNotNullOrEmpty]
+        [Alias("Tags")]
         public Hashtable Tag { get; set; }
 
         /// <summary>

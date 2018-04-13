@@ -23,12 +23,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentJobCredentialAdapter>
     {
+        /// <summary>
+        /// Parameter sets
+        /// </summary>
         protected const string DefaultParameterSet = "Job Credential Default Parameter Set";
         protected const string InputObjectParameterSet = "Job Credential Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "Job Credential Resource Id Parameter Set";
 
         /// <summary>
-        /// Gets or sets the name of the SQL Database Agent Server to use
+        /// Gets or sets the name of the resource group
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
@@ -39,7 +42,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the SQL Database Agent Server to use
+        /// Gets or sets the name of agent server name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
@@ -51,7 +54,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Gets or sets the name of the agent name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,

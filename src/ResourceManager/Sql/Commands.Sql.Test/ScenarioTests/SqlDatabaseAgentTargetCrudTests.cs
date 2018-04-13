@@ -52,12 +52,5 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-ShardMapTarget");
         }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestClear()
-        {
-            RunPowerShellTest("Test-Clear");
-        }
     }
 }

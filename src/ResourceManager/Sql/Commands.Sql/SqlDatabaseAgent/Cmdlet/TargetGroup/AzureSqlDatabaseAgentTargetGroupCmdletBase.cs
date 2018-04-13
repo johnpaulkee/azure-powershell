@@ -23,6 +23,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
+        /// <summary>
+        /// Parameter sets
+        /// </summary>
         protected const string DefaultParameterSet = "Target Group Default Parameter Set";
         protected const string InputObjectParameterSet = "Target Group Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "Target Group Resource Id Parameter Set";
@@ -34,7 +37,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "Resource Group Name.")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
         public override string ResourceGroupName { get; set; }
 
@@ -45,19 +48,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Server Name.")]
+            HelpMessage = "The agent server name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentServerName")]
         public string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Gets or sets the name of the agent
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet, 
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Name.")]
+            HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         public string AgentName { get; set; }
 

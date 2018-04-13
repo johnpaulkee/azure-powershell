@@ -13,8 +13,6 @@
 // ----------------------------------------------------------------------------------
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
@@ -33,38 +31,38 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the Agent object
+        /// Gets or sets the agent input object
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The Agent Object")]
+            HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the Agent resource id
+		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The Agent Resource Id")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the Agent name
+        /// Gets or sets the agent name
         /// </summary>
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultParameterSet,
             Position = 2,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
@@ -87,6 +85,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
             ParameterSetName = ResourceIdParameterSet)]
+        [Alias("Tags")]
         public Hashtable Tag { get; set; }
 
         /// <summary>

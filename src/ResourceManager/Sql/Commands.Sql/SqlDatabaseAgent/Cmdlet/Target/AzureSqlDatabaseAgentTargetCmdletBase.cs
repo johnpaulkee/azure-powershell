@@ -18,9 +18,7 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
 using System.Management.Automation;
-using System.Linq;
 using Microsoft.Azure.Management.Sql.Models;
-using Microsoft.Rest.Azure;
 using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
@@ -49,7 +47,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string ResourceIdSqlShardMapSet = "Sql Shard Map ResourceId Parameter Set";
 
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the target group input object.
         /// </summary>
         [Parameter(ParameterSetName = InputObjectSqlDatabaseSet,
             Mandatory = true,
@@ -70,7 +68,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the target group resource id.
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdSqlDatabaseSet,
             Mandatory = true,
@@ -91,7 +89,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the server to use
+        /// Gets or sets the resource group name.
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -112,7 +110,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the server to use
+        /// Gets or sets the name of the agent's server name
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -133,7 +131,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string AgentServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent to create
+        /// Gets or sets the name of the agent
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -154,7 +152,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the target group name
         /// </summary>
         [Parameter(Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -335,13 +333,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = ResourceIdSqlShardMapSet)]
         public string RefreshCredentialName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the switch parameter for whether or not this target will be excluded.
+        /// </summary>
         public virtual SwitchParameter Exclude { get; set; }
 
         /// <summary>
         /// Intializes the model adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
-        /// <returns>The Azure SQL Database Agent adapter</returns>
+        /// <returns>The Azure SQL Database Agent Target Group adapter</returns>
         protected override AzureSqlDatabaseAgentTargetGroupAdapter InitModelAdapter(IAzureSubscription subscription)
         {
             return new AzureSqlDatabaseAgentTargetGroupAdapter(DefaultContext);
@@ -446,59 +447,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// This merges the target group members list with the new target that customer wants added.
-        /// Throws PSArgumentException if the target for it's target type already exists.s
+        /// Gets the list of existing targets in the target group.
         /// </summary>
-        /// <param name="existingTargets">The existing target group members</param>
-        /// <param name="target">The target we want to add to the group</param>
-        /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
-        protected List<JobTarget> MergeTargets(IList<JobTarget> existingTargets, JobTarget target)
-        {
-            bool updatedMembershipType = false;
-            bool targetExists = false;
-            foreach (JobTarget t in existingTargets)
-            {
-                if (t.ServerName == target.ServerName &&  
-                    t.DatabaseName == target.DatabaseName &&
-                    t.ElasticPoolName == target.ElasticPoolName &&
-                    t.ShardMapName == target.ShardMapName &&
-                    t.Type == target.Type &&
-                    t.RefreshCredential == target.RefreshCredential)
-                {
-                    targetExists = true;
-                    if (t.MembershipType != target.MembershipType)
-                    {
-                        updatedMembershipType = true;
-                        t.MembershipType = target.MembershipType;
-                    }
-                }
-            }
-
-            // If target didn't exist, add this new target
-            if (!targetExists)
-            {
-                existingTargets.Add(target);
-                return existingTargets.ToList();
-            }
-
-            // If target already existed but it's membership type was updated, update existing target
-            if (updatedMembershipType)
-            {
-                return existingTargets.ToList();
-            }
-
-            // If target to be added already exists and wasn't updated, return null to indicate no changes were made.
-            return null;
-        }
-
-        /// <summary>
-        /// Check to see if the target group member already exists in the target group.
-        /// </summary>
-        /// <returns>Null if the target doesn't exist. Otherwise throws exception</returns>
+        /// <returns>The list of existing targets</returns>
         protected override IEnumerable<JobTarget> GetEntity()
         {
             IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
-
             return existingTargets;
         }
     }

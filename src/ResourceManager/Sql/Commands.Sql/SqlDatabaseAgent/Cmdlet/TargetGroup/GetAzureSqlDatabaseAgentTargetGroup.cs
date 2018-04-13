@@ -12,21 +12,24 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Get-AzureRmSqlDatabaseAgentTargetGroup Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentTargetGroup", SupportsShouldProcess = true), OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentTargetGroup", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
     public class GetAzureSqlDatabaseAgentTargetGroup : AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the agent input object model
         /// </summary>
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
@@ -37,7 +40,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
@@ -48,30 +51,30 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the target group name
         /// </summary>
         [Parameter(
             ParameterSetName = DefaultParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
+            HelpMessage = "The target group name")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The target group name")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The target group name")]
         [ValidateNotNullOrEmpty]
         [Alias("TargetGroupName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Writes a list of agents if AgentName is not given, otherwise returns the agent asked for.
+        /// Execution starts here
         /// </summary>
         public override void ExecuteCmdlet()
         {
@@ -92,7 +95,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     break;
             }
 
-            // Lets us return a list of agents
+            // Lets us return a list of target groups
             if (this.Name == null)
             {
                 ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
@@ -104,12 +107,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Gets one or more credentials from the Azure SQL Database Agent
+        /// Check to see if the target group exists
         /// </summary>
-        /// <returns>Null if the credential doesn't exist. Otherwise throws exception</returns>
+        /// <returns>Throws exception if the target group doesn't exist.<returns>
         protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
         {
-            return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            try
+            {
+                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The target group does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.Name, this.AgentName),
+                        "TargetGroupName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
     }
 }

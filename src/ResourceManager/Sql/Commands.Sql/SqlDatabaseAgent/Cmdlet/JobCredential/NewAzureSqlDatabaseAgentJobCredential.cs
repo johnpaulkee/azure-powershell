@@ -12,11 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
@@ -24,7 +20,7 @@ using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the New-AzureRmSqlDatabaseAgentJobCredential Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobCredential", 
         SupportsShouldProcess = true,
@@ -33,66 +29,66 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class NewAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the agent model input object
         /// </summary>
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The agent model input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets the job credential name
         /// </summary>
         [Parameter(Mandatory = true,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
+            HelpMessage = "The job credential name")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The Job Credential")]
+            HelpMessage = "The job credential name")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The Job Credential")]
+            HelpMessage = "The job credential name")]
         [Alias("CredentialName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the job credential user name
+        /// Gets or sets the job's credential
         /// </summary>
         [Parameter(Mandatory = true,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
-            HelpMessage = "The Job Credential")]
+            HelpMessage = "The credential")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "The Job Credential")]
+            HelpMessage = "The credential")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "The Job Credential")]
+            HelpMessage = "The credential")]
         [ValidateNotNullOrEmpty]
         public PSCredential Credential { get; set; }
 

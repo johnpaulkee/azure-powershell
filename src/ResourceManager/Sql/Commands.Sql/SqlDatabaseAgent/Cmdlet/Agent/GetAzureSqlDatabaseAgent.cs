@@ -38,7 +38,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The Agent Server Object")]
+            HelpMessage = "The agent's server input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlServerModel InputObject { get; set; }
 
@@ -50,7 +50,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The Agent Server Resource Id")]
+            HelpMessage = "The agent's server resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
@@ -62,19 +62,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent name")]
         [Alias("AgentName")]
         public string Name { get; set; }
 

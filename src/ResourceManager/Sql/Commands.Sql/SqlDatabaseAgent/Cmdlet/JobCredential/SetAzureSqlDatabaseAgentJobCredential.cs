@@ -12,20 +12,15 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Set-AzureRmSqlDatabaseAgent Cmdlet
+    /// Defines the Set-AzureRmSqlDatabaseAgentJobCredential Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJobCredential", 
         SupportsShouldProcess = true,
@@ -34,40 +29,40 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class SetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
-        /// Server Dns Alias object to remove
+        /// Gets or sets the job credential input object model to update
         /// </summary>
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Job Credential object to remove")]
+            HelpMessage = "Job credential object to update")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentJobCredentialModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the resource id of the SQL Database Agent
+		/// Gets or sets the job credential resource id
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "Job credential resource id to update")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent's number of workers
+        /// Gets or sets job credential name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet, 
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Job Credential")]
+            HelpMessage = "Job credential name")]
         [Alias("CredentialName")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the job credential user name
+        /// Gets or sets the credential
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
@@ -159,7 +154,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the job credential
+        /// Sends the changes to the service -> Updates the job credential
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>

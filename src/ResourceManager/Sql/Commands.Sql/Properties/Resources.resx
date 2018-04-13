@@ -426,12 +426,8 @@
     <value>Job credential with name '{0}' does not exist in agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
-  <data name="RemoveSqlDatabaseAgentJobCredentialDescription" xml:space="preserve">
-    <value>Permanently removing Job credential '{0}' from agent '{1}'</value>
-    <comment>Azure SQL Database Agent</comment>
-  </data>
-  <data name="RemoveSqlDatabaseAgentJobCredentialWarning" xml:space="preserve">
-    <value>Are you sure you want to remove the Job credential '{0}' from agent '{1'}</value>
+  <data name="RemoveSqlDatabaseAgentTargetGroupDescription" xml:space="preserve">
+    <value>Permanently removing target group '{0}' from agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
   <data name="AzureSqlDatabaseAgentTargetDatabaseExists" xml:space="preserve">
@@ -456,6 +452,10 @@
   </data>
   <data name="AzureSqlDatabaseAgentTargetGroupNotExists" xml:space="preserve">
     <value>Target group '{0}' does not exist in agent '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="RemoveSqlDatabaseAgentTargetGroupWarning" xml:space="preserve">
+    <value>Are you sure you want to remove the target group '{0}' from agent '{1'}</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
 </root>
