@@ -58,15 +58,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         {
             var param = new Job
             {
-                Description = "",
-                Schedule = new JobSchedule
-                {
-                    Enabled = false,
-                    EndTime = null,
-                    StartTime = null,
-                    Interval = null,
-                    Type = null
-                }
+                Description = model.Description,
+                //Schedule = new JobSchedule
+                //{
+                //    StartTime = model.StartTime,
+                //    EndTime = model.EndTime,
+                //    Interval = model.Interval,
+                //    Type = model.Type,
+                //    Enabled = model.Enabled,
+                //}
             };
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.JobName, param);

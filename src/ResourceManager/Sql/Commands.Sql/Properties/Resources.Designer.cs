@@ -142,6 +142,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Job with name &apos;{0}&apos; does not exist in agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentJobNotExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentJobNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SQL Database Agent &apos;{0}&apos; does not exist with in server &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentNotExists {
@@ -759,6 +768,24 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         internal static string RemoveSqlDatabaseAgentDescription {
             get {
                 return ResourceManager.GetString("RemoveSqlDatabaseAgentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permanently removing job &apos;{0}&apos; from agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string RemoveSqlDatabaseAgentJobDescription {
+            get {
+                return ResourceManager.GetString("RemoveSqlDatabaseAgentJobDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove the job &apos;{0}&apos; from agent &apos;{1}&apos;.
+        /// </summary>
+        internal static string RemoveSqlDatabaseAgentJobWarning {
+            get {
+                return ResourceManager.GetString("RemoveSqlDatabaseAgentJobWarning", resourceCulture);
             }
         }
         

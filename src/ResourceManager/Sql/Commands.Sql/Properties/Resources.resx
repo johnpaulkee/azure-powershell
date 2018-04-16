@@ -462,4 +462,16 @@
     <value>Job with name '{0}' already exists in agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
+  <data name="AzureSqlDatabaseAgentJobNotExists" xml:space="preserve">
+    <value>Job with name '{0}' does not exist in agent '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="RemoveSqlDatabaseAgentJobDescription" xml:space="preserve">
+    <value>Permanently removing job '{0}' from agent '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="RemoveSqlDatabaseAgentJobWarning" xml:space="preserve">
+    <value>Are you sure you want to remove the job '{0}' from agent '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
 </root>

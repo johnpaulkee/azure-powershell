@@ -17,9 +17,9 @@ using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
-    public class AzureSqlDatabaseAgentJobModel
+    public class AzureSqlDatabaseAgentJobStepModel
     {
-        public AzureSqlDatabaseAgentJobModel()
+        public AzureSqlDatabaseAgentJobStepModel()
         {
         }
 
@@ -44,38 +44,33 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string JobName { get; set; }
 
         /// <summary>
-        /// Gets or sets the description of the job
+        /// The job step name
         /// </summary>
-        public string Description { get; set; }
+        public string StepName { get; set; }
 
         /// <summary>
-        /// Gets or sets the job resource id.
+        /// The target group name
         /// </summary>
-        public string ResourceId { get; set; }
+        public string TargetGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the job's start time
+        /// The credential name
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public string CredentialName { get; set; }
 
         /// <summary>
-        /// Gets or sets the job's end time
+        /// The script
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public string Script { get; set; }
 
         /// <summary>
-        /// Gets or sets the job type
+        /// 
         /// </summary>
-        public JobScheduleType Type { get; set; }
+        public string Output { get; set; }
 
         /// <summary>
-        /// Gets or sets the job interval
+        /// 
         /// </summary>
-        public string Interval { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the job will is enabled
-        /// </summary>
-        public bool Enabled { get; set; }
+        public string ExecutionOptions { get; set; }
     }
 }

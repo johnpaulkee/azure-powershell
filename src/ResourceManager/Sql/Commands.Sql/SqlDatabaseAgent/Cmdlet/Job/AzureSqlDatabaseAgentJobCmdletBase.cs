@@ -16,8 +16,8 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using System.Collections.Generic;
 using System.Management.Automation;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -27,67 +27,55 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Parameter sets
         /// </summary>
         protected const string DefaultParameterSet = "Job Default Parameter Set";
-        protected const string InputObjectParameterSet = "Job Input Object Parameter Set";
-        protected const string ResourceIdParameterSet = "Job Resource Id Parameter Set";
+        protected const string InputObjectParameterSet = "Input object job default parameter set";
+        protected const string ResourceIdParameterSet = "Resource id job default parameter set";
+
+        protected const string DefaultOnceParameterSet = "Job Default Once Parameter Set";
+        protected const string DefaultMinuteParameterSet = "Job Default Minute Parameter Set";
+        protected const string DefaultHourParameterSet = "Job Default Hour Parameter Set";
+        protected const string DefaultDayParameterSet = "Job Default Day Parameter Set";
+        protected const string DefaultWeekParameterSet = "Job Default Week Parameter Set";
+        protected const string DefaultMonthParameterSet = "Job Default Month Parameter Set";
+
+        protected const string InputObjectOnceParameterSet = "Job Input Object Once Parameter Set";
+        protected const string InputObjectMinuteParameterSet = "Job Input Object Minute Parameter Set";
+        protected const string InputObjectHourParameterSet = "Job Input Object Hour Parameter Set";
+        protected const string InputObjectDayParameterSet = "Job Input Object Day Parameter Set";
+        protected const string InputObjectWeekParameterSet = "Job Input Object Week Parameter Set";
+        protected const string InputObjectMonthParameterSet = "Job Input Object Month Parameter Set";
+
+        protected const string ResourceIdOnceParameterSet = "Job Resource Id Once Parameter Set";
+        protected const string ResourceIdMinuteParameterSet = "Job Resource Id Minute Parameter Set";
+        protected const string ResourceIdHourParameterSet = "Job Resource Id Hour Parameter Set";
+        protected const string ResourceIdDayParameterSet = "Job Resource Id Day Parameter Set";
+        protected const string ResourceIdWeekParameterSet = "Job Resource Id Week Parameter Set";
+        protected const string ResourceIdMonthParameterSet = "Job Resource Id Month Parameter Set";
 
 
-        /// <summary>
-        /// Gets or sets the resource group name
-        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The Agent Resource Group Name")]
+            HelpMessage = "The resource group name")]
         public override string ResourceGroupName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the agent server name
-        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The Agent Server Name")]
-        [Alias("AgentServerName")]
+            HelpMessage = "The server name")]
         public virtual string ServerName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the agent name
-        /// </summary>
-        [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets the job name
-        /// </summary>
         [Parameter(
-            Mandatory = false,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "The job name")]
-        [Alias("JobName")]
-        public string Name { get; set; }
+            HelpMessage = "The agent name")]
+        public virtual string AgentName { get; set; }
+
 
         /// <summary>
         /// Intializes the model adapter
