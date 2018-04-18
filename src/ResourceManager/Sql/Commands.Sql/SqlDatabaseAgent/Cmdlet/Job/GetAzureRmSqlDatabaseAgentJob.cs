@@ -21,7 +21,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     /// <summary>
     /// Defines the Get-AzureRmSqlDatabaseAgentJob Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJob", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJob", 
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobModel))]
     public class GetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
         /// <summary>
@@ -65,7 +69,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = DefaultOnceParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]

@@ -12,14 +12,11 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Commands.Sql.Database.Model;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -32,6 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
     public class SetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
+        /// <summary>
         /// <summary>
         /// Gets or sets the job object
         /// </summary>
@@ -56,11 +54,101 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
-
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = DefaultParameterSet)]
         public string JobName { get; set; }
 
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
         [Alias("StepName")]
         public string Name { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 2,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 2,
+            HelpMessage = "The target group name")]
+        public string TargetGroupName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 6,
+            ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 3,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 3,
+            HelpMessage = "The credential name")]
+        public string CredentialName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 4,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 4,
+            HelpMessage = "The command text")]
+        public string CommandText { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public Management.Sql.Models.JobStepOutput Output { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public int? TimeoutSeconds { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public int? RetryAttempts { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public int? InitialRetryIntervalSeconds { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public int? MaximumRetryIntervalSeconds { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public double? RetryIntervalBackoffMultiplier { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public int? StepId { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here
@@ -97,24 +185,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             try
             {
-                WriteDebugWithTimestamp("AgentName: {0}", Name);
-                ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.JobName, this.Name);
+                WriteDebugWithTimestamp("StepName: {0}", Name);
+                return ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
             }
             catch (CloudException ex)
             {
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // The job step doesn't exist
+                    // The job step does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.Name, this.JobName),
-                        "AgentName");
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobStepNotExists, this.Name, this.JobName),
+                        "JobStep");
                 }
 
                 // Unexpected exception encountered
                 throw;
             }
-
-            return null;
         }
 
         /// <summary>
@@ -124,7 +210,48 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
-            return model;
+            string targetGroupId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}",
+                AzureSqlDatabaseAgentJobStepCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.ServerName,
+                this.AgentName,
+                this.TargetGroupName);
+
+            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+                AzureSqlDatabaseAgentJobStepCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.ServerName,
+                this.AgentName,
+                this.CredentialName);
+
+            AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.AgentName,
+                JobName = this.JobName,
+                StepName = this.Name,
+                TargetGroup = targetGroupId,
+                Credential = credentialId,
+                Output = Output,
+                ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
+                {
+                    InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds,
+                    MaximumRetryIntervalSeconds = this.MaximumRetryIntervalSeconds,
+                    RetryAttempts = this.RetryAttempts,
+                    RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier,
+                    TimeoutSeconds = this.TimeoutSeconds
+                },
+                Action = new Management.Sql.Models.JobStepAction
+                {
+                    Source = "Inline",
+                    Type = "TSql",
+                    Value = this.CommandText
+                },
+                StepId = StepId
+            };
+
+            return updatedModel;
         }
 
         /// <summary>

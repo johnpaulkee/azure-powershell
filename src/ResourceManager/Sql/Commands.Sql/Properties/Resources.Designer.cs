@@ -151,6 +151,24 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Job step with name &apos;{0}&apos; already exists in job &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentJobStepExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentJobStepExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job step with name &apos;{0}&apos; does not exist in job &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentJobStepNotExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentJobStepNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SQL Database Agent &apos;{0}&apos; does not exist with in server &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentNotExists {

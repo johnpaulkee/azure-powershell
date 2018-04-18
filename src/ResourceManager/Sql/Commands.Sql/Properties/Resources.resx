@@ -474,4 +474,12 @@
     <value>Are you sure you want to remove the job '{0}' from agent '{1}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
+  <data name="AzureSqlDatabaseAgentJobStepExists" xml:space="preserve">
+    <value>Job step with name '{0}' already exists in job '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
+  <data name="AzureSqlDatabaseAgentJobStepNotExists" xml:space="preserve">
+    <value>Job step with name '{0}' does not exist in job '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
 </root>

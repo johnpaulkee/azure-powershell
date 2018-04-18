@@ -329,6 +329,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job name")]
+        [Alias("JobName")]
         public string Name { get; set; }
 
         [Parameter(

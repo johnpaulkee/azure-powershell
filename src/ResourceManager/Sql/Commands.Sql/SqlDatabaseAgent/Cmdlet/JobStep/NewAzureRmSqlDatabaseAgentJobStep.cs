@@ -12,13 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Commands.Sql.Database.Model;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 
@@ -144,10 +140,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public int? MaximumRetryIntervalSeconds { get; set; }
 
         [Parameter(Mandatory = false)]
-        public double? RetryIntervalBackoffMultipler { get; set; }
-
-        [Parameter(Mandatory = false)]
-        public int? StepId { get; set; }
+        public double? RetryIntervalBackoffMultiplier { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here
@@ -184,8 +177,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             try
             {
-                WriteDebugWithTimestamp("AgentName: {0}", Name);
-                ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.JobName, this.Name);
+                WriteDebugWithTimestamp("StepName: {0}", Name);
+                ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -199,10 +192,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 throw;
             }
 
-            // The agent already exists
+            // The job step already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.Name, this.JobName),
-                "AgentName");
+                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobStepExists, this.Name, this.JobName),
+                "JobStep");
         }
 
         /// <summary>
@@ -213,14 +206,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
             string targetGroupId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}",
-                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                AzureSqlDatabaseAgentJobStepCommunicator.Subscription.Id,
                 this.ResourceGroupName,
                 this.ServerName,
                 this.AgentName,
                 this.TargetGroupName);
 
             string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
-                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                AzureSqlDatabaseAgentJobStepCommunicator.Subscription.Id,
                 this.ResourceGroupName,
                 this.ServerName,
                 this.AgentName,
@@ -241,7 +234,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds,
                     MaximumRetryIntervalSeconds = this.MaximumRetryIntervalSeconds,
                     RetryAttempts = this.RetryAttempts,
-                    RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultipler,
+                    RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier,
                     TimeoutSeconds = this.TimeoutSeconds
                 },
                 Action = new Management.Sql.Models.JobStepAction
@@ -250,7 +243,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     Type = "TSql",
                     Value = this.CommandText
                 },
-                StepId = StepId
             };
 
             return updatedModel;

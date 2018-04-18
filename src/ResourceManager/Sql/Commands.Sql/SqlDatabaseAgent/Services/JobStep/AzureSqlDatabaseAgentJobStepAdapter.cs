@@ -129,16 +129,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Management.Sql.Models.JobStep resp)
         {
             // TODO: Update this to include response details
-            AzureSqlDatabaseAgentJobStepModel targetGroup = new AzureSqlDatabaseAgentJobStepModel
+            AzureSqlDatabaseAgentJobStepModel jobStep = new AzureSqlDatabaseAgentJobStepModel
             {
                 ResourceGroupName = resourceGroupName,
                 ServerName = serverName,
                 AgentName = agentName,
                 JobName = jobName,
-                StepName = stepName
+                StepName = stepName,
+                TargetGroup = resp.TargetGroup,
+                Credential = resp.Credential,
+                Action = resp.Action,
+                ExecutionOptions = resp.ExecutionOptions,
+                Output = resp.Output, 
+                ResourceId = resp.Id,
+                StepId = resp.StepId
             };
 
-            return targetGroup;
+            return jobStep;
         }
     }
 }

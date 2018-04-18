@@ -59,11 +59,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string Credential { get; set; }
 
         /// <summary>
-        /// The script
-        /// </summary>
-        public JobStepAction Action { get; set; }
-
-        /// <summary>
         /// 
         /// </summary>
         public JobStepOutput Output { get; set; }
@@ -74,13 +69,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public JobStepExecutionOptions ExecutionOptions { get; set; }
 
         /// <summary>
+        /// Gets or sets the job step resource id
+        /// </summary>
+        public string ResourceId { get; set; }
+
+        /// <summary>
         /// The job step id
         /// </summary>
         public int? StepId;
 
         /// <summary>
-        /// Gets or sets the job step resource id
+        /// The script
         /// </summary>
-        public string ResourceId { get; set; }
+        public JobStepAction Action { get; set; }
     }
 }

@@ -23,7 +23,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     /// <summary>
     /// Defines the Remove-AzureRmSqlDatabaseAgentJobStep Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJobStep", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJobStep",
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
     public class RemoveAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
         /// <summary>

@@ -48,6 +48,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobStep
                 SchemaName = SchemaName,
                 TableName = TableName,
                 Credential = CredentialName,
+                Type = Management.Sql.Models.JobTargetType.SqlDatabase
             };
 
             WriteObject(output);

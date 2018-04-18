@@ -1,30 +1,14 @@
-﻿// ----------------------------------------------------------------------------------
-//
-// Copyright Microsoft Corporation
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// ----------------------------------------------------------------------------------
-
+﻿using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
+namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
 {
-    /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgentJobStep Cmdlet
-    /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobStep",
-        SupportsShouldProcess = true,
-        DefaultParameterSetName = DefaultParameterSet)]
-    public class GetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
+    public class GetAzureRmSqlDatabaseAgentJobVersion : AzureRmSqlDatabaseAgentJobVersionCmdletBase
     {
         /// <summary>
         /// Gets or sets the job input object
@@ -61,20 +45,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The job name")]
         public string JobName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the job step name
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        [Alias("StepName")]
-        public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the job version
-        /// </summary>
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The job version")]
-        public int? Version { get; set; }
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            HelpMessage = "The job version number")]
+        public int Version { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here
@@ -100,29 +78,20 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
                     break;
             }
 
-            // Returns a list of jobs if name is not provided
-            if (this.Name == null)
+            // If version is not provided
+            if (!this.MyInvocation.BoundParameters.ContainsKey("Version"))
             {
                 ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
-                WriteObject(ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName), true);
+                WriteObject(ModelAdapter.GetJobVersion(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName));
                 return;
             }
 
             base.ExecuteCmdlet();
         }
 
-        /// <summary>
-        /// Gets a job step from the service.
-        /// </summary>
-        /// <returns></returns>
-        protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
+        protected override AzureSqlDatabaseAgentJobVersionModel GetEntity()
         {
-            if (this.Version.HasValue)
-            {
-                return ModelAdapter.GetJobStepByVersion(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Version.Value, this.Name);
-            }
-
-            return ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
+            return ModelAdapter.GetJobVersion(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Version);
         }
     }
 }

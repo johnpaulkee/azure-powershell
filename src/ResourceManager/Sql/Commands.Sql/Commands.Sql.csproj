@@ -207,6 +207,8 @@
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\NewAzureRmSqlDatabaseAgentJobStepOutput.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\RemoveAzureSqlDatabaseAgentJobStep.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\SetAzureSqlDatabaseAgentJobStep.cs" />
+    <Compile Include="SqlDatabaseAgent\Cmdlet\JobVersion\AzureRmSqlDatabaseAgentJobVersionCmdletBase.cs" />
+    <Compile Include="SqlDatabaseAgent\Cmdlet\JobVersion\GetAzureRmSqlDatabaseAgentJobVersion.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\Job\AzureSqlDatabaseAgentJobCmdletBase.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\Job\GetAzureRmSqlDatabaseAgentJob.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\Job\NewAzureSqlDatabaseAgentJob.cs" />
@@ -233,6 +235,7 @@
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobExecutionModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobStepModel.cs" />
+    <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobVersionModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentTargetGroupModel.cs" />
     <Compile Include="SqlDatabaseAgent\Services\Agent\AzureSqlDatabaseAgentAdapter.cs" />
@@ -243,6 +246,8 @@
     <Compile Include="SqlDatabaseAgent\Services\JobExecution\AzureSqlDatabaseAgentJobExecutionCommunicator.cs" />
     <Compile Include="SqlDatabaseAgent\Services\JobStep\AzureSqlDatabaseAgentJobStepAdapter.cs" />
     <Compile Include="SqlDatabaseAgent\Services\JobStep\AzureSqlDatabaseAgentJobStepCommunicator.cs" />
+    <Compile Include="SqlDatabaseAgent\Services\JobVersion\AzureSqlDatabaseAgentJobVersionAdapter.cs" />
+    <Compile Include="SqlDatabaseAgent\Services\JobVersion\AzureSqlDatabaseAgentJobVersionCommunicator.cs" />
     <Compile Include="SqlDatabaseAgent\Services\Job\AzureSqlDatabaseAgentJobAdapter.cs" />
     <Compile Include="SqlDatabaseAgent\Services\Job\AzureSqlDatabaseAgentJobCommunicator.cs" />
     <Compile Include="SqlDatabaseAgent\Services\TargetGroup\AzureSqlDatabaseAgentTargetGroupAdapter.cs" />
