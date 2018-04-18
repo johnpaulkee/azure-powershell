@@ -11,23 +11,30 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobStep
     /// <summary>
     /// Defines the New-AzureRmSqlDatabaseAgentJobStep Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobStep",
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobStepOutput",
         SupportsShouldProcess = true)]
     [OutputType(typeof(Management.Sql.Models.JobStepOutput))]
     public class NewAzureRmSqlDatabaseAgentJobStepOutput : AzureRMCmdlet
     {
+        [Parameter(Mandatory = false)]
         public string SubscriptionId;
 
+        [Parameter(Mandatory = false)]
         public string ResourceGroupName;
 
+        [Parameter(Mandatory = true)]
         public string ServerName;
 
+        [Parameter(Mandatory = true)]
         public string DatabaseName;
 
+        [Parameter(Mandatory = false)]
         public string SchemaName;
 
+        [Parameter(Mandatory = true)]
         public string TableName;
 
+        [Parameter(Mandatory = false)]
         public string CredentialName;
 
         public override void ExecuteCmdlet()

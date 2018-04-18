@@ -36,7 +36,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 0,
             HelpMessage = "The job input object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job resource id
@@ -62,14 +62,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
 
         public string JobName { get; set; }
 
-        [Alias("JobName")]
+        /// <summary>
+        /// Gets or sets the job step name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            HelpMessage = "The job step name")]
+        [Alias("StepName")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Defines whether it is ok to skip the requesting of rule removal confirmation
-        /// </summary>
-        [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
-        public SwitchParameter Force { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
@@ -82,26 +86,20 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
-                    this.Name = InputObject.AgentName;
+                    this.JobName = InputObject.JobName;
+                    this.Name = InputObject.StepName;
                     break;
                 case ResourceIdParameterSet:
+                    // TODO:
                     string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     this.ResourceGroupName = tokens[3];
                     this.ServerName = tokens[7];
                     this.AgentName = tokens[9];
+                    this.JobName = tokens[11];
                     this.Name = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;
-            }
-
-            // Warning confirmation for agent when deleting
-            if (!Force.IsPresent &&
-                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobDescription, this.Name, this.ServerName),
-                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobWarning, this.Name, this.ServerName),
-                               Properties.Resources.ShouldProcessCaption))
-            {
-                return;
             }
 
             base.ExecuteCmdlet();

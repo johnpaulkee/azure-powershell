@@ -17,6 +17,7 @@ using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 using Microsoft.Azure.Management.Sql.Models;
+using System.Xml;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -368,7 +369,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The job will execute in minute intervals")]
-        public int MinuteInterval { get; set; }
+        public int? MinuteInterval { get; set; }
 
         [Parameter(
             Mandatory = true,
@@ -388,7 +389,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The job will execute in hour intervals")]
-        public int HourInterval { get; set; }
+        public int? HourInterval { get; set; }
 
         [Parameter(
             Mandatory = true,
@@ -408,7 +409,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The job will execute in daily intervals")]
-        public int DayInterval { get; set; }
+        public int? DayInterval { get; set; }
 
         [Parameter(
             Mandatory = true,
@@ -460,13 +461,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job start time")]
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
 
         [Parameter(
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job end time")]
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         /// <summary>
         /// The switch parameter that describes whether this job will be run once. If not provided, job will be recurring.
@@ -512,6 +513,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobModel model)
         {
+            TimeSpan timeSpan = new TimeSpan(days: this.DayInterval.HasValue ? this.DayInterval.Value : 0, 
+                                             hours: this.HourInterval.HasValue ? this.HourInterval.Value : 0, 
+                                             minutes: this.MinuteInterval.HasValue ? this.MinuteInterval.Value : 0,
+                                             seconds: 0);
+
+            string interval = XmlConvert.ToString(timeSpan);
+
             AzureSqlDatabaseAgentJobModel newEntity = new AzureSqlDatabaseAgentJobModel
             {
                 ResourceGroupName = this.ResourceGroupName,
@@ -520,7 +528,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 JobName = this.Name,
                 Description = this.Description,
                 Type = this.Once.IsPresent ? JobScheduleType.Once : JobScheduleType.Recurring,
-                Enabled = this.Enabled.IsPresent
+                Enabled = this.Enabled.IsPresent,
+                StartTime = this.StartTime.Value,
+                EndTime = this.EndTime.Value,
+                Interval = interval
             };
 
             return newEntity;

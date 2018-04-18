@@ -196,6 +196,8 @@
     <Compile Include="ScenarioTests\SqlDatabaseAgentCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentJobCredentialCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentJobCrudTests.cs" />
+    <Compile Include="ScenarioTests\SqlDatabaseAgentJobExecutionCrudTests.cs" />
+    <Compile Include="ScenarioTests\SqlDatabaseAgentJobStepCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentTargetCrudTests.cs" />
     <Compile Include="ScenarioTests\ThreatDetectionClassicStorageTests.cs" />
@@ -248,6 +250,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ScenarioTests\SqlDatabaseAgentJobCrudTests.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ScenarioTests\SqlDatabaseAgentJobExecutionCrudTests.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ScenarioTests\SqlDatabaseAgentJobStepCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.ps1">

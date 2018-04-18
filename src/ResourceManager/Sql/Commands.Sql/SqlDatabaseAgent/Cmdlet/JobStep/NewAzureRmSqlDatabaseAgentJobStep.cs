@@ -67,6 +67,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             Position = 4,
             ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
         [Alias("StepName")]
         public string Name { get; set; }
 
@@ -74,54 +84,70 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             Position = 5,
             ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 2,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 2,
+            HelpMessage = "The target group name")]
         public string TargetGroupName { get; set; }
 
         [Parameter(
             Mandatory = true,
             Position = 6,
             ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 3,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 3,
+            HelpMessage = "The credential name")]
         public string CredentialName { get; set; }
 
         [Parameter(
             Mandatory = true,
             Position = 7,
             ParameterSetName = DefaultParameterSet)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            Position = 4,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            Position = 4,
+            HelpMessage = "The command text")]
         public string CommandText { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
+        [Parameter(Mandatory = false)]
         public Management.Sql.Models.JobStepOutput Output { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
-        public int TimeoutSeconds { get; set; }
+        [Parameter(Mandatory = false)]
+        public int? TimeoutSeconds { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
-        public int RetryAttempts { get; set; }
+        [Parameter(Mandatory = false)]
+        public int? RetryAttempts { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
-        public int InitialRetryIntervalSeconds { get; set; }
+        [Parameter(Mandatory = false)]
+        public int? InitialRetryIntervalSeconds { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
-        public int MaximumRetryIntervalSeconds { get; set; }
+        [Parameter(Mandatory = false)]
+        public int? MaximumRetryIntervalSeconds { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
-        public double RetryIntervalBackoffMultipler { get; set; }
+        [Parameter(Mandatory = false)]
+        public double? RetryIntervalBackoffMultipler { get; set; }
 
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet)]
-        public int StepId { get; set; }
+        [Parameter(Mandatory = false)]
+        public int? StepId { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here

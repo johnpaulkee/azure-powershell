@@ -73,6 +73,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// </summary>
         public JobStepExecutionOptions ExecutionOptions { get; set; }
 
-        public int StepId;
+        /// <summary>
+        /// The job step id
+        /// </summary>
+        public int? StepId;
+
+        /// <summary>
+        /// Gets or sets the job step resource id
+        /// </summary>
+        public string ResourceId { get; set; }
     }
 }
