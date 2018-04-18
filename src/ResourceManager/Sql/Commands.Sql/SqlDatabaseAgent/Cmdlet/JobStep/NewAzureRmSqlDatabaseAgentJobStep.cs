@@ -12,9 +12,232 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobStep
+using System.Collections;
+using System.Management.Automation;
+using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
+using Microsoft.Rest.Azure;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Commands.Sql.Database.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using System;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
+
+namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    class NewAzureRmSqlDatabaseAgentJobStep
+    /// <summary>
+    /// Defines the New-AzureRmSqlDatabaseAgentJobStep Cmdlet
+    /// </summary>
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobStep",
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
+    public class NewAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
+        /// <summary>
+        /// Gets or sets the job object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job resource id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The job resource id")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = DefaultParameterSet)]
+        public string JobName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ParameterSetName = DefaultParameterSet)]
+        [Alias("StepName")]
+        public string Name { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ParameterSetName = DefaultParameterSet)]
+        public string TargetGroupName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 6,
+            ParameterSetName = DefaultParameterSet)]
+        public string CredentialName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ParameterSetName = DefaultParameterSet)]
+        public string CommandText { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public Management.Sql.Models.JobStepOutput Output { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public int TimeoutSeconds { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public int RetryAttempts { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public int InitialRetryIntervalSeconds { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public int MaximumRetryIntervalSeconds { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public double RetryIntervalBackoffMultipler { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet)]
+        public int StepId { get; set; }
+
+        /// <summary>
+        /// Cmdlet execution starts here
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    this.JobName = InputObject.JobName;
+                    break;
+                case ResourceIdParameterSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9]; // TODO:
+                    this.JobName = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Check to see if the agent already exists in this resource group.
+        /// </summary>
+        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
+        protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
+        {
+            try
+            {
+                WriteDebugWithTimestamp("AgentName: {0}", Name);
+                ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.JobName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // This is what we want.  We looked and there is no agent with this name.
+                    return null;
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
+
+            // The agent already exists
+            throw new PSArgumentException(
+                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.Name, this.JobName),
+                "AgentName");
+        }
+
+        /// <summary>
+        /// Generates the model from user input.
+        /// </summary>
+        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <returns>The generated model from user input</returns>
+        protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
+        {
+            string targetGroupId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}",
+                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.ServerName,
+                this.AgentName,
+                this.TargetGroupName);
+
+            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
+                this.ResourceGroupName,
+                this.ServerName,
+                this.AgentName,
+                this.CredentialName);
+
+            AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.AgentName,
+                JobName = this.JobName,
+                StepName = this.Name,
+                TargetGroup = targetGroupId,
+                Credential = credentialId,
+                Output = Output,
+                ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
+                {
+                    InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds,
+                    MaximumRetryIntervalSeconds = this.MaximumRetryIntervalSeconds,
+                    RetryAttempts = this.RetryAttempts,
+                    RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultipler,
+                    TimeoutSeconds = this.TimeoutSeconds
+                },
+                Action = new Management.Sql.Models.JobStepAction
+                {
+                    Source = "Inline",
+                    Type = "TSql",
+                    Value = this.CommandText
+                },
+                StepId = StepId
+            };
+
+            return updatedModel;
+        }
+
+        /// <summary>
+        /// Sends the changes to the service -> Creates the agent
+        /// </summary>
+        /// <param name="entity">The agent to create</param>
+        /// <returns>The created agent</returns>
+        protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
+        {
+            return ModelAdapter.UpsertJobStep(entity);
+        }
     }
 }

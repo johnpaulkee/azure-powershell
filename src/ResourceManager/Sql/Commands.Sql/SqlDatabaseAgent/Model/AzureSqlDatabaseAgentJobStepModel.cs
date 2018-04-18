@@ -49,28 +49,30 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string StepName { get; set; }
 
         /// <summary>
-        /// The target group name
+        /// The target group id
         /// </summary>
-        public string TargetGroupName { get; set; }
+        public string TargetGroup { get; set; }
 
         /// <summary>
-        /// The credential name
+        /// The credential id
         /// </summary>
-        public string CredentialName { get; set; }
+        public string Credential { get; set; }
 
         /// <summary>
         /// The script
         /// </summary>
-        public string Script { get; set; }
+        public JobStepAction Action { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Output { get; set; }
+        public JobStepOutput Output { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string ExecutionOptions { get; set; }
+        public JobStepExecutionOptions ExecutionOptions { get; set; }
+
+        public int StepId;
     }
 }

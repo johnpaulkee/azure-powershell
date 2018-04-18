@@ -71,6 +71,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The job name")]
         [Alias("JobName")]
         public string Name { get; set; }
+        
+        // Do I want to use job step, job version here? or do I want to separate it into a different cmdlet.
 
         /// <summary>
         /// Cmdlet execution starts here

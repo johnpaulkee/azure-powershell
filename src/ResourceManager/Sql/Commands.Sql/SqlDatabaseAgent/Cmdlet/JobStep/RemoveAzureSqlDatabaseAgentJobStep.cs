@@ -12,9 +12,145 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobStep
+using System.Management.Automation;
+using Microsoft.Rest.Azure;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System.Globalization;
+using System;
+
+namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
 {
-    class RemoveAzureSqlDatabaseAgentJobStep
+    /// <summary>
+    /// Defines the Remove-AzureRmSqlDatabaseAgentJobStep Cmdlet
+    /// </summary>
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJobStep", SupportsShouldProcess = true)]
+    public class RemoveAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
+        /// <summary>
+        /// Gets or sets the job input object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job input object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job resource id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+
+        public string JobName { get; set; }
+
+        [Alias("JobName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Defines whether it is ok to skip the requesting of rule removal confirmation
+        /// </summary>
+        [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
+        public SwitchParameter Force { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    this.Name = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.Name = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            // Warning confirmation for agent when deleting
+            if (!Force.IsPresent &&
+                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobDescription, this.Name, this.ServerName),
+                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobWarning, this.Name, this.ServerName),
+                               Properties.Resources.ShouldProcessCaption))
+            {
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Gets job to see if it exists before removing
+        /// </summary>
+        /// <returns></returns>
+        protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
+        {
+            try
+            {
+                return ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The job doesn't exists
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.Name, this.AgentName),
+                        "JobName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Apply user input.
+        /// </summary>
+        /// <param name="model">The result of GetEntity</param>
+        /// <returns>The input model</returns>
+        protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
+        {
+            return model;
+        }
+
+        /// <summary>
+        /// Deletes the job.
+        /// </summary>
+        /// <param name="entity">The job account being deleted</param>
+        /// <returns>The job account that was deleted</returns>
+        protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
+        {
+            ModelAdapter.RemoveJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
+            return entity;
+        }
     }
 }

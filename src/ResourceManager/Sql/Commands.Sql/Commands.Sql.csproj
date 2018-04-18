@@ -204,6 +204,7 @@
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\AzureSqlDatabaseAgentJobStepCmdletBase.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\GetAzureSqlDatabaseAgentJobStep.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\NewAzureRmSqlDatabaseAgentJobStep.cs" />
+    <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\NewAzureRmSqlDatabaseAgentJobStepOutput.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\RemoveAzureSqlDatabaseAgentJobStep.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\JobStep\SetAzureSqlDatabaseAgentJobStep.cs" />
     <Compile Include="SqlDatabaseAgent\Cmdlet\Job\AzureSqlDatabaseAgentJobCmdletBase.cs" />

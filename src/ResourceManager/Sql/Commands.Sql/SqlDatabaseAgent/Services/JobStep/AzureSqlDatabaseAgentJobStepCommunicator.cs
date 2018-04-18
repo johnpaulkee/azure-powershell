@@ -108,6 +108,43 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         }
 
         /// <summary>
+        /// Gets all steps by job version
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="serverName">The server name</param>
+        /// <param name="agentName">The agent name</param>
+        /// <param name="jobName">The job name</param>
+        /// <param name="jobVersion">The job version</param>
+        /// <returns>Pages of job steps for a job for a specific version</returns>
+        public Rest.Azure.IPage<Management.Sql.Models.JobStep> ListByJobVersion(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            int jobVersion)
+        {
+            return GetCurrentSqlClient().JobSteps.ListByVersion(resourceGroupName, serverName, agentName, jobName, jobVersion);
+        }
+
+
+        /// <summary>
+        /// Gets all steps from a job
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="serverName">The server name</param>
+        /// <param name="agentName">The agent name</param>
+        /// <param name="jobName">The job name</param>
+        /// <returns>Pages of job steps for a job</returns>
+        public Rest.Azure.IPage<Management.Sql.Models.JobStep> ListByJob(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName)
+        {
+            return GetCurrentSqlClient().JobSteps.ListByJob(resourceGroupName, serverName, agentName, jobName);
+        }
+
+        /// <summary>
         /// Deletes a job step belong to a job.
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>

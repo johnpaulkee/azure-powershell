@@ -13,6 +13,8 @@
 
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -46,7 +48,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         {
             var param = new Management.Sql.Models.JobStep
             {
-
+                // Min params
+                TargetGroup = model.TargetGroup,
+                Credential = model.Credential,
+                Action = model.Action,
+                // Max params
+                ExecutionOptions = model.ExecutionOptions,
+                Output = model.Output,
+                StepId = model.StepId,
             };
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.JobName, model.StepName, param);
@@ -80,12 +89,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         }
 
         /// <summary>
+        /// Gets a list of steps associated to a job
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="serverName">The server name</param>
+        /// <param name="agentName">The agent name</param>
+        /// <param name="jobName">The job name</param>
+        /// <returns>A list of steps that the job has</returns>
+        public IEnumerable<AzureSqlDatabaseAgentJobStepModel> GetJobStep(string resourceGroupName, string serverName, string agentName, string jobName)
+        {
+            var resp = Communicator.ListByJob(resourceGroupName, serverName, agentName, jobName);
+            return resp.Select((step) => CreateJobStepModelFromResponse(resourceGroupName, serverName, agentName, jobName, step.Name, step));
+        }
+
+        /// <summary>
         /// Deletes an Azure SQL Database Agent associated to a server
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agent is in</param>
         /// <param name="agentName">The agent name</param>
-        public void RemoveTargetGroup(string resourceGroupName, string serverName, string agentName, string jobName, string stepName)
+        public void RemoveJobStep(string resourceGroupName, string serverName, string agentName, string jobName, string stepName)
         {
             Communicator.Remove(resourceGroupName, serverName, agentName, jobName, stepName);
         }
