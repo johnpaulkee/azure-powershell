@@ -12,6 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System;
 using System.Globalization;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
@@ -38,7 +39,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the agent resource id
@@ -59,16 +60,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The target group name")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The target group name")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The target group name")]
         [Alias("TargetGroupName")]
         public string Name { get; set; }
 
@@ -83,29 +74,31 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            // Warning confirmation for deletion for target group
-            if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupDescription, this.Name, this.AgentName),
-                   string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupWarning, this.Name, this.AgentName),
-                   Properties.Resources.ShouldProcessCaption))
-            {
-                return;
-            }
-
             switch (ParameterSetName)
             {
                 case InputObjectParameterSet:
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
+                    this.Name = InputObject.TargetGroupName;
                     break;
                 case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.AgentName = resourceInfo.ResourceName;
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.Name = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;
+            }
+
+            // Warning confirmation for deletion for target group
+            if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupDescription, this.Name, this.AgentName),
+                   string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupWarning, this.Name, this.AgentName),
+                   Properties.Resources.ShouldProcessCaption))
+            {
+                return;
             }
 
             base.ExecuteCmdlet();

@@ -28,7 +28,6 @@ using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Management.Compute;
 using Microsoft.Azure.Management.Compute.Models;
 using Microsoft.Azure.Management.Internal.Network.Version2017_10_01;
-using Microsoft.Azure.Management.Internal.Network.Version2017_10_01.Models;
 using Microsoft.Azure.Management.Internal.Resources;
 using Microsoft.Azure.Management.Internal.Resources.Models;
 using Microsoft.Azure.Management.Storage;
@@ -106,6 +105,7 @@ namespace Microsoft.Azure.Commands.Compute
             Mandatory = false,
             Position = 3,
             ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = SimpleParameterSet, Mandatory = false)]
         [ValidateNotNullOrEmpty]
         public string[] Zone { get; set; }
 
@@ -190,9 +190,10 @@ namespace Microsoft.Azure.Commands.Compute
             "Win2016Datacenter",
             "Win2012R2Datacenter",
             "Win2012Datacenter",
-            "Win2008R2SP1")]
+            "Win2008R2SP1",
+            "Win10")]
         public string ImageName { get; set; } = "Win2016Datacenter";
-        
+
         [Parameter(ParameterSetName = DiskFileParameterSet, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string DiskFile { get; set; }
@@ -211,8 +212,14 @@ namespace Microsoft.Azure.Commands.Compute
         [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
         public SwitchParameter AsJob { get; set; }
 
+        [Parameter(ParameterSetName = SimpleParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = DiskFileParameterSet, Mandatory = false)]
+        public int[] DataDiskSizeInGb { get; set; }
+
         public override void ExecuteCmdlet()
         {
+            WriteWarning("New-AzureRmVM: A property of the output of this cmdlet will change in an upcoming breaking change release. " +
+                         "The StorageAccountType property for a DataDisk will return Standard_LRS and Premium_LRS");
             switch (ParameterSetName)
             {
                 case SimpleParameterSet:
@@ -254,7 +261,7 @@ namespace Microsoft.Azure.Commands.Compute
                 if (_cmdlet.DiskFile == null)
                 {
                     ImageAndOsType = await _client.UpdateImageAndOsTypeAsync(
-                        ImageAndOsType, _cmdlet.ImageName, Location);
+                        ImageAndOsType, _cmdlet.ResourceGroupName, _cmdlet.ImageName, Location);
                 }
 
                 _cmdlet.DomainNameLabel = await PublicIPAddressStrategy.UpdateDomainNameLabelAsync(
@@ -270,11 +277,15 @@ namespace Microsoft.Azure.Commands.Compute
                 var publicIpAddress = resourceGroup.CreatePublicIPAddressConfig(
                     name: _cmdlet.PublicIpAddressName,
                     domainNameLabel: _cmdlet.DomainNameLabel,
-                    allocationMethod: _cmdlet.AllocationMethod);
+                    allocationMethod: _cmdlet.AllocationMethod,
+                    sku: PublicIPAddressStrategy.Sku.Basic,
+                    zones: _cmdlet.Zone);
+
+                _cmdlet.OpenPorts = ImageAndOsType.UpdatePorts(_cmdlet.OpenPorts);
+
                 var networkSecurityGroup = resourceGroup.CreateNetworkSecurityGroupConfig(
                     name: _cmdlet.SecurityGroupName,
-                    openPorts: _cmdlet.OpenPorts,
-                    imageAndOsType: ImageAndOsType);
+                    openPorts: _cmdlet.OpenPorts);
 
                 var networkInterface = resourceGroup.CreateNetworkInterfaceConfig(
                     _cmdlet.Name, subnet, publicIpAddress, networkSecurityGroup);
@@ -293,7 +304,9 @@ namespace Microsoft.Azure.Commands.Compute
                         adminPassword:
                             new NetworkCredential(string.Empty, _cmdlet.Credential.Password).Password,
                         size: _cmdlet.Size,
-                        availabilitySet: availabilitySet);
+                        availabilitySet: availabilitySet,
+                        dataDisks: _cmdlet.DataDiskSizeInGb,
+                        zones: _cmdlet.Zone);
                 }
                 else
                 {
@@ -307,7 +320,9 @@ namespace Microsoft.Azure.Commands.Compute
                         osType: ImageAndOsType.OsType,
                         disk: disk,
                         size: _cmdlet.Size,
-                        availabilitySet: availabilitySet);
+                        availabilitySet: availabilitySet,
+                        dataDisks: _cmdlet.DataDiskSizeInGb,
+                        zones: _cmdlet.Zone);
                 }
             }
         }
@@ -341,6 +356,7 @@ namespace Microsoft.Azure.Commands.Compute
                 }
                 parameters.ImageAndOsType = new ImageAndOsType(
                     Linux ? OperatingSystemTypes.Linux : OperatingSystemTypes.Windows,
+                    null,
                     null);
                 var storageClient = AzureSession.Instance.ClientFactory.CreateArmClient<StorageManagementClient>(
                     DefaultProfile.DefaultContext,
@@ -446,7 +462,7 @@ namespace Microsoft.Azure.Commands.Compute
                     {
                         DiagnosticsProfile = this.VM.DiagnosticsProfile,
                         HardwareProfile = this.VM.HardwareProfile,
-                        StorageProfile = this.VM.StorageProfile,
+                        StorageProfile = this.VM.StorageProfile.ToSerializedStorageProfile(),
                         NetworkProfile = this.VM.NetworkProfile,
                         OsProfile = this.VM.OSProfile,
                         Plan = this.VM.Plan,

@@ -30,21 +30,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class AddAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
         /// <summary>
-        /// The target to add
-        /// </summary>
-        private JobTarget Target;
-
-        /// <summary>
-        /// Flag to check if this target already existed within the group.
-        /// </summary>
-        private bool TargetExists;
-
-        /// <summary>
-        /// Flag to check if this target's membership is being updated.
-        /// </summary>
-        private bool UpdatedMembership;
-
-        /// <summary>
         /// Gets or sets the flag indicating that we want to exclude this target
         /// </summary>
         [Parameter(Mandatory = false,
@@ -54,105 +39,35 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override SwitchParameter Exclude { get; set; }
 
         /// <summary>
-        /// Updates the existing list of targets with the new target if it doesn't already exist in the list.
+        /// Updates list of existing targets during add target scenario
+        /// There are 2 scenarios where we will need to send an update to server
+        /// 1. If target wasn't in list and we need to add it
+        /// 2. If target was in the list, but client wants to update it's membership type.
+        /// If one of these scenarios occurs, we return true and send update to server.
+        /// Otherwise, we return empty response to indicate that no changes were made.
         /// </summary>
-        /// <param name="existingTargets">The list of existing targets in the target group</param>
-        /// <returns>An updated list of targets.</returns>
-        protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> existingTargets)
+        /// <returns>True if an update to server is required after updating list of existing targets</returns>
+        protected override bool UpdateExistingTargets()
         {
-            this.Target = CreateJobTargetModel();
+            int? index = FindTarget();
+            bool targetExists = index.HasValue;
+            bool needsMembershipUpdate = targetExists ? this.ExistingTargets[index.Value].MembershipType != this.Target.MembershipType : false;
+            bool needsUpdate = false;
 
-            List<JobTarget> updatedTargets = MergeTargets(existingTargets.ToList(), this.Target);
-
-            // If there were no updates, just return an empty list to user to indicate no changes were made.
-            if (updatedTargets == null)
+            if (!targetExists)
             {
-                return new List<JobTarget>();
+                this.ExistingTargets.Add(this.Target);
+                needsUpdate = true;
             }
 
-            return updatedTargets;
-        }
-
-        /// <summary>
-        /// Sends the changes to the service -> Creates or updates the target if necessary
-        /// </summary>
-        /// <param name="updatedTargets">The list of updated targets</param>
-        /// <returns>The target that was created/updated or null if nothing changed.</returns>
-        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
-        {
-            // If the target existed and it's membership wasn't updated, then return null.
-            if (this.TargetExists && !this.UpdatedMembership)
+            // If the membership type needs updating then update.
+            if (needsMembershipUpdate)
             {
-                return null;
+                this.ExistingTargets[index.Value].MembershipType = this.Target.MembershipType;
+                needsUpdate = true;
             }
 
-            AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
-            {
-                ResourceGroupName = this.ResourceGroupName,
-                ServerName = this.AgentServerName,
-                AgentName = this.AgentName,
-                TargetGroupName = this.TargetGroupName,
-                Members = updatedTargets.ToList()
-            };
-
-            IList<JobTarget> resp = ModelAdapter.UpsertTargetGroup(model).Members;
-
-            var upsertedTarget = resp.Where(target =>
-                target.DatabaseName == this.Target.DatabaseName &&
-                target.ServerName == this.Target.ServerName &&
-                target.ElasticPoolName == this.Target.ElasticPoolName &&
-                target.ShardMapName == this.Target.ShardMapName &&
-                target.MembershipType == this.Target.MembershipType &&
-                target.Type == this.Target.Type &&
-                target.RefreshCredential == this.Target.RefreshCredential).FirstOrDefault();
-
-            return new List<JobTarget> { upsertedTarget };
-        }
-
-        /// <summary>
-        /// This merges the target group members list with the new target that customer wants added.
-        /// Throws PSArgumentException if the target for it's target type already exists.s
-        /// </summary>
-        /// <param name="existingTargets">The existing target group members</param>
-        /// <param name="target">The target we want to add to the group</param>
-        /// <returns>A merged list of targets if the target doesn't already exist in the group.</returns>
-        protected List<JobTarget> MergeTargets(IList<JobTarget> existingTargets, JobTarget target)
-        {
-            this.UpdatedMembership = false;
-            this.TargetExists = false;
-
-            foreach (JobTarget t in existingTargets)
-            {
-                if (t.ServerName == target.ServerName &&
-                    t.DatabaseName == target.DatabaseName &&
-                    t.ElasticPoolName == target.ElasticPoolName &&
-                    t.ShardMapName == target.ShardMapName &&
-                    t.Type == target.Type &&
-                    t.RefreshCredential == target.RefreshCredential)
-                {
-                    this.TargetExists = true;
-                    if (t.MembershipType != target.MembershipType)
-                    {
-                        this.UpdatedMembership = true;
-                        t.MembershipType = target.MembershipType;
-                    }
-                }
-            }
-
-            // If target didn't exist, add this new target
-            if (!this.TargetExists)
-            {
-                existingTargets.Add(target);
-                return existingTargets.ToList();
-            }
-
-            // If target did exist but membership was updated, return the new list.
-            if (this.UpdatedMembership)
-            {
-                return existingTargets.ToList();
-            }
-
-            return null;
+            return needsUpdate;
         }
     }
 }

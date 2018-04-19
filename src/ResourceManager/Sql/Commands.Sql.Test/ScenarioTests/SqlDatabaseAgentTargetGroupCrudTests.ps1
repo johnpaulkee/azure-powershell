@@ -23,8 +23,8 @@ function Test-CreateTargetGroup
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
     $tgName1 = Get-TargetGroupName
     $tgName2 = Get-TargetGroupName
     $tgName3 = Get-TargetGroupName
@@ -81,13 +81,13 @@ function Test-GetTargetGroup
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
-    $tg2 = Create-TargetGroupForTest $rg1 $s1 $a1
-    $tg3 = Create-TargetGroupForTest $rg1 $s1 $a1
-    $tg4 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg1 = Create-TargetGroupForTest $a1
+    $tg2 = Create-TargetGroupForTest $a1
+    $tg3 = Create-TargetGroupForTest $a1
+    $tg4 = Create-TargetGroupForTest $a1
 
     try
     {
@@ -156,13 +156,13 @@ function Test-RemoveTargetGroup
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
-    $tg2 = Create-TargetGroupForTest $rg1 $s1 $a1
-    $tg3 = Create-TargetGroupForTest $rg1 $s1 $a1
-    $tg4 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $tg1 = Create-TargetGroupForTest $a1
+    $tg2 = Create-TargetGroupForTest $a1
+    $tg3 = Create-TargetGroupForTest $a1
+    $tg4 = Create-TargetGroupForTest $a1
 
     try
     {
@@ -175,7 +175,7 @@ function Test-RemoveTargetGroup
         Assert-AreEqual $resp1.Members.Count 0
 
         # Test using input object
-        $resp2 = Remove-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg2.TargetGroupName
+        $resp2 = Remove-AzureRmSqlDatabaseAgentTargetGroup -InputObject $tg2
         Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp2.AgentName $a1.AgentName
         Assert-AreEqual $resp2.ServerName $s1.ServerName
@@ -183,7 +183,7 @@ function Test-RemoveTargetGroup
         Assert-AreEqual $resp2.Members.Count 0
 
         # Test using resource id
-        $resp3 = Remove-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId -Name $tg3.TargetGroupName
+        $resp3 = Remove-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $tg3.ResourceId
         Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp3.AgentName $a1.AgentName
         Assert-AreEqual $resp3.ServerName $s1.ServerName
@@ -191,12 +191,15 @@ function Test-RemoveTargetGroup
         Assert-AreEqual $resp3.Members.Count 0
 
         # Test piping
-        $resp4 = $a1 | Remove-AzureRmSqlDatabaseAgentTargetGroup -Name $tg4.TargetGroupName
+        $resp4 = $tg4 | Remove-AzureRmSqlDatabaseAgentTargetGroup
         Assert-AreEqual $resp4.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp4.AgentName $a1.AgentName
         Assert-AreEqual $resp4.ServerName $s1.ServerName
         Assert-AreEqual $resp4.TargetGroupName $tg4.TargetGroupName
         Assert-AreEqual $resp4.Members.Count 0
+
+        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1
+        Assert-AreEqual 0 $all.Count
     }
     finally
     {

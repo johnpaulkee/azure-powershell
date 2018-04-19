@@ -460,7 +460,16 @@ function Remove-ResourceGroupForTest ($rg)
 #>
 function Get-ServerCredential
 {
-	$serverLogin = "testusername"
+	return Get-Credential
+}
+
+<#
+	.SYNOPSIS
+	Gets a random credential
+#>
+function Get-Credential
+{
+	$serverLogin = Get-UserName
 	$serverPassword = "t357ingP@s5w0rd!"
 	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force)) 
 	return $credentials
@@ -495,11 +504,11 @@ function Create-ServerForTest ($resourceGroup, $location = "Japan East")
 	.SYNOPSIS
 	Creates the test environment needed to perform the Sql elastic pool CRUD tests
 #>
-function Create-ElasticPoolForTest ($resourceGroup, $server)
+function Create-ElasticPoolForTest ($server)
 {
 	$epName = Get-ElasticPoolName
 
-	$ep = New-AzureRmSqlElasticPool -ResourceGroupName  $resourceGroup.ResourceGroupName -ServerName $server.ServerName -ElasticPoolName $epName
+	$ep = New-AzureRmSqlElasticPool -ResourceGroupName  $server.ResourceGroupName -ServerName $server.ServerName -ElasticPoolName $epName
 	return $ep
 }
 
@@ -507,10 +516,10 @@ function Create-ElasticPoolForTest ($resourceGroup, $server)
 	.SYNOPSIS
 	Creates a database with test params
 #>
-function Create-DatabaseForTest ($resourceGroup, $server)
+function Create-DatabaseForTest ($server)
 {
     $dbName = Get-DatabaseName
-	$db = New-AzureRmSqlDatabase -ResourceGroupName $resourceGroup.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
+	$db = New-AzureRmSqlDatabase -ResourceGroupName $server.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
 	return $db
 }
 
@@ -518,22 +527,22 @@ function Create-DatabaseForTest ($resourceGroup, $server)
 	.SYNOPSIS
 	Creates a sql database agent with test params
 #>
-function Create-AgentForTest ($rg, $s, $db)
+function Create-AgentForTest ($db)
 {
     $agentName = Get-AgentName
-    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
+    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $db.ResourceGroupName -ServerName $db.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
 }
 
 <#
 	.SYNOPSIS
 	Creates a sql database agent job credential with test params
 #>
-function Create-JobCredentialForTest ($rg, $s, $a)
+function Create-JobCredentialForTest ($a)
 {
     $credentialName = Get-JobCredentialName
     $credential = Get-ServerCredential
 
-    $jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
+    $jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
     return $jobCredential
 }
 
@@ -541,10 +550,10 @@ function Create-JobCredentialForTest ($rg, $s, $a)
 	.SYNOPSIS
 	Creates a sql database agent target group with test params
 #>
-function Create-TargetGroupForTest ($rg, $s, $a)
+function Create-TargetGroupForTest ($a)
 {
     $targetGroupName = Get-TargetGroupName
-    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $rg.ResourceGroupName -ServerName $s.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
+    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
     return $tg
 }
 

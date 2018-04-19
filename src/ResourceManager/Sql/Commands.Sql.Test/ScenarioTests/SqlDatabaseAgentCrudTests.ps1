@@ -23,10 +23,10 @@ function Test-CreateAgent
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $db2 = Create-DatabaseForTest $rg1 $s1
-    $db3 = Create-DatabaseForTest $rg1 $s1
-    $db4 = Create-DatabaseForTest $rg1 $s1
+    $db1 = Create-DatabaseForTest $s1
+    $db2 = Create-DatabaseForTest $s1
+    $db3 = Create-DatabaseForTest $s1
+    $db4 = Create-DatabaseForTest $s1
     $agentName1 = Get-AgentName
     $agentName2 = Get-AgentName
     $agentName3 = Get-AgentName
@@ -91,8 +91,8 @@ function Test-UpdateAgent
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
     $tags1 = @{ Dept="Finance"; AnotherTag="WOOHOO" }
     $tags2 = @{ Dept="CS" }
@@ -165,12 +165,12 @@ function Test-GetAgent
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $s2 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $db2 = Create-DatabaseForTest $rg1 $s1
-    $db3 = Create-DatabaseForTest $rg1 $s2
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $a2 = Create-AgentForTest $rg1 $s1 $db2
-    $a3 = Create-AgentForTest $rg1 $s2 $db3
+    $db1 = Create-DatabaseForTest $s1
+    $db2 = Create-DatabaseForTest $s1
+    $db3 = Create-DatabaseForTest $s2
+    $a1 = Create-AgentForTest $db1
+    $a2 = Create-AgentForTest $db2
+    $a3 = Create-AgentForTest $db3
     
     try {
         # Test using default parameters
@@ -240,14 +240,14 @@ function Test-RemoveAgent
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $db2 = Create-DatabaseForTest $rg1 $s1
-    $db3 = Create-DatabaseForTest $rg1 $s1
-    $db4 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $a2 = Create-AgentForTest $rg1 $s1 $db2
-    $a3 = Create-AgentForTest $rg1 $s1 $db3
-    $a4 = Create-AgentForTest $rg1 $s1 $db4
+    $db1 = Create-DatabaseForTest $s1
+    $db2 = Create-DatabaseForTest $s1
+    $db3 = Create-DatabaseForTest $s1
+    $db4 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $a2 = Create-AgentForTest $db2
+    $a3 = Create-AgentForTest $db3
+    $a4 = Create-AgentForTest $db4
 
     try
     {

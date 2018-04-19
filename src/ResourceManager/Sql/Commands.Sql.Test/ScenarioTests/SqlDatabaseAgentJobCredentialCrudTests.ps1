@@ -23,8 +23,8 @@ function Test-CreateJobCredential
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
     # Credential params
     $cn1 = Get-JobCredentialName
@@ -80,9 +80,9 @@ function Test-UpdateJobCredential
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $jc1 = Create-JobCredentialForTest $a1
 
     try
     {
@@ -141,12 +141,12 @@ function Test-GetJobCredential
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $jc3 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $jc4 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $jc1 = Create-JobCredentialForTest $a1
+    $jc2 = Create-JobCredentialForTest $a1
+    $jc3 = Create-JobCredentialForTest $a1
+    $jc4 = Create-JobCredentialForTest $a1
 
     try
     {
@@ -218,13 +218,13 @@ function Test-RemoveJobCredential
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $jc2 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $jc3 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $jc4 = Create-JobCredentialForTest $rg1 $s1 $a1
+    $jc1 = Create-JobCredentialForTest $a1
+    $jc2 = Create-JobCredentialForTest $a1
+    $jc3 = Create-JobCredentialForTest $a1
+    $jc4 = Create-JobCredentialForTest $a1
 
     try
     {

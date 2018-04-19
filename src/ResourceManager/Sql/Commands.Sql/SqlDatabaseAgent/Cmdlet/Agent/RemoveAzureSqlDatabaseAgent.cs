@@ -77,15 +77,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            // Warning confirmation for agent when deleting
-            if (!Force.IsPresent && 
-                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.Name, this.ServerName),
-                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.Name, this.ServerName),
-                               Properties.Resources.ShouldProcessCaption))
-            {
-                return;
-            }
-
             switch (ParameterSetName)
             {
                 case InputObjectParameterSet:
@@ -101,6 +92,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     break;
                 default:
                     break;
+            }
+
+            // Warning confirmation for agent when deleting
+            if (!Force.IsPresent &&
+                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.Name, this.ServerName),
+                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.Name, this.ServerName),
+                               Properties.Resources.ShouldProcessCaption))
+            {
+                return;
             }
 
             base.ExecuteCmdlet();

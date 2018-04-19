@@ -23,10 +23,10 @@ function Test-ServerTarget
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $jc1 = Create-JobCredentialForTest $a1
+    $tg1 = Create-TargetGroupForTest $a1
 
     # Server Target Helper Objects
     $st1 =  @{ ServerName = "s1"; } # Include
@@ -36,8 +36,8 @@ function Test-ServerTarget
 
     try
     {
-        Test-AddServerTarget $rg1 $s1 $a1 $jc1 $tg1 $st1 $st2 $st3 $st4
-        Test-RemoveServerTarget $rg1 $s1 $a1 $jc1 $tg1 $st1 $st2 $st3 $st4
+        Test-AddServerTarget $a1 $jc1 $tg1 $st1 $st2 $st3 $st4
+        Test-RemoveServerTarget $a1 $jc1 $tg1 $st1 $st2 $st3 $st4
     }
     finally
     {
@@ -51,13 +51,13 @@ function Test-ServerTarget
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $st4)
+function Test-AddServerTarget($a1, $jc1, $tg1, $st1, $st2, $st3, $st4)
 {
     ## --------- Server Target Tests -------------
     ## Test default parameters 
 
     # Include s1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $st1.ServerName
     Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
@@ -65,7 +65,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $st4
     Assert-AreEqual $resp.Type "SqlServer"
 
     # Exclude s1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $st1.ServerName
     Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
@@ -73,11 +73,11 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $st4
     Assert-AreEqual $resp.Type "SqlServer"
 
     # Exclude s1 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include s1 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $st1.ServerName
@@ -159,7 +159,7 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $st4
     Assert-AreEqual $all.Members.Count 4
 
     # Add all servers from rg1 to tg1 - Could also add other servers from all resource groups but unsure what count would be otherwise
-    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
+    $added = Get-AzureRmSqlServer -ResourceGroupName $a1.ResourceGroupName | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual 1 $added.Count
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -172,13 +172,13 @@ function Test-AddServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $st4
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-RemoveServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $st4)
+function Test-RemoveServerTarget($a1, $jc1, $tg1, $st1, $st2, $st3, $st4)
 {
     ## --------- Server Target Tests -------------
     ## Test default parameters 
 
     # Remove s1
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $st1.ServerName
     Assert-AreEqual $resp.RefreshCredential $jc1.ResourceId
@@ -186,7 +186,7 @@ function Test-RemoveServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $
     Assert-AreEqual $resp.Type "SqlServer"
 
     # Try remove again - should have no resp
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $st1.ServerName -RefreshCredentialName $jc1.CredentialName
     Assert-Null $resp
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -239,7 +239,7 @@ function Test-RemoveServerTarget($rg1, $s1, $a1, $jc1, $tg1, $st1, $st2, $st3, $
     Assert-AreEqual $all.Members.Count 1
 
     # Remove all servers from rg1 in tg1
-    $removed = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
+    $removed = Get-AzureRmSqlServer -ResourceGroupName $a1.ResourceGroupName | Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual 1 $removed.Count
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -257,10 +257,10 @@ function Test-DatabaseTarget
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $jc1 = Create-JobCredentialForTest $a1
+    $tg1 = Create-TargetGroupForTest $a1
 
     # Target Helper Objects
     $dbt1 = @{ ServerName = "s1"; DatabaseName = "db1" } # Include
@@ -270,8 +270,8 @@ function Test-DatabaseTarget
 
     try
     {
-        Test-AddDatabaseTarget $rg1 $s1 $a1 $jc1 $tg1 $dbt1 $dbt2 $dbt3 $dbt4
-        Test-RemoveDatabaseTarget $rg1 $s1 $a1 $jc1 $tg1 $dbt1 $dbt2 $dbt3 $dbt4
+        Test-AddDatabaseTarget $a1 $jc1 $tg1 $dbt1 $dbt2 $dbt3 $dbt4
+        Test-RemoveDatabaseTarget $a1 $jc1 $tg1 $dbt1 $dbt2 $dbt3 $dbt4
     }
     finally
     {
@@ -285,13 +285,13 @@ function Test-DatabaseTarget
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3, $dbt4)
+function Test-AddDatabaseTarget($a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3, $dbt4)
 {
     ## --------- Database Target Tests -------------
     ## Test default parameters
 
     # Include db1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName 
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName 
 
     Assert-AreEqual $resp.ServerName $dbt1.ServerName
     Assert-AreEqual $resp.DatabaseName $dbt1.DatabaseName
@@ -299,7 +299,7 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3,
     Assert-AreEqual $resp.Type "SqlDatabase"
 
     # Exclude db1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName -Exclude
 
     Assert-AreEqual $resp.ServerName $dbt1.ServerName
     Assert-AreEqual $resp.DatabaseName $dbt1.DatabaseName
@@ -307,11 +307,11 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3,
     Assert-AreEqual $resp.Type "SqlDatabase"
 
     # Exclude db1 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName -Exclude
     Assert-Null $resp
 
     # Include db1 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $dbt1.ServerName
@@ -394,7 +394,7 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3,
     Assert-AreEqual $all.Members.Count 4
 
     # Add all databases from server in rg1 to tg1 (should be master & 1 user db)
-    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlDatabase | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1
+    $added = Get-AzureRmSqlServer -ResourceGroupName $a1.ResourceGroupName | Get-AzureRmSqlDatabase | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1
     Assert-AreEqual 2 $added.Count
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -407,20 +407,20 @@ function Test-AddDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3,
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-RemoveDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3, $dbt4)
+function Test-RemoveDatabaseTarget($a1, $jc1, $tg1, $dbt1, $dbt2, $dbt3, $dbt4)
 {
     ## --------- Database Target Tests -------------
     ## Test default parameters
 
     # Remove db1
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName
     Assert-AreEqual $resp.ServerName $dbt1.ServerName
     Assert-AreEqual $resp.DatabaseName $dbt1.DatabaseName
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlDatabase"
 
     # Should have no resp
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $dbt1.ServerName -DatabaseName $dbt1.DatabaseName
     Assert-Null $resp
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -471,7 +471,7 @@ function Test-RemoveDatabaseTarget($rg1, $s1, $a1, $jc1, $tg1, $dbt1, $dbt2, $db
     Assert-AreEqual $all.Members.Count 2
 
     # Remove all databases from server in rg1 to tg1 (should be master & 1 user db)
-    $removed = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlDatabase | Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg1
+    $removed = Get-AzureRmSqlServer -ResourceGroupName $a1.ResourceGroupName | Get-AzureRmSqlDatabase | Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg1
     Assert-AreEqual 2 $removed.Count
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -490,11 +490,11 @@ function Test-ElasticPoolTarget
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $ep1 = Create-ElasticPoolForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $db1 = Create-DatabaseForTest $s1
+    $ep1 = Create-ElasticPoolForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $jc1 = Create-JobCredentialForTest $a1
+    $tg1 = Create-TargetGroupForTest $a1
 
     # Target Helper Objects
     $ept1 = @{ ServerName = "s1"; ElasticPoolName = "ep1"; }
@@ -504,8 +504,8 @@ function Test-ElasticPoolTarget
 
     try
     {
-        Test-AddElasticPoolTarget $rg1 $s1 $a1 $jc1 $tg1 $ept1 $ept2 $ept3 $ept4
-        Test-RemoveElasticPoolTarget $rg1 $s1 $a1 $jc1 $tg1 $ept1 $ept2 $ept3 $ept4
+        Test-AddElasticPoolTarget $a1 $jc1 $tg1 $ept1 $ept2 $ept3 $ept4
+        Test-RemoveElasticPoolTarget $a1 $jc1 $tg1 $ept1 $ept2 $ept3 $ept4
     }
     finally
     {
@@ -519,13 +519,13 @@ function Test-ElasticPoolTarget
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, $ept3, $ept4)
+function Test-AddElasticPoolTarget($a1, $jc1, $tg1, $ept1, $ept2, $ept3, $ept4)
 {
     ## --------- Elastic Pool Target Tests -------------
     ## Test default parameters
 
     # Include ep1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $ept1.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept1.ElasticPoolName
@@ -534,7 +534,7 @@ function Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, $ep
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
     # Exclude ep1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $ept1.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept1.ElasticPoolName
@@ -543,11 +543,11 @@ function Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, $ep
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
     # Exclude ep1 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include ep1 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $ept1.ServerName
@@ -637,7 +637,7 @@ function Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, $ep
     Assert-AreEqual $all.Members.Count 4
 
     # Add all elastic pools from rg1 to tg1
-    $added = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlElasticPool | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
+    $added = Get-AzureRmSqlServer -ResourceGroupName $a1.ResourceGroupName | Get-AzureRmSqlElasticPool | Add-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual 1 $added.Count
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -650,13 +650,13 @@ function Test-AddElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, $ep
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-RemoveElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, $ept3, $ept4)
+function Test-RemoveElasticPoolTarget($a1, $jc1, $tg1, $ept1, $ept2, $ept3, $ept4)
 {
     ## --------- Elastic Pool Target Tests -------------
     ## Test default parameters
 
     # Remove ep1
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $ept1.ServerName
     Assert-AreEqual $resp.ElasticPoolName $ept1.ElasticPoolName
@@ -664,7 +664,7 @@ function Test-RemoveElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, 
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlElasticPool"
 
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $ept1.ServerName -ElasticPoolName $ept1.ElasticPoolName -RefreshCredentialName $jc1.CredentialName
     Assert-Null $resp
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -718,7 +718,7 @@ function Test-RemoveElasticPoolTarget($rg1, $s1, $a1, $jc1, $tg1, $ept1, $ept2, 
     Assert-AreEqual $all.Members.Count 1
 
     # Remove all elastic pools from rg1 to tg1
-    $removed = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlElasticPool | Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
+    $removed = Get-AzureRmSqlServer -ResourceGroupName $a1.ResourceGroupName | Get-AzureRmSqlElasticPool | Remove-AzureRmSqlDatabaseAgentTarget -InputObject $tg1 -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual 1 $removed.Count
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName
@@ -736,10 +736,10 @@ function Test-ShardMapTarget
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $rg1 $s1
-    $a1 = Create-AgentForTest $rg1 $s1 $db1
-    $jc1 = Create-JobCredentialForTest $rg1 $s1 $a1
-    $tg1 = Create-TargetGroupForTest $rg1 $s1 $a1
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $jc1 = Create-JobCredentialForTest $a1
+    $tg1 = Create-TargetGroupForTest $a1
 
     # Target Helper Objects
     $smt1 = @{ ServerName = "s1"; ShardMapName = "sm1"; DatabaseName = "db1"} # Include
@@ -749,8 +749,8 @@ function Test-ShardMapTarget
 
     try
     {
-        Test-AddShardMapTarget $rg1 $s1 $a1 $jc1 $tg1 $smt1 $smt2 $smt3 $smt4
-        Test-RemoveShardMapTarget $rg1 $s1 $a1 $jc1 $tg1 $smt1 $smt2 $smt3 $smt4
+        Test-AddShardMapTarget $a1 $jc1 $tg1 $smt1 $smt2 $smt3 $smt4
+        Test-RemoveShardMapTarget $a1 $jc1 $tg1 $smt1 $smt2 $smt3 $smt4
     }
     finally
     {
@@ -764,13 +764,13 @@ function Test-ShardMapTarget
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-AddShardMapTarget($rg1, $s1, $a1, $jc1, $tg1, $smt1, $smt2, $smt3, $smt4)
+function Test-AddShardMapTarget($a1, $jc1, $tg1, $smt1, $smt2, $smt3, $smt4)
 {
     ## --------- Shard Map Target Tests -------------
     ## Test default parameters
 
     # Include sm1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     Assert-AreEqual $resp.ServerName $smt1.ServerName
     Assert-AreEqual $resp.ShardMapName $smt1.ShardMapName
@@ -780,7 +780,7 @@ function Test-AddShardMapTarget($rg1, $s1, $a1, $jc1, $tg1, $smt1, $smt2, $smt3,
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude sm1
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName  -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName  -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
 
     Assert-AreEqual $resp.ServerName $smt1.ServerName
     Assert-AreEqual $resp.ShardMapName $smt1.ShardMapName
@@ -790,11 +790,11 @@ function Test-AddShardMapTarget($rg1, $s1, $a1, $jc1, $tg1, $smt1, $smt2, $smt3,
     Assert-AreEqual $resp.Type "SqlShardMap"
 
     # Exclude sm1 again - no errors and no resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName -Exclude
     Assert-Null $resp
 
     # Include sm1 - no errors and resp
-    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
+    $resp = Add-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
 
     # Test updating back to include shows membership type as Include again.
     Assert-AreEqual $resp.ServerName $smt1.ServerName
@@ -897,13 +897,13 @@ function Test-AddShardMapTarget($rg1, $s1, $a1, $jc1, $tg1, $smt1, $smt2, $smt3,
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-RemoveShardMapTarget($rg1, $s1, $a1, $jc1, $tg1, $smt1, $smt2, $smt3, $smt4)
+function Test-RemoveShardMapTarget($a1, $jc1, $tg1, $smt1, $smt2, $smt3, $smt4)
 {
     ## --------- Shard Map Target Tests -------------
     ## Test default parameters
 
     # Remove sm1
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
     Assert-AreEqual $resp.ServerName $smt1.ServerName
     Assert-AreEqual $resp.ShardMapName $smt1.ShardMapName
     Assert-AreEqual $resp.DatabaseName $smt1.DatabaseName
@@ -911,7 +911,7 @@ function Test-RemoveShardMapTarget($rg1, $s1, $a1, $jc1, $tg1, $smt1, $smt2, $sm
     Assert-AreEqual $resp.MembershipType "Include"
     Assert-AreEqual $resp.Type "SqlShardMap"
 
-    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $rg1.ResourceGroupName -AgentServerName $s1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
+    $resp = Remove-AzureRmSqlDatabaseAgentTarget -ResourceGroupName $a1.ResourceGroupName -AgentServerName $a1.ServerName -AgentName $a1.AgentName -TargetGroupName $tg1.TargetGroupName -ServerName $smt1.ServerName -ShardMapName $smt1.ShardMapName -DatabaseName $smt1.DatabaseName -RefreshCredentialName $jc1.CredentialName
     Assert-Null $resp
 
     $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg1.TargetGroupName

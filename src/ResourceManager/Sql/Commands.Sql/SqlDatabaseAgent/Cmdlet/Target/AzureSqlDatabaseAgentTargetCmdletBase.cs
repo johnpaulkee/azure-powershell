@@ -20,11 +20,27 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Management.Sql.Models;
 using System;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlCmdletBase<IEnumerable<JobTarget>, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
+        /// <summary>
+        /// The target in question
+        /// </summary>
+        protected JobTarget Target;
+
+        /// <summary>
+        /// The existing targets
+        /// </summary>
+        protected List<JobTarget> ExistingTargets;
+
+        /// <summary>
+        /// Flag to determine whether an update to targets in target group is needed in this powershell session
+        /// </summary>
+        protected bool NeedsUpdate;
+
         /// <summary>
         /// Parameter set name for default sets
         /// </summary>
@@ -380,6 +396,54 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
+        /// Updates the existing list of targets with the new target if it doesn't already exist in the list.
+        /// </summary>
+        /// <param name="existingTargets">The list of existing targets in the target group</param>
+        /// <returns>An updated list of targets.</returns>
+        protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> existingTargets)
+        {
+            this.Target = CreateJobTargetModel();
+            this.ExistingTargets = existingTargets.ToList();
+            this.NeedsUpdate = UpdateExistingTargets();
+
+            // If we don't need to send an update, send back an empty list.
+            if (!this.NeedsUpdate)
+            {
+                return new List<JobTarget>();
+            }
+
+            return this.ExistingTargets;
+        }
+
+        /// <summary>
+        /// Sends the changes to the service -> Creates or updates the target if necessary
+        /// </summary>
+        /// <param name="updatedTargets">The list of updated targets</param>
+        /// <returns>The target that was created/updated or null if nothing changed.</returns>
+        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
+        {
+            // If we don't need to update the target group member's return null.
+            if (!this.NeedsUpdate)
+            {
+                return null;
+            }
+
+            // Update list of targets
+            AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.AgentServerName,
+                AgentName = this.AgentName,
+                TargetGroupName = this.TargetGroupName,
+                Members = updatedTargets.ToList()
+            };
+
+            var resp = ModelAdapter.UpsertTargetGroup(model).Members.ToList();
+
+            return new List<JobTarget> { this.Target };
+        }
+
+        /// <summary>
         /// Helper to create a job target model from user input.
         /// </summary>
         /// <returns>Job target model</returns>
@@ -455,5 +519,34 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
             return existingTargets;
         }
+
+        /// <summary>
+        /// Does a scan over the list of targets and finds the target's index in the list
+        /// </summary>
+        protected int? FindTarget()
+        {
+            for (int i = 0; i < this.ExistingTargets.Count; i++)
+            {
+                JobTarget t = this.ExistingTargets[i];
+
+                if (t.ServerName == this.Target.ServerName &&
+                    t.DatabaseName == this.Target.DatabaseName &&
+                    t.ElasticPoolName == this.Target.ElasticPoolName &&
+                    t.ShardMapName == this.Target.ShardMapName &&
+                    t.Type == this.Target.Type &&
+                    t.RefreshCredential == this.Target.RefreshCredential)
+                {
+                    return i;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Abstract method when adding or removing targets
+        /// </summary>
+        /// <returns></returns>
+        protected abstract bool UpdateExistingTargets();
     }
 }
