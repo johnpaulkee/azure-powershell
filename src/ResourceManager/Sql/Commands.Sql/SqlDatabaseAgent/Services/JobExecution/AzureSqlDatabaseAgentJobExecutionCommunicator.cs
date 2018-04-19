@@ -99,7 +99,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             DateTime? endTimeMin = null,
             DateTime? endTimeMax = null,
             bool? isActive = null,
-            int? skip = null)
+            int? skip = null,
+            int? top = null)
         {
             // TODO: .NET SDK update should include top executions too
             return GetCurrentSqlClient().JobExecutions.ListByAgent(
@@ -111,7 +112,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 endTimeMin: endTimeMin,
                 endTimeMax: endTimeMax,
                 isActive: isActive,
-                skip: skip);
+                skip: skip,
+                top: top);
         }
 
         /// <summary>
@@ -131,7 +133,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             DateTime? endTimeMin = null,
             DateTime? endTimeMax = null,
             bool? isActive = null,
-            int? skip = null)
+            int? skip = null,
+            int? top = null)
         {
             // TODO:
             // create time min, create time max, end time min, end time max, is active, skip, top
@@ -164,6 +167,86 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         {
             GetCurrentSqlClient().JobExecutions.Cancel(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
         }
+
+
+        #region Job Step Executions
+
+        /// <summary>
+        /// Gets a job step execution
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobExecutionId"></param>
+        /// <param name="stepName"></param>
+        /// <returns></returns>
+        public Management.Sql.Models.JobExecution GetJobStepExecution(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName
+            )
+        {
+            return GetCurrentSqlClient().JobStepExecutions.Get(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+        }
+
+        public IPage<Management.Sql.Models.JobExecution> ListJobExecutionSteps(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName
+            )
+        {
+            return GetCurrentSqlClient().JobStepExecutions.ListByJobExecution(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
+        }
+
+        #endregion
+
+
+        #region Job Target Executions
+
+        public Management.Sql.Models.JobExecution GetJobTargetExecution(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName,
+            Guid targetId)
+        {
+            return GetCurrentSqlClient().JobTargetExecutions.Get(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName, targetId);
+        }
+
+        public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutionsByTarget(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName,
+            Guid targetId)
+        {
+            return GetCurrentSqlClient().JobTargetExecutions.ListByJobExecution(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
+        }
+
+        public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutionsByStep(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName)
+        {
+            return GetCurrentSqlClient().JobTargetExecutions.ListByStep(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Retrieve the SQL Management client for the currently selected subscription, adding the session and request
