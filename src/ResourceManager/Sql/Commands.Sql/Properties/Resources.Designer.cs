@@ -106,7 +106,7 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Azure SQL Database Agent with name &apos;{0}&apos; already exists in server &apos;{1}&apos;.
+        ///   Looks up a localized string similar to SQL Database Agent with name &apos;{0}&apos; already exists in server &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentExists {
             get {
@@ -169,11 +169,29 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SQL Database Agent &apos;{0}&apos; does not exist with in server &apos;{1}&apos;.
+        ///   Looks up a localized string similar to SQL Database Agent &apos;{0}&apos; does not exist in server &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentNotExists {
             get {
                 return ResourceManager.GetString("AzureSqlDatabaseAgentNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target with database name &apos;{0}&apos; and server name &apos;{1}&apos; already exists in target group &apos;{2}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetDatabaseExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetDatabaseExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target with elastic pool name &apos;{0}&apos; and server name &apos;{1}&apos; already exists in Target Group &apos;{2}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetElasticPoolExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetElasticPoolExists", resourceCulture);
             }
         }
         
@@ -192,6 +210,24 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         internal static string AzureSqlDatabaseAgentTargetGroupNotExists {
             get {
                 return ResourceManager.GetString("AzureSqlDatabaseAgentTargetGroupNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target with server name &apos;{0}&apos; already exists in Target Group &apos;{1}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetServerExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetServerExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target with shard map name &apos;{0}&apos; and server name &apos;{1}&apos; already exists in Target Group &apos;{2}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentTargetShardMapExists {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentTargetShardMapExists", resourceCulture);
             }
         }
         
@@ -808,7 +844,7 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to remove the agent &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Are you sure you want to remove the agent &apos;{0}&apos; from server &apos;{1}&apos;?.
         /// </summary>
         internal static string RemoveSqlDatabaseAgentWarning {
             get {
