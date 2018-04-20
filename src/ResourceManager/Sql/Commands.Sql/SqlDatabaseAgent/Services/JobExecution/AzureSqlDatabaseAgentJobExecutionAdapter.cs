@@ -15,11 +15,7 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.Commands.Sql.Server.Services;
-using System.Security.Permissions;
-using System.Security;
 using System;
-using System.Runtime.InteropServices;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -43,6 +39,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Context = context;
             Communicator = new AzureSqlDatabaseAgentJobExecutionCommunicator(Context);
         }
+
+        #region Root job execution
 
         /// <summary>
         /// Creates a root job execution
@@ -143,6 +141,131 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 
             return resp.Select((jobExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, jobExecution));
         }
+
+        #endregion
+
+        #region Step level execution
+        
+        /// <summary>
+        /// Gets a job step execution
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobExecutionId"></param>
+        /// <param name="stepName"></param>
+        /// <returns></returns>
+        public AzureSqlDatabaseAgentJobExecutionModel GetJobStepExecution(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName)
+        {
+            var resp = Communicator.GetJobStepExecution(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+            return CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, resp);
+        }
+
+        /// <summary>
+        /// Gets a list of job step executions by step name
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobExecutionId"></param>
+        /// <param name="stepName"></param>
+        /// <returns></returns>
+        public IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ListJobExecutionSteps(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName)
+        {
+            var resp = Communicator.ListJobExecutionSteps(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+            return resp.Select((stepExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution));
+        }
+
+        #endregion
+
+
+        #region Target level execution
+
+        /// <summary>
+        /// Gets a job target execution
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobExecutionId"></param>
+        /// <param name="stepName"></param>
+        /// <param name="targetId"></param>
+        /// <returns></returns>
+        public AzureSqlDatabaseAgentJobExecutionModel GetJobTargetExecution(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName,
+            Guid targetId)
+        {
+            var resp = Communicator.GetJobTargetExecution(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName, targetId);
+            return CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, resp);
+        }
+
+        /// <summary>
+        /// Gets a list of job target executions by step name
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobExecutionId"></param>
+        /// <param name="stepName"></param>
+        /// <returns></returns>
+        public IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ListJobTargetExecutionsByStep(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName)
+        {
+            var resp = Communicator.ListJobTargetExecutionsByStep(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+            return resp.Select((stepExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution));
+        }
+
+        /// <summary>
+        /// Gets a list of job target executions by target id
+        /// </summary>
+        /// <param name="resourceGroupName"></param>
+        /// <param name="serverName"></param>
+        /// <param name="agentName"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobExecutionId"></param>
+        /// <param name="stepName"></param>
+        /// <returns></returns>
+        public IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ListJobTargetExecutionsByTarget(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            Guid jobExecutionId,
+            string stepName,
+            Guid targetId)
+        {
+            var resp = Communicator.ListJobTargetExecutionsByTarget(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName, targetId);
+            return resp.Select((stepExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution));
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Convert a Management.Sql.Models.JobAgent to AzureSqlDatabaseAgentJobExecutionModel

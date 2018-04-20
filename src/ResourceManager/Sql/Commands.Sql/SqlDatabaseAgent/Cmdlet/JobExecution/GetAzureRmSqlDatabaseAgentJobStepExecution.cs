@@ -12,16 +12,103 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System;
+using System.Management.Automation;
+
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
 {
-    class GetAzureRmSqlDatabaseAgentJobStepExecution
+    public class GetAzureRmSqlDatabaseAgentJobStepExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
-        public string AgentName;
+        public AzureSqlDatabaseAgentJobModel InputObject;
 
-        public string JobName;
+        public string ResourceId;
+
+        public DateTime? CreateTimeMin;
+
+        public DateTime? CreateTimeMax;
+
+        public DateTime? EndTimeMin;
+
+        public DateTime? EndTimeMax;
+
+        public SwitchParameter IsActive;
 
         public string JobExecutionId;
 
-        public string StepName;
+        public string JobName;
+
+        public int? Skip;
+
+        public int? Top;
+
+        /// <summary>
+        /// Cmdlet execution starts here
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectParameterSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdParameterSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            // Returns a list of jobs if name is not provided
+            if (this.JobExecutionId == null)
+            {
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.ListByJob(
+                    this.ResourceGroupName,
+                    this.ServerName,
+                    this.AgentName,
+                    this.JobName,
+                    this.CreateTimeMin,
+                    this.CreateTimeMax,
+                    this.EndTimeMin,
+                    this.EndTimeMax,
+                    this.IsActive.IsPresent,
+                    this.Skip), true);
+
+                return;
+            }
+
+            if (this.JobName == null)
+            {
+                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
+                WriteObject(ModelAdapter.ListByAgent(
+                    this.ResourceGroupName,
+                    this.ServerName,
+                    this.AgentName,
+                    this.CreateTimeMin,
+                    this.CreateTimeMax,
+                    this.EndTimeMin,
+                    this.EndTimeMax,
+                    this.IsActive.IsPresent,
+                    this.Skip), true);
+                return;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Gets a job from the service.
+        /// </summary>
+        /// <returns></returns>
+        protected override AzureSqlDatabaseAgentJobExecutionModel GetEntity()
+        {
+            return ModelAdapter.GetJobExecution(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, Guid.Parse(this.JobExecutionId));
+        }
     }
 }
