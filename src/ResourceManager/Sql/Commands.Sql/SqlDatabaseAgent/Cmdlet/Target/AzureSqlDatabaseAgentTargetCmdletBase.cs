@@ -396,6 +396,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
+        /// Gets the list of existing targets in the target group.
+        /// </summary>
+        /// <returns>The list of existing targets</returns>
+        protected override IEnumerable<JobTarget> GetEntity()
+        {
+            IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
+            return existingTargets;
+        }
+
+        /// <summary>
         /// Updates the existing list of targets with the new target if it doesn't already exist in the list.
         /// </summary>
         /// <param name="existingTargets">The list of existing targets in the target group</param>
@@ -485,16 +495,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             }
 
             return JobTargetType.SqlServer;
-        }
-
-        /// <summary>
-        /// Gets the list of existing targets in the target group.
-        /// </summary>
-        /// <returns>The list of existing targets</returns>
-        protected override IEnumerable<JobTarget> GetEntity()
-        {
-            IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
-            return existingTargets;
         }
 
         /// <summary>

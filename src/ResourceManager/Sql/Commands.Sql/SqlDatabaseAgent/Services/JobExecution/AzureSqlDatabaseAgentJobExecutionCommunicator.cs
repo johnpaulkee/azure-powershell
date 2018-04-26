@@ -94,13 +94,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string resourceGroupName,
             string serverName,
             string agentName,
-            DateTime? createTimeMin = null,
-            DateTime? createTimeMax = null,
-            DateTime? endTimeMin = null,
-            DateTime? endTimeMax = null,
-            bool? isActive = null,
-            int? skip = null,
-            int? top = null)
+            DateTime? createTimeMin,
+            DateTime? createTimeMax,
+            DateTime? endTimeMin,
+            DateTime? endTimeMax,
+            bool? isActive,
+            int? skip,
+            int? top)
         {
             // TODO: .NET SDK update should include top executions too
             return GetCurrentSqlClient().JobExecutions.ListByAgent(
@@ -238,7 +238,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return GetCurrentSqlClient().JobTargetExecutions.Get(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName, targetId);
         }
 
-        public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutionsByTarget(
+        public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutions(
             string resourceGroupName,
             string serverName,
             string agentName,

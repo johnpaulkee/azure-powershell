@@ -16,15 +16,13 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using System.Management.Automation;
-using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     public abstract class AzureSqlDatabaseAgentJobCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, AzureSqlDatabaseAgentJobAdapter>
     {
         /// <summary>
-        /// Parameter sets
+        /// Default parameter sets
         /// </summary>
         protected const string DefaultOnceParameterSet = "Job Default Once Parameter Set";
         protected const string DefaultMinuteParameterSet = "Job Default Minute Parameter Set";
@@ -33,6 +31,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string DefaultWeekParameterSet = "Job Default Week Parameter Set";
         protected const string DefaultMonthParameterSet = "Job Default Month Parameter Set";
 
+        /// <summary>
+        /// Input object parameter sets
+        /// </summary>
         protected const string InputObjectOnceParameterSet = "Job Input Object Once Parameter Set";
         protected const string InputObjectMinuteParameterSet = "Job Input Object Minute Parameter Set";
         protected const string InputObjectHourParameterSet = "Job Input Object Hour Parameter Set";
@@ -40,6 +41,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string InputObjectWeekParameterSet = "Job Input Object Week Parameter Set";
         protected const string InputObjectMonthParameterSet = "Job Input Object Month Parameter Set";
 
+        /// <summary>
+        /// Resource id parameter sets
+        /// </summary>
         protected const string ResourceIdOnceParameterSet = "Job Resource Id Once Parameter Set";
         protected const string ResourceIdMinuteParameterSet = "Job Resource Id Minute Parameter Set";
         protected const string ResourceIdHourParameterSet = "Job Resource Id Hour Parameter Set";

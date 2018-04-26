@@ -87,12 +87,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string resourceGroupName, 
             string serverName, 
             string agentName,
-            DateTime? createTimeMin,
-            DateTime? createTimeMax,
-            DateTime? endTimeMin,
-            DateTime? endTimeMax,
-            bool? isActive,
-            int? skip)
+            DateTime? createTimeMin = null,
+            DateTime? createTimeMax = null,
+            DateTime? endTimeMin = null,
+            DateTime? endTimeMax = null,
+            bool? isActive = null,
+            int? skip = null,
+            int? top = null)
         {
             // TODO: scrape job name here
             var resp = Communicator.ListByAgent(
@@ -104,7 +105,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 endTimeMin,
                 endTimeMax,
                 isActive,
-                skip);
+                skip,
+                top);
 
             return resp.Select((jobExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobExecution.Id, jobExecution));
         }
@@ -125,7 +127,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             DateTime? endTimeMin,
             DateTime? endTimeMax,
             bool? isActive,
-            int? skip)
+            int? skip,
+            int? top)
         {
             var resp = Communicator.ListByJob(
                 resourceGroupName, 
@@ -137,7 +140,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 endTimeMin,
                 endTimeMax,
                 isActive,
-                skip);
+                skip,
+                top);
 
             return resp.Select((jobExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, jobExecution));
         }
@@ -283,7 +287,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="jobExecutionId"></param>
         /// <param name="stepName"></param>
         /// <returns></returns>
-        public IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ListJobTargetExecutionsByTarget(
+        public IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ListJobTargetExecutions(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -297,7 +301,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             int? skip,
             int? top)
         {
-            var resp = Communicator.ListJobTargetExecutionsByTarget(
+            var resp = Communicator.ListJobTargetExecutions(
                 resourceGroupName, 
                 serverName, 
                 agentName, 
@@ -336,20 +340,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 ResourceGroupName = resourceGroupName,
                 ServerName = serverName,
                 AgentName = agentName,
+
+                JobName = jobName,
+                JobVersion = resp.JobVersion,
+
+                StepName = resp.StepName,
+                StepId = resp.StepId,
+
+                JobExecutionId = resp.JobExecutionId,
+
                 CreateTime = resp.CreateTime,
                 CurrentAttempts = resp.CurrentAttempts,
                 CurrentAttemptStartTime = resp.CurrentAttemptStartTime,
-                JobExecutionId = resp.JobExecutionId,
-                JobName = jobName,
-                JobVersion = resp.JobVersion,
                 LastMessage = resp.LastMessage,
                 Lifecycle = resp.Lifecycle,
                 ProvisioningState = resp.ProvisioningState,
-                StepId = resp.StepId,
+
+                TargetType = resp.Target != null ? resp.Target.Type : null,
+                TargetServerName = resp.Target != null ? resp.Target.ServerName : null,
+                TargetDatabaseName = resp.Target != null ? resp.Target.DatabaseName : null,
+
                 Type = resp.Type,
                 ResourceId = resp.Id,
-                StepName = resp.StepName,
-                Target = resp.Target
             };
 
             return jobExecution;

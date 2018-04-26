@@ -16,6 +16,8 @@ using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -25,7 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsLifecycle.Stop, "AzureRmSqlDatabaseAgentJobExecution",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentJobExecutionModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
     public class StopAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
         /// <summary>
@@ -102,7 +104,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentJobExecutionModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
             return null;
         }
@@ -112,7 +114,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentJobExecutionModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobExecutionModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> model)
         {
             return model;
         }
@@ -122,9 +124,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override AzureSqlDatabaseAgentJobExecutionModel PersistChanges(AzureSqlDatabaseAgentJobExecutionModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> entity)
         {
-            ModelAdapter.CancelJobExecution(entity);
+            ModelAdapter.CancelJobExecution(entity.First());
             return entity;
         }
     }

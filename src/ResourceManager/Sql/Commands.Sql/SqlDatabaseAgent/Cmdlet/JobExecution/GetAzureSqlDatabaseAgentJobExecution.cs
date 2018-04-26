@@ -12,6 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobExecution",
         SupportsShouldProcess = true,
-        DefaultParameterSetName = ListByAgent)]
-    [OutputType(typeof(AzureSqlDatabaseAgentJobExecutionModel))]
+        DefaultParameterSetName = GetRootJobExecution)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
     public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
@@ -73,6 +73,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "SQL Database Agent Resource Group Name.")]
         [ValidateNotNullOrEmpty]
+        [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
@@ -909,9 +910,143 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// Gets a job from the service.
         /// </summary>
         /// <returns></returns>
-        protected override AzureSqlDatabaseAgentJobExecutionModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
-            return ModelAdapter.GetJobExecution(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, Guid.Parse(this.JobExecutionId));
+            switch (ParameterSetName)
+            {
+                case ListByAgent:
+                case InputObjectListByAgent:
+                case ResourceIdListByAgent:
+
+                    return ModelAdapter.ListByAgent(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        createTimeMin: this.CreateTimeMin,
+                        createTimeMax: this.CreateTimeMax,
+                        endTimeMin: this.EndTimeMin,
+                        endTimeMax: this.EndTimeMax, 
+                        isActive: this.Active.IsPresent,
+                        skip: this.Skip,
+                        top: this.Top);
+
+                case ListByJob:
+                case InputObjectListByJob:
+                case ResourceIdListByJob:
+
+                    return ModelAdapter.ListByJob(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        createTimeMin: this.CreateTimeMin,
+                        createTimeMax: this.CreateTimeMax,
+                        endTimeMin: this.EndTimeMin,
+                        endTimeMax: this.EndTimeMax,
+                        isActive: this.Active.IsPresent,
+                        skip: this.Skip,
+                        top: this.Top);
+
+                case GetRootJobExecution:
+                case InputObjectGetRootJobExecution:
+                case ResourceIdGetRootJobExecution:
+
+                    var rootJobExecution = ModelAdapter.GetJobExecution(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        jobExecutionId: Guid.Parse(this.JobExecutionId));
+
+                    return new List<AzureSqlDatabaseAgentJobExecutionModel> { rootJobExecution };
+
+                case ListStepExecutions:
+                case InputObjectListStepExecutions:
+                case ResourceIdListStepExecutions:
+
+                    return ModelAdapter.ListJobExecutionSteps(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        jobExecutionId: Guid.Parse(this.JobExecutionId),
+                        createTimeMin: this.CreateTimeMin,
+                        createTimeMax: this.CreateTimeMax,
+                        endTimeMin: this.EndTimeMin,
+                        endTimeMax: this.EndTimeMax,
+                        isActive: this.Active.IsPresent,
+                        skip: this.Skip,
+                        top: this.Top);
+
+                case ListTargetExecutions:
+                case InputObjectListTargetExecutions:
+                case ResourceIdListTargetExecutions:
+
+                    return ModelAdapter.ListJobTargetExecutions(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        jobExecutionId: Guid.Parse(this.JobExecutionId),
+                        createTimeMin: this.CreateTimeMin,
+                        createTimeMax: this.CreateTimeMax,
+                        endTimeMin: this.EndTimeMin,
+                        endTimeMax: this.EndTimeMax,
+                        isActive: this.Active.IsPresent,
+                        skip: this.Skip,
+                        top: this.Top);
+
+                case GetStepExecution:
+                case InputObjectGetStepExecution:
+                case ResourceIdGetStepExecution:
+
+                    var stepExecution = ModelAdapter.GetJobStepExecution(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        jobExecutionId: Guid.Parse(this.JobExecutionId),
+                        stepName: this.StepName);
+
+                    return new List<AzureSqlDatabaseAgentJobExecutionModel> { stepExecution };
+
+                case ListTargetStepExecutions:
+                case InputObjectListTargetStepExecutions:
+                case ResourceIdListTargetStepExecutions:
+
+                    return ModelAdapter.ListJobTargetExecutionsByStep(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        jobExecutionId: Guid.Parse(this.JobExecutionId),
+                        stepName: this.StepName,
+                        createTimeMin: this.CreateTimeMin,
+                        createTimeMax: this.CreateTimeMax,
+                        endTimeMin: this.EndTimeMin,
+                        endTimeMax: this.EndTimeMax,
+                        isActive: this.Active.IsPresent,
+                        skip: this.Skip,
+                        top: this.Top);
+
+
+                case GetTargetExecution:
+                case InputObjectGetTargetExecution:
+                case ResourceIdGetTargetExecution:
+
+                    var targetExecution = ModelAdapter.GetJobStepExecution(
+                        resourceGroupName: this.ResourceGroupName,
+                        serverName: this.ServerName,
+                        agentName: this.AgentName,
+                        jobName: this.JobName,
+                        jobExecutionId: Guid.Parse(this.JobExecutionId),
+                        stepName: this.StepName);
+
+                    return new List<AzureSqlDatabaseAgentJobExecutionModel> { targetExecution };
+
+                default:
+                    throw new PSArgumentException();
+            }
         }
     }
 }

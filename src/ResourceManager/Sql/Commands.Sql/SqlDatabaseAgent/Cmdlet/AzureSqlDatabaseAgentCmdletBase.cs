@@ -65,7 +65,6 @@ namespace Microsoft.Azure.Commands.Sql.Common
         [ValidateNotNullOrEmpty]
         public virtual string AgentName { get; set; }
 
-
         #region Helpers
 
         /// <summary>
