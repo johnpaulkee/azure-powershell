@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlCmdletBase<IEnumerable<JobTarget>, AzureSqlDatabaseAgentTargetGroupAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlDatabaseAgentCmdletBase<IEnumerable<JobTarget>, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
         /// <summary>
         /// The target in question
@@ -165,7 +165,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = SqlShardMapSet,
             HelpMessage = "SQL Database Agent Name.")]
         [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the target group name
@@ -235,7 +235,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
-        public string ServerName { get; set; }
+        public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the Target Elastic Pool Name
@@ -459,7 +459,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 DatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
                 ElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
                 ShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
-                RefreshCredential = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? GetJobCredentialId(this.RefreshCredentialName) : null,
+                RefreshCredential = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.RefreshCredentialName) : null,
             };
         }
 
@@ -485,29 +485,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             }
 
             return JobTargetType.SqlServer;
-        }
-
-        /// <summary>
-        /// Returns the job credential id
-        /// </summary>
-        /// <param name="refreshCredentialName"></param>
-        /// <returns>The job credential id</returns>
-        protected string GetJobCredentialId(
-            string refreshCredentialName)
-        {
-            if (refreshCredentialName == null)
-            {
-                return null;
-            }
-
-            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
-                AzureSqlDatabaseAgentTargetGroupCommunicator.Subscription.Id,
-                this.ResourceGroupName,
-                this.AgentServerName,
-                this.AgentName,
-                refreshCredentialName);
-
-            return credentialId;
         }
 
         /// <summary>

@@ -462,30 +462,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             // If remove output is present, then model will exclude output details and update will clear it.
             if (!this.RemoveOutput.IsPresent)
             {
-                if (model.Output != null)
-                {
-                    Management.Sql.Models.JobStepOutput newOutput = new Management.Sql.Models.JobStepOutput
-                    {
-                        SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputSubscriptionId) : model.Output.SubscriptionId,
-                        ResourceGroupName = this.OutputResourceGroupName != null ? this.OutputResourceGroupName : model.Output.ResourceGroupName,
-                        ServerName = this.OutputServerName != null ? this.OutputServerName : model.Output.ServerName,
-                        DatabaseName = this.OutputDatabaseName != null ? this.OutputDatabaseName : model.Output.DatabaseName,
-                        SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : model.Output.SchemaName,
-                        Credential = this.OutputCredentialName != null ? CreateCredentialId(this.OutputCredentialName) : model.Output.Credential,
-                        TableName = this.OutputTableName != null ? this.OutputTableName : model.Output.TableName
-                    };
+                Management.Sql.Models.JobStepOutput output;
+                bool existingOutput = model.Output != null;
 
-                    updatedModel.Output = newOutput;
+                if (existingOutput)
+                {
+                    output = CreateJobStepOutputModel(
+                        outputSubscriptionId: model.Output.SubscriptionId,
+                        outputResourceGroupName: model.Output.ResourceGroupName,
+                        outputServerName: model.Output.ServerName,
+                        outputDatabaseName: model.Output.DatabaseName,
+                        outputSchemaName: model.Output.SchemaName,
+                        outputCredential: model.Output.Credential,
+                        outputTableName: model.Output.TableName);
                 }
                 else
                 {
-                    Management.Sql.Models.JobStepOutput output = CreateJobStepOutputModel();
-
-                    if (output.ServerName != null)
-                    {
-                        updatedModel.Output = output;
-                    }
+                    output = CreateJobStepOutputModel();
                 }
+
+                updatedModel.Output = output;
             }
 
             return updatedModel;

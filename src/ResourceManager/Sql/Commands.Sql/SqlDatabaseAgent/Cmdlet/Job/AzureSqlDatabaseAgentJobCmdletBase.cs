@@ -21,15 +21,11 @@ using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentJobModel, AzureSqlDatabaseAgentJobAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, AzureSqlDatabaseAgentJobAdapter>
     {
         /// <summary>
         /// Parameter sets
         /// </summary>
-        protected const string DefaultParameterSet = "Job Default Parameter Set";
-        protected const string InputObjectParameterSet = "Input object job default parameter set";
-        protected const string ResourceIdParameterSet = "Resource id job default parameter set";
-
         protected const string DefaultOnceParameterSet = "Job Default Once Parameter Set";
         protected const string DefaultMinuteParameterSet = "Job Default Minute Parameter Set";
         protected const string DefaultHourParameterSet = "Job Default Hour Parameter Set";
@@ -50,32 +46,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string ResourceIdDayParameterSet = "Job Resource Id Day Parameter Set";
         protected const string ResourceIdWeekParameterSet = "Job Resource Id Week Parameter Set";
         protected const string ResourceIdMonthParameterSet = "Job Resource Id Month Parameter Set";
-
-
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        public override string ResourceGroupName { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
-        public virtual string ServerName { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        public virtual string AgentName { get; set; }
-
 
         /// <summary>
         /// Intializes the model adapter

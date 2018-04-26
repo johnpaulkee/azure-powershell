@@ -20,49 +20,8 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentTargetGroupAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentTargetGroupAdapter>
     {
-        /// <summary>
-        /// Parameter sets
-        /// </summary>
-        protected const string DefaultParameterSet = "Target Group Default Parameter Set";
-        protected const string InputObjectParameterSet = "Target Group Input Object Parameter Set";
-        protected const string ResourceIdParameterSet = "Target Group Resource Id Parameter Set";
-
-        /// <summary>
-        /// Gets or sets the name of the resource group name to use
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        [ValidateNotNullOrEmpty]
-        public override string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the server to use
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, 
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The agent server name")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentServerName")]
-        public string ServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the agent
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, 
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
-
         /// <summary>
         /// Intializes the model adapter
         /// </summary>

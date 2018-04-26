@@ -226,19 +226,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
-            string targetGroupId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}",
-                AzureSqlDatabaseAgentJobStepCommunicator.Subscription.Id,
-                this.ResourceGroupName,
-                this.ServerName,
-                this.AgentName,
-                this.TargetGroupName);
-
-            string credentialId = string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
-                AzureSqlDatabaseAgentJobStepCommunicator.Subscription.Id,
-                this.ResourceGroupName,
-                this.ServerName,
-                this.AgentName,
-                this.CredentialName);
+            string targetGroupId = CreateTargetGroupId(this.TargetGroupName);
+            string credentialId = CreateCredentialId(this.CredentialName);
 
             AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
             {

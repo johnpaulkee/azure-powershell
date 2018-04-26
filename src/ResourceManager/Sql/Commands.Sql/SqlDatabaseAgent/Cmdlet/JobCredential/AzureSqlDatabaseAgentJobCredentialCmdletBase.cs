@@ -16,55 +16,13 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentJobCredentialAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentJobCredentialAdapter>
     {
         /// <summary>
-        /// Parameter sets
-        /// </summary>
-        protected const string DefaultParameterSet = "Job Credential Default Parameter Set";
-        protected const string InputObjectParameterSet = "Job Credential Input Object Parameter Set";
-        protected const string ResourceIdParameterSet = "Job Credential Resource Id Parameter Set";
-
-        /// <summary>
-        /// Gets or sets the name of the resource group
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
-        [ValidateNotNullOrEmpty]
-        public override string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of agent server name
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "SQL Database Agent Server Name.")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentServerName")]
-        public string ServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the agent name
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "SQL Database Agent Name.")]
-        [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
-
-        /// <summary>
-        /// Intializes the model adapter
+        /// Intialize the job credential adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
         /// <returns>The Azure SQL Database Agent adapter</returns>

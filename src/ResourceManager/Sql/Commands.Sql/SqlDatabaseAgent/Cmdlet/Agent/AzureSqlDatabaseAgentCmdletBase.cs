@@ -20,37 +20,12 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentModel, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
-        /// Parameter sets
+        /// Removing parameter attribute here since we use "Name" as set by powershell standards
         /// </summary>
-        protected const string DefaultParameterSet = "Agent Default Parameter Set";
-        protected const string InputObjectParameterSet = "Agent Input Object Parameter Set";
-        protected const string ResourceIdParameterSet = "Agent Resource Id Parameter Set";
-
-        /// <summary>
-        /// Gets or sets the resource group name
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The Agent Resource Group Name")]
-        public override string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent server name
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The Agent Server Name")]
-        [Alias("AgentServerName")]
-        public virtual string ServerName { get; set; }
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Intializes the model adapter
