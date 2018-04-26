@@ -59,14 +59,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             var param = new Job
             {
                 Description = model.Description,
-                Schedule = new JobSchedule
-                {
-                    StartTime = model.StartTime,
-                    EndTime = model.EndTime,
-                    Interval = model.Interval,
-                    Type = model.Type,
-                    Enabled = model.Enabled,
-                }
+                Schedule = model.Schedule
             };
 
             var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.ServerName, model.AgentName, model.JobName, param);
@@ -112,14 +105,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             Communicator.Remove(resourceGroupName, agentServerName, agentName, jobName);
         }
 
-        public AzureSqlDatabaseAgentJobModel CreateJobModelFromResponse(string resourceGroupName, string serverName, string agentName, Job resp)
+        public AzureSqlDatabaseAgentJobModel CreateJobModelFromResponse(
+            string resourceGroupName, 
+            string serverName, 
+            string agentName,
+            Job resp)
         {
             return new AzureSqlDatabaseAgentJobModel
             {
                 ResourceGroupName = resourceGroupName,
                 ServerName = serverName,
                 AgentName = agentName,
-                JobName = resp.Name
+                JobName = resp.Name,
+                Description = resp.Description,
+                ResourceId = resp.Id,
+                Schedule = resp.Schedule
             };
         }
     }

@@ -25,9 +25,36 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// <summary>
         /// Parameter sets
         /// </summary>
-        protected const string DefaultParameterSet = "Job Credential Default Parameter Set";
-        protected const string InputObjectParameterSet = "Job Credential Input Object Parameter Set";
-        protected const string ResourceIdParameterSet = "Job Credential Resource Id Parameter Set";
+        protected const string DefaultParameterSet = "Default parameter set";
+        protected const string InputObjectParameterSet = "Input object parameter set"; // todo
+        protected const string ResourceIdParameterSet = "Resource id parameter set"; // todo
+
+        protected const string ListByAgent = "ListByAgent Parameter Set";
+        protected const string ListByJob = "ListByJob Parameter Set";
+        protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
+        protected const string ListStepExecutions = "ListStepExecutions Parameter Set";
+        protected const string ListTargetExecutions = "ListTargetExecutions Parameter Set";
+        protected const string GetStepExecution = "GetStepExecution Parameter Set";
+        protected const string ListTargetStepExecutions = "ListTargetStepExecutions Parameter Set";
+        protected const string GetTargetExecution = "GetTargetExecution Parameter Set";
+
+        protected const string InputObjectListByAgent = "Input Object ListByAgent Parameter Set";
+        protected const string InputObjectListByJob = "Input Object ListByJob Parameter Set";
+        protected const string InputObjectGetRootJobExecution = "Input Object GetRootJobExecution Parameter Set";
+        protected const string InputObjectListStepExecutions = "Input Object ListStepExecutions Parameter Set";
+        protected const string InputObjectListTargetExecutions = "Input Object ListTargetExecutions Parameter Set";
+        protected const string InputObjectGetStepExecution = "Input Object GetStepExecution Parameter Set";
+        protected const string InputObjectListTargetStepExecutions = "Input Object ListTargetStepExecutions Parameter Set";
+        protected const string InputObjectGetTargetExecution = "Input Object GetTargetExecution Parameter Set";
+
+        protected const string ResourceIdListByAgent = "Resource Id ListByAgent Parameter Set";
+        protected const string ResourceIdListByJob = "Resource Id ListByJob Parameter Set";
+        protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
+        protected const string ResourceIdListStepExecutions = "Resource Id ListStepExecutions Parameter Set";
+        protected const string ResourceIdListTargetExecutions = "Resource Id ListTargetExecutions Parameter Set";
+        protected const string ResourceIdGetStepExecution = "Resource Id GetStepExecution Parameter Set";
+        protected const string ResourceIdListTargetStepExecutions = "Resource Id ListTargetStepExecutions Parameter Set";
+        protected const string ResourceIdGetTargetExecution = "Resource Id GetTargetExecution Parameter Set";
 
         /// <summary>
         /// Gets or sets the name of the resource group
@@ -47,10 +74,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Server Name.")]
+            HelpMessage = "SQL Database Agent Resource Group Name.")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentServerName")]
-        public string ServerName { get; set; }
+        public virtual string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the agent name
@@ -59,9 +86,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Name.")]
+            HelpMessage = "SQL Database Agent Resource Group Name.")]
         [ValidateNotNullOrEmpty]
-        public string AgentName { get; set; }
+        public virtual string AgentName { get; set; }
 
         protected override AzureSqlDatabaseAgentJobExecutionAdapter InitModelAdapter(IAzureSubscription subscription)
         {

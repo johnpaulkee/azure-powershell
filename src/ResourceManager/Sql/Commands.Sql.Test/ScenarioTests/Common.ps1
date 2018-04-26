@@ -346,14 +346,67 @@ function Get-AgentName
     return getAssetName
 }
 
+<#
+.SYNOPSIS
+Gets valid target group name
+#>
 function Get-TargetGroupName
 {
     return getAssetName
 }
 
+<#
+.SYNOPSIS
+Gets valid job credential name
+#>
 function Get-JobCredentialName
 {
     return getAssetName
+}
+
+<#
+.SYNOPSIS
+Gets valid job name
+#>
+function Get-JobName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
+Gets valid job step name
+#>
+function Get-JobStepName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
+Gets valid subscription id
+#>
+function Get-SubscriptionId
+{
+    return [guid]::NewGuid().ToString()
+}
+
+<#
+.SYNOPSIS
+Gets valid schema name
+#>
+function Get-SchemaName
+{
+    return getAssetName
+}
+
+<#
+.SYNOPSIS
+Gets valid table name
+#>
+function Get-TableName
+{
+    return getAssetname
 }
 
 <#
@@ -555,6 +608,58 @@ function Create-TargetGroupForTest ($a)
     $targetGroupName = Get-TargetGroupName
     $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
     return $tg
+}
+
+<#
+	.SYNOPSIS
+	Creates a sql database agent job with test params
+#>
+function Create-JobForTest ($a)
+{
+    $jobName = Get-JobName
+    $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
+    return $job
+}
+
+<#
+	.SYNOPSIS
+	Creates a sql database agent job step with test params
+#>
+function Create-JobStepForTest ($j, $tg, $c, $script, $withOutput = $false)
+{
+    $jobStepName = Get-JobStepName
+
+    if ($withOutput)
+    {
+        $output = Create-JobStepOutputForTest $c
+
+        $jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName `
+                                                      -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $script `
+                                                      -OutputSubscriptionId $output.SubscriptionId -OutputResourceGroupName $output.ResourceGroupName -OutputServerName $output.ServerName `
+                                                      -OutputDatabaseName $output.DatabaseName -OutputSchemaName $output.SchemaName -OutputTableName $output.TableName `
+                                                      -OutputCredentialName $output.CredentialName
+        return $jobStep
+    }
+
+    $jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName `
+                                                  -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $script
+    return $jobStep
+}
+
+<#
+.SYNOPSIS
+Create job step output
+#>
+function Create-JobStepOutputForTest ($cred)
+{
+	return @{ SubscriptionId = Get-SubscriptionId;
+			  ResourceGroupName = Get-ResourceGroupName;
+              ServerName = Get-ServerName;
+              DatabaseName = Get-DatabaseName;
+              SchemaName = Get-SchemaName;
+              TableName = Get-TableName;
+              CredentialName = $cred.CredentialName;
+		}
 }
 
 <#

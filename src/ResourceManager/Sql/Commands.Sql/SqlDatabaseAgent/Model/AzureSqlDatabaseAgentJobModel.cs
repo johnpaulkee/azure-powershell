@@ -49,33 +49,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the job schedule
+        /// </summary>
+        public JobSchedule Schedule { get; set; }
+
+        /// <summary>
         /// Gets or sets the job resource id.
         /// </summary>
         public string ResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job's start time
-        /// </summary>
-        public DateTime StartTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job's end time
-        /// </summary>
-        public DateTime EndTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job type
-        /// </summary>
-        public JobScheduleType Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job interval
-        /// </summary>
-        public string Interval { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the job will is enabled
-        /// </summary>
-        public bool Enabled { get; set; }
     }
 }

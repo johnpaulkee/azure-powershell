@@ -27,6 +27,24 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     public class RemoveAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
         /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Alias("JobName")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Defines whether it is ok to skip the requesting of rule removal confirmation
+        /// </summary>
+        [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
+        public SwitchParameter Force { get; set; }
+
+        /// <summary>
         /// Gets or sets the job input object
         /// </summary>
         [Parameter(
@@ -49,24 +67,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job name
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Alias("JobName")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Defines whether it is ok to skip the requesting of rule removal confirmation
-        /// </summary>
-        [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
-        public SwitchParameter Force { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet

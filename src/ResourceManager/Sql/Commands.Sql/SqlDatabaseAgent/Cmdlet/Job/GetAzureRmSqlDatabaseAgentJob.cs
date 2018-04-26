@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 
@@ -24,8 +25,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJob", 
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
     [OutputType(typeof(AzureSqlDatabaseAgentJobModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobModel>))]
     public class GetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
         /// <summary>

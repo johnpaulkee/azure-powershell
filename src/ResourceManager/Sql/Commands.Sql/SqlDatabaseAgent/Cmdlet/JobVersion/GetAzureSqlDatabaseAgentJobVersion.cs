@@ -1,14 +1,16 @@
 ﻿using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
 {
-    public class GetAzureRmSqlDatabaseAgentJobVersion : AzureRmSqlDatabaseAgentJobVersionCmdletBase
+    /// <summary>
+    /// Defines the Get-AzureRmSqlDatabaseAgentJobStep Cmdlet
+    /// </summary>
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobVersion",
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
+    public class GetAzureSqlDatabaseAgentJobVersion : AzureSqlDatabaseAgentJobVersionCmdletBase
     {
         /// <summary>
         /// Gets or sets the job input object
@@ -38,7 +40,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
         /// Gets or sets the job name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
@@ -48,9 +50,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
 
         [Parameter(
             Mandatory = false,
-            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
-            Position = 4,
             HelpMessage = "The job version number")]
         public int Version { get; set; }
 

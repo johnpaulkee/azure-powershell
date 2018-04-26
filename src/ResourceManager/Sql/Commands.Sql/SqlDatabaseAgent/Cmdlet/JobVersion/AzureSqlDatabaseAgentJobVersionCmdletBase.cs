@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
 {
-    public abstract class AzureRmSqlDatabaseAgentJobVersionCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentJobVersionModel, AzureSqlDatabaseAgentJobVersionAdapter>
+    public abstract class AzureSqlDatabaseAgentJobVersionCmdletBase : AzureSqlCmdletBase<AzureSqlDatabaseAgentJobVersionModel, AzureSqlDatabaseAgentJobVersionAdapter>
     {
         protected const string DefaultParameterSet = "Job Default Parameter Set";
         protected const string InputObjectParameterSet = "Input object job default parameter set";

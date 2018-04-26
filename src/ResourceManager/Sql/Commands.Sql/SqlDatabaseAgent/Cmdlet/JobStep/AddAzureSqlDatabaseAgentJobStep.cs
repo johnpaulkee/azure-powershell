@@ -21,13 +21,13 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the New-AzureRmSqlDatabaseAgentJobStep Cmdlet
+    /// Defines the Add-AzureRmSqlDatabaseAgentJobStep Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentJobStep",
+    [Cmdlet(VerbsCommon.Add, "AzureRmSqlDatabaseAgentJobStep",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
-    public class NewAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
+    public class AddAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
         /// <summary>
         /// Gets or sets the job object
@@ -125,8 +125,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string CommandText { get; set; }
 
         [Parameter(Mandatory = false)]
-        public Management.Sql.Models.JobStepOutput Output { get; set; }
+        public override string OutputSubscriptionId { get; set; }
 
+        [Parameter(Mandatory = false)]
+        public override string OutputResourceGroupName { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public override string OutputServerName { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public override string OutputDatabaseName { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public override string OutputSchemaName { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public override string OutputTableName { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public override string OutputCredentialName { get; set; }
+
+        /// <summary>
+        /// Execution Options
+        /// </summary>
         [Parameter(Mandatory = false)]
         public int? TimeoutSeconds { get; set; }
 
@@ -228,7 +249,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 StepName = this.Name,
                 TargetGroup = targetGroupId,
                 Credential = credentialId,
-                Output = Output,
                 ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
                 {
                     InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds,
@@ -244,6 +264,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     Value = this.CommandText
                 },
             };
+
+            Management.Sql.Models.JobStepOutput output = CreateJobStepOutputModel();
+
+            if (output.ServerName != null)
+            {
+                updatedModel.Output = output;
+            }
 
             return updatedModel;
         }

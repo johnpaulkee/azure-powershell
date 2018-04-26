@@ -50,37 +50,79 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         #endregion
 
-        //#region Update Tests
+        #region Update Tests
 
-        //[Fact]
-        //[Trait(Category.AcceptanceType, Category.CheckIn)]
-        //public void TestJobUpdate()
-        //{
-        //    RunPowerShellTest("Test-UpdateJob");
-        //}
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepUpdate()
+        {
+            RunPowerShellTest("Test-UpdateJobStep");
+        }
 
-        //#endregion
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepUpdateWithInputObject()
+        {
+            RunPowerShellTest("Test-UpdateJobStepWithInputObject");
+        }
 
-        //#region Get Tests
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateJobStepWithResourceId");
+        }
 
-        //[Fact]
-        //[Trait(Category.AcceptanceType, Category.CheckIn)]
-        //public void TestJobGet()
-        //{
-        //    RunPowerShellTest("Test-GetJob");
-        //}
+        #endregion
 
-        //#endregion
+        #region Get Tests
 
-        //#region Remove Tests
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepGet()
+        {
+            RunPowerShellTest("Test-GetJobStep");
+        }
 
-        //[Fact]
-        //[Trait(Category.AcceptanceType, Category.CheckIn)]
-        //public void TestJobRemove()
-        //{
-        //    RunPowerShellTest("Test-RemoveJob");
-        //}
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepGetWithInputObject()
+        {
+            RunPowerShellTest("Test-GetJobStepWithInputObject");
+        }
 
-        //#endregion
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepGetWithResourceId()
+        {
+            RunPowerShellTest("Test-GetJobStepWithResourceId");
+        }
+
+        #endregion
+
+        #region Remove Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepRemove()
+        {
+            RunPowerShellTest("Test-RemoveJobStep");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepRemoveWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveJobStepWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepRemoveWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveJobStepWithResourceId");
+        }
+
+        #endregion
     }
 }

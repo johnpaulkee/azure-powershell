@@ -187,8 +187,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName
-            )
+            string stepName)
         {
             return GetCurrentSqlClient().JobStepExecutions.Get(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
         }
@@ -199,10 +198,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName
-            )
+            DateTime? createTimeMin = null,
+            DateTime? createTimeMax = null,
+            DateTime? endTimeMin = null,
+            DateTime? endTimeMax = null,
+            bool? isActive = null,
+            int? skip = null,
+            int? top = null)
         {
-            return GetCurrentSqlClient().JobStepExecutions.ListByJobExecution(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
+            return GetCurrentSqlClient().JobStepExecutions.ListByJobExecution(
+                resourceGroupName, 
+                serverName, 
+                agentName, 
+                jobName, 
+                jobExecutionId,
+                createTimeMin,
+                createTimeMax,
+                endTimeMin,
+                endTimeMax,
+                isActive,
+                skip,
+                top);
         }
 
         #endregion
@@ -228,10 +244,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName,
-            Guid targetId)
+            DateTime? createTimeMin = null,
+            DateTime? createTimeMax = null,
+            DateTime? endTimeMin = null,
+            DateTime? endTimeMax = null,
+            bool? isActive = null,
+            int? skip = null,
+            int? top = null)
         {
-            return GetCurrentSqlClient().JobTargetExecutions.ListByJobExecution(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
+            return GetCurrentSqlClient().JobTargetExecutions.ListByJobExecution(
+                resourceGroupName,
+                serverName,
+                agentName,
+                jobName,
+                jobExecutionId,
+                createTimeMin,
+                createTimeMax,
+                endTimeMin,
+                endTimeMax,
+                isActive,
+                skip,
+                top);
         }
 
         public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutionsByStep(
@@ -240,9 +273,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName)
+            string stepName,
+            DateTime? createTimeMin = null,
+            DateTime? createTimeMax = null,
+            DateTime? endTimeMin = null,
+            DateTime? endTimeMax = null,
+            bool? isActive = null,
+            int? skip = null,
+            int? top = null)
         {
-            return GetCurrentSqlClient().JobTargetExecutions.ListByStep(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+            return GetCurrentSqlClient().JobTargetExecutions.ListByStep(
+                resourceGroupName, 
+                serverName, 
+                agentName, 
+                jobName, 
+                jobExecutionId, 
+                stepName,
+                createTimeMin,
+                createTimeMax,
+                endTimeMin,
+                endTimeMax,
+                isActive,
+                skip,
+                top);
         }
 
         #endregion

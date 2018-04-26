@@ -142,6 +142,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested job time interval is not supported &apos;{0}&apos;.
+        /// </summary>
+        internal static string AzureSqlDatabaseAgentJobIntervalNotSupported {
+            get {
+                return ResourceManager.GetString("AzureSqlDatabaseAgentJobIntervalNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Job with name &apos;{0}&apos; does not exist in agent &apos;{1}&apos;.
         /// </summary>
         internal static string AzureSqlDatabaseAgentJobNotExists {

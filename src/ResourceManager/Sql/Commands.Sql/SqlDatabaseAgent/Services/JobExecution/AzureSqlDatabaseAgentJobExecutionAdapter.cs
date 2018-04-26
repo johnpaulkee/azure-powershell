@@ -72,9 +72,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agents are in</param>
         /// <returns>The converted agent model(s)</returns>
-        public void CancelJobExecution(string resourceGroupName, string serverName, string agentName, string jobName, Guid jobExecutionId)
+        public void CancelJobExecution(AzureSqlDatabaseAgentJobExecutionModel model)
         {
-            Communicator.Cancel(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
+            Communicator.Cancel(model.ResourceGroupName, model.ServerName, model.AgentName, model.JobName, model.JobExecutionId.Value);
         }
 
         /// <summary>
@@ -184,9 +184,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName)
+            DateTime? createTimeMin,
+            DateTime? createTimeMax,
+            DateTime? endTimeMin,
+            DateTime? endTimeMax,
+            bool? isActive,
+            int? skip,
+            int? top)
         {
-            var resp = Communicator.ListJobExecutionSteps(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+            var resp = Communicator.ListJobExecutionSteps(
+                resourceGroupName, 
+                serverName, 
+                agentName, 
+                jobName, 
+                jobExecutionId,
+                createTimeMin,
+                createTimeMax,
+                endTimeMin,
+                endTimeMax,
+                isActive,
+                skip,
+                top);
+
             return resp.Select((stepExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution));
         }
 
@@ -235,9 +254,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName)
+            string stepName,
+            DateTime? createTimeMin,
+            DateTime? createTimeMax,
+            DateTime? endTimeMin,
+            DateTime? endTimeMax,
+            bool? isActive,
+            int? skip,
+            int? top)
         {
-            var resp = Communicator.ListJobTargetExecutionsByStep(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
+            var resp = Communicator.ListJobTargetExecutionsByStep(
+                resourceGroupName, 
+                serverName, 
+                agentName, 
+                jobName, 
+                jobExecutionId, 
+                stepName);
             return resp.Select((stepExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution));
         }
 
@@ -257,10 +289,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             Guid jobExecutionId,
-            string stepName,
-            Guid targetId)
+            DateTime? createTimeMin,
+            DateTime? createTimeMax,
+            DateTime? endTimeMin,
+            DateTime? endTimeMax,
+            bool? isActive,
+            int? skip,
+            int? top)
         {
-            var resp = Communicator.ListJobTargetExecutionsByTarget(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName, targetId);
+            var resp = Communicator.ListJobTargetExecutionsByTarget(
+                resourceGroupName, 
+                serverName, 
+                agentName, 
+                jobName, 
+                jobExecutionId,
+                createTimeMin,
+                createTimeMax,
+                endTimeMin,
+                endTimeMax,
+                isActive,
+                skip,
+                top);
+
             return resp.Select((stepExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution));
         }
 
