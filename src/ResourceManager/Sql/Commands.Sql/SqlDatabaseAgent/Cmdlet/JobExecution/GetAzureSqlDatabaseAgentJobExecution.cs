@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobExecution",
         SupportsShouldProcess = true,
-        DefaultParameterSetName = GetRootJobExecution)]
+        DefaultParameterSetName = ListByAgent)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
     public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
@@ -433,38 +433,38 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         public string TargetId { get; set; }
 
         [Parameter(ParameterSetName = ListStepExecutions,
-            Mandatory = false,
+            Mandatory = true,
             HelpMessage = "SQL Database Agent Resource Group Name.")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = InputObjectListStepExecutions,
             HelpMessage = "The job object")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = ResourceIdListStepExecutions,
             HelpMessage = "The job object")]
         public SwitchParameter Steps { get; set; }
 
         [Parameter(ParameterSetName = ListTargetStepExecutions,
-            Mandatory = false,
+            Mandatory = true,
             HelpMessage = "SQL Database Agent Resource Group Name.")]
         [Parameter(ParameterSetName = ListTargetExecutions,
-            Mandatory = false,
+            Mandatory = true,
             HelpMessage = "SQL Database Agent Resource Group Name.")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = InputObjectListTargetExecutions,
             HelpMessage = "The job object")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = InputObjectListTargetStepExecutions,
             HelpMessage = "The job object")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = ResourceIdListTargetExecutions,
             HelpMessage = "The job object")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = ResourceIdListTargetStepExecutions,
             HelpMessage = "The job object")]
         public SwitchParameter Targets { get; set; }
