@@ -614,11 +614,20 @@ function Create-TargetGroupForTest ($a)
 	.SYNOPSIS
 	Creates a sql database agent job with test params
 #>
-function Create-JobForTest ($a)
+function Create-JobForTest ($a, $enabled = $false)
 {
     $jobName = Get-JobName
-    $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
-    return $job
+    
+    if ($enabled)
+    {
+        $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
+        return $job    
+    }
+    else 
+    {
+        $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName -Enabled
+        return $job        
+    }
 }
 
 <#

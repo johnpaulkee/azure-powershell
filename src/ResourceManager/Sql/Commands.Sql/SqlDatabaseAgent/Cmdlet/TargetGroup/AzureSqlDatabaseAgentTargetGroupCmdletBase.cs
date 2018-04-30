@@ -20,16 +20,16 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentTargetGroupAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Intializes the model adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
         /// <returns>The Azure SQL Database Agent adapter</returns>
-        protected override AzureSqlDatabaseAgentTargetGroupAdapter InitModelAdapter(IAzureSubscription subscription)
+        protected override AzureSqlDatabaseAgentAdapter InitModelAdapter(IAzureSubscription subscription)
         {
-            return new AzureSqlDatabaseAgentTargetGroupAdapter(DefaultContext);
+            return new AzureSqlDatabaseAgentAdapter(DefaultContext);
         }
     }
 }

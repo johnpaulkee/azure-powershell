@@ -22,13 +22,13 @@ using System.Linq;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Start-AzureRmSqlDatabaseAgentJobExecution Cmdlet
+    /// Defines the Start-AzureRmSqlDatabaseAgentJob Cmdlet
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Start, "AzureRmSqlDatabaseAgentJobExecution",
+    [Cmdlet(VerbsLifecycle.Start, "AzureRmSqlDatabaseAgentJob",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
-    public class StartAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
+    public class StartAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
         /// <summary>
         /// Gets or sets the Agent's Control Database Object
@@ -64,6 +64,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "SQL Database Agent Resource Group Name.")]
         [ValidateNotNullOrEmpty]
         public string JobName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the switch parameter to indicate whether customer wants to poll completion of job
+        /// or if not set, to return job execution id immediately upon creation.
+        /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false)]
+        public SwitchParameter Wait { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not to run this cmdlet in the background as a job
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
+        public SwitchParameter AsJob { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
@@ -124,8 +139,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The created agent</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> entity)
         {
-            List<AzureSqlDatabaseAgentJobExecutionModel> execution = new List<AzureSqlDatabaseAgentJobExecutionModel> { ModelAdapter.CreateJobExecution(entity.First()) };
-            return execution;
+            AzureSqlDatabaseAgentJobExecutionModel resp;
+
+            if (this.Wait.IsPresent)
+            {
+                resp = ModelAdapter.CreateJobExecution(entity.First());
+            }
+            else
+            {
+                resp = ModelAdapter.BeginCreateJobExecution(entity.First());
+            }
+
+            return new List<AzureSqlDatabaseAgentJobExecutionModel> { resp }; ;
         }
     }
 }

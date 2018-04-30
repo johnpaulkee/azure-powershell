@@ -21,7 +21,7 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
 {
-    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : AzureSqlDatabaseAgentCmdletBase<IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentJobExecutionAdapter>
+    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : AzureSqlDatabaseAgentCmdletBase<IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Default parameter sets
@@ -29,11 +29,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         protected const string ListByAgent = "ListByAgent Parameter Set";
         protected const string ListByJob = "ListByJob Parameter Set";
         protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
-        protected const string ListStepExecutions = "ListStepExecutions Parameter Set";
-        protected const string ListTargetExecutions = "ListTargetExecutions Parameter Set";
-        protected const string GetStepExecution = "GetStepExecution Parameter Set";
-        protected const string ListTargetStepExecutions = "ListTargetStepExecutions Parameter Set";
-        protected const string GetTargetExecution = "GetTargetExecution Parameter Set";
 
         /// <summary>
         /// Inpuyt object parameter sets
@@ -41,11 +36,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         protected const string InputObjectListByAgent = "Input Object ListByAgent Parameter Set";
         protected const string InputObjectListByJob = "Input Object ListByJob Parameter Set";
         protected const string InputObjectGetRootJobExecution = "Input Object GetRootJobExecution Parameter Set";
-        protected const string InputObjectListStepExecutions = "Input Object ListStepExecutions Parameter Set";
-        protected const string InputObjectListTargetExecutions = "Input Object ListTargetExecutions Parameter Set";
-        protected const string InputObjectGetStepExecution = "Input Object GetStepExecution Parameter Set";
-        protected const string InputObjectListTargetStepExecutions = "Input Object ListTargetStepExecutions Parameter Set";
-        protected const string InputObjectGetTargetExecution = "Input Object GetTargetExecution Parameter Set";
 
         /// <summary>
         /// Resource id parameter sets
@@ -53,20 +43,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         protected const string ResourceIdListByAgent = "Resource Id ListByAgent Parameter Set";
         protected const string ResourceIdListByJob = "Resource Id ListByJob Parameter Set";
         protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
-        protected const string ResourceIdListStepExecutions = "Resource Id ListStepExecutions Parameter Set";
-        protected const string ResourceIdListTargetExecutions = "Resource Id ListTargetExecutions Parameter Set";
-        protected const string ResourceIdGetStepExecution = "Resource Id GetStepExecution Parameter Set";
-        protected const string ResourceIdListTargetStepExecutions = "Resource Id ListTargetStepExecutions Parameter Set";
-        protected const string ResourceIdGetTargetExecution = "Resource Id GetTargetExecution Parameter Set";
 
         /// <summary>
         /// Initialize the job execution adapter
         /// </summary>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        protected override AzureSqlDatabaseAgentJobExecutionAdapter InitModelAdapter(IAzureSubscription subscription)
+        protected override AzureSqlDatabaseAgentAdapter InitModelAdapter(IAzureSubscription subscription)
         {
-            return new AzureSqlDatabaseAgentJobExecutionAdapter(DefaultContext);
+            return new AzureSqlDatabaseAgentAdapter(DefaultContext);
         }
     }
 }

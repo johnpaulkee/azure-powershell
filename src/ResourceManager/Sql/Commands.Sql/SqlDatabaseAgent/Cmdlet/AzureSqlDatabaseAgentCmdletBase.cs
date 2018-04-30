@@ -65,7 +65,7 @@ namespace Microsoft.Azure.Commands.Sql.Common
         [ValidateNotNullOrEmpty]
         public virtual string AgentName { get; set; }
 
-        #region Helpers
+        #region Target Group Helpers
 
         /// <summary>
         /// 
@@ -74,6 +74,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
         /// <returns></returns>
         protected string CreateTargetGroupId(string targetGroupName)
         {
+            if (targetGroupName == null)
+            {
+                return null;
+            }
+
             return string.Format(targetGroupResourceIdTemplate,
                             DefaultContext.Subscription.Id,
                             this.ResourceGroupName,
@@ -81,6 +86,10 @@ namespace Microsoft.Azure.Commands.Sql.Common
                             this.AgentName,
                             targetGroupName);
         }
+
+        #endregion
+
+        #region Credential Helpers
 
         protected string CreateCredentialId(string credentialName)
         {
@@ -95,6 +104,15 @@ namespace Microsoft.Azure.Commands.Sql.Common
                             this.ServerName,
                             this.AgentName,
                             credentialName);
+        }
+
+        #endregion
+
+        #region 
+
+        public string GetJobNameFromJobExecutionResourceId(string jobExecutionResourceId)
+        {
+            return "";
         }
 
         #endregion

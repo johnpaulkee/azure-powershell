@@ -18,13 +18,14 @@ using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Stop-AzureRmSqlDatabaseAgentJobExecution Cmdlet
+    /// Defines the Stop-AzureRmSqlDatabaseAgentJob Cmdlet
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Stop, "AzureRmSqlDatabaseAgentJobExecution",
+    [Cmdlet(VerbsLifecycle.Stop, "AzureRmSqlDatabaseAgentJob",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
@@ -106,7 +107,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
-            return null;
+            return new List<AzureSqlDatabaseAgentJobExecutionModel> { };
         }
 
         /// <summary>
@@ -116,6 +117,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> model)
         {
+            var execution = new AzureSqlDatabaseAgentJobExecutionModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.AgentName,
+                JobName = this.JobName,
+                JobExecutionId = Guid.Parse(this.JobExecutionId)
+            };
+
             return model;
         }
 

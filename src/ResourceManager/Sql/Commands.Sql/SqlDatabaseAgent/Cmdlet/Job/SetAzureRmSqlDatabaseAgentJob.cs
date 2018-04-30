@@ -560,20 +560,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.Name,
                 Description = this.Description,
-                Schedule = new JobSchedule
-                {
-                    Enabled = this.Enabled.IsPresent
-                },
+                Enabled = this.Enabled.IsPresent
             };
 
             if (this.StartTime != null)
             {
-                newEntity.Schedule.StartTime = this.StartTime;
+                newEntity.StartTime = this.StartTime;
             }
 
             if (this.EndTime != null)
             {
-                newEntity.Schedule.EndTime = this.EndTime;
+                newEntity.EndTime = this.EndTime;
             }
 
             // Check what flags are set
@@ -588,13 +585,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             if (onceIsPresent)
             {
                 // Customer requested job to run once
-                newEntity.Schedule.Type = JobScheduleType.Once;
+                newEntity.ScheduleType = JobScheduleType.Once;
             }
             else if (recurringIsPresent)
             {
                 // Customer requested job to be a recurring time interval
                 // Can monthly, weekly, daily, hourly, or every X minutes.
-                newEntity.Schedule.Type = JobScheduleType.Recurring;
+                newEntity.ScheduleType = JobScheduleType.Recurring;
 
                 StringBuilder stringBuilder = new StringBuilder();
 
@@ -609,7 +606,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
                 string interval = stringBuilder.ToString();
 
-                newEntity.Schedule.Interval = interval;
+                newEntity.Interval = interval;
             }
 
             return newEntity;

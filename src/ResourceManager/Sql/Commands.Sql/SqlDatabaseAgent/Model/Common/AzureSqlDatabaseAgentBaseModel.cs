@@ -19,9 +19,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
     /// <summary>
     /// Represents the core properties of an Azure Sql Database Agent model
     /// </summary>
-    public class AzureSqlDatabaseAgentModel
+    public class AzureSqlDatabaseAgentBaseModel
     {
-        public AzureSqlDatabaseAgentModel()
+        public AzureSqlDatabaseAgentBaseModel()
         {
         }
 
@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string ResourceGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the server
+        /// Gets or sets the server name
         /// </summary>
         public string ServerName { get; set; }
 
@@ -41,33 +41,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the location the sql database agent is in
-        /// </summary>
-        public string Location { get; set; }
-
-        /// <summary>
-        /// Gets or sets the database name for the sql database agent name.
-        /// </summary>
-        public string DatabaseName { get; set; }
-
-        /// <summary>
-        /// The SQL Database Agent Resource Id
+        /// Gets or sets the resource id
         /// </summary>
         public string ResourceId { get; set; }
 
         /// <summary>
-        ///  The SQL Database Agent Control Database Id
+        /// Gets or sets the resource typ
         /// </summary>
-        public string DatabaseId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent's number of workers.
-        /// </summary>
-        public int? WorkerCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tags associated with the server.
-        /// </summary>
-        public Dictionary<string, string> Tags { get; set; }
+        public string Type { get; set; }
     }
 }

@@ -19,16 +19,16 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentJobCredentialAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Intialize the job credential adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
         /// <returns>The Azure SQL Database Agent adapter</returns>
-        protected override AzureSqlDatabaseAgentJobCredentialAdapter InitModelAdapter(IAzureSubscription subscription)
+        protected override AzureSqlDatabaseAgentAdapter InitModelAdapter(IAzureSubscription subscription)
         {
-            return new AzureSqlDatabaseAgentJobCredentialAdapter(DefaultContext);
+            return new AzureSqlDatabaseAgentAdapter(DefaultContext);
         }
     }
 }

@@ -12,43 +12,28 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System.Security;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     /// <summary>
-    /// Represents the core properties of a target group
+    /// Represents the core properties of a job credential
     /// </summary>
-    public class AzureSqlDatabaseAgentTargetGroupModel
+    public class AzureSqlDatabaseAgentJobCredentialModel : AzureSqlDatabaseAgentBaseModel
     {
         /// <summary>
-        /// Gets or sets the name of the resource group name
+        /// Gets or sets the job credential name
         /// </summary>
-        public string ResourceGroupName { get; set; }
+        public string CredentialName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the server
+        /// Gets or sets the user name
         /// </summary>
-        public string ServerName { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the azure sql database agent name
+        /// Gets or sets the password
         /// </summary>
-        public string AgentName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the target group name
-        /// </summary>
-        public string TargetGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the target group resource id
-        /// </summary>
-        public string ResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the target group members
-        /// </summary>
-        public IList<Management.Sql.Models.JobTarget> Members { get; set; }
+        public SecureString Password { get; set; }
     }
 }

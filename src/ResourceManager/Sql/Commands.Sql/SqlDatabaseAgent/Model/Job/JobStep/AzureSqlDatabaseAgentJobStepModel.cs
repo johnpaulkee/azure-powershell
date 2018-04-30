@@ -12,48 +12,50 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Security;
+using Microsoft.Azure.Management.Sql.Models;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
-    /// <summary>
-    /// Represents the core properties of a job credential
-    /// </summary>
-    public class AzureSqlDatabaseAgentJobCredentialModel
+    public class AzureSqlDatabaseAgentJobStepModel : AzureSqlDatabaseAgentJobModelBase
     {
-        /// <summary>
-        /// Gets or sets the name of the resource group name
-        /// </summary>
-        public string ResourceGroupName { get; set; }
+        public AzureSqlDatabaseAgentJobStepModel()
+        {
+        }
 
         /// <summary>
-        /// Gets or sets the name of the server
+        /// The job step name
         /// </summary>
-        public string ServerName { get; set; }
+        public string StepName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the agent
+        /// The target group id
         /// </summary>
-        public string AgentName { get; set; }
+        public string TargetGroup { get; set; }
 
         /// <summary>
-        /// Gets or sets the job credential name
+        /// The credential id
         /// </summary>
-        public string CredentialName { get; set; }
+        public string Credential { get; set; }
 
         /// <summary>
-        /// Gets or sets the user name
+        /// 
         /// </summary>
-        public string UserName { get; set; }
+        public JobStepOutput Output { get; set; }
 
         /// <summary>
-        /// Gets or sets the password
+        /// 
         /// </summary>
-        public SecureString Password { get; set; }
+        public JobStepExecutionOptions ExecutionOptions { get; set; }
 
         /// <summary>
-        /// The credential resource id
+        /// The job step id
         /// </summary>
-        public string ResourceId { get; set; }
+        public int? StepId;
+
+        /// <summary>
+        /// The script
+        /// </summary>
+        public JobStepAction Action { get; set; }
     }
 }

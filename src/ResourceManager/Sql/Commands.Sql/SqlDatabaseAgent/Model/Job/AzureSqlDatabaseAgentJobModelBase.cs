@@ -17,45 +17,15 @@ using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
-    public class AzureSqlDatabaseAgentJobModel
+    public class AzureSqlDatabaseAgentJobModelBase : AzureSqlDatabaseAgentBaseModel
     {
-        public AzureSqlDatabaseAgentJobModel()
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the name of the resource group name
-        /// </summary>
-        public string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the server
-        /// </summary>
-        public string ServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent name
-        /// </summary>
-        public string AgentName { get; set; }
-
         /// <summary>
         ///  Gets or sets the job name
         /// </summary>
         public string JobName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the description of the job
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job schedule
-        /// </summary>
-        public JobSchedule Schedule { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job resource id.
-        /// </summary>
-        public string ResourceId { get; set; }
+        public AzureSqlDatabaseAgentJobModelBase()
+        {
+        }
     }
 }

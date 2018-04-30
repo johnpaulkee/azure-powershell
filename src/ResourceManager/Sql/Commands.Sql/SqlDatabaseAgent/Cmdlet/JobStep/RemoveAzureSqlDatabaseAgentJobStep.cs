@@ -61,7 +61,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 3,
             HelpMessage = "The job name")]
 
-        public string JobName { get; set; }
+        public override string JobName { get; set; }
 
         /// <summary>
         /// Gets or sets the job step name

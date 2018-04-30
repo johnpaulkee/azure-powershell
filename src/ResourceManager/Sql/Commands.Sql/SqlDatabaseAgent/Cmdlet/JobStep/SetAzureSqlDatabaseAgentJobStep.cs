@@ -16,7 +16,6 @@ using System.Management.Automation;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -117,7 +116,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             ParameterSetName = RemoveOutputDefaultParameterSet,
             HelpMessage = "The step name")]
-        public string JobName { get; set; }
+        public override string JobName { get; set; }
 
         [Parameter(
             Mandatory = true,

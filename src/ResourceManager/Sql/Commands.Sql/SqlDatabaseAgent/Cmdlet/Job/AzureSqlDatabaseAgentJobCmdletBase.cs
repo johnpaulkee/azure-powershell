@@ -19,7 +19,7 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, AzureSqlDatabaseAgentJobAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Default parameter sets
@@ -56,9 +56,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
         /// <returns>The Azure SQL Database Agent Job adapter</returns>
-        protected override AzureSqlDatabaseAgentJobAdapter InitModelAdapter(IAzureSubscription subscription)
+        protected override AzureSqlDatabaseAgentAdapter InitModelAdapter(IAzureSubscription subscription)
         {
-            return new AzureSqlDatabaseAgentJobAdapter(DefaultContext);
+            return new AzureSqlDatabaseAgentAdapter(DefaultContext);
         }
     }
 }

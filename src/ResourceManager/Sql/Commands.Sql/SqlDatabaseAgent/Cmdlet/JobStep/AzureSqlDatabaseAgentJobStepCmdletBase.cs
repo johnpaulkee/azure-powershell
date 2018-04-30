@@ -21,7 +21,7 @@ using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobStepCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobStepModel, AzureSqlDatabaseAgentJobStepAdapter>
+    public abstract class AzureSqlDatabaseAgentJobStepCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobStepModel, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Default parameter sets
@@ -41,6 +41,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string AddOutputResourceIdParameterSet = "Add Output Resource id job step parameter set";
         protected const string RemoveOutputResourceIdParameterSet = "Remove output resource id job step parameter set";
 
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = DefaultParameterSet)]
+        public virtual string JobName { get; set; }
+
+
         /// <summary>
         /// Output target parameters
         /// </summary>
@@ -57,9 +64,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
         /// <returns>The Azure SQL Database Agent Job adapter</returns>
-        protected override AzureSqlDatabaseAgentJobStepAdapter InitModelAdapter(IAzureSubscription subscription)
+        protected override AzureSqlDatabaseAgentAdapter InitModelAdapter(IAzureSubscription subscription)
         {
-            return new AzureSqlDatabaseAgentJobStepAdapter(DefaultContext);
+            return new AzureSqlDatabaseAgentAdapter(DefaultContext);
         }
 
         /// <summary>

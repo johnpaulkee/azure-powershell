@@ -55,12 +55,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
         [Parameter(
             Mandatory = true,
-            Position = 3,
-            ParameterSetName = DefaultParameterSet)]
-        public string JobName { get; set; }
-
-        [Parameter(
-            Mandatory = true,
             Position = 4,
             ParameterSetName = DefaultParameterSet)]
         [Parameter(
@@ -124,6 +118,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The command text")]
         public string CommandText { get; set; }
 
+
+        #region Output parameters
+
         [Parameter(Mandatory = false)]
         public override string OutputSubscriptionId { get; set; }
 
@@ -145,6 +142,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = false)]
         public override string OutputCredentialName { get; set; }
 
+        #endregion
+
+        #region Execution option parameters
+
         /// <summary>
         /// Execution Options
         /// </summary>
@@ -162,6 +163,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
         [Parameter(Mandatory = false)]
         public double? RetryIntervalBackoffMultiplier { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Cmdlet execution starts here
