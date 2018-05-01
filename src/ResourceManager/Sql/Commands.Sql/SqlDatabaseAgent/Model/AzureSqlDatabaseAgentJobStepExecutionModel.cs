@@ -1,13 +1,12 @@
-﻿using Microsoft.Rest.Azure;
+﻿using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.Job.JobExecution;
+using Microsoft.Azure.Management.Sql;
+using Microsoft.Azure.Management.Sql.Models;
+using Microsoft.Rest.Azure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Azure.Management.Sql.Models;
-using Microsoft.Azure.Management.Sql;
 
-namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.Job.JobExecution
+namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     public class AzureSqlDatabaseAgentJobStepExecutionModel : AzureSqlDatabaseAgentJobExecutionBaseModel
     {
@@ -46,7 +45,20 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.Job.JobExecution
 
         private Func<string, string, string, string, Guid, string, IPage<Management.Sql.Models.JobExecution>> _targetsFunc { get; set; }
 
-        public virtual IPage<Management.Sql.Models.JobExecution> Targets =>
-            _targetsFunc(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.JobExecutionId.Value, this.StepName);
+        private IList<AzureSqlDatabaseAgentJobTargetExecutionModel> _targets;
+
+        public IList<AzureSqlDatabaseAgentJobTargetExecutionModel> Targets
+        {
+            get
+            {
+                if (_targets == null)
+                {
+                    IPage<Management.Sql.Models.JobExecution> targets = _targetsFunc(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.JobExecutionId.Value, this.StepName);
+                    _targets = targets.Select((targetExecution) => CreateJobTargetExecutionModel(targetExecution)).ToList();
+                    return _targets;
+                }
+                return _targets;
+            }
+        }
     }
 }

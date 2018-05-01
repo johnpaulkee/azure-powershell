@@ -438,9 +438,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             var param = new Management.Sql.Models.JobStep
             {
                 // Min params
-                TargetGroup = model.TargetGroup,
-                Credential = model.Credential,
-                Action = model.Action,
+                TargetGroup = model.TargetGroupName,
+                Credential = model.CredentialName,
+                Action = new JobStepAction
+                {
+                    Value = model.CommandText
+                },
                 // Max params
                 ExecutionOptions = model.ExecutionOptions,
                 Output = model.Output,
@@ -525,9 +528,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 AgentName = agentName,
                 JobName = jobName,
                 StepName = stepName,
-                TargetGroup = resp.TargetGroup,
-                Credential = resp.Credential,
-                Action = resp.Action,
+                TargetGroupName = resp.TargetGroup,
+                CredentialName = resp.Credential,
+                CommandText = resp.Action.Value,
                 ExecutionOptions = resp.ExecutionOptions,
                 Output = resp.Output,
                 ResourceId = resp.Id,

@@ -31,12 +31,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// <summary>
         /// The target group id
         /// </summary>
-        public string TargetGroup { get; set; }
+        public string TargetGroupName { get; set; }
 
         /// <summary>
         /// The credential id
         /// </summary>
-        public string Credential { get; set; }
+        public string CredentialName { get; set; }
 
         /// <summary>
         /// 
@@ -53,9 +53,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// </summary>
         public int? StepId;
 
-        /// <summary>
-        /// The script
-        /// </summary>
-        public JobStepAction Action { get; set; }
+        public string CommandText { get; set; }
     }
 }

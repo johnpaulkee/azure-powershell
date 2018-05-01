@@ -239,8 +239,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.JobName,
                 StepName = this.Name,
-                TargetGroup = targetGroupId,
-                Credential = credentialId,
+                TargetGroupName = targetGroupId,
+                CredentialName = credentialId,
                 ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
                 {
                     InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds,
@@ -249,12 +249,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier,
                     TimeoutSeconds = this.TimeoutSeconds
                 },
-                Action = new Management.Sql.Models.JobStepAction
-                {
-                    Source = "Inline",
-                    Type = "TSql",
-                    Value = this.CommandText
-                },
+                CommandText = this.CommandText
             };
 
             Management.Sql.Models.JobStepOutput output = CreateJobStepOutputModel();

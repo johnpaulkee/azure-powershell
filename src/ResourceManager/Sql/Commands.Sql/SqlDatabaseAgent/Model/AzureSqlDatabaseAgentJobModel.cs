@@ -12,9 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.Sql;
 using Microsoft.Azure.Management.Sql.Models;
-using Microsoft.Rest.Azure;
 using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
@@ -40,6 +38,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
             this.ScheduleType = resp.Schedule.Type;
             this.Enabled = resp.Schedule.Enabled;
             this.Interval = resp.Schedule.Interval;
+            this.Type = resp.Type;
         }
 
         /// <summary>

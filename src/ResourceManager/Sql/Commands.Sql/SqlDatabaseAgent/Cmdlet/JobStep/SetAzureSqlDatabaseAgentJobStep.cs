@@ -440,8 +440,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.JobName,
                 StepName = this.Name,
-                TargetGroup = this.TargetGroupName != null ? CreateTargetGroupId(this.TargetGroupName) : model.TargetGroup,
-                Credential = this.CredentialName != null ? CreateCredentialId(this.CredentialName) : model.Credential,
+                TargetGroupName = this.TargetGroupName != null ? CreateTargetGroupId(this.TargetGroupName) : model.TargetGroupName,
+                CredentialName = this.CredentialName != null ? CreateCredentialId(this.CredentialName) : model.CredentialName,
                 ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
                 {
                     InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds != null ? this.InitialRetryIntervalSeconds : model.ExecutionOptions.InitialRetryIntervalSeconds,
@@ -450,10 +450,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier != null ? this.RetryIntervalBackoffMultiplier : model.ExecutionOptions.RetryIntervalBackoffMultiplier,
                     TimeoutSeconds = this.TimeoutSeconds != null ? this.TimeoutSeconds : model.ExecutionOptions.TimeoutSeconds
                 },
-                Action = new Management.Sql.Models.JobStepAction
-                {
-                    Value = this.CommandText != null ? this.CommandText : model.Action.Value
-                },
+                CommandText = this.CommandText != null ? this.CommandText : model.CommandText,
                 StepId = this.StepId != null ? this.StepId : model.StepId
             };
 

@@ -6,8 +6,6 @@ using Microsoft.Rest.Azure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
@@ -15,22 +13,24 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
     {
         public AzureSqlDatabaseAgentJobExecutionModel() { }
 
-        protected SqlManagementClient Client { get; private set; }
+
+        private IList<AzureSqlDatabaseAgentJobStepExecutionModel> _steps;
 
         public virtual IList<AzureSqlDatabaseAgentJobStepExecutionModel> Steps
         {
             get
             {
-                IPage<JobExecution> steps = _stepsFunc(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.JobExecutionId.Value);
-                return steps.Select((stepExecution) => CreateJobStepExecutionModel(stepExecution)).ToList();
+                if (_steps == null)
+                {
+                    IPage<JobExecution> steps = _stepsFunc(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.JobExecutionId.Value);
+                    _steps = steps.Select((stepExecution) => CreateJobStepExecutionModel(stepExecution)).ToList();
+                    return _steps;
+                }
+                return _steps;
             }
         }
 
         private Func<string, string, string, string, Guid, IPage<JobExecution>> _stepsFunc { get; set; }
-
-        public IPage<JobExecution> Targets => _targetsFunc(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.JobExecutionId.Value);
-
-        private Func<string, string, string, string, Guid, IPage<JobExecution>> _targetsFunc { get; set; }
 
         public AzureSqlDatabaseAgentJobExecutionModel(
             string resourceGroupName,
@@ -62,19 +62,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
             this.Client = client;
 
             _stepsFunc = (rg, s, a, j, je) => client.JobStepExecutions.ListByJobExecution(rg, s, a, j, je);
-            _targetsFunc = (rg, s, a, j, je) => client.JobTargetExecutions.ListByJobExecution(rg, s, a, j, je);
-        }
-
-        public AzureSqlDatabaseAgentJobStepExecutionModel CreateJobStepExecutionModel(
-            JobExecution stepExecution)
-        {
-            return new AzureSqlDatabaseAgentJobStepExecutionModel(
-                this.ResourceGroupName,
-                this.ServerName,
-                this.AgentName,
-                this.JobName,
-                stepExecution,
-                this.Client);
         }
     }
 }

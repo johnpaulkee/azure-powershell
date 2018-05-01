@@ -49,8 +49,7 @@ namespace Microsoft.Azure.Commands.Sql.Common
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "The Agent Server Name")]
-        [Alias("AgentServerName")]
+            HelpMessage = "The Server Name")]
         [ValidateNotNullOrEmpty]
         public virtual string ServerName { get; set; }
 
