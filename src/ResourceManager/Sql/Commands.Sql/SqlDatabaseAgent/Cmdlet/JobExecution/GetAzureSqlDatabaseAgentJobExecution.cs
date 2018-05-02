@@ -15,6 +15,7 @@
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
@@ -125,7 +126,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             ParameterSetName = ResourceIdGetRootJobExecution,
             Position = 1,
             HelpMessage = "The job object")]
-        public string JobName { get; set; }
+        public override string JobName { get; set; }
 
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
@@ -242,7 +243,24 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             HelpMessage = "Flag to filter by active executions.")]
         public SwitchParameter Active { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "Filter count of executions")]
+        [Parameter(ParameterSetName = ListByAgent,
+            Mandatory = false,
+            HelpMessage = "Flag to filter by active executions.")]
+        [Parameter(ParameterSetName = ListByJob,
+            Mandatory = false,
+            HelpMessage = "Flag to filter by active executions.")]
+        [Parameter(ParameterSetName = InputObjectListByAgent,
+            Mandatory = false,
+            HelpMessage = "Flag to filter by active executions.")]
+        [Parameter(ParameterSetName = InputObjectListByJob,
+            Mandatory = false,
+            HelpMessage = "Flag to filter by active executions.")]
+        [Parameter(ParameterSetName = ResourceIdListByAgent,
+            Mandatory = false,
+            HelpMessage = "Flag to filter by active executions.")]
+        [Parameter(ParameterSetName = ResourceIdListByJob,
+            Mandatory = false,
+            HelpMessage = "Flag to filter by active executions.")]
         public int? Count { get; set; }
 
         /// <summary>
@@ -267,7 +285,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "The job object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent's Control Database Object
@@ -291,7 +309,36 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "The job resource id")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        public override string ResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectListByAgent:
+                case InputObjectListByJob:
+                case InputObjectGetRootJobExecution:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.ServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    break;
+                case ResourceIdListByAgent:
+                case ResourceIdListByJob:
+                case ResourceIdGetRootJobExecution:
+                    var resourceInfo = new ResourceIdentifier(ResourceId);
+                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
+                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
+                    this.AgentName = resourceInfo.ResourceName;
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets a job from the service.

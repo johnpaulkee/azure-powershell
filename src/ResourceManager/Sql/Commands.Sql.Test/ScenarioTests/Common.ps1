@@ -618,16 +618,8 @@ function Create-JobForTest ($a, $enabled = $false)
 {
     $jobName = Get-JobName
     
-    if ($enabled)
-    {
-        $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
-        return $job    
-    }
-    else 
-    {
-        $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName -Enabled
-        return $job        
-    }
+    $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
+    return $job
 }
 
 <#

@@ -20,7 +20,7 @@
 #>
 function Test-CreateJobStep
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jppsserver -Name jpagent
+    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
     $jc1 = Create-JobCredentialForTest $a1
     $tg1 = Create-TargetGroupForTest $a1
     $j1 = Create-JobForTest $a1
@@ -53,7 +53,7 @@ function Test-CreateJobStep
 #>
 function Test-CreateJobStepWithInputObject
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jppsserver -Name jpagent
+    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
     $jc1 = Create-JobCredentialForTest $a1
     $tg1 = Create-TargetGroupForTest $a1
     $j1 = Create-JobForTest $a1
@@ -86,7 +86,7 @@ function Test-CreateJobStepWithInputObject
 #>
 function Test-CreateJobStepWithResourceId
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jppsserver -Name jpagent
+    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
     $jc1 = Create-JobCredentialForTest $a1
     $tg1 = Create-TargetGroupForTest $a1
     $j1 = Create-JobForTest $a1
@@ -113,12 +113,12 @@ function Test-CreateJobStepWithResourceId
 
 function Test-RemoveJobStep
 {
-    Remove-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jppsserver -AgentName jpagent -Name job1
+    Remove-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name job1
 }
 
 function Test-UpdateJobStep
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jppsserver -Name jpagent
+    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
     $jc1 = Create-JobCredentialForTest $a1
     $jc2 = Create-JobCredentialForTest $a1
     $tg1 = Create-TargetGroupForTest $a1
@@ -131,19 +131,17 @@ function Test-UpdateJobStep
     # Test create job step with output object
     $js1 = Create-JobStepForTest $j1 $tg1 $jc1 $script1 $true
 
-    # Test updating existing param at a time
-
     # Test update target group name
-    $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -TargetGroupName $tg2.TargetGroupName
-    Assert-AreEqual $true $resp.TargetGroup.Contains($tg2.TargetGroupName)
+    #$resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -TargetGroupName $tg2.TargetGroupName
+    #Assert-AreEqual $resp.TargetGroupName $tg2.TargetGroupName
 
     # Test update credential name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -CredentialName $jc2.CredentialName
-    Assert-AreEqual $true $resp.Credential.Contains($jc2.CredentialName)
+    Assert-AreEqual $resp.CredentialName $jc2.CredentialName
 
     # Test update script
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -CommandText $script2
-    Assert-AreEqual $resp.Action.Value $script2
+    Assert-AreEqual $resp.CommandText $script2
 
     # Test updating output target
     $output = Create-JobStepOutputForTest $jc2
@@ -167,7 +165,7 @@ function Test-UpdateJobStep
     Assert-AreEqual $resp.Output.TableName $output.TableName
 
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputCredentialName $output.CredentialName
-    Assert-AreEqual $true $resp.Output.Credential.Contains($output.CredentialName)
+    Assert-AreEqual $resp.Output.Credential $output.CredentialName
 
     # Remove output object
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -RemoveOutput

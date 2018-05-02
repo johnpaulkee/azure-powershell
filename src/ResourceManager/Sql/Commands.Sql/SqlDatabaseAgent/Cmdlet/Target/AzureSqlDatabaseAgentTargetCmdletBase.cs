@@ -24,17 +24,17 @@ using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlDatabaseAgentCmdletBase<IEnumerable<JobTarget>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : AzureSqlDatabaseAgentCmdletBase<List<AzureSqlDatabaseAgentTargetModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// The target in question
         /// </summary>
-        protected JobTarget Target;
+        protected AzureSqlDatabaseAgentTargetModel Target;
 
         /// <summary>
         /// The existing targets
         /// </summary>
-        protected List<JobTarget> ExistingTargets;
+        protected List<AzureSqlDatabaseAgentTargetModel> ExistingTargets;
 
         /// <summary>
         /// Flag to determine whether an update to targets in target group is needed in this powershell session
@@ -63,27 +63,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string ResourceIdSqlShardMapSet = "Sql Shard Map ResourceId Parameter Set";
 
         /// <summary>
-        /// Gets or sets the target group input object.
-        /// </summary>
-        [Parameter(ParameterSetName = InputObjectSqlDatabaseSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The SQL Database Agent Target Group Object")]
-        [Parameter(ParameterSetName = InputObjectSqlServerOrElasticPoolSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The SQL Database Agent Target Group Object")]
-        [Parameter(ParameterSetName = InputObjectSqlShardMapSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The SQL Database Agent Target Group Object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
-
-        /// <summary>
 		/// Gets or sets the target group resource id.
 		/// </summary>
 		[Parameter(ParameterSetName = ResourceIdSqlDatabaseSet,
@@ -102,7 +81,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The resource id of the target group")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        public virtual string ResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the resource group name.
@@ -365,43 +344,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Entry point for the cmdlet
-        /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectSqlDatabaseSet:
-                case InputObjectSqlServerOrElasticPoolSet:
-                case InputObjectSqlShardMapSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.AgentServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.TargetGroupName = InputObject.TargetGroupName;
-                    break;
-                case ResourceIdSqlDatabaseSet:
-                case ResourceIdSqlServerOrElasticPoolSet:
-                case ResourceIdSqlShardMapSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.AgentServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.TargetGroupName = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
-            }
-
-            base.ExecuteCmdlet();
-        }
-
-        /// <summary>
         /// Gets the list of existing targets in the target group.
         /// </summary>
         /// <returns>The list of existing targets</returns>
-        protected override IEnumerable<JobTarget> GetEntity()
+        protected override List<AzureSqlDatabaseAgentTargetModel> GetEntity()
         {
-            IList<JobTarget> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Members;
+            List<AzureSqlDatabaseAgentTargetModel> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Targets.ToList();
             return existingTargets;
         }
 
@@ -410,16 +358,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="existingTargets">The list of existing targets in the target group</param>
         /// <returns>An updated list of targets.</returns>
-        protected override IEnumerable<JobTarget> ApplyUserInputToModel(IEnumerable<JobTarget> existingTargets)
+        protected override List<AzureSqlDatabaseAgentTargetModel> ApplyUserInputToModel(List<AzureSqlDatabaseAgentTargetModel> existingTargets)
         {
-            this.Target = CreateJobTargetModel();
-            this.ExistingTargets = existingTargets.ToList();
+            this.Target = new AzureSqlDatabaseAgentTargetModel
+            {
+                TargetGroupName = this.TargetGroupName,
+                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
+                    JobTargetGroupMembershipType.Exclude :
+                    JobTargetGroupMembershipType.Include,
+                TargetType = GetTargetType(),
+                TargetServerName = MyInvocation.BoundParameters.ContainsKey("ServerName") ? this.ServerName: null,
+                TargetDatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
+                TargetElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
+                TargetShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
+                RefreshCredentialName = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.RefreshCredentialName) : null,
+            };
+
+            this.ExistingTargets = existingTargets;
             this.NeedsUpdate = UpdateExistingTargets();
 
             // If we don't need to send an update, send back an empty list.
             if (!this.NeedsUpdate)
             {
-                return new List<JobTarget>();
+                return new List<AzureSqlDatabaseAgentTargetModel>();
             }
 
             return this.ExistingTargets;
@@ -430,7 +391,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="updatedTargets">The list of updated targets</param>
         /// <returns>The target that was created/updated or null if nothing changed.</returns>
-        protected override IEnumerable<JobTarget> PersistChanges(IEnumerable<JobTarget> updatedTargets)
+        protected override List<AzureSqlDatabaseAgentTargetModel> PersistChanges(List<AzureSqlDatabaseAgentTargetModel> updatedTargets)
         {
             // If we don't need to update the target group member's return null.
             if (!this.NeedsUpdate)
@@ -445,32 +406,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 ServerName = this.AgentServerName,
                 AgentName = this.AgentName,
                 TargetGroupName = this.TargetGroupName,
-                Members = updatedTargets.ToList()
+                Targets = updatedTargets
             };
 
-            var resp = ModelAdapter.UpsertTargetGroup(model).Members.ToList();
+            var resp = ModelAdapter.UpsertTargetGroup(model).Targets.ToList();
 
-            return new List<JobTarget> { this.Target };
-        }
-
-        /// <summary>
-        /// Helper to create a job target model from user input.
-        /// </summary>
-        /// <returns>Job target model</returns>
-        protected JobTarget CreateJobTargetModel()
-        {
-            return new JobTarget
-            {
-                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
-                    JobTargetGroupMembershipType.Exclude :
-                    JobTargetGroupMembershipType.Include,
-                Type = GetTargetType(),
-                ServerName = this.ServerName,
-                DatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
-                ElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
-                ShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
-                RefreshCredential = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.RefreshCredentialName) : null,
-            };
+            return new List<AzureSqlDatabaseAgentTargetModel> { this.Target };
         }
 
         /// <summary>
@@ -504,14 +445,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             for (int i = 0; i < this.ExistingTargets.Count; i++)
             {
-                JobTarget t = this.ExistingTargets[i];
+                AzureSqlDatabaseAgentTargetModel t = this.ExistingTargets[i];
 
-                if (t.ServerName == this.Target.ServerName &&
-                    t.DatabaseName == this.Target.DatabaseName &&
-                    t.ElasticPoolName == this.Target.ElasticPoolName &&
-                    t.ShardMapName == this.Target.ShardMapName &&
-                    t.Type == this.Target.Type &&
-                    t.RefreshCredential == this.Target.RefreshCredential)
+                if (t.TargetServerName == this.Target.TargetServerName &&
+                    t.TargetDatabaseName == this.Target.TargetDatabaseName &&
+                    t.TargetElasticPoolName == this.Target.TargetElasticPoolName &&
+                    t.TargetShardMapName == this.Target.TargetShardMapName &&
+                    t.TargetType == this.Target.TargetType &&
+                    t.RefreshCredentialName == this.Target.RefreshCredentialName)
                 {
                     return i;
                 }

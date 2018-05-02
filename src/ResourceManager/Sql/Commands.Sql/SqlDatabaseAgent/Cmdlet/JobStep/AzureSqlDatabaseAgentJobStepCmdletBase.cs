@@ -80,25 +80,45 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <param name="outputSchemaName"></param>
         /// <param name="outputTableName"></param>
         /// <returns></returns>
-        protected Management.Sql.Models.JobStepOutput CreateJobStepOutputModel(
-            Guid? outputSubscriptionId = null,
-            string outputResourceGroupName = null,
-            string outputServerName = null,
-            string outputDatabaseName = null,
-            string outputCredential = null,
-            string outputSchemaName = null,
-            string outputTableName = null)
+        protected Management.Sql.Models.JobStepOutput CreateOrUpdateJobStepOutputModel(
+            Management.Sql.Models.JobStepOutput existingOutput = null)
         {
-            return new Management.Sql.Models.JobStepOutput
+            Management.Sql.Models.JobStepOutput model;
+
+            // Create new output model
+            if (existingOutput == null)
             {
-                SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputSubscriptionId) : outputSubscriptionId,
-                ResourceGroupName = this.OutputResourceGroupName != null ? this.OutputResourceGroupName : outputResourceGroupName,
-                ServerName = this.OutputServerName != null ? this.OutputServerName : outputServerName,
-                DatabaseName = this.OutputDatabaseName != null ? this.OutputDatabaseName : outputDatabaseName,
-                Credential = this.OutputCredentialName != null ? CreateCredentialId(this.OutputCredentialName) : outputCredential,
-                SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : outputSchemaName,
-                TableName = this.OutputTableName != null ? this.OutputTableName : outputTableName
-            };
+                model = new Management.Sql.Models.JobStepOutput
+                {
+                    SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputSubscriptionId) : (Guid?) null,
+                    ResourceGroupName = this.OutputResourceGroupName != null ? this.OutputResourceGroupName : null,
+                    ServerName = this.OutputServerName != null ? this.OutputServerName : null,
+                    DatabaseName = this.OutputDatabaseName != null ? this.OutputDatabaseName : null,
+                    Credential = this.OutputCredentialName != null ?
+                        CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
+                        null,
+                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : null,
+                    TableName = this.OutputTableName != null ? this.OutputTableName : null
+                };
+            }
+            else
+            {
+                // Update existing output model if necessary
+                model = new Management.Sql.Models.JobStepOutput
+                {
+                    SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputSubscriptionId) : existingOutput.SubscriptionId,
+                    ResourceGroupName = this.OutputResourceGroupName != null ? this.OutputResourceGroupName : existingOutput.ResourceGroupName,
+                    ServerName = this.OutputServerName != null ? this.OutputServerName : existingOutput.ServerName,
+                    DatabaseName = this.OutputDatabaseName != null ? this.OutputDatabaseName : existingOutput.DatabaseName,
+                    Credential = this.OutputCredentialName != null ?
+                        CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
+                        CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, existingOutput.Credential),
+                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : existingOutput.SchemaName,
+                    TableName = this.OutputTableName != null ? this.OutputTableName : existingOutput.TableName
+                };
+            }
+
+            return model;
         }
     }
 }

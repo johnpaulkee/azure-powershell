@@ -71,7 +71,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
         /// </summary>
         /// <param name="targetGroupName"></param>
         /// <returns></returns>
-        protected string CreateTargetGroupId(string targetGroupName)
+        protected string CreateTargetGroupId(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string targetGroupName)
         {
             if (targetGroupName == null)
             {
@@ -80,9 +84,9 @@ namespace Microsoft.Azure.Commands.Sql.Common
 
             return string.Format(targetGroupResourceIdTemplate,
                             DefaultContext.Subscription.Id,
-                            this.ResourceGroupName,
-                            this.ServerName,
-                            this.AgentName,
+                            resourceGroupName,
+                            serverName,
+                            agentName,
                             targetGroupName);
         }
 
@@ -90,7 +94,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
 
         #region Credential Helpers
 
-        protected string CreateCredentialId(string credentialName)
+        protected string CreateCredentialId(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string credentialName)
         {
             if (credentialName == null)
             {
@@ -99,9 +107,9 @@ namespace Microsoft.Azure.Commands.Sql.Common
 
             return string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
                             DefaultContext.Subscription.Id,
-                            this.ResourceGroupName,
-                            this.ServerName,
-                            this.AgentName,
+                            resourceGroupName,
+                            serverName,
+                            agentName,
                             credentialName);
         }
 

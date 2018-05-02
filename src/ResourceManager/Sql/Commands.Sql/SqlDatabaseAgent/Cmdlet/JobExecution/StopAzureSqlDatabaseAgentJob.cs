@@ -41,36 +41,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The Agent Control Database Object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Agent's Control Database Resource Id
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The Agent Control Database Resource Id")]
-        [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the agent name
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
-        [ValidateNotNullOrEmpty]
-        public string JobName { get; set; }
+        public AzureSqlDatabaseAgentJobExecutionModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job execution id to cancel
         /// </summary>
         [Parameter(
             Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job execution id.")]
         [ValidateNotNullOrEmpty]
@@ -87,12 +65,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
+                    this.JobName = InputObject.JobName;
+                    this.JobExecutionId = InputObject.JobExecutionId.Value.ToString();
                     break;
                 case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.AgentName = resourceInfo.ResourceName;
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.JobName = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;

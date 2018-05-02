@@ -79,7 +79,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
-                    this.Name = InputObject.AgentName;
+                    this.Name = InputObject.JobName;
                     break;
                 case ResourceIdParameterSet:
                     string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);

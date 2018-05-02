@@ -12,7 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System;
 using System.Management.Automation;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Sql.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
@@ -27,6 +29,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class AddAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
         /// <summary>
+        /// Gets or sets the target group input object.
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectSqlDatabaseSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Target Group Object")]
+        [Parameter(ParameterSetName = InputObjectSqlServerOrElasticPoolSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Target Group Object")]
+        [Parameter(ParameterSetName = InputObjectSqlShardMapSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Target Group Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
+
+        /// <summary>
         /// Gets or sets the flag indicating that we want to exclude this target
         /// </summary>
         [Parameter(Mandatory = false,
@@ -34,6 +57,37 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "Excludes a target.")]
         [ValidateNotNullOrEmpty]
         public override SwitchParameter Exclude { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectSqlDatabaseSet:
+                case InputObjectSqlServerOrElasticPoolSet:
+                case InputObjectSqlShardMapSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.AgentServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    this.TargetGroupName = InputObject.TargetGroupName;
+                    break;
+                case ResourceIdSqlDatabaseSet:
+                case ResourceIdSqlServerOrElasticPoolSet:
+                case ResourceIdSqlShardMapSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.AgentServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.TargetGroupName = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Updates list of existing targets during add target scenario

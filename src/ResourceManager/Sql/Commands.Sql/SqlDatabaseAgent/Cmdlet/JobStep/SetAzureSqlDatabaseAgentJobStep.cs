@@ -24,28 +24,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJobStep",
         SupportsShouldProcess = true,
-        DefaultParameterSetName = AddOutputInputObjectParameterSet)]
+        DefaultParameterSetName = AddOutputDefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
     public class SetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
-        /// <summary>
-        /// Gets or sets the job object
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = RemoveOutputInputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
-
         [Parameter(
             Mandatory = true,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -109,11 +91,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 3,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The step name")]
         [Parameter(
             Mandatory = true,
             Position = 3,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = RemoveOutputDefaultParameterSet,
             HelpMessage = "The step name")]
         public override string JobName { get; set; }
@@ -121,10 +105,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 4,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = AddOutputDefaultParameterSet)]
         [Parameter(
             Mandatory = true,
             Position = 4,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = RemoveOutputDefaultParameterSet,
             HelpMessage = "The step name")]
         [Alias("StepName")]
@@ -163,7 +149,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The command text")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The command text")]
         [Parameter(
@@ -177,7 +163,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output subscription id")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output subscription id")]
         [Parameter(
@@ -191,7 +177,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output resource group name")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output resource group name")]
         [Parameter(
@@ -205,7 +191,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output server name")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output server name")]
         [Parameter(
@@ -219,7 +205,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output database name")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output database name")]
         [Parameter(
@@ -233,7 +219,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output schema name")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output schema name")]
         [Parameter(
@@ -247,7 +233,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output table name")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output table name")]
         [Parameter(
@@ -261,7 +247,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The output credential name")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The output credential name")]
         [Parameter(
@@ -275,7 +261,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = RemoveOutputDefaultParameterSet,
             HelpMessage = "The command text")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = RemoveOutputInputObjectParameterSet,
             HelpMessage = "The command text")]
         [Parameter(
@@ -292,7 +278,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The timeout seconds")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The timeout seconds")]
         [Parameter(
@@ -306,7 +292,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The retry attempts")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The retry attempts")]
         [Parameter(
@@ -320,7 +306,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The initial retry interval seconds")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The initial retry interval seconds")]
         [Parameter(
@@ -334,7 +320,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The maximum retry interval seconds")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The maximum retry interval seconds")]
         [Parameter(
@@ -348,7 +334,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The retry interval backoff multiplier")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The retry interval backoff multiplier")]
         [Parameter(
@@ -362,7 +348,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = AddOutputDefaultParameterSet,
             HelpMessage = "The step id")]
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
             HelpMessage = "The step id")]
         [Parameter(
@@ -372,20 +358,40 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public int? StepId { get; set; }
 
         /// <summary>
+        /// Gets or sets the job object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AddOutputInputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job object")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = RemoveOutputInputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
+
+        /// <summary>
         /// Cmdlet execution starts here
         /// </summary>
         public override void ExecuteCmdlet()
         {
             switch (ParameterSetName)
             {
-                case InputObjectParameterSet:
+                case AddOutputInputObjectParameterSet:
+                case RemoveOutputInputObjectParameterSet:
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
                     this.JobName = InputObject.JobName;
                     this.Name = InputObject.StepName;
                     break;
-                case ResourceIdParameterSet:
+                case AddOutputResourceIdParameterSet:
+                case RemoveOutputResourceIdParameterSet:
                     string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     this.ResourceGroupName = tokens[3];
                     this.ServerName = tokens[7];
@@ -433,6 +439,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
+            Management.Sql.Models.JobStepOutput output =
+                this.RemoveOutput.IsPresent ? null :
+                    (model.Output == null) ?
+                        CreateOrUpdateJobStepOutputModel() :                // create new output model
+                        CreateOrUpdateJobStepOutputModel(model.Output);     // update existing output model
+
             AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
             {
                 ResourceGroupName = this.ResourceGroupName,
@@ -440,8 +452,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.JobName,
                 StepName = this.Name,
-                TargetGroupName = this.TargetGroupName != null ? CreateTargetGroupId(this.TargetGroupName) : model.TargetGroupName,
-                CredentialName = this.CredentialName != null ? CreateCredentialId(this.CredentialName) : model.CredentialName,
+                TargetGroupName = this.TargetGroupName != null ? 
+                    CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName) : 
+                    CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, model.TargetGroupName),
+                CredentialName = this.CredentialName != null ? 
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName) : 
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, model.CredentialName),
                 ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
                 {
                     InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds != null ? this.InitialRetryIntervalSeconds : model.ExecutionOptions.InitialRetryIntervalSeconds,
@@ -451,34 +467,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     TimeoutSeconds = this.TimeoutSeconds != null ? this.TimeoutSeconds : model.ExecutionOptions.TimeoutSeconds
                 },
                 CommandText = this.CommandText != null ? this.CommandText : model.CommandText,
-                StepId = this.StepId != null ? this.StepId : model.StepId
+                StepId = this.StepId != null ? this.StepId : model.StepId,
+                Output = output != null && output.ServerName != null ? output : null
             };
-
-            // If remove output is not present, then we will update output details if necessary, otherwise use existing output model.
-            // If remove output is present, then model will exclude output details and update will clear it.
-            if (!this.RemoveOutput.IsPresent)
-            {
-                Management.Sql.Models.JobStepOutput output;
-                bool existingOutput = model.Output != null;
-
-                if (existingOutput)
-                {
-                    output = CreateJobStepOutputModel(
-                        outputSubscriptionId: model.Output.SubscriptionId,
-                        outputResourceGroupName: model.Output.ResourceGroupName,
-                        outputServerName: model.Output.ServerName,
-                        outputDatabaseName: model.Output.DatabaseName,
-                        outputSchemaName: model.Output.SchemaName,
-                        outputCredential: model.Output.Credential,
-                        outputTableName: model.Output.TableName);
-                }
-                else
-                {
-                    output = CreateJobStepOutputModel();
-                }
-
-                updatedModel.Output = output;
-            }
 
             return updatedModel;
         }

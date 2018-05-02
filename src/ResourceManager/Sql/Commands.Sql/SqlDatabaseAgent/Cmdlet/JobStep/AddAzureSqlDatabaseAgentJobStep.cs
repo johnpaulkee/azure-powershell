@@ -229,8 +229,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
-            string targetGroupId = CreateTargetGroupId(this.TargetGroupName);
-            string credentialId = CreateCredentialId(this.CredentialName);
+            string targetGroupId = CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
+            string credentialId = CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
+            Management.Sql.Models.JobStepOutput output = CreateOrUpdateJobStepOutputModel();
 
             AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
             {
@@ -249,15 +250,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier,
                     TimeoutSeconds = this.TimeoutSeconds
                 },
-                CommandText = this.CommandText
+                CommandText = this.CommandText,
+                Output = output.ServerName != null ? output : null
             };
-
-            Management.Sql.Models.JobStepOutput output = CreateJobStepOutputModel();
-
-            if (output.ServerName != null)
-            {
-                updatedModel.Output = output;
-            }
 
             return updatedModel;
         }

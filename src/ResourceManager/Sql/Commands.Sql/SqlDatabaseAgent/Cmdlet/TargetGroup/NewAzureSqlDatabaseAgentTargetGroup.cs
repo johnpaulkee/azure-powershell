@@ -141,7 +141,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 ServerName = this.ServerName,
                 AgentName = this.AgentName,
                 TargetGroupName = this.Name,
-                Members = new List<Management.Sql.Models.JobTarget> { }, // We create an empty list of targets on creation of new target group
+                Targets = new List<AzureSqlDatabaseAgentTargetModel> { }, // We create an empty list of targets on creation of new target group
             };
 
             return targetGroup;

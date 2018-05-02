@@ -18,6 +18,7 @@ using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -30,41 +31,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
     public class StartAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
-        /// <summary>
-        /// Gets or sets the Agent's Control Database Object
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The Agent Control Database Object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Agent's Control Database Resource Id
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The Agent Control Database Resource Id")]
-        [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the agent name
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
-        [ValidateNotNullOrEmpty]
-        public string JobName { get; set; }
-
         /// <summary>
         /// Gets or sets the switch parameter to indicate whether customer wants to poll completion of job
         /// or if not set, to return job execution id immediately upon creation.
@@ -81,6 +47,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public SwitchParameter AsJob { get; set; }
 
         /// <summary>
+        /// Gets or sets the Agent's Control Database Object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The Agent Control Database Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+
+        /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
@@ -91,12 +69,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
+                    this.JobName = InputObject.JobName;
                     break;
                 case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.AgentName = resourceInfo.ResourceName;
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.ServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.JobName = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;

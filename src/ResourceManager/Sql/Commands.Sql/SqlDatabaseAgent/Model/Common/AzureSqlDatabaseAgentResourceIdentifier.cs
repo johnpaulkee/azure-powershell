@@ -21,8 +21,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 
         public string JobExecutionId { get; set; }
 
-
-
         public AzureSqlDatabaseAgentResourceIdentifier(string resourceId)
         {
             // TODO: make this work for agent, target group, credential, job, job step, job execution, step execution, target execution

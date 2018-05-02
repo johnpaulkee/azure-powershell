@@ -27,9 +27,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJob",
         SupportsShouldProcess = true,
-        DefaultParameterSetName = DefaultMinuteParameterSet)]
+        DefaultParameterSetName = DefaultParameterSet)]
     public class SetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOnceParameterSet,
@@ -70,6 +76,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
         [Parameter(
             Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [Parameter(
+            Mandatory = true,
             ParameterSetName = DefaultOnceParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
@@ -106,6 +118,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The server name")]
         public override string ServerName { get; set; }
 
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOnceParameterSet,
@@ -146,6 +164,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
         [Parameter(
             Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Parameter(
+            Mandatory = true,
             ParameterSetName = DefaultOnceParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
@@ -179,78 +203,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = DefaultMonthParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectMinuteParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMinuteParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
             HelpMessage = "The job name")]
         [Alias("JobName")]
         public string Name { get; set; }
@@ -407,6 +359,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent input object")]
+        [Parameter(
+            Mandatory = true,
             ParameterSetName = InputObjectOnceParameterSet,
             ValueFromPipeline = true,
             Position = 0,
@@ -442,11 +400,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the agent resource id
         /// </summary>
+        [Parameter(
+        Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdOnceParameterSet,
@@ -493,6 +457,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             switch (ParameterSetName)
             {
+                case InputObjectParameterSet:
                 case InputObjectOnceParameterSet:
                 case InputObjectMinuteParameterSet:
                 case InputObjectHourParameterSet:
@@ -502,7 +467,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     this.ResourceGroupName = InputObject.ResourceGroupName;
                     this.ServerName = InputObject.ServerName;
                     this.AgentName = InputObject.AgentName;
+                    this.Name = InputObject.JobName;
                     break;
+                case ResourceIdParameterSet:
                 case ResourceIdOnceParameterSet:
                 case ResourceIdMinuteParameterSet:
                 case ResourceIdHourParameterSet:
@@ -512,7 +479,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     this.ResourceGroupName = tokens[3];
                     this.ServerName = tokens[7];
-                    this.AgentName = tokens[tokens.Length - 1];
+                    this.AgentName = tokens[9];
+                    this.Name = tokens[tokens.Length - 1];
                     break;
                 default:
                     break;
@@ -559,19 +527,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 ServerName = this.ServerName,
                 AgentName = this.AgentName,
                 JobName = this.Name,
-                Description = this.Description,
-                Enabled = this.Enabled.IsPresent
+                Description = this.Description != null ? this.Description : model.Description,
+                Enabled = this.Enabled.IsPresent,
+                StartTime = this.StartTime != null ? this.StartTime : model.StartTime,
+                EndTime = this.EndTime != null ? this.EndTime : model.EndTime
             };
-
-            if (this.StartTime != null)
-            {
-                newEntity.StartTime = this.StartTime;
-            }
-
-            if (this.EndTime != null)
-            {
-                newEntity.EndTime = this.EndTime;
-            }
 
             // Check what flags are set
             bool onceIsPresent = this.Once.IsPresent;

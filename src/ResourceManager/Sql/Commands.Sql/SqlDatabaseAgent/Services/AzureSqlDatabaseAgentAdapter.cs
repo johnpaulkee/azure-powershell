@@ -20,6 +20,7 @@ using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Azure.Management.Sql.Models;
 using Microsoft.WindowsAzure.Commands.Common;
 using System;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -271,13 +272,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <returns>The upserted Azure SQL Database Agent</returns>
         public AzureSqlDatabaseAgentTargetGroupModel UpsertTargetGroup(AzureSqlDatabaseAgentTargetGroupModel model)
         {
-            var param = new Management.Sql.Models.JobTargetGroup
+            var param = new JobTargetGroup
             {
-                Members = model.Members,
+                Members = model.Targets.Select((target) => CreateTargetModel(target)).ToList()
             };
 
             var resp = Communicator.CreateOrUpdateTargetGroup(model.ResourceGroupName, model.ServerName, model.AgentName, model.TargetGroupName, param);
             return CreateTargetGroupModelFromResponse(model.ResourceGroupName, model.ServerName, model.AgentName, resp);
+        }
+
+        public JobTarget CreateTargetModel(AzureSqlDatabaseAgentTargetModel target)
+        {
+            return new JobTarget
+            {
+                MembershipType = target.MembershipType,
+                DatabaseName = target.TargetDatabaseName,
+                ServerName = target.TargetServerName,
+                ElasticPoolName = target.TargetElasticPoolName,
+                RefreshCredential = target.RefreshCredentialName,
+                ShardMapName = target.TargetShardMapName,
+                Type = target.TargetType
+            };
         }
 
         /// <summary>
@@ -324,7 +339,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server the agent is in</param>
         /// <param name="resp">The management client server response to convert</param>
         /// <returns>The converted agent model</returns>
-        private static AzureSqlDatabaseAgentTargetGroupModel CreateTargetGroupModelFromResponse(string resourceGroupName, string serverName, string agentName, Management.Sql.Models.JobTargetGroup resp)
+        private AzureSqlDatabaseAgentTargetGroupModel CreateTargetGroupModelFromResponse(string resourceGroupName, string serverName, string agentName, Management.Sql.Models.JobTargetGroup resp)
         {
             AzureSqlDatabaseAgentTargetGroupModel targetGroup = new AzureSqlDatabaseAgentTargetGroupModel
             {
@@ -332,12 +347,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 ServerName = serverName,
                 AgentName = agentName,
                 TargetGroupName = resp.Name,
-                Members = resp.Members,
+                Targets = resp.Members.Select((target) => CreateTargetModel(resourceGroupName, serverName, agentName, resp.Name, target)).ToList(),
                 ResourceId = resp.Id,
                 Type = resp.Type
             };
 
             return targetGroup;
+        }
+
+        protected AzureSqlDatabaseAgentTargetModel CreateTargetModel(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string targetGroupName,
+            JobTarget target)
+        {
+            return new AzureSqlDatabaseAgentTargetModel
+            {
+                TargetGroupName = targetGroupName,
+                MembershipType = target.MembershipType,
+                TargetType = target.Type,
+                RefreshCredentialName = target.RefreshCredential,
+                TargetServerName = target.ServerName,
+                TargetDatabaseName = target.DatabaseName,
+                TargetElasticPoolName = target.ElasticPoolName,
+                TargetShardMapName = target.ShardMapName,
+            };
         }
 
         #endregion
@@ -435,7 +470,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <returns>The upserted job step</returns>
         public AzureSqlDatabaseAgentJobStepModel UpsertJobStep(AzureSqlDatabaseAgentJobStepModel model)
         {
-            var param = new Management.Sql.Models.JobStep
+            var param = new JobStep
             {
                 // Min params
                 TargetGroup = model.TargetGroupName,
@@ -518,9 +553,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             string jobName,
             string stepName,
-            Management.Sql.Models.JobStep resp)
+            JobStep resp)
         {
-            // TODO: Update this to include response details
             AzureSqlDatabaseAgentJobStepModel jobStep = new AzureSqlDatabaseAgentJobStepModel
             {
                 ResourceGroupName = resourceGroupName,
@@ -528,11 +562,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 AgentName = agentName,
                 JobName = jobName,
                 StepName = stepName,
-                TargetGroupName = resp.TargetGroup,
-                CredentialName = resp.Credential,
+                TargetGroupName = new ResourceIdentifier(resp.TargetGroup).ResourceName,
+                CredentialName = new ResourceIdentifier(resp.Credential).ResourceName,
                 CommandText = resp.Action.Value,
                 ExecutionOptions = resp.ExecutionOptions,
-                Output = resp.Output,
+                Output = resp.Output != null ? new JobStepOutput
+                {
+                    ResourceGroupName = resp.Output.ResourceGroupName,
+                    SubscriptionId = resp.Output.SubscriptionId,
+                    Credential = new ResourceIdentifier(resp.Output.Credential).ResourceName,
+                    DatabaseName = resp.Output.DatabaseName,
+                    SchemaName = resp.Output.SchemaName,
+                    ServerName = resp.Output.ServerName,
+                    TableName = resp.Output.TableName,
+                    Type = resp.Output.Type
+                } : null,
                 ResourceId = resp.Id,
                 StepId = resp.StepId,
                 Type = resp.Type

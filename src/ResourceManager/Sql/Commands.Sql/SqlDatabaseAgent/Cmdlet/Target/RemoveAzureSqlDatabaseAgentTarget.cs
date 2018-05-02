@@ -12,6 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
@@ -29,6 +30,58 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         OutputType(typeof(JobTarget))]
     public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
     {
+        /// <summary>
+        /// Gets or sets the target group input object.
+        /// </summary>
+        [Parameter(ParameterSetName = InputObjectSqlDatabaseSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Target Group Object")]
+        [Parameter(ParameterSetName = InputObjectSqlServerOrElasticPoolSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Target Group Object")]
+        [Parameter(ParameterSetName = InputObjectSqlShardMapSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Target Group Object")]
+        [ValidateNotNullOrEmpty]
+        public AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            switch (ParameterSetName)
+            {
+                case InputObjectSqlDatabaseSet:
+                case InputObjectSqlServerOrElasticPoolSet:
+                case InputObjectSqlShardMapSet:
+                    this.ResourceGroupName = InputObject.ResourceGroupName;
+                    this.AgentServerName = InputObject.ServerName;
+                    this.AgentName = InputObject.AgentName;
+                    this.TargetGroupName = InputObject.TargetGroupName;
+                    break;
+                case ResourceIdSqlDatabaseSet:
+                case ResourceIdSqlServerOrElasticPoolSet:
+                case ResourceIdSqlShardMapSet:
+                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    this.ResourceGroupName = tokens[3];
+                    this.AgentServerName = tokens[7];
+                    this.AgentName = tokens[9];
+                    this.TargetGroupName = tokens[tokens.Length - 1];
+                    break;
+                default:
+                    break;
+            }
+
+            base.ExecuteCmdlet();
+        }
+
         /// <summary>
         /// Updates list of existing targets during remove target scenario
         /// There is 1 scenario where we will need to send an update to server

@@ -16,6 +16,7 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
+using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 
@@ -43,6 +44,31 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         protected const string ResourceIdListByAgent = "Resource Id ListByAgent Parameter Set";
         protected const string ResourceIdListByJob = "Resource Id ListByJob Parameter Set";
         protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
+
+
+
+        /// <summary>
+        /// Gets or sets the Agent's Control Database Resource Id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The Agent Control Database Resource Id")]
+        [ValidateNotNullOrEmpty]
+        public virtual string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the agent name
+        /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "SQL Database Agent Resource Group Name.")]
+        [ValidateNotNullOrEmpty]
+        public virtual string JobName { get; set; }
 
         /// <summary>
         /// Initialize the job execution adapter
