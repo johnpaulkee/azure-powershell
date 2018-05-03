@@ -19,6 +19,7 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -28,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsLifecycle.Stop, "AzureRmSqlDatabaseAgentJob",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
+    [OutputType(typeof(List<AzureSqlDatabaseAgentJobExecutionModel>))]
     public class StopAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
         /// <summary>
@@ -83,39 +84,47 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Check to see if the agent already exists in this resource group.
+        /// Gets the existing job execution to cancel
         /// </summary>
-        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
+        /// <returns>The existing job execution</returns>
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
-            return new List<AzureSqlDatabaseAgentJobExecutionModel> { };
+            try
+            {
+                var resp = ModelAdapter.GetJobExecution(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, Guid.Parse(this.JobExecutionId));
+                return new List<AzureSqlDatabaseAgentJobExecutionModel> { resp };
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The job execution does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobExecutionNotExists, this.JobExecutionId, this.JobName),
+                        "JobExecution");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
 
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
-        /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> model)
+        /// <param name="model">The job execution</param>
+        /// <returns>The job execution</returns>
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(List<AzureSqlDatabaseAgentJobExecutionModel> model)
         {
-            var execution = new AzureSqlDatabaseAgentJobExecutionModel
-            {
-                ResourceGroupName = this.ResourceGroupName,
-                ServerName = this.ServerName,
-                AgentName = this.AgentName,
-                JobName = this.JobName,
-                JobExecutionId = Guid.Parse(this.JobExecutionId)
-            };
-
             return model;
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the agent
+        /// Sends the changes to the service -> Cancels the job execution belonging to job
         /// </summary>
-        /// <param name="entity">The agent to create</param>
-        /// <returns>The created agent</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> entity)
+        /// <param name="entity">The job execution to cancel</param>
+        /// <returns>The job execution that was cancelled</returns>
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(List<AzureSqlDatabaseAgentJobExecutionModel> entity)
         {
             ModelAdapter.CancelJobExecution(entity.First());
             return entity;

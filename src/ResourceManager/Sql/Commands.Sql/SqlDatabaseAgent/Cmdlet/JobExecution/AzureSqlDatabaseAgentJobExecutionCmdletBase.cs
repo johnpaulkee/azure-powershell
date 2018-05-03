@@ -22,7 +22,7 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
 {
-    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : AzureSqlDatabaseAgentCmdletBase<IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : AzureSqlDatabaseAgentCmdletBase<List<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Default parameter sets
@@ -32,7 +32,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
 
         /// <summary>
-        /// Inpuyt object parameter sets
+        /// Input object parameter sets
         /// </summary>
         protected const string InputObjectListByAgent = "Input Object ListByAgent Parameter Set";
         protected const string InputObjectListByJob = "Input Object ListByJob Parameter Set";

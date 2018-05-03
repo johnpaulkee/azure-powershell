@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true, 
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentModel))]
-    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
+    [OutputType(typeof(List<AzureSqlDatabaseAgentModel>))]
     public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>

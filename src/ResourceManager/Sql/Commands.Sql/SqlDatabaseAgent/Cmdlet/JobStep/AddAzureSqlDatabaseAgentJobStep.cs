@@ -53,10 +53,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job step name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 4,
-            ParameterSetName = DefaultParameterSet)]
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
@@ -70,10 +74,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Alias("StepName")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the target group name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 5,
-            ParameterSetName = DefaultParameterSet)]
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The target group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
@@ -86,10 +94,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The target group name")]
         public string TargetGroupName { get; set; }
 
+        /// <summary>
+        /// The credential name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 6,
-            ParameterSetName = DefaultParameterSet)]
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The credential name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
@@ -102,10 +114,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The credential name")]
         public string CredentialName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the command text
+        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 7,
-            ParameterSetName = DefaultParameterSet)]
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The command text")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
@@ -121,24 +137,45 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 
         #region Output parameters
 
+        /// <summary>
+        /// Gets or sets the output subscription id
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputSubscriptionId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output resource group name
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputResourceGroupName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output server name
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputServerName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output database name
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputDatabaseName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output schema name
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputSchemaName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output table name
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputTableName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output credential name
+        /// </summary>
         [Parameter(Mandatory = false)]
         public override string OutputCredentialName { get; set; }
 
@@ -147,20 +184,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         #region Execution option parameters
 
         /// <summary>
-        /// Execution Options
+        /// Gets or sets the timeout seconds
         /// </summary>
         [Parameter(Mandatory = false)]
         public int? TimeoutSeconds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the retry attempts
+        /// </summary>
         [Parameter(Mandatory = false)]
         public int? RetryAttempts { get; set; }
 
+        /// <summary>
+        /// Gets or sets the initial retry interval seconds
+        /// </summary>
         [Parameter(Mandatory = false)]
         public int? InitialRetryIntervalSeconds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the maximum retry interval seconds
+        /// </summary>
         [Parameter(Mandatory = false)]
         public int? MaximumRetryIntervalSeconds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the retry interval backoff multiplier
+        /// </summary>
         [Parameter(Mandatory = false)]
         public double? RetryIntervalBackoffMultiplier { get; set; }
 
@@ -194,9 +243,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Check to see if the agent already exists in this resource group.
+        /// Check to see if the job step already exists in this job
         /// </summary>
-        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
+        /// <returns>Null if the job step doesn't exist. Otherwise throws exception</returns>
         protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
         {
             try
@@ -225,7 +274,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <param name="model">This is null since the job step doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
@@ -258,10 +307,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the agent
+        /// Sends the changes to the service -> Creates the job step
         /// </summary>
-        /// <param name="entity">The agent to create</param>
-        /// <returns>The created agent</returns>
+        /// <param name="entity">The job step to create</param>
+        /// <returns>The created job step</returns>
         protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
         {
             return ModelAdapter.UpsertJobStep(entity);

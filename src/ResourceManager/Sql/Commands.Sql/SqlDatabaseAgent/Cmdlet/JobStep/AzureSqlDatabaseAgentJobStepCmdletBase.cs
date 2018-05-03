@@ -41,6 +41,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected const string AddOutputResourceIdParameterSet = "Add Output Resource id job step parameter set";
         protected const string RemoveOutputResourceIdParameterSet = "Remove output resource id job step parameter set";
 
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 3,

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
 {
@@ -116,7 +117,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// <returns></returns>
         protected override AzureSqlDatabaseAgentJobModel GetEntity()
         {
-            return ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            try
+            {
+                return ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The job does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.Name, this.AgentName),
+                        "JobName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
     }
 }

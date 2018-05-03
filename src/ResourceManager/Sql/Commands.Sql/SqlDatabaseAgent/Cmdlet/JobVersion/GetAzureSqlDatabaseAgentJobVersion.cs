@@ -47,7 +47,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
             HelpMessage = "The job name")]
         public string JobName { get; set; }
 
-
+        /// <summary>
+        /// Gets or sets the job version
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
@@ -78,7 +80,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
                     break;
             }
 
-            // If version is not provided
+            // If version is not provided, return list of versions that this job has
             if (!this.MyInvocation.BoundParameters.ContainsKey("Version"))
             {
                 ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
@@ -89,6 +91,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobVersion
             base.ExecuteCmdlet();
         }
 
+        /// <summary>
+        /// Gets the existing job version
+        /// </summary>
+        /// <returns></returns>
         protected override AzureSqlDatabaseAgentJobVersionModel GetEntity()
         {
             return ModelAdapter.GetJobVersion(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Version);

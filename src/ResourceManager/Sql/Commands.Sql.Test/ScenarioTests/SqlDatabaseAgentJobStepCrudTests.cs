@@ -34,20 +34,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-CreateJobStep");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreateWithInputObject()
-        {
-            RunPowerShellTest("Test-CreateJobStepWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreateWithResourceId()
-        {
-            RunPowerShellTest("Test-CreateJobStepWithResourceId");
-        }
-
         #endregion
 
         #region Update Tests
@@ -73,6 +59,13 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-UpdateJobStepWithResourceId");
         }
 
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStepUpdateWithPiping()
+        {
+            RunPowerShellTest("Test-UpdateJobStepWithPiping");
+        }
+
         #endregion
 
         #region Get Tests
@@ -84,20 +77,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-GetJobStep");
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGetWithInputObject()
-        {
-            RunPowerShellTest("Test-GetJobStepWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGetWithResourceId()
-        {
-            RunPowerShellTest("Test-GetJobStepWithResourceId");
-        }
-
         #endregion
 
         #region Remove Tests
@@ -107,20 +86,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         public void TestJobStepRemove()
         {
             RunPowerShellTest("Test-RemoveJobStep");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemoveWithInputObject()
-        {
-            RunPowerShellTest("Test-RemoveJobStepWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemoveWithResourceId()
-        {
-            RunPowerShellTest("Test-RemoveJobStepWithResourceId");
         }
 
         #endregion

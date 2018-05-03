@@ -185,6 +185,7 @@
     <Compile Include="ScenarioTests\SqlDatabaseAgentJobCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentJobExecutionCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentJobStepCrudTests.cs" />
+    <Compile Include="ScenarioTests\SqlDatabaseAgentJobVersionCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.cs" />
     <Compile Include="ScenarioTests\SqlDatabaseAgentTargetCrudTests.cs" />
     <Compile Include="ScenarioTests\ThreatDetectionClassicStorageTests.cs" />
@@ -243,6 +244,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ScenarioTests\SqlDatabaseAgentJobStepCrudTests.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ScenarioTests\SqlDatabaseAgentJobVersionCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.ps1">
@@ -765,7 +769,7 @@
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestElasticPoolUpdateWithZoneRedundancy.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestElasticPoolCancelOperation.json">
+    <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestElasticPoolCancelOperation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.FailoverGroupTests\TestCreateFailoverGroup_AutomaticPolicy.json">

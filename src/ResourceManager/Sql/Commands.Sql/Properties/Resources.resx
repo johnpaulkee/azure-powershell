@@ -492,4 +492,8 @@
     <value>The requested job time interval is not supported '{0}'</value>
     <comment>Azure SQL Database Agent</comment>
   </data>
+  <data name="AzureSqlDatabaseAgentJobExecutionNotExists" xml:space="preserve">
+    <value>Job execution '{0}' does not exist in job '{1}'</value>
+    <comment>Azure SQL Database Agent</comment>
+  </data>
 </root>

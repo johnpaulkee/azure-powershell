@@ -32,45 +32,45 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
     public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
         /// <summary>
-        /// Gets or sets the name of the resource group
+        /// Gets or sets the resource group name
         /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The resource group name.")]
         [Parameter(ParameterSetName = ListByJob,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The resource group name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The resource group name.")]
         [ValidateNotNullOrEmpty]
         [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of agent server name
+        /// Gets or sets the server name
         /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The server name.")]
         [Parameter(ParameterSetName = ListByJob,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The server name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The server name.")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentServerName")]
         public override string ServerName { get; set; }
@@ -82,70 +82,78 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The agent name.")]
         [Parameter(ParameterSetName = ListByJob,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The agent name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The agent name.")]
         [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
         [Parameter(ParameterSetName = ListByJob,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The job name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The job name.")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectListByJob,
             Position = 1,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job name.")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectGetRootJobExecution,
             Position = 1,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job name.")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdListByJob,
             Position = 1,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job name.")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdGetRootJobExecution,
             Position = 1,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job name.")]
         public override string JobName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job execution id
+        /// </summary>
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
+            HelpMessage = "The job execution id.")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectGetRootJobExecution,
             Position = 2,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job execution id.")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdGetRootJobExecution,
             Position = 2,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job execution id.")]
         public string JobExecutionId { get; set; }
 
-
+        /// <summary>
+        /// Gets or sets the min create time
+        /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
             Mandatory = false,
             HelpMessage = "Filter by create time min")]
@@ -166,6 +174,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             HelpMessage = "Filter by create time min")]
         public DateTime? CreateTimeMin { get; set; }
 
+        /// <summary>
+        /// Gets or sets the max create time
+        /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
             Mandatory = false,
             HelpMessage = "Filter by create time max")]
@@ -186,6 +197,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             HelpMessage = "Filter by create time max")]
         public DateTime? CreateTimeMax { get; set; }
 
+        /// <summary>
+        /// Gets or sets the min end time
+        /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
             Mandatory = false,
             HelpMessage = "Filter by end time min.")]
@@ -226,6 +240,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             HelpMessage = "Filter by end time max.")]
         public DateTime? EndTimeMax { get; set; }
 
+        /// <summary>
+        /// Gets or sets the active switch parameter. Filters by active/in progress executions
+        /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
             Mandatory = false,
             HelpMessage = "Flag to filter by active executions.")]
@@ -243,71 +260,74 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             HelpMessage = "Flag to filter by active executions.")]
         public SwitchParameter Active { get; set; }
 
+        /// <summary>
+        /// Gets or sets the top executions to return in the response
+        /// </summary>
         [Parameter(ParameterSetName = ListByAgent,
-            Mandatory = false,
-            HelpMessage = "Flag to filter by active executions.")]
+            Mandatory = true,
+            HelpMessage = "Count returns the top number of executions.")]
         [Parameter(ParameterSetName = ListByJob,
-            Mandatory = false,
-            HelpMessage = "Flag to filter by active executions.")]
+            Mandatory = true,
+            HelpMessage = "Count returns the top number of executions.")]
         [Parameter(ParameterSetName = InputObjectListByAgent,
-            Mandatory = false,
-            HelpMessage = "Flag to filter by active executions.")]
+            Mandatory = true,
+            HelpMessage = "Count returns the top number of executions.")]
         [Parameter(ParameterSetName = InputObjectListByJob,
-            Mandatory = false,
-            HelpMessage = "Flag to filter by active executions.")]
+            Mandatory = true,
+            HelpMessage = "Count returns the top number of executions.")]
         [Parameter(ParameterSetName = ResourceIdListByAgent,
-            Mandatory = false,
-            HelpMessage = "Flag to filter by active executions.")]
+            Mandatory = true,
+            HelpMessage = "Count returns the top number of executions.")]
         [Parameter(ParameterSetName = ResourceIdListByJob,
-            Mandatory = false,
-            HelpMessage = "Flag to filter by active executions.")]
+            Mandatory = true,
+            HelpMessage = "Count returns the top number of executions.")]
         public int? Count { get; set; }
 
         /// <summary>
-        /// Gets or sets the Agent's Control Database Object
+        /// Gets or sets the agent object input model
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectListByAgent,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job object")]
+            HelpMessage = "The agent object")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectListByJob,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job object")]
+            HelpMessage = "The agent object")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectGetRootJobExecution,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job object")]
+            HelpMessage = "The agent object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
-        /// Gets or sets the Agent's Control Database Object
+        /// Gets or sets the agent resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdListByAgent,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job resource id")]
+            HelpMessage = "The agent resource id")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdListByJob,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job resource id")]
+            HelpMessage = "The agent resource id")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdGetRootJobExecution,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job resource id")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public override string ResourceId { get; set; }
 
@@ -341,10 +361,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         }
 
         /// <summary>
-        /// Gets a job from the service.
+        /// Gets job execution(s) from the service.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
             switch (ParameterSetName)
             {

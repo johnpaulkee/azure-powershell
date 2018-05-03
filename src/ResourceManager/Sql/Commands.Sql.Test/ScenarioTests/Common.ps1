@@ -626,24 +626,10 @@ function Create-JobForTest ($a, $enabled = $false)
 	.SYNOPSIS
 	Creates a sql database agent job step with test params
 #>
-function Create-JobStepForTest ($j, $tg, $c, $script, $withOutput = $false)
+function Create-JobStepForTest ($j, $tg, $c, $ct)
 {
     $jobStepName = Get-JobStepName
-
-    if ($withOutput)
-    {
-        $output = Create-JobStepOutputForTest $c
-
-        $jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName `
-                                                      -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $script `
-                                                      -OutputSubscriptionId $output.SubscriptionId -OutputResourceGroupName $output.ResourceGroupName -OutputServerName $output.ServerName `
-                                                      -OutputDatabaseName $output.DatabaseName -OutputSchemaName $output.SchemaName -OutputTableName $output.TableName `
-                                                      -OutputCredentialName $output.CredentialName
-        return $jobStep
-    }
-
-    $jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName `
-                                                  -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $script
+    $jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $ct
     return $jobStep
 }
 

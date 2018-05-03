@@ -16,6 +16,7 @@ using System.Management.Automation;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -28,6 +29,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
     public class SetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
+        /// <summary>
+        /// Gets or sets the resource group name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -40,8 +44,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
+        [ValidateNotNullOrEmpty]
+        [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -56,6 +65,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The server name")]
         public override string ServerName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the agent name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -71,42 +83,31 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public override string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the job resource id
+        /// Gets or sets the job name
         /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The job resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = RemoveOutputResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The job resource id")]
-        [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
-
         [Parameter(
             Mandatory = true,
             Position = 3,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The step name")]
+            HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
             Position = 3,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = RemoveOutputDefaultParameterSet,
-            HelpMessage = "The step name")]
+            HelpMessage = "The job name")]
         public override string JobName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job step name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 4,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = AddOutputDefaultParameterSet)]
+            ParameterSetName = AddOutputDefaultParameterSet,
+            HelpMessage = "The step name")]
         [Parameter(
             Mandatory = true,
             Position = 4,
@@ -116,6 +117,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Alias("StepName")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the target group name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -130,6 +134,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The target group name")]
         public string TargetGroupName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the credential name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -144,6 +151,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The credential name")]
         public string CredentialName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the command text
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -158,6 +168,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The command text")]
         public string CommandText { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output subscription id
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -172,6 +185,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output subscription id")]
         public override string OutputSubscriptionId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output resource group name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -186,6 +202,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output resource group name")]
         public override string OutputResourceGroupName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output server name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -200,6 +219,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output server name")]
         public override string OutputServerName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output database name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -214,6 +236,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output database name")]
         public override string OutputDatabaseName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output schema name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -228,6 +253,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output schema name")]
         public override string OutputSchemaName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output table name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -242,6 +270,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output table name")]
         public override string OutputTableName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output credential name
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -256,22 +287,25 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The output credential name")]
         public override string OutputCredentialName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the switch parameter to remove the job step output target
+        /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = RemoveOutputDefaultParameterSet,
-            HelpMessage = "The command text")]
+            HelpMessage = "The flag to indicate to removing the job output from this job step")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = RemoveOutputInputObjectParameterSet,
-            HelpMessage = "The command text")]
+            HelpMessage = "The flag to indicate to removing the job output from this job step")]
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = RemoveOutputResourceIdParameterSet,
-            HelpMessage = "The command text")]
+            HelpMessage = "The flag to indicate to removing the job output from this job step")]
         public SwitchParameter RemoveOutput { get; set; }
 
         /// <summary>
-        /// Execution Options
+        /// Gets or sets the timeout seconds
         /// </summary>
         [Parameter(
             Mandatory = false,
@@ -287,6 +321,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The timeout seconds")]
         public int? TimeoutSeconds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the retry attempts
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -301,6 +338,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The retry attempts")]
         public int? RetryAttempts { get; set; }
 
+        /// <summary>
+        /// Gets or sets the initial retry interval seconds
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -315,6 +355,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The initial retry interval seconds")]
         public int? InitialRetryIntervalSeconds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the maximum retry interval seconds
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -329,6 +372,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The maximum retry interval seconds")]
         public int? MaximumRetryIntervalSeconds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the retry interval backoff multiplier
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
@@ -343,37 +389,58 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The retry interval backoff multiplier")]
         public double? RetryIntervalBackoffMultiplier { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job step id
+        /// </summary>
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The step id")]
+            HelpMessage = "The job step id")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The step id")]
+            HelpMessage = "The job step id")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The step id")]
+            HelpMessage = "The job step id")]
         public int? StepId { get; set; }
 
         /// <summary>
-        /// Gets or sets the job object
+        /// Gets or sets the job step object
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = AddOutputInputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job step object")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = RemoveOutputInputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job object")]
+            HelpMessage = "The job step object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job step resource id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AddOutputResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The job step resource id")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = RemoveOutputResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The job step resource id")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here
@@ -407,9 +474,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Check to see if the agent already exists in this resource group.
+        /// Check to see if the job step already exists in job.
         /// </summary>
-        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
+        /// <returns>Null if the job step doesn't exist. Otherwise throws exception</returns>
         protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
         {
             try
@@ -435,7 +502,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <param name="model">The existing job step model</param>
         /// <returns>The generated model from user input</returns>
         protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
         {
@@ -475,10 +542,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the agent
+        /// Sends the changes to the service -> Updates the job step
         /// </summary>
-        /// <param name="entity">The agent to create</param>
-        /// <returns>The created agent</returns>
+        /// <param name="entity">The job step to update</param>
+        /// <returns>The updated job step</returns>
         protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
         {
             return ModelAdapter.UpsertJobStep(entity);

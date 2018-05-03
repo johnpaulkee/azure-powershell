@@ -28,26 +28,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     public class RemoveAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
         /// <summary>
-        /// Gets or sets the job input object
+        /// Gets or sets the job step input object
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The job input object")]
+            HelpMessage = "The job step input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
 
         /// <summary>
-        /// Gets or sets the job resource id
+        /// Gets or sets the job step resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The agent resource id")]
+            HelpMessage = "The job step resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
@@ -60,7 +60,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
-
         public override string JobName { get; set; }
 
         /// <summary>
@@ -91,7 +90,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
                     this.Name = InputObject.StepName;
                     break;
                 case ResourceIdParameterSet:
-                    // TODO:
                     string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     this.ResourceGroupName = tokens[3];
                     this.ServerName = tokens[7];
@@ -107,7 +105,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         }
 
         /// <summary>
-        /// Gets job to see if it exists before removing
+        /// Gets job to see if job step exists before removing
         /// </summary>
         /// <returns></returns>
         protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
@@ -122,7 +120,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
                 {
                     // The job doesn't exists
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.Name, this.AgentName),
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobStepNotExists, this.Name, this.JobName),
                         "JobName");
                 }
 
@@ -142,10 +140,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         }
 
         /// <summary>
-        /// Deletes the job.
+        /// Deletes the job step from job.
         /// </summary>
-        /// <param name="entity">The job account being deleted</param>
-        /// <returns>The job account that was deleted</returns>
+        /// <param name="entity">The job step to be deleted</param>
+        /// <returns>The job step that was deleted</returns>
         protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
         {
             ModelAdapter.RemoveJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);

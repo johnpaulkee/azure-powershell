@@ -19,6 +19,7 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -47,14 +48,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public SwitchParameter AsJob { get; set; }
 
         /// <summary>
-        /// Gets or sets the Agent's Control Database Object
+        /// Gets or sets the job model input object
         /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The Agent Control Database Object")]
+            HelpMessage = "The job object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
 
@@ -85,13 +86,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             base.ExecuteCmdlet();
         }
 
-        /// <summary>
-        /// Check to see if the agent already exists in this resource group.
-        /// </summary>
-        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
-            return new List<AzureSqlDatabaseAgentJobExecutionModel> { };
+            try
+            {
+                ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName);
+                return new List<AzureSqlDatabaseAgentJobExecutionModel> { };
+            }
+            catch (CloudException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // The job does not exist
+                    throw new PSArgumentException(
+                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.JobName, this.AgentName),
+                        "JobName");
+                }
+
+                // Unexpected exception encountered
+                throw;
+            }
         }
 
         /// <summary>
@@ -99,7 +113,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> model)
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(List<AzureSqlDatabaseAgentJobExecutionModel> model)
         {
             AzureSqlDatabaseAgentJobExecutionModel updatedModel = new AzureSqlDatabaseAgentJobExecutionModel
             {
@@ -117,7 +131,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> entity)
+        protected override List<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(List<AzureSqlDatabaseAgentJobExecutionModel> entity)
         {
             AzureSqlDatabaseAgentJobExecutionModel resp;
 

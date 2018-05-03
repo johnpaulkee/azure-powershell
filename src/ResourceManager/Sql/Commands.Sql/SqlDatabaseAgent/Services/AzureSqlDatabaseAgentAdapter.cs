@@ -109,7 +109,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agents are in</param>
         /// <returns>The converted agent model(s)</returns>
-        public IEnumerable<AzureSqlDatabaseAgentModel> GetSqlDatabaseAgent(string resourceGroupName, string serverName)
+        public List<AzureSqlDatabaseAgentModel> GetSqlDatabaseAgent(string resourceGroupName, string serverName)
         {
             var resp = Communicator.ListAgentsByServer(resourceGroupName, serverName);
             return resp.Select(agent => CreateAgentModelFromResponse(resourceGroupName, serverName, agent)).ToList();
@@ -523,10 +523,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName">The agent name</param>
         /// <param name="jobName">The job name</param>
         /// <returns>A list of steps that the job has</returns>
-        public IEnumerable<AzureSqlDatabaseAgentJobStepModel> GetJobStep(string resourceGroupName, string serverName, string agentName, string jobName)
+        public List<AzureSqlDatabaseAgentJobStepModel> GetJobStep(string resourceGroupName, string serverName, string agentName, string jobName)
         {
             var resp = Communicator.ListJobStepsByJob(resourceGroupName, serverName, agentName, jobName);
-            return resp.Select((step) => CreateJobStepModelFromResponse(resourceGroupName, serverName, agentName, jobName, step.Name, step));
+            return resp.Select((step) => CreateJobStepModelFromResponse(resourceGroupName, serverName, agentName, jobName, step.Name, step)).ToList();
         }
 
         /// <summary>
@@ -606,10 +606,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns>The upserted job step</returns>
-        public IEnumerable<AzureSqlDatabaseAgentJobVersionModel> GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName)
+        public List<AzureSqlDatabaseAgentJobVersionModel> GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName)
         {
             var resp = Communicator.GetJobVersion(resourceGroupName, serverName, agentName, jobName);
-            return resp.Select((version) => CreateJobVersionModelFromResponse(resourceGroupName, serverName, agentName, jobName, version));
+            return resp.Select((version) => CreateJobVersionModelFromResponse(resourceGroupName, serverName, agentName, jobName, version)).ToList();
         }
 
         public AzureSqlDatabaseAgentJobVersionModel CreateJobVersionModelFromResponse(
