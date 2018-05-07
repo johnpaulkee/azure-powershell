@@ -17,6 +17,8 @@ using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Globalization;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
 {
@@ -27,6 +29,39 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     public class RemoveAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
         /// <summary>
+        /// Gets or sets the resource group name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        public override string AgentName { get; set; }
+
+        /// <summary>
         /// Gets or sets the job name
         /// </summary>
         [Parameter(
@@ -36,7 +71,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 3,
             HelpMessage = "The job name")]
         [Alias("JobName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
@@ -54,42 +89,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 0,
             HelpMessage = "The job input object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+        public override AzureSqlDatabaseAgentJobModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = JobResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        public override string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            switch (ParameterSetName)
+            if (ParameterSetName == InputObjectParameterSet)
             {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.Name = InputObject.JobName;
-                    break;
-                case ResourceIdParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.Name = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
+                InitializeJobProperties(this.InputObject);
             }
 
             // Warning confirmation for agent when deleting
@@ -108,11 +129,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// Gets job to see if it exists before removing
         /// </summary>
         /// <returns></returns>
-        protected override AzureSqlDatabaseAgentJobModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> GetEntity()
         {
             try
             {
-                return ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+                return new List<AzureSqlDatabaseAgentJobModel>
+                {
+                    ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name)
+                };
             }
             catch (CloudException ex)
             {
@@ -134,7 +158,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// </summary>
         /// <param name="model">The result of GetEntity</param>
         /// <returns>The input model</returns>
-        protected override AzureSqlDatabaseAgentJobModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobModel> model)
         {
             return model;
         }
@@ -144,9 +168,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// </summary>
         /// <param name="entity">The job account being deleted</param>
         /// <returns>The job account that was deleted</returns>
-        protected override AzureSqlDatabaseAgentJobModel PersistChanges(AzureSqlDatabaseAgentJobModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobModel> entity)
         {
-            ModelAdapter.RemoveJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            var existingEntity = entity.First();
+            ModelAdapter.RemoveJob(existingEntity.ResourceGroupName, existingEntity.ServerName, existingEntity.AgentName, existingEntity.JobName);
             return entity;
         }
     }

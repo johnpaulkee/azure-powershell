@@ -22,53 +22,53 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
 {
-    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : AzureSqlDatabaseAgentCmdletBase<List<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : 
+        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobExecutionModel, IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Default parameter sets
         /// </summary>
-        protected const string ListByAgent = "ListByAgent Parameter Set";
-        protected const string ListByJob = "ListByJob Parameter Set";
         protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
 
         /// <summary>
         /// Input object parameter sets
         /// </summary>
-        protected const string InputObjectListByAgent = "Input Object ListByAgent Parameter Set";
-        protected const string InputObjectListByJob = "Input Object ListByJob Parameter Set";
         protected const string InputObjectGetRootJobExecution = "Input Object GetRootJobExecution Parameter Set";
 
         /// <summary>
         /// Resource id parameter sets
         /// </summary>
-        protected const string ResourceIdListByAgent = "Resource Id ListByAgent Parameter Set";
-        protected const string ResourceIdListByJob = "Resource Id ListByJob Parameter Set";
         protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
 
-
+        /// <summary>
+        /// Default parameter sets
+        /// </summary>
+        protected const string GetJobStepExecution = "GetJobStepExecution Parameter Set";
 
         /// <summary>
-        /// Gets or sets the Agent's Control Database Resource Id
+        /// Input object parameter sets
         /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The Agent Control Database Resource Id")]
-        [ValidateNotNullOrEmpty]
-        public virtual string ResourceId { get; set; }
+        protected const string InputObjectGetJobStepExecution = "Input Object GetJobStepExecution Parameter Set";
 
         /// <summary>
-        /// Gets or sets the name of the agent name
+        /// Resource id parameter sets
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "SQL Database Agent Resource Group Name.")]
-        [ValidateNotNullOrEmpty]
-        public virtual string JobName { get; set; }
+        protected const string ResourceIdGetJobStepExecution = "Resource Id GetJobStepExecution Parameter Set";
+
+        /// <summary>
+        /// Default parameter sets
+        /// </summary>
+        protected const string GetJobTargetExecution = "GetJobTargetExecution Parameter Set";
+
+        /// <summary>
+        /// Input object parameter sets
+        /// </summary>
+        protected const string InputObjectGetJobTargetExecution = "Input Object GetJobTargetExecution Parameter Set";
+
+        /// <summary>
+        /// Resource id parameter sets
+        /// </summary>
+        protected const string ResourceIdGetJobTargetExecution = "Resource Id GetJobTargetExecution Parameter Set";
 
         /// <summary>
         /// Initialize the job execution adapter

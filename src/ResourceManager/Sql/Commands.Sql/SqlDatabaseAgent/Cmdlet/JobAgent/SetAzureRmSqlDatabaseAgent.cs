@@ -18,6 +18,9 @@ using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -31,28 +34,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent input object
+        /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent input object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
-
-        /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The agent resource id")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
+        public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the agent name
@@ -65,7 +69,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent tags
@@ -79,35 +83,48 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
-            ParameterSetName = InputObjectParameterSet)]
+            ParameterSetName = AgentObjectParameterSet)]
         [Parameter(
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
-            ParameterSetName = ResourceIdParameterSet)]
+            ParameterSetName = AgentResourceIdParameterSet)]
+        [ValidateNotNullOrEmpty]
         [Alias("Tags")]
         public Hashtable Tag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent input object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent input object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentModel InputObject { get; set; }
+
+        /// <summary>
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
+        [ValidateNotNullOrEmpty]
+        public override string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            switch (ParameterSetName)
+            if (ParameterSetName == InputObjectParameterSet)
             {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.Name = InputObject.AgentName;
-                    break;
-                case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.Name = resourceInfo.ResourceName;
-                    break;
-                default:
-                    break;
+                InitializeAgentProperties(this.InputObject);
             }
 
             base.ExecuteCmdlet();
@@ -117,12 +134,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
         {
             try
             {
                 WriteDebugWithTimestamp("AgentName: {0}", Name);
-                return ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
+                return new List<AzureSqlDatabaseAgentModel> { ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name) };
             }
             catch (CloudException ex)
             {
@@ -144,7 +161,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
         {
             string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
 
@@ -154,11 +171,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 ResourceGroupName = this.ResourceGroupName,
                 ServerName = this.ServerName,
                 AgentName = this.Name,
-                DatabaseName = model.DatabaseName,
-                Tags = TagsConversionHelper.ReadOrFetchTags(this, model.Tags),
+                DatabaseName = model.First().DatabaseName,
+                Tags = TagsConversionHelper.ReadOrFetchTags(this, model.First().Tags),
             };
 
-            return newEntity;
+            return new List<AzureSqlDatabaseAgentModel> { newEntity };
         }
 
         /// <summary>
@@ -166,11 +183,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override AzureSqlDatabaseAgentModel PersistChanges(AzureSqlDatabaseAgentModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
             // Note: We are currently using PATCH, but in the future we plan on exposing worker count for public preview.
             // Hence the reason we are using Set instead of Update as we will call a PUT in the future instead of current PATCH request.
-            return ModelAdapter.UpdateSqlDatabaseAgent(entity);
+            return new List<AzureSqlDatabaseAgentModel> {
+                ModelAdapter.UpdateSqlDatabaseAgent(entity.First())
+            };
         }
     }
 }

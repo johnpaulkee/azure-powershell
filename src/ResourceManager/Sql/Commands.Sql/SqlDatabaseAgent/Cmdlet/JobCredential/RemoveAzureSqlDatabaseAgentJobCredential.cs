@@ -13,7 +13,10 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Rest.Azure;
 
@@ -25,64 +28,91 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJobCredential", 
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
     public class RemoveAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
-        /// Gets or sets the job credential input object to remove
+        /// Gets or sets the resource group name
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job credential object to remove")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobCredentialModel InputObject { get; set; }
-
-        /// <summary>
-		/// Gets or sets the job credential resource id to remove
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The job credential resource id of the credential to remove")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the job credential's name.
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, 
+        [Parameter(
+            ParameterSetName = DefaultParameterSet, 
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job credential name")]
         [Alias("CredentialName")]
-        public string Name { get; set; }
+        [ValidateNotNullOrEmpty]
+        public override string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job credential input object to remove
+        /// </summary>
+        [Parameter(
+            ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job credential object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentJobCredentialModel InputObject { get; set; }
+
+        /// <summary>
+		/// Gets or sets the job credential resource id to remove
+		/// </summary>
+		[Parameter(
+            ParameterSetName = JobCredentialResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The job credential resource id")]
+        [ValidateNotNullOrEmpty]
+        public override string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            switch (ParameterSetName)
+            if (ParameterSetName == InputObjectParameterSet)
             {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.Name = InputObject.CredentialName;
-                    break;
-                case ResourceIdParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.Name = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
+                InitializeJobCredentialProperties(this.InputObject);
             }
 
             base.ExecuteCmdlet();
@@ -92,11 +122,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Throws exception if the credential doesn't exist.<returns>
-        protected override AzureSqlDatabaseAgentJobCredentialModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
         {
             try
             {
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+                return new List<AzureSqlDatabaseAgentJobCredentialModel>
+                {
+                    ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name)
+                };
             }
             catch (CloudException ex)
             {
@@ -118,7 +151,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">Model retrieved from service</param>
         /// <returns>The model that was passed in</returns>
-        protected override AzureSqlDatabaseAgentJobCredentialModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobCredentialModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> model)
         {
             return model;
         }
@@ -128,9 +161,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The credential to create</param>
         /// <returns>The created job credential</returns>
-        protected override AzureSqlDatabaseAgentJobCredentialModel PersistChanges(AzureSqlDatabaseAgentJobCredentialModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> entity)
         {
-            ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+            var existingEntity = entity.First();
+            ModelAdapter.RemoveJobCredential(existingEntity.ResourceGroupName, existingEntity.ServerName, existingEntity.AgentName, existingEntity.CredentialName);
             return entity;
         }
     }

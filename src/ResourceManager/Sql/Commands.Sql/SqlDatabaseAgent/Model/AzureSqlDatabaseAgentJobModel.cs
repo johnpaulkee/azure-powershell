@@ -20,31 +20,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
     public class AzureSqlDatabaseAgentJobModel : AzureSqlDatabaseAgentJobModelBase
     {
         public AzureSqlDatabaseAgentJobModel() { }
-        public AzureSqlDatabaseAgentJobModel(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            Management.Sql.Models.Job resp)
-        {
-            this.ResourceGroupName = resourceGroupName;
-            this.ServerName = serverName;
-            this.AgentName = agentName;
-            this.JobName = resp.Name;
-            this.Description = resp.Description;
-            this.ResourceId = resp.Id;
-
-            this.StartTime = resp.Schedule.StartTime;
-            this.EndTime = resp.Schedule.EndTime;
-            this.ScheduleType = resp.Schedule.Type;
-            this.Enabled = resp.Schedule.Enabled;
-            this.Interval = resp.Schedule.Interval;
-            this.Type = resp.Type;
-        }
 
         /// <summary>
         /// Gets or sets the description of the job
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job version
+        /// </summary>
+        public int? Version { get; set; }
 
         /// <summary>
         /// Gets or sets the job schedule start time
@@ -70,5 +55,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// Gets or sets the job's schedule interval value.
         /// </summary>
         public string Interval { get; set; }
+
+        /// <summary>
+        /// The job schedule intervals
+        /// </summary>
+        public enum JobScheduleReccuringScheduleTypes
+        {
+            Minute,
+            Hour,
+            Day,
+            Week,
+            Month
+        }
     }
 }

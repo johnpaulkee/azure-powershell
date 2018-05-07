@@ -17,6 +17,8 @@ using System.Management.Automation;
 using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
+using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -26,84 +28,96 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgentTargetGroup",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>))]
     public class NewAzureSqlDatabaseAgentTargetGroup : AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent input object
+        /// Gets or sets the resource group name
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent input object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
-
-        /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The agent resource id")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the target group name
         /// </summary>
         [Parameter(
             ParameterSetName = DefaultParameterSet,
-            Mandatory = false,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The target group name")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
-            Mandatory = false,
+        [Parameter(ParameterSetName = AgentObjectParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The target group name")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = false,
+        [Parameter(ParameterSetName = AgentResourceIdParameterSet,
+            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The target group name")]
         [ValidateNotNullOrEmpty]
         [Alias("TargetGroupName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
-        /// Writes a list of target groups if name is not given, otherwise returns the target group asked for.
+        /// Gets or sets the agent input object
         /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    break;
-                case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.AgentName = resourceInfo.ResourceName;
-                    break;
-                default:
-                    break;
-            }
+        [Parameter(ParameterSetName = AgentObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent input object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
-            base.ExecuteCmdlet();
-        }
+        /// <summary>
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(ParameterSetName = AgentResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentResourceId { get; set; }
 
         /// <summary>
         /// Check to see if the target group already exists for the agent.
         /// </summary>
         /// <returns>Null if the target group doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
         {
             try
             {
@@ -133,7 +147,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the target group doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentTargetGroupModel ApplyUserInputToModel(AzureSqlDatabaseAgentTargetGroupModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> model)
         {
             AzureSqlDatabaseAgentTargetGroupModel targetGroup = new AzureSqlDatabaseAgentTargetGroupModel
             {
@@ -144,7 +158,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 Targets = new List<AzureSqlDatabaseAgentTargetModel> { }, // We create an empty list of targets on creation of new target group
             };
 
-            return targetGroup;
+            return new List<AzureSqlDatabaseAgentTargetGroupModel> { targetGroup };
         }
 
         /// <summary>
@@ -152,9 +166,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The target group to create</param>
         /// <returns>The created target group</returns>
-        protected override AzureSqlDatabaseAgentTargetGroupModel PersistChanges(AzureSqlDatabaseAgentTargetGroupModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> entity)
         {
-            return ModelAdapter.UpsertTargetGroup(entity);
+            return new List<AzureSqlDatabaseAgentTargetGroupModel>
+            {
+                ModelAdapter.UpsertTargetGroup(entity.First())
+            };
         }
     }
 }

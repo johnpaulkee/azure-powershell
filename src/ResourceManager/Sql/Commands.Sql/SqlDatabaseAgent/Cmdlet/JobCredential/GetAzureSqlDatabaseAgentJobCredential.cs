@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.Management.Automation;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Rest.Azure;
@@ -26,96 +27,115 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobCredential", 
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentJobCredentialModel))]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
     public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent model input object
+        /// Gets or sets the resource group name
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
-            ValueFromPipeline = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The agent input object model")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
             Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent resource id")]
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the credential name
         /// </summary>
-        [Parameter(Mandatory = false,
+        [Parameter(
+            Mandatory = false,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job credential name")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
+            ParameterSetName = AgentObjectParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+        [Parameter(
+            ParameterSetName = AgentResourceIdParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
         [ValidateNotNullOrEmpty]
         [Alias("CredentialName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
-        /// Entry point for the cmdlet
+        /// Gets or sets the agent model input object
         /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    break;
-                case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.AgentName = resourceInfo.ResourceName;
-                    break;
-                default:
-                    break;
-            }
+        [Parameter(
+            ParameterSetName = AgentObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
-            // Returns a list of credentials
-            if (this.Name == null)
-            {
-                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
-                WriteObject(ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName), true);
-                return;
-            }
-
-            base.ExecuteCmdlet();
-        }
+        /// <summary>
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(
+            ParameterSetName = AgentResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The agent resource id")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentResourceId { get; set; }
 
         /// <summary>
         /// Check to see if the credential already exists for the agent.
         /// </summary>
         /// <returns>Throws exception if the credential doesn't exist.<returns>
-        protected override AzureSqlDatabaseAgentJobCredentialModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> GetEntity()
         {
             try
             {
-                return ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+                // Returns a list of credentials
+                if (this.Name == null)
+                {
+                    return ModelAdapter.ListJobCredentials(this.ResourceGroupName, this.ServerName, this.AgentName);
+                }
+                else
+                {
+                    return new List<AzureSqlDatabaseAgentJobCredentialModel>
+                    {
+                        ModelAdapter.GetJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name)
+                    };
+                }
             }
             catch (CloudException ex)
             {
@@ -130,6 +150,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 // Unexpected exception encountered
                 throw;
             }
+        }
+
+        /// <summary>
+        /// No user input to apply to model.
+        /// </summary>
+        /// <param name="model">The model to modify</param>
+        /// <returns>The input model</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> model)
+        {
+            return model;
+        }
+
+        /// <summary>
+        /// No changes, thus nothing to persist.
+        /// Note: even though we technically don't need to override this, we want to pass the entity forward so that we can take advantage of
+        /// powershell's understanding of a list with one item defaulting to just the item itself.
+        /// </summary>
+        /// <param name="entity">The entity retrieved</param>
+        /// <returns>The unchanged entity</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel> entity)
+        {
+            return entity;
         }
     }
 }

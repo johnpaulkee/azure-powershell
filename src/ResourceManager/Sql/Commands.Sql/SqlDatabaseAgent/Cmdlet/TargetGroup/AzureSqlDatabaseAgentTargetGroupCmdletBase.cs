@@ -17,10 +17,12 @@ using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Management.Automation;
+using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : 
+        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Intializes the model adapter

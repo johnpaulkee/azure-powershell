@@ -12,28 +12,16 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Commands.ScenarioTest.SqlTests;
-using Microsoft.WindowsAzure.Commands.ScenarioTest;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Azure.Management.Sql.Models;
+using System;
 
-namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
+namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
-    public class SqlDatabaseAgentJobVersionCrudTests : SqlTestsBase
+    public class AzureSqlDatabaseAgentJobStepVersionModel : AzureSqlDatabaseAgentJobStepModel
     {
-        public SqlDatabaseAgentJobVersionCrudTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
-        #region Get Tests
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobVersionGet()
-        {
-            RunPowerShellTest("Test-GetJobVersion");
-        }
-
-        #endregion
+        /// <summary>
+        /// The job step's version
+        /// </summary>
+        public int? Version { get; set; }
     }
 }

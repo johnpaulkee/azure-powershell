@@ -12,24 +12,22 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
+using Microsoft.Azure.Commands.Sql.Server.Model;
+using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Collections.Generic;
 using System.Management.Automation;
-using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Rest.Azure;
 
-namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
+namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
     /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgentJob Cmdlet
+    /// Defines the Get-AzureRmSqlDatabaseAgent cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJob", 
-        SupportsShouldProcess = true,
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgent",
+        SupportsShouldProcess = true, 
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentJobModel))]
-    [OutputType(typeof(List<AzureSqlDatabaseAgentJobModel>))]
-    public class GetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
+    public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -57,97 +55,73 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         public override string ServerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the server name
+        /// Gets or sets the agent name
         /// </summary>
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
+            ParameterSetName = ServerObjectParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServerResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = false,
             ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
+        [Alias("AgentName")]
         [ValidateNotNullOrEmpty]
-        public override string AgentName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job name
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AgentObjectParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AgentResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [ValidateNotNullOrEmpty]
-        [Alias("JobName")]
         public override string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent input object
+        /// Gets or sets the Agent Server Object
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AgentObjectParameterSet,
+            ParameterSetName = ServerObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The agent input object")]
+            HelpMessage = "The server input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
+        public override AzureSqlServerModel ServerObject { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent resource id
+        /// Gets or sets the Agent Server Resource Id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ServerResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The agent resource id")]
-        [ValidateNotNullOrEmpty]
-        public override string AgentResourceId { get; set; }
+            HelpMessage = "The server resource id")]
+        public override string ServerResourceId { get; set; }
 
         /// <summary>
-        /// Gets a job from the service.
+        /// Gets one or more Azure SQL Database Agents from the service.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
         {
-            try
-            {
-                // Returns a list of jobs if name is not provided
-                if (this.Name == null)
-                {
-                    return ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName);
-                }
-                else
-                {
-                    return new List<AzureSqlDatabaseAgentJobModel> { ModelAdapter.GetJob(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name) };
-                }
-            }
-            catch (CloudException ex)
-            {
-                if (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    // The job does not exist
-                    throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.Name, this.AgentName),
-                        "JobName");
-                }
+            ICollection<AzureSqlDatabaseAgentModel> results = null;
 
-                // Unexpected exception encountered
-                throw;
+            // Lets us return a list of agents
+            if (this.Name == null)
+            {
+                results = ModelAdapter.ListAgents(this.ResourceGroupName, this.ServerName);
             }
+            else
+            {
+                results = new List<AzureSqlDatabaseAgentModel>();
+                results.Add(ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name));
+            }
+
+            return results;
         }
 
         /// <summary>
@@ -155,7 +129,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// </summary>
         /// <param name="model">The model to modify</param>
         /// <returns>The input model</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobModel> model)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
         {
             return model;
         }
@@ -167,7 +141,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// </summary>
         /// <param name="entity">The entity retrieved</param>
         /// <returns>The unchanged entity</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobModel> entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
             return entity;
         }

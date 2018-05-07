@@ -16,40 +16,54 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCmdletBase : 
+        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, IEnumerable<AzureSqlDatabaseAgentJobModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
-        /// Default parameter sets
+        /// Agent default parameter sets
         /// </summary>
-        protected const string DefaultOnceParameterSet = "Job Default Once Parameter Set";
-        protected const string DefaultMinuteParameterSet = "Job Default Minute Parameter Set";
-        protected const string DefaultHourParameterSet = "Job Default Hour Parameter Set";
-        protected const string DefaultDayParameterSet = "Job Default Day Parameter Set";
-        protected const string DefaultWeekParameterSet = "Job Default Week Parameter Set";
-        protected const string DefaultMonthParameterSet = "Job Default Month Parameter Set";
+        protected const string AgentDefaultRunOnceParameterSet = "Agent Default Run Once Parameter Set";
+        protected const string AgentDefaultRecurringParameterSet = "Agent Default Recurring Parameter Set";
 
         /// <summary>
-        /// Input object parameter sets
+        /// Agent object parameter sets
         /// </summary>
-        protected const string InputObjectOnceParameterSet = "Job Input Object Once Parameter Set";
-        protected const string InputObjectMinuteParameterSet = "Job Input Object Minute Parameter Set";
-        protected const string InputObjectHourParameterSet = "Job Input Object Hour Parameter Set";
-        protected const string InputObjectDayParameterSet = "Job Input Object Day Parameter Set";
-        protected const string InputObjectWeekParameterSet = "Job Input Object Week Parameter Set";
-        protected const string InputObjectMonthParameterSet = "Job Input Object Month Parameter Set";
+        protected const string AgentObjectRunOnceParameterSet = "Agent Object Run Once Parameter Set";
+        protected const string AgentObjectRecurringParameterSet = "Agent Object Recurring Parameter Set";
 
         /// <summary>
-        /// Resource id parameter sets
+        /// Agent resource id parameter sets
         /// </summary>
-        protected const string ResourceIdOnceParameterSet = "Job Resource Id Once Parameter Set";
-        protected const string ResourceIdMinuteParameterSet = "Job Resource Id Minute Parameter Set";
-        protected const string ResourceIdHourParameterSet = "Job Resource Id Hour Parameter Set";
-        protected const string ResourceIdDayParameterSet = "Job Resource Id Day Parameter Set";
-        protected const string ResourceIdWeekParameterSet = "Job Resource Id Week Parameter Set";
-        protected const string ResourceIdMonthParameterSet = "Job Resource Id Month Parameter Set";
+        protected const string AgentResourceIdRunOnceParameterSet = "Agent Resource Id Run Once Parameter Set";
+        protected const string AgentResourceIdRecurringParameterSet= "Agent Resource Id Recurring Parameter Set";
+
+        /// <summary>
+        /// Job default parameter sets
+        /// </summary>
+        protected const string JobDefaultRunOnceParameterSet = "Job Default Run Once Parameter Set";
+        protected const string JobDefaultRecurringParameterSet = "Job Default Recurring Parameter Set";
+        protected const string JobDefaultEnableParameterSet = "Job Default Enable Job Parameter Set";
+        protected const string JobDefaultDisableParameterSet = "Job Default Disable Job Parameter Set";
+
+        /// <summary>
+        /// Job object parameter sets
+        /// </summary>
+        protected const string JobObjectRunOnceParameterSet = "Job Object Run Once Parameter Set";
+        protected const string JobObjectRecurringParameterSet = "Job Object Recurring Parameter Set";
+        protected const string JobObjectEnableParameterSet = "Job Object Enable Parameter Set";
+        protected const string JobObjectDisableParameterSet = "Job Object Disable Parameter Set";
+
+        /// <summary>
+        /// Job resource id parameter sets
+        /// </summary>
+        protected const string JobResourceIdRunOnceParameterSet = "Job Resource Id Run Once Parameter Set";
+        protected const string JobResourceIdRecurringParameterSet = "Job Resource Id Recurring Parameter Set";
+        protected const string JobResourceIdEnableParameterSet = "Job Resource Id Enable Job Parameter Set";
+        protected const string JobResourceIdDisableParameterSet = "Job Resource Id Disable Job Parameter Set";
 
         /// <summary>
         /// Intializes the model adapter

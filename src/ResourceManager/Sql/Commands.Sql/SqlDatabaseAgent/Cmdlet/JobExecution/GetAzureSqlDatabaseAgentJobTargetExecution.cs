@@ -23,13 +23,13 @@ using System.Management.Automation;
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
 {
     /// <summary>
-    /// Defines the Get-AzureRmSqlDatabaseAgentJobExecution Cmdlet
+    /// Defines the Get-AzureRmSqlDatabaseAgentJobTargetExecution Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobExecution",
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobTargetExecution",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
-    public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
+    public class GetAzureSqlDatabaseAgentJobTargetExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -39,7 +39,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
-        [Parameter(ParameterSetName = GetRootJobExecution,
+        [Parameter(ParameterSetName = GetJobTargetExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -56,7 +56,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name.")]
-        [Parameter(ParameterSetName = GetRootJobExecution,
+        [Parameter(ParameterSetName = GetJobTargetExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
@@ -72,7 +72,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name.")]
-        [Parameter(ParameterSetName = GetRootJobExecution,
+        [Parameter(ParameterSetName = GetJobTargetExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
@@ -84,28 +84,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// Gets or sets the job name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
-            Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
-            HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
-            Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = InputObjectGetRootJobExecution,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
+        [Parameter(ParameterSetName = GetJobTargetExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
@@ -115,22 +98,77 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// <summary>
         /// Gets or sets the job execution id
         /// </summary>
-        [Parameter(ParameterSetName = GetRootJobExecution,
+        [Parameter(
+            ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
-            HelpMessage = "The job execution id.")]
-        [Parameter(ParameterSetName = InputObjectGetRootJobExecution,
-            Mandatory = true,
             ValueFromPipelineByPropertyName = true,
-            Position = 4,
             HelpMessage = "The job execution id.")]
-        [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
+        [Parameter(
+            ParameterSetName = GetJobTargetExecution,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job execution id.")]
         public override string JobExecutionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job step name
+        /// </summary>
+        [Parameter(
+            ParameterSetName = DefaultParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "The job step name.")]
+        [Parameter(
+            ParameterSetName = GetJobTargetExecution,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 5,
+            HelpMessage = "The job step name.")]
+        [Parameter(
+            ParameterSetName = InputObjectParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "The job step name.")]
+        [Parameter(
+            ParameterSetName = InputObjectGetJobTargetExecution,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The job step name.")]
+        [Parameter(
+            ParameterSetName = ResourceIdParameterSet,
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            HelpMessage = "The job step name.")]
+        [Parameter(
+            ParameterSetName = ResourceIdGetJobTargetExecution,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The job step name.")]
+        public string StepName { get; set; }
+
+        [Parameter(
+            ParameterSetName = GetJobTargetExecution,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 6,
+            HelpMessage = "The job target id.")]
+        [Parameter(
+            ParameterSetName = InputObjectGetJobTargetExecution,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The job target id.")]
+        [Parameter(
+            ParameterSetName = ResourceIdGetJobTargetExecution,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The job target id.")]
+        public string TargetId { get; set; }
 
         /// <summary>
         /// Gets or sets the min create time
@@ -181,7 +219,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         public int? Count { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent object input model
+        /// Gets or sets the job execution object input model
         /// </summary>
         [Parameter(
             ParameterSetName = InputObjectParameterSet,
@@ -190,29 +228,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "The agent object.")]
         [Parameter(
-            ParameterSetName = InputObjectGetRootJobExecution,
+            ParameterSetName = InputObjectGetJobTargetExecution,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent object.")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
+        public override AzureSqlDatabaseAgentJobExecutionModel JobExecutionObject { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent resource id
+        /// Gets or sets the job execution resource id
         /// </summary>
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The agent resource id.")]
-        [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
+            HelpMessage = "The job execution resource id.")]
+        [Parameter(ParameterSetName = ResourceIdGetJobTargetExecution,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The agent resource id.")]
+            HelpMessage = "The job execution resource id.")]
         [ValidateNotNullOrEmpty]
-        public override string AgentResourceId { get; set; }
+        public override string JobExecutionResourceId { get; set; }
 
         /// <summary>
         /// Gets job execution(s) from the service.
@@ -246,11 +284,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
                         createTimeMin: this.CreateTimeMin,
                         createTimeMax: this.CreateTimeMax,
                         endTimeMin: this.EndTimeMin,
-                        endTimeMax: this.EndTimeMax, 
-                        isActive: this.Active.IsPresent ? this.Active : (bool?) null,
+                        endTimeMax: this.EndTimeMax,
+                        isActive: this.Active.IsPresent ? this.Active : (bool?)null,
                         top: this.Count);
 
-                case GetRootJobExecution:
+                case GetJobTargetExecution:
 
                     var rootJobExecution = ModelAdapter.GetJobExecution(
                         resourceGroupName: this.ResourceGroupName,

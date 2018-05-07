@@ -33,12 +33,80 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class StartAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobExecutionCmdletBase
     {
         /// <summary>
+        /// Gets or sets the resource group name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        public override string AgentName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        public override string JobName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job model input object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentJobModel JobObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job resource id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobResourceIdParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job resource id")]
+        [ValidateNotNullOrEmpty]
+        public override string JobResourceId { get; set; }
+
+        /// <summary>
         /// Gets or sets the switch parameter to indicate whether customer wants to poll completion of job
         /// or if not set, to return job execution id immediately upon creation.
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false)]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false)]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = JobObjectParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = JobResourceIdParameterSet, Mandatory = false)]
         public SwitchParameter Wait { get; set; }
 
         /// <summary>
@@ -47,46 +115,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
         public SwitchParameter AsJob { get; set; }
 
-        /// <summary>
-        /// Gets or sets the job model input object
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
-
-        /// <summary>
-        /// Entry point for the cmdlet
-        /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.JobName = InputObject.JobName;
-                    break;
-                case ResourceIdParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.JobName = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
-            }
-
-            base.ExecuteCmdlet();
-        }
-
-        protected override List<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
             try
             {
@@ -113,7 +142,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override List<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(List<AzureSqlDatabaseAgentJobExecutionModel> model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> model)
         {
             AzureSqlDatabaseAgentJobExecutionModel updatedModel = new AzureSqlDatabaseAgentJobExecutionModel
             {
@@ -131,7 +160,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override List<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(List<AzureSqlDatabaseAgentJobExecutionModel> entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> entity)
         {
             AzureSqlDatabaseAgentJobExecutionModel resp;
 

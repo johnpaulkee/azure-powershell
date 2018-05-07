@@ -17,6 +17,10 @@ using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Commands.Sql.Database.Model;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -30,73 +34,207 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     public class AddAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
         /// <summary>
-        /// Gets or sets the job object
+        /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job resource id
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The job resource id")]
+            HelpMessage = "The resource group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseId,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseId,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseId,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        public override string AgentName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseId,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        public override string JobName { get; set; }
 
         /// <summary>
         /// Gets or sets the job step name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 4,
             ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseId,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 1,
             ParameterSetName = InputObjectParameterSet,
-            Position = 1,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
             Position = 1,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 1,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 1,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The job step name")]
         [Alias("StepName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the target group name
+        /// Gets or sets the job step name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 5,
             ParameterSetName = DefaultParameterSet,
+            Position = 5,
             HelpMessage = "The target group name")]
         [Parameter(
             Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            Position = 5,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultOutputDatabaseId,
+            Position = 5,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 2,
             ParameterSetName = InputObjectParameterSet,
-            Position = 2,
             HelpMessage = "The target group name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
             Position = 2,
+            ParameterSetName = InputObjectOutputDatabaseObject,
             HelpMessage = "The target group name")]
-        public string TargetGroupName { get; set; }
+        [Parameter(
+            Mandatory = true,
+            Position = 2,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 2,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 2,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The target group name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 2,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdOutputDatabaseId,
+            HelpMessage = "The target group name")]
+        public override string TargetGroupName { get; set; }
 
-        /// <summary>
-        /// The credential name
-        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 6,
@@ -104,19 +242,46 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The credential name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            Position = 3,
+            Position = 6,
+            ParameterSetName = DefaultOutputDatabaseObject,
             HelpMessage = "The credential name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            Position = 6,
+            ParameterSetName = DefaultOutputDatabaseId,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
             Position = 3,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 3,
+            ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The credential name")]
         public string CredentialName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command text
-        /// </summary>
         [Parameter(
             Mandatory = true,
             Position = 7,
@@ -124,64 +289,184 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The command text")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            Position = 4,
+            Position = 7,
+            ParameterSetName = DefaultOutputDatabaseObject,
             HelpMessage = "The command text")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            Position = 7,
+            ParameterSetName = DefaultOutputDatabaseId,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
             Position = 4,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The command text")]
+        [Parameter(
+            Mandatory = true,
+            Position = 4,
+            ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The command text")]
         public string CommandText { get; set; }
 
+        [Parameter(
+           Mandatory = true,
+           Position = 8,
+           ParameterSetName = DefaultOutputDatabaseObject,
+           HelpMessage = "The output database object")]
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The output database object")]
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The output database object")]
+        public AzureSqlDatabaseModel OutputDatabaseObject { get; set; }
 
-        #region Output parameters
-
-        /// <summary>
-        /// Gets or sets the output subscription id
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputSubscriptionId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the output resource group name
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the output server name
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the output database name
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputDatabaseName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the output schema name
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputSchemaName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the output table name
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputTableName { get; set; }
+        [Parameter(
+           Mandatory = true,
+           Position = 8,
+           ParameterSetName = DefaultOutputDatabaseId,
+           HelpMessage = "The output database resource id")]
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The output database resource id")]
+        [Parameter(
+            Mandatory = true,
+            Position = 5,
+            ParameterSetName = ResourceIdOutputDatabaseId,
+            HelpMessage = "The output database resource id")]
+        public string OutputDatabaseResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the output credential name
         /// </summary>
-        [Parameter(Mandatory = false)]
-        public override string OutputCredentialName { get; set; }
+        [Parameter(
+            Mandatory = true,
+            Position = 9,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 9,
+            ParameterSetName = DefaultOutputDatabaseId,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 6,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 6,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 6,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 6,
+            ParameterSetName = ResourceIdOutputDatabaseId,
+            HelpMessage = "The output credential name")]
+        public string OutputCredentialName { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the output table name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            Position = 10,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 10,
+            ParameterSetName = DefaultOutputDatabaseId,
+            HelpMessage = "The output table name ")]
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = true,
+            Position = 7,
+            ParameterSetName = ResourceIdOutputDatabaseId,
+            HelpMessage = "The output table name")]
+        public string OutputTableName { get; set; }
 
-        #region Execution option parameters
+        /// <summary>
+        /// Gets or sets the output schema name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            Position = 11,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            Position = 11,
+            ParameterSetName = DefaultOutputDatabaseId,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            Position = 8,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            Position = 8,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            Position = 8,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            Position = 8,
+            ParameterSetName = ResourceIdOutputDatabaseId,
+            HelpMessage = "The output schema name")]
+        public string OutputSchemaName { get; set; }
 
         /// <summary>
         /// Gets or sets the timeout seconds
@@ -213,40 +498,58 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(Mandatory = false)]
         public double? RetryIntervalBackoffMultiplier { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the job object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The job object")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ParameterSetName = InputObjectOutputDatabaseObject,
+            HelpMessage = "The job object")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ParameterSetName = InputObjectOutputDatabaseId,
+            HelpMessage = "The job object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentJobModel JobObject { get; set; }
 
         /// <summary>
-        /// Cmdlet execution starts here
+        /// Gets or sets the job resource id
         /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.JobName = InputObject.JobName;
-                    break;
-                case ResourceIdParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[9]; // TODO:
-                    this.JobName = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
-            }
-
-            base.ExecuteCmdlet();
-        }
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The job resource id")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdOutputDatabaseObject,
+            HelpMessage = "The job resource id")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdOutputDatabaseId,
+            HelpMessage = "The job resource id")]
+        public override string JobResourceId { get; set; }
 
         /// <summary>
         /// Check to see if the job step already exists in this job
         /// </summary>
         /// <returns>Null if the job step doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> GetEntity()
         {
             try
             {
@@ -276,11 +579,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the job step doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobStepModel> model)
         {
             string targetGroupId = CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName);
             string credentialId = CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName);
-            Management.Sql.Models.JobStepOutput output = CreateOrUpdateJobStepOutputModel();
 
             AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
             {
@@ -300,10 +602,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                     TimeoutSeconds = this.TimeoutSeconds
                 },
                 CommandText = this.CommandText,
-                Output = output.ServerName != null ? output : null
             };
 
-            return updatedModel;
+            if (this.OutputDatabaseObject != null)
+            {
+                updatedModel.Output = new Management.Sql.Models.JobStepOutput
+                {
+                    // TODO parse database object resource id to get subscription id chosen
+                    //SubscriptionId = this.OutputDatabaseObject != null ? Guid.Parse(this.OutputSubscriptionId) : (Guid?) null,
+                    ResourceGroupName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.ResourceGroupName : null,
+                    ServerName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.ServerName : null,
+                    DatabaseName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.DatabaseName : null,
+                    Credential = this.OutputCredentialName != null ?
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
+                    null,
+                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : null,
+                    TableName = this.OutputTableName != null ? this.OutputTableName : null
+                };
+            }
+
+            return new List<AzureSqlDatabaseAgentJobStepModel> { updatedModel };
         }
 
         /// <summary>
@@ -311,9 +629,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The job step to create</param>
         /// <returns>The created job step</returns>
-        protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobStepModel> entity)
         {
-            return ModelAdapter.UpsertJobStep(entity);
+            return new List<AzureSqlDatabaseAgentJobStepModel>
+            {
+                ModelAdapter.UpsertJobStep(entity.First())
+            };
         }
     }
 }

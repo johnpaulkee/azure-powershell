@@ -17,8 +17,11 @@ using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 using Microsoft.Azure.Management.Sql.Models;
-using System.Xml;
 using System.Text;
+using static Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobModel;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -30,6 +33,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         DefaultParameterSetName = DefaultParameterSet)]
     public class NewAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
     {
+        /// <summary>
+        /// Gets or sets the resource group name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
@@ -38,42 +44,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultOnceParameterSet,
+            ParameterSetName = AgentDefaultRunOnceParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultMinuteParameterSet,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
+        [ValidateNotNullOrEmpty]
+        [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
@@ -82,42 +69,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultOnceParameterSet,
+            ParameterSetName = AgentDefaultRunOnceParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultMinuteParameterSet,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
         public override string ServerName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the agent name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
@@ -126,42 +93,22 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultOnceParameterSet,
+            ParameterSetName = AgentDefaultRunOnceParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultMinuteParameterSet,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
@@ -170,412 +117,233 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultOnceParameterSet,
+            ParameterSetName = AgentDefaultRunOnceParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultMinuteParameterSet,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentObjectParameterSet,
+            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentObjectRunOnceParameterSet,
+            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectMinuteParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentObjectRecurringParameterSet,
+            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentResourceIdParameterSet,
+            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentResourceIdRunOnceParameterSet,
+            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentResourceIdRecurringParameterSet,
+            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMinuteParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
+        [ValidateNotNullOrEmpty]
         [Alias("JobName")]
-        public string Name { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultOnceParameterSet,
-            HelpMessage = "The job will be run once")]
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = InputObjectOnceParameterSet,
-            HelpMessage = "The job will be run once")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The job will be run once")]
-        public SwitchParameter Once { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultMinuteParameterSet,
-            HelpMessage = "The job will execute in minute intervals")]
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = InputObjectMinuteParameterSet,
-            HelpMessage = "The job will execute in minute intervals")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMinuteParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The job will execute in minute intervals")]
-        public int? MinuteInterval { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultHourParameterSet,
-            HelpMessage = "The job will execute in hour intervals")]
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = InputObjectHourParameterSet,
-            HelpMessage = "The job will execute in hour intervals")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The job will execute in hour intervals")]
-        public int? HourInterval { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultDayParameterSet,
-            HelpMessage = "The job will execute in daily intervals")]
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = InputObjectDayParameterSet,
-            HelpMessage = "The job will execute in daily intervals")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The job will execute in daily intervals")]
-        public int? DayInterval { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultWeekParameterSet,
-            HelpMessage = "The job will execute in weekly intervals")]
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = InputObjectWeekParameterSet,
-            HelpMessage = "The job will execute in weekly intervals")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The job will execute in weekly intervals")]
-        public int? WeekInterval { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 4,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = DefaultMonthParameterSet,
-            HelpMessage = "The job will execute in monthly intervals")]
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = InputObjectMonthParameterSet,
-            HelpMessage = "The job will execute in monthly intervals")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The job will execute in monthly intervals")]
-        public int? MonthInterval { get; set; }
-
-        [Parameter(
-            Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job description")]
-        public string Description { get; set; }
-
-        [Parameter(
-            Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job start time")]
-        public DateTime? StartTime { get; set; }
-
-        [Parameter(
-            Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job end time")]
-        public DateTime? EndTime { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
-        /// The switch parameter that describes whether this job will be run once. If not provided, job will be recurring.
+        /// Gets or sets the switch parameter run once
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentDefaultRunOnceParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            HelpMessage = "The flag to indicate job will be run once")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentObjectRunOnceParameterSet,
+            ValueFromPipeline = true,
+            Position = 2,
+            HelpMessage = "The flag to indicate job will be run once")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentResourceIdRunOnceParameterSet,
+            ValueFromPipeline = true,
+            Position = 2,
+            HelpMessage = "The flag to indicate job will be run once")]
+        public SwitchParameter RunOnce { get; set; }
+
+        /// <summary>
+        /// Get or sets the job schedule interval type
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
+            Position = 4,
+            HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentObjectRecurringParameterSet,
+            Position = 2,
+            HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentResourceIdRecurringParameterSet,
+            Position = 2,
+            HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
+        public JobScheduleReccuringScheduleTypes? IntervalType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job schedule interval count
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
+            Position = 5,
+            HelpMessage = "The recurring schedule interval count")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentObjectRecurringParameterSet,
+            Position = 3,
+            HelpMessage = "The recurring schedule interval count")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = AgentResourceIdRecurringParameterSet,
+            Position = 3,
+            HelpMessage = "The recurring schedule interval count")]
+        public uint? IntervalCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job schedule start time
         /// </summary>
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Determines whether this job start immediately")]
-        public SwitchParameter Enabled { get; set; }
+            ParameterSetName = AgentDefaultRunOnceParameterSet,
+            Position = 5,
+            HelpMessage = "The job schedule start time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
+            Position = 6,
+            HelpMessage = "The job schedule start time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentObjectRunOnceParameterSet,
+            Position = 3,
+            HelpMessage = "The job schedule start time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentObjectRecurringParameterSet,
+            Position = 4,
+            HelpMessage = "The job schedule start time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentResourceIdRunOnceParameterSet,
+            Position = 3,
+            HelpMessage = "The job schedule start time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentResourceIdRecurringParameterSet,
+            Position = 4,
+            HelpMessage = "The job schedule start time")]
+        public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job schedule end time
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentDefaultRecurringParameterSet,
+            Position = 7,
+            HelpMessage = "The job schedule end time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentObjectRecurringParameterSet,
+            Position = 5,
+            HelpMessage = "The job schedule end time")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = AgentResourceIdRecurringParameterSet,
+            Position = 5,
+            HelpMessage = "The job schedule end time")]
+        public DateTime? EndTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job description
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The job description")]
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the agent input object
         /// </summary>
         [Parameter(
-        Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
+            Mandatory = true,
+            ParameterSetName = AgentObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent input object")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectOnceParameterSet,
+            ParameterSetName = AgentObjectRunOnceParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent input object")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectMinuteParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent input object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectHourParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent input object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectDayParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent input object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectWeekParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent input object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = InputObjectMonthParameterSet,
+            ParameterSetName = AgentObjectRecurringParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
+        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
         /// <summary>
         /// Gets or sets the agent resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentResourceIdParameterSet,
+            ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentResourceIdRunOnceParameterSet,
+            ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdMinuteParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The agent resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdHourParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The agent resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdDayParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The agent resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdWeekParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The agent resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdMonthParameterSet,
-            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = AgentResourceIdRecurringParameterSet,
+            ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        public override string AgentResourceId { get; set; }
 
         /// <summary>
-        /// Cmdlet execution starts here
+        /// Check to see if the job already exists in this agent.
         /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                case InputObjectOnceParameterSet:
-                case InputObjectMinuteParameterSet:
-                case InputObjectHourParameterSet:
-                case InputObjectDayParameterSet:
-                case InputObjectWeekParameterSet:
-                case InputObjectMonthParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    break;
-                case ResourceIdParameterSet:
-                case ResourceIdOnceParameterSet:
-                case ResourceIdMinuteParameterSet:
-                case ResourceIdHourParameterSet:
-                case ResourceIdDayParameterSet:
-                case ResourceIdWeekParameterSet:
-                case ResourceIdMonthParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
-            }
-
-            base.ExecuteCmdlet();
-        }
-
-        /// <summary>
-        /// Check to see if the agent already exists in this resource group.
-        /// </summary>
-        /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentJobModel GetEntity()
+        /// <returns>Null if the job doesn't exist. Otherwise throws exception</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> GetEntity()
         {
             try
             {
@@ -602,9 +370,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <param name="model">This is null since the job doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentJobModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobModel> model)
         {
             AzureSqlDatabaseAgentJobModel newEntity = new AzureSqlDatabaseAgentJobModel
             {
@@ -613,56 +381,53 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.Name,
                 Description = this.Description,
-                Enabled = this.Enabled.IsPresent
+                StartTime = this.StartTime != null ? this.StartTime : null,
+                EndTime = this.EndTime != null ? this.EndTime : null,
+                ScheduleType = this.RunOnce.IsPresent ? JobScheduleType.Once :
+                               this.IntervalType.HasValue ? JobScheduleType.Recurring : (JobScheduleType?) null,
             };
 
-            if (this.StartTime != null)
+            if (newEntity.ScheduleType != null && newEntity.ScheduleType == JobScheduleType.Recurring)
             {
-                newEntity.StartTime = this.StartTime;
-            }
-
-            if (this.EndTime != null)
-            {
-                newEntity.EndTime = this.EndTime;
-            }
-
-            // Check what flags are set
-            bool onceIsPresent = this.Once.IsPresent;
-            bool recurringIsPresent = this.MonthInterval.HasValue ||
-                                      this.WeekInterval.HasValue ||
-                                      this.DayInterval.HasValue ||
-                                      this.HourInterval.HasValue ||
-                                      this.MinuteInterval.HasValue;
-
-            // Set up job schedule params
-            if (onceIsPresent)
-            {
-                // Customer requested job to run once
-                newEntity.ScheduleType = JobScheduleType.Once;
-            }
-            else if (recurringIsPresent)
-            {
-                // Customer requested job to be a recurring time interval
-                // Can monthly, weekly, daily, hourly, or every X minutes.
-                newEntity.ScheduleType = JobScheduleType.Recurring;
-
                 StringBuilder stringBuilder = new StringBuilder();
 
+                // Create basic ISO 8601 duration - Basic string builder implementation
+                // XmlConvert.ToString(timeSpan) only supports up to days. Weeks and months need to be supported
                 stringBuilder.Append("P");
-                if (this.HourInterval.HasValue || this.MinuteInterval.HasValue) stringBuilder.Append("T");
 
-                if (this.MonthInterval.HasValue) stringBuilder.Append(this.MonthInterval.Value.ToString() + "M");
-                if (this.WeekInterval.HasValue) stringBuilder.Append(this.WeekInterval.Value.ToString() + "W");
-                if (this.DayInterval.HasValue) stringBuilder.Append(this.DayInterval.Value.ToString() + "D");
-                if (this.HourInterval.HasValue) stringBuilder.Append(this.HourInterval.Value.ToString() + "H");
-                if (this.MinuteInterval.HasValue) stringBuilder.Append(this.MinuteInterval.Value.ToString() + "M");
+                if (this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Hour) || 
+                    this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Minute))
+                {
+                    stringBuilder.Append("T");
+                }
+
+                if (this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Month) || 
+                    this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Minute))
+                {
+                    stringBuilder.Append(this.IntervalCount + "M");
+                }
+
+                if (this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Week))
+                {
+                    stringBuilder.Append(this.IntervalCount + "W");
+                }
+
+                if (this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Day))
+                {
+                    stringBuilder.Append(this.IntervalCount + "D");
+                }
+
+                if (this.IntervalType.Value.HasFlag(JobScheduleReccuringScheduleTypes.Hour))
+                {
+                    stringBuilder.Append(this.IntervalCount + "H");
+                }
 
                 string interval = stringBuilder.ToString();
 
                 newEntity.Interval = interval;
             }
 
-            return newEntity;
+            return new List<AzureSqlDatabaseAgentJobModel> { newEntity };
         }
 
         /// <summary>
@@ -670,9 +435,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override AzureSqlDatabaseAgentJobModel PersistChanges(AzureSqlDatabaseAgentJobModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobModel> entity)
         {
-            return ModelAdapter.UpsertJob(entity);
+            return new List<AzureSqlDatabaseAgentJobModel> {
+                ModelAdapter.UpsertJob(entity.First())
+            };
         }
     }
 }

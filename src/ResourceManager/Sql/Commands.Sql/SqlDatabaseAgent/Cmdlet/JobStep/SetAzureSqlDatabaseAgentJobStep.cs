@@ -17,6 +17,9 @@ using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Commands.Sql.Database.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -25,22 +28,55 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJobStep",
         SupportsShouldProcess = true,
-        DefaultParameterSetName = AddOutputDefaultParameterSet)]
+        DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
     public class SetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
+        /// <summary>
+        /// Default parameter sets
+        /// </summary>
+        protected const string DefaultRemoveOutputParameterSet = "Default remove output parameter set";
+        protected const string DefaultAddDatabaseOutputParameterSet = "Default add database output parameter set";
+        protected const string DefaultAddDatabaseResourceIdParameterSet = "Default add database resource id parameter set";
+
+        /// <summary>
+        /// Input object parameter sets
+        /// </summary>
+        protected const string InputObjectRemoveOutputParameterSet = "Input Object remove output parameter set";
+        protected const string InputObjectAddDatabaseOutputParameterSet = "Input Object add database output parameter set";
+        protected const string InputObjectAddDatabaseResourceIdParameterSet = "Input Object add database resource id parameter set";
+
+        /// <summary>
+        /// Input object parameter sets
+        /// </summary>
+        protected const string ResourceIdRemoveOutputParameterSet = "Resource id remove output parameter set";
+        protected const string ResourceIdAddDatabaseOutputParameterSet = "Resource id add database output parameter set";
+        protected const string ResourceIdAddDatabaseResourceIdParameterSet = "Resource id add database resource id parameter set";
+
         /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AddOutputDefaultParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = RemoveOutputDefaultParameterSet,
+            ParameterSetName = DefaultRemoveOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
@@ -53,13 +89,25 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AddOutputDefaultParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = RemoveOutputDefaultParameterSet,
+            ParameterSetName = DefaultRemoveOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
@@ -70,13 +118,25 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AddOutputDefaultParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = RemoveOutputDefaultParameterSet,
+            ParameterSetName = DefaultRemoveOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
@@ -87,15 +147,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 3,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = AddOutputDefaultParameterSet,
+            Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
-            Position = 3,
+            ParameterSetName = DefaultRemoveOutputParameterSet,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = RemoveOutputDefaultParameterSet,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
             HelpMessage = "The job name")]
         public override string JobName { get; set; }
 
@@ -104,370 +176,328 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 4,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = AddOutputDefaultParameterSet,
+            Position = 4,
             HelpMessage = "The step name")]
         [Parameter(
             Mandatory = true,
-            Position = 4,
+            ParameterSetName = DefaultRemoveOutputParameterSet,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = RemoveOutputDefaultParameterSet,
+            Position = 4,
+            HelpMessage = "The step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
+            HelpMessage = "The step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 4,
             HelpMessage = "The step name")]
         [Alias("StepName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultRemoveOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 5,
+            HelpMessage = "The flag to indicate whether to remove output")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectRemoveOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The flag to indicate whether to remove output")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdRemoveOutputParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The flag to indicate whether to remove output")]
+        public SwitchParameter RemoveOutput { get; set; }
 
         /// <summary>
         /// Gets or sets the target group name
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The target group name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The target group name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The target group name")]
-        public string TargetGroupName { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The target group name")]
+        public override string TargetGroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the credential name
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The credential name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The credential name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The credential name")]
+        [Parameter(Mandatory = false, HelpMessage = "The credential name")]
         public string CredentialName { get; set; }
 
         /// <summary>
         /// Gets or sets the command text
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The command text")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The command text")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The command text")]
+        [Parameter(Mandatory = false, HelpMessage = "The command text")]
         public string CommandText { get; set; }
 
         /// <summary>
-        /// Gets or sets the output subscription id
+        /// Gets or sets the step id
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The output subscription id")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The output subscription id")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The output subscription id")]
-        public override string OutputSubscriptionId { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The step id text")]
+        public int? StepId { get; set; }
 
         /// <summary>
-        /// Gets or sets the output resource group name
+        /// Gets or sets the timeout seconds
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The output resource group name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The output resource group name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The output resource group name")]
-        public override string OutputResourceGroupName { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The timeout seconds")]
+        public int? TimeoutSeconds { get; set; }
 
         /// <summary>
-        /// Gets or sets the output server name
+        /// Gets or sets the retry attempts
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The output server name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The output server name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The output server name")]
-        public override string OutputServerName { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The retry attemps")]
+        public int? RetryAttempts { get; set; }
 
         /// <summary>
-        /// Gets or sets the output database name
+        /// Gets or sets the initial retry interval seconds
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The output database name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The output database name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The output database name")]
-        public override string OutputDatabaseName { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The initial retry interval seconds")]
+        public int? InitialRetryIntervalSeconds { get; set; }
 
         /// <summary>
-        /// Gets or sets the output schema name
+        /// Gets or sets the maximum retry interval seconds
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The output schema name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The output schema name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The output schema name")]
-        public override string OutputSchemaName { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The maximum retry interval seconds")]
+        public int? MaximumRetryIntervalSeconds { get; set; }
 
         /// <summary>
-        /// Gets or sets the output table name
+        /// Gets or sets the retry interval backoff multiplier
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The retry interval backoff multiplier")]
+        public double? RetryIntervalBackoffMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output database object
         /// </summary>
         [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The output table name")]
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            Position = 5,
+            HelpMessage = "The output database object")]
         [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The output table name")]
+            Mandatory = true,
+            ParameterSetName = InputObjectAddDatabaseOutputParameterSet,
+            Position = 1,
+            HelpMessage = "The output database object")]
         [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The output table name")]
-        public override string OutputTableName { get; set; }
+            Mandatory = true,
+            ParameterSetName = ResourceIdAddDatabaseOutputParameterSet,
+            Position = 1,
+            HelpMessage = "The output database object")]
+        public AzureSqlDatabaseModel OutputDatabaseObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output database resource id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
+            Position = 5,
+            HelpMessage = "The output database resource id")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            Position = 1,
+            HelpMessage = "The output database resource id")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            Position = 1,
+            HelpMessage = "The output database resource id")]
+        public string OutputDatabaseResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the output credential name
         /// </summary>
         [Parameter(
             Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
+            ParameterSetName = DefaultParameterSet,
             HelpMessage = "The output credential name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
             HelpMessage = "The output credential name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output credential name")]
-        public override string OutputCredentialName { get; set; }
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectAddDatabaseOutputParameterSet,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdAddDatabaseOutputParameterSet,
+            HelpMessage = "The output credential name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output credential name")]
+        public string OutputCredentialName { get; set; }
 
         /// <summary>
-        /// Gets or sets the switch parameter to remove the job step output target
+        /// Gets or sets the output table name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectAddDatabaseOutputParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdAddDatabaseOutputParameterSet,
+            HelpMessage = "The output table name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output schema name")]
+        public string OutputTableName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output schema name
+        /// </summary>
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultAddDatabaseOutputParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectAddDatabaseOutputParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdAddDatabaseOutputParameterSet,
+            HelpMessage = "The output schema name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            HelpMessage = "The output schema name")]
+        public string OutputSchemaName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job object
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = RemoveOutputDefaultParameterSet,
-            HelpMessage = "The flag to indicate to removing the job output from this job step")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = RemoveOutputInputObjectParameterSet,
-            HelpMessage = "The flag to indicate to removing the job output from this job step")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = RemoveOutputResourceIdParameterSet,
-            HelpMessage = "The flag to indicate to removing the job output from this job step")]
-        public SwitchParameter RemoveOutput { get; set; }
-
-        /// <summary>
-        /// Gets or sets the timeout seconds
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The timeout seconds")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The timeout seconds")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The timeout seconds")]
-        public int? TimeoutSeconds { get; set; }
-
-        /// <summary>
-        /// Gets or sets the retry attempts
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The retry attempts")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The retry attempts")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The retry attempts")]
-        public int? RetryAttempts { get; set; }
-
-        /// <summary>
-        /// Gets or sets the initial retry interval seconds
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The initial retry interval seconds")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The initial retry interval seconds")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The initial retry interval seconds")]
-        public int? InitialRetryIntervalSeconds { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum retry interval seconds
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The maximum retry interval seconds")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The maximum retry interval seconds")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The maximum retry interval seconds")]
-        public int? MaximumRetryIntervalSeconds { get; set; }
-
-        /// <summary>
-        /// Gets or sets the retry interval backoff multiplier
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The retry interval backoff multiplier")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The retry interval backoff multiplier")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The retry interval backoff multiplier")]
-        public double? RetryIntervalBackoffMultiplier { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job step id
-        /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputDefaultParameterSet,
-            HelpMessage = "The job step id")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            HelpMessage = "The job step id")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            HelpMessage = "The job step id")]
-        public int? StepId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job step object
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = AddOutputInputObjectParameterSet,
-            ValueFromPipeline = true,
             Position = 0,
+            ParameterSetName = InputObjectParameterSet,
             HelpMessage = "The job step object")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = RemoveOutputInputObjectParameterSet,
-            ValueFromPipeline = true,
             Position = 0,
+            ParameterSetName = InputObjectRemoveOutputParameterSet,
+            HelpMessage = "The job step object")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ParameterSetName = InputObjectAddDatabaseOutputParameterSet,
+            HelpMessage = "The job step object")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
             HelpMessage = "The job step object")]
         [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
+        public override AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
 
         /// <summary>
-        /// Gets or sets the job step resource id
+        /// Gets or sets the job resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AddOutputResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
+            ParameterSetName = ResourceIdParameterSet,
             HelpMessage = "The job step resource id")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = RemoveOutputResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
+            ParameterSetName = ResourceIdRemoveOutputParameterSet,
+            HelpMessage = "The job step resource id")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ParameterSetName = ResourceIdAddDatabaseOutputParameterSet,
+            HelpMessage = "The job step resource id")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
             HelpMessage = "The job step resource id")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        public override string ResourceId { get; set; }
 
         /// <summary>
-        /// Cmdlet execution starts here
+        /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            switch (ParameterSetName)
+            if (ParameterSetName == InputObjectParameterSet)
             {
-                case AddOutputInputObjectParameterSet:
-                case RemoveOutputInputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.JobName = InputObject.JobName;
-                    this.Name = InputObject.StepName;
-                    break;
-                case AddOutputResourceIdParameterSet:
-                case RemoveOutputResourceIdParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.JobName = tokens[11];
-                    this.Name = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
+                InitializeJobStepProperties(this.InputObject);
             }
 
             base.ExecuteCmdlet();
@@ -477,12 +507,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Check to see if the job step already exists in job.
         /// </summary>
         /// <returns>Null if the job step doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> GetEntity()
         {
             try
             {
                 WriteDebugWithTimestamp("StepName: {0}", Name);
-                return ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
+                return new List<AzureSqlDatabaseAgentJobStepModel>
+                {
+                    ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name)
+                };
             }
             catch (CloudException ex)
             {
@@ -504,13 +537,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">The existing job step model</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentJobStepModel ApplyUserInputToModel(AzureSqlDatabaseAgentJobStepModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobStepModel> model)
         {
-            Management.Sql.Models.JobStepOutput output =
-                this.RemoveOutput.IsPresent ? null :
-                    (model.Output == null) ?
-                        CreateOrUpdateJobStepOutputModel() :                // create new output model
-                        CreateOrUpdateJobStepOutputModel(model.Output);     // update existing output model
+            var existingEntity = model.First();
 
             AzureSqlDatabaseAgentJobStepModel updatedModel = new AzureSqlDatabaseAgentJobStepModel
             {
@@ -519,26 +548,44 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.JobName,
                 StepName = this.Name,
-                TargetGroupName = this.TargetGroupName != null ? 
-                    CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName) : 
-                    CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, model.TargetGroupName),
-                CredentialName = this.CredentialName != null ? 
-                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName) : 
-                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, model.CredentialName),
+                TargetGroupName = this.TargetGroupName != null ?
+                    CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, this.TargetGroupName) :
+                    CreateTargetGroupId(this.ResourceGroupName, this.ServerName, this.AgentName, existingEntity.TargetGroupName),
+                CredentialName = this.CredentialName != null ?
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.CredentialName) :
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, existingEntity.CredentialName),
                 ExecutionOptions = new Management.Sql.Models.JobStepExecutionOptions
                 {
-                    InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds != null ? this.InitialRetryIntervalSeconds : model.ExecutionOptions.InitialRetryIntervalSeconds,
-                    MaximumRetryIntervalSeconds = this.MaximumRetryIntervalSeconds != null ? this.MaximumRetryIntervalSeconds : model.ExecutionOptions.MaximumRetryIntervalSeconds,
-                    RetryAttempts = this.RetryAttempts != null ? this.RetryAttempts : model.ExecutionOptions.RetryAttempts,
-                    RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier != null ? this.RetryIntervalBackoffMultiplier : model.ExecutionOptions.RetryIntervalBackoffMultiplier,
-                    TimeoutSeconds = this.TimeoutSeconds != null ? this.TimeoutSeconds : model.ExecutionOptions.TimeoutSeconds
+                    InitialRetryIntervalSeconds = this.InitialRetryIntervalSeconds != null ? this.InitialRetryIntervalSeconds : existingEntity.ExecutionOptions.InitialRetryIntervalSeconds,
+                    MaximumRetryIntervalSeconds = this.MaximumRetryIntervalSeconds != null ? this.MaximumRetryIntervalSeconds : existingEntity.ExecutionOptions.MaximumRetryIntervalSeconds,
+                    RetryAttempts = this.RetryAttempts != null ? this.RetryAttempts : existingEntity.ExecutionOptions.RetryAttempts,
+                    RetryIntervalBackoffMultiplier = this.RetryIntervalBackoffMultiplier != null ? this.RetryIntervalBackoffMultiplier : existingEntity.ExecutionOptions.RetryIntervalBackoffMultiplier,
+                    TimeoutSeconds = this.TimeoutSeconds != null ? this.TimeoutSeconds : existingEntity.ExecutionOptions.TimeoutSeconds
                 },
-                CommandText = this.CommandText != null ? this.CommandText : model.CommandText,
-                StepId = this.StepId != null ? this.StepId : model.StepId,
-                Output = output != null && output.ServerName != null ? output : null
+                CommandText = this.CommandText != null ? this.CommandText : existingEntity.CommandText,
+                StepId = this.StepId != null ? this.StepId : existingEntity.StepId,
             };
 
-            return updatedModel;
+            if (this.OutputDatabaseObject != null)
+            {
+                var existingOutput = existingEntity.Output;
+
+                updatedModel.Output = new Management.Sql.Models.JobStepOutput
+                {
+                    // todo update subscription id from database object resource id
+                    //SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputDatabase) : existingOutput.SubscriptionId,
+                    ResourceGroupName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.ResourceGroupName : existingOutput.ResourceGroupName,
+                    ServerName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.ServerName : existingOutput.ServerName,
+                    DatabaseName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.DatabaseName : existingOutput.DatabaseName,
+                    Credential = this.OutputCredentialName != null ?
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
+                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, existingOutput.Credential),
+                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : existingOutput.SchemaName,
+                    TableName = this.OutputTableName != null ? this.OutputTableName : existingOutput.TableName
+                };
+            }
+
+            return new List<AzureSqlDatabaseAgentJobStepModel> { updatedModel };
         }
 
         /// <summary>
@@ -546,9 +593,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The job step to update</param>
         /// <returns>The updated job step</returns>
-        protected override AzureSqlDatabaseAgentJobStepModel PersistChanges(AzureSqlDatabaseAgentJobStepModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobStepModel> entity)
         {
-            return ModelAdapter.UpsertJobStep(entity);
+            return new List<AzureSqlDatabaseAgentJobStepModel>
+            {
+                ModelAdapter.UpsertJobStep(entity.First())
+            };
         }
     }
 }

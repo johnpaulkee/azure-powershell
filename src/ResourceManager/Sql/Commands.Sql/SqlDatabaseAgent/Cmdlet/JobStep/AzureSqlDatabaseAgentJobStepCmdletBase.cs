@@ -18,49 +18,27 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System.Management.Automation;
 using System;
+using System.Collections.Generic;
+using Microsoft.Azure.Commands.Sql.Database.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobStepCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobStepModel, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobStepCmdletBase : 
+        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobStepModel, IEnumerable<AzureSqlDatabaseAgentJobStepModel>, AzureSqlDatabaseAgentAdapter>
     {
-        /// <summary>
-        /// Default parameter sets
-        /// </summary>
-        protected const string AddOutputDefaultParameterSet = "Add output job step default parameter set";
-        protected const string RemoveOutputDefaultParameterSet = "Remove output job step default Parameter Set";
+        protected const string DefaultOutputDatabaseObject = "Default job step output database object parameter set";
+        protected const string DefaultOutputDatabaseId = "Default job step output database id parameter set";
 
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
-        protected const string AddOutputInputObjectParameterSet = "Add Output Input object job step parameter set";
-        protected const string RemoveOutputInputObjectParameterSet = "Remove output input object job step parameter set";
+        protected const string InputObjectOutputDatabaseObject = "Input object job step output database object parameter set";
+        protected const string InputObjectOutputDatabaseId = "Input object job step output database id parameter set";
 
-        /// <summary>
-        /// Resource id parameter sets
-        /// </summary>
-        protected const string AddOutputResourceIdParameterSet = "Add Output Resource id job step parameter set";
-        protected const string RemoveOutputResourceIdParameterSet = "Remove output resource id job step parameter set";
-
-        /// <summary>
-        /// Gets or sets the job name
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            Position = 3,
-            ParameterSetName = DefaultParameterSet)]
-        public virtual string JobName { get; set; }
+        protected const string ResourceIdOutputDatabaseObject = "Resource id job step output database object parameter set";
+        protected const string ResourceIdOutputDatabaseId = "Resource id job step output database id parameter set";
 
 
-        /// <summary>
-        /// Output target parameters
-        /// </summary>
-        public virtual string OutputSubscriptionId { get; set; }
-        public virtual string OutputResourceGroupName { get; set; }
-        public virtual string OutputServerName { get; set; }
-        public virtual string OutputDatabaseName { get; set; }
-        public virtual string OutputSchemaName { get; set; }
-        public virtual string OutputTableName { get; set; }
-        public virtual string OutputCredentialName { get; set; }
+        protected const string DefaultGetVersionParameterSet = "Default get job step version parameter set";
+        protected const string JobObjectGetVersionParameterSet = "Job object get job step version parameter set";
+        protected const string JobResourceIdGetVersionParameterSet = "Job resource id get job step version parameter set";
 
         /// <summary>
         /// Intializes the model adapter
@@ -70,58 +48,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         protected override AzureSqlDatabaseAgentAdapter InitModelAdapter(IAzureSubscription subscription)
         {
             return new AzureSqlDatabaseAgentAdapter(DefaultContext);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="outputSubscriptionId"></param>
-        /// <param name="outputResourceGroupName"></param>
-        /// <param name="outputServerName"></param>
-        /// <param name="outputDatabaseName"></param>
-        /// <param name="outputCredential"></param>
-        /// <param name="outputSchemaName"></param>
-        /// <param name="outputTableName"></param>
-        /// <returns></returns>
-        protected Management.Sql.Models.JobStepOutput CreateOrUpdateJobStepOutputModel(
-            Management.Sql.Models.JobStepOutput existingOutput = null)
-        {
-            Management.Sql.Models.JobStepOutput model;
-
-            // Create new output model
-            if (existingOutput == null)
-            {
-                model = new Management.Sql.Models.JobStepOutput
-                {
-                    SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputSubscriptionId) : (Guid?) null,
-                    ResourceGroupName = this.OutputResourceGroupName != null ? this.OutputResourceGroupName : null,
-                    ServerName = this.OutputServerName != null ? this.OutputServerName : null,
-                    DatabaseName = this.OutputDatabaseName != null ? this.OutputDatabaseName : null,
-                    Credential = this.OutputCredentialName != null ?
-                        CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
-                        null,
-                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : null,
-                    TableName = this.OutputTableName != null ? this.OutputTableName : null
-                };
-            }
-            else
-            {
-                // Update existing output model if necessary
-                model = new Management.Sql.Models.JobStepOutput
-                {
-                    SubscriptionId = this.OutputSubscriptionId != null ? Guid.Parse(this.OutputSubscriptionId) : existingOutput.SubscriptionId,
-                    ResourceGroupName = this.OutputResourceGroupName != null ? this.OutputResourceGroupName : existingOutput.ResourceGroupName,
-                    ServerName = this.OutputServerName != null ? this.OutputServerName : existingOutput.ServerName,
-                    DatabaseName = this.OutputDatabaseName != null ? this.OutputDatabaseName : existingOutput.DatabaseName,
-                    Credential = this.OutputCredentialName != null ?
-                        CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
-                        CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, existingOutput.Credential),
-                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : existingOutput.SchemaName,
-                    TableName = this.OutputTableName != null ? this.OutputTableName : existingOutput.TableName
-                };
-            }
-
-            return model;
         }
     }
 }

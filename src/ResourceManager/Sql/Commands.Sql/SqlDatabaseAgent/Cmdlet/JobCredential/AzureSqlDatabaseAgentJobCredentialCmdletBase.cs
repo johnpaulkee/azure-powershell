@@ -16,10 +16,12 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : 
+        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Intialize the job credential adapter

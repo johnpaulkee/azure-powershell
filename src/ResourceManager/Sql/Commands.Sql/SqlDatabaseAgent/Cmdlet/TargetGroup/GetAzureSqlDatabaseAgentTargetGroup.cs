@@ -12,7 +12,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Management.Automation;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Rest.Azure;
@@ -25,30 +27,45 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentTargetGroup", 
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentTargetGroupModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>))]
     public class GetAzureSqlDatabaseAgentTargetGroup : AzureSqlDatabaseAgentTargetGroupCmdletBase
     {
         /// <summary>
-        /// Gets or sets the agent input object model
+        /// Gets or sets the resource group name
         /// </summary>
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(
             Mandatory = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentModel InputObject { get; set; }
-
-        /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the target group name
@@ -59,62 +76,62 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The target group name")]
-        [Parameter(ParameterSetName = InputObjectParameterSet,
+        [Parameter(ParameterSetName = AgentObjectParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The target group name")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
+        [Parameter(ParameterSetName = AgentResourceIdParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The target group name")]
         [ValidateNotNullOrEmpty]
         [Alias("TargetGroupName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
-        /// Execution starts here
+        /// Gets or sets the agent input object model
         /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    break;
-                case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.AgentName = resourceInfo.ResourceName;
-                    break;
-                default:
-                    break;
-            }
+        [Parameter(ParameterSetName = AgentObjectParameterSet,
+            Mandatory = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The SQL Database Agent Parent Object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
-            // Lets us return a list of target groups
-            if (this.Name == null)
-            {
-                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
-                WriteObject(ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName), true);
-                return;
-            }
-
-            base.ExecuteCmdlet();
-        }
+        /// <summary>
+		/// Gets or sets the agent resource id
+		/// </summary>
+		[Parameter(ParameterSetName = AgentResourceIdParameterSet,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource id of the credential to remove")]
+        [ValidateNotNullOrEmpty]
+        public override string AgentResourceId { get; set; }
 
         /// <summary>
         /// Check to see if the target group exists
         /// </summary>
         /// <returns>Throws exception if the target group doesn't exist.<returns>
-        protected override AzureSqlDatabaseAgentTargetGroupModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> GetEntity()
         {
             try
             {
-                return ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
+                // Lets us return a list of target groups
+                if (this.Name == null)
+                {
+                    return ModelAdapter.ListTargetGroups(this.ResourceGroupName, this.ServerName, this.AgentName);
+                }
+                else
+                {
+                    return new List<AzureSqlDatabaseAgentTargetGroupModel>
+                    {
+                        ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name)
+                    };
+                }
             }
             catch (CloudException ex)
             {
@@ -129,6 +146,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 // Unexpected exception encountered
                 throw;
             }
+        }
+
+        /// <summary>
+        /// No user input to apply to model.
+        /// </summary>
+        /// <param name="model">The model to modify</param>
+        /// <returns>The input model</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> model)
+        {
+            return model;
+        }
+
+        /// <summary>
+        /// No changes, thus nothing to persist.
+        /// Note: even though we technically don't need to override this, we want to pass the entity forward so that we can take advantage of
+        /// powershell's understanding of a list with one item defaulting to just the item itself.
+        /// </summary>
+        /// <param name="entity">The entity retrieved</param>
+        /// <returns>The unchanged entity</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel> entity)
+        {
+            return entity;
         }
     }
 }

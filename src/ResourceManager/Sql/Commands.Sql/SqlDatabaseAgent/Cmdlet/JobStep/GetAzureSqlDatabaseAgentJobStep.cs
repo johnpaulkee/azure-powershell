@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 
@@ -24,38 +25,74 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobStep",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
+    [OutputType(typeof(AzureSqlDatabaseAgentJobStepVersionModel))]
+    [OutputType(typeof(List<AzureSqlDatabaseAgentJobStepModel>))]
     public class GetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
     {
         /// <summary>
-        /// Gets or sets the job input object
+        /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job input object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job resource id
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The job resource id")]
-        [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+            HelpMessage = "The resource group name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultGetVersionParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The resource group name")]
+        public override string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultGetVersionParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultGetVersionParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            HelpMessage = "The agent name")]
+        public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the job name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 3,
+            HelpMessage = "The job name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultGetVersionParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
@@ -64,49 +101,103 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// <summary>
         /// Gets or sets the job step name
         /// </summary>
-        [Parameter(Mandatory = false)]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            Position = 4,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultGetVersionParameterSet,
+            Position = 4,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = JobObjectParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobObjectGetVersionParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = JobResourceIdParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobResourceIdGetVersionParameterSet,
+            Position = 1,
+            HelpMessage = "The job step name")]
         [Alias("StepName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job version
         /// </summary>
         [Parameter(
-            Mandatory = false,
-            HelpMessage = "The job version")]
+            Mandatory = true,
+            ParameterSetName = DefaultGetVersionParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 5,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobObjectGetVersionParameterSet,
+            ValueFromPipeline = true,
+            Position = 2,
+            HelpMessage = "The job step name")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobResourceIdGetVersionParameterSet,
+            Position = 2,
+            HelpMessage = "The job step name")]
         public int? Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job input object
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job input object")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobObjectGetVersionParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The job input object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseAgentJobModel JobObject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job resource id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The job resource id")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = JobResourceIdGetVersionParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The job resource id")]
+        [ValidateNotNullOrEmpty]
+        public override string JobResourceId { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here
         /// </summary>
-        public override void ExecuteCmdlet()
+        public sealed override void ExecuteCmdlet()
         {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.AgentName = InputObject.AgentName;
-                    this.JobName = InputObject.JobName;
-                    break;
-                case ResourceIdParameterSet:
-                    string[] tokens = ResourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    this.ResourceGroupName = tokens[3];
-                    this.ServerName = tokens[7];
-                    this.AgentName = tokens[9];
-                    this.JobName = tokens[tokens.Length - 1];
-                    break;
-                default:
-                    break;
-            }
 
-            // Returns a list of jobs if name is not provided
-            if (this.Name == null)
-            {
-                ModelAdapter = InitModelAdapter(DefaultProfile.DefaultContext.Subscription);
-                WriteObject(ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName), true);
-                return;
-            }
 
             base.ExecuteCmdlet();
         }
@@ -115,14 +206,49 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// Gets a job step from the service.
         /// </summary>
         /// <returns></returns>
-        protected override AzureSqlDatabaseAgentJobStepModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> GetEntity()
         {
             if (this.Version.HasValue)
             {
-                return ModelAdapter.GetJobStepByVersion(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Version.Value, this.Name);
+                return new List<AzureSqlDatabaseAgentJobStepModel>
+                {
+                    ModelAdapter.GetJobStepByVersion(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Version.Value, this.Name)
+                };
             }
+            else if (this.Name == null)
+            {
+                // Returns a list of jobs if name is not provided
+                return ModelAdapter.ListJobSteps(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName);
+            }
+            else
+            {
+                return new List<AzureSqlDatabaseAgentJobStepModel>
+                {
+                    ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name)
+                };
+            }
+        }
 
-            return ModelAdapter.GetJobStep(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.Name);
+        /// <summary>
+        /// No user input to apply to model.
+        /// </summary>
+        /// <param name="model">The model to modify</param>
+        /// <returns>The input model</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobStepModel> model)
+        {
+            return model;
+        }
+
+        /// <summary>
+        /// No changes, thus nothing to persist.
+        /// Note: even though we technically don't need to override this, we want to pass the entity forward so that we can take advantage of
+        /// powershell's understanding of a list with one item defaulting to just the item itself.
+        /// </summary>
+        /// <param name="entity">The entity retrieved</param>
+        /// <returns>The unchanged entity</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentJobStepModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentJobStepModel> entity)
+        {
+            return entity;
         }
     }
 }

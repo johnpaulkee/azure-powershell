@@ -45,7 +45,7 @@ function Test-CreateAgent
         Assert-AreEqual $resp1.WorkerCount 100
 
         # Test using input object
-        $resp2 = New-AzureRmSqlDatabaseAgent -InputObject $db2 -Name $agentName2
+        $resp2 = New-AzureRmSqlDatabaseAgent -DatabaseObject $db2 -Name $agentName2
 
         Assert-AreEqual $resp2.AgentName $agentName2
         Assert-AreEqual $resp2.ServerName $s1.ServerName
@@ -55,7 +55,7 @@ function Test-CreateAgent
         Assert-AreEqual $resp2.WorkerCount 100
 
         # Test using resource id
-        $resp3 = New-AzureRmSqlDatabaseAgent -ResourceId $db3.ResourceId -Name $agentName3
+        $resp3 = New-AzureRmSqlDatabaseAgent -DatabaseResourceId $db3.ResourceId -Name $agentName3
 
         Assert-AreEqual $resp3.AgentName $agentName3
         Assert-AreEqual $resp3.ServerName $s1.ServerName
@@ -188,7 +188,7 @@ function Test-GetAgent
         Assert-AreEqual 2 $all.Count
 
         # Test using input object
-        $resp2 = Get-AzureRmSqlDatabaseAgent -InputObject $s1 -AgentName $a2.AgentName
+        $resp2 = Get-AzureRmSqlDatabaseAgent -ServerObject $s1 -AgentName $a2.AgentName
 
         Assert-AreEqual $resp2.AgentName $a2.AgentName
         Assert-AreEqual $resp2.ServerName $s1.ServerName
@@ -198,11 +198,11 @@ function Test-GetAgent
         Assert-AreEqual $resp2.WorkerCount 100
 
         # Test get all agents in s1 using input object
-        $all = Get-AzureRmSqlDatabaseAgent -InputObject $s1
+        $all = Get-AzureRmSqlDatabaseAgent -ServerObject $s1
         Assert-AreEqual 2 $all.Count
 
         # Test using resource id
-        $resp3 = Get-AzureRmSqlDatabaseAgent -ResourceId $s2.ResourceId -AgentName $a3.AgentName
+        $resp3 = Get-AzureRmSqlDatabaseAgent -ServerResourceId $s2.ResourceId -AgentName $a3.AgentName
 
         Assert-AreEqual $resp3.AgentName $a3.AgentName
         Assert-AreEqual $resp3.ServerName $s2.ServerName
@@ -212,7 +212,7 @@ function Test-GetAgent
         Assert-AreEqual $resp3.WorkerCount 100
         
         # Test get all agents in s2 using resource id
-        $all = Get-AzureRmSqlDatabaseAgent -InputObject $s2
+        $all = Get-AzureRmSqlDatabaseAgent -ServerInputObject $s2
         Assert-AreEqual 1 $all.Count
 
         # Test piping - Get all agents in s1

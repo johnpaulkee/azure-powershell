@@ -16,10 +16,13 @@ using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using System.Collections.Generic;
+using Microsoft.Azure.Commands.Sql.Server.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentCmdletBase : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentModel, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentCmdletBase : 
+        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentModel, IEnumerable<AzureSqlDatabaseAgentModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Removing parameter attribute here since we use "Name" as set by powershell standards

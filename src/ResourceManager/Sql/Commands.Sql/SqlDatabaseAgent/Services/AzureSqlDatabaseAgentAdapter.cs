@@ -69,7 +69,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
 
             var resp = Communicator.CreateOrUpdateAgent(model.ResourceGroupName, model.ServerName, model.AgentName, param);
-
             return CreateAgentModelFromResponse(model.ResourceGroupName, model.ServerName, resp);
         }
 
@@ -86,7 +85,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
 
             var resp = Communicator.UpdateAgent(model.ResourceGroupName, model.ServerName, model.AgentName, param);
-
             return CreateAgentModelFromResponse(model.ResourceGroupName, model.ServerName, resp);
         }
 
@@ -109,7 +107,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agents are in</param>
         /// <returns>The converted agent model(s)</returns>
-        public List<AzureSqlDatabaseAgentModel> GetSqlDatabaseAgent(string resourceGroupName, string serverName)
+        public List<AzureSqlDatabaseAgentModel> ListAgents(string resourceGroupName, string serverName)
         {
             var resp = Communicator.ListAgentsByServer(resourceGroupName, serverName);
             return resp.Select(agent => CreateAgentModelFromResponse(resourceGroupName, serverName, agent)).ToList();
@@ -216,7 +214,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agents are in</param>
         /// <returns>The converted agent model(s)</returns>
-        public List<AzureSqlDatabaseAgentJobCredentialModel> GetJobCredential(string resourceGroupName, string serverName, string agentName)
+        public List<AzureSqlDatabaseAgentJobCredentialModel> ListJobCredentials(string resourceGroupName, string serverName, string agentName)
         {
             var resp = Communicator.GetJobCredential(resourceGroupName, serverName, agentName);
             return resp.Select(credentialName => CreateAgentCredentialModelFromResponse(resourceGroupName, serverName, agentName, credentialName)).ToList();
@@ -315,7 +313,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server the agent is in</param>
         /// <param name="agentName">The agent name</param>
         /// <returns>The converted agent model</returns>
-        public List<AzureSqlDatabaseAgentTargetGroupModel> GetTargetGroup(string resourceGroupName, string serverName, string agentName)
+        public List<AzureSqlDatabaseAgentTargetGroupModel> ListTargetGroups(string resourceGroupName, string serverName, string agentName)
         {
             var resp = Communicator.GetTargetGroup(resourceGroupName, serverName, agentName);
             return resp.Select(targetGroup => CreateTargetGroupModelFromResponse(resourceGroupName, serverName, agentName, targetGroup)).ToList();
@@ -452,11 +450,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             string agentName,
             Job resp)
         {
-            return new AzureSqlDatabaseAgentJobModel(
-                resourceGroupName,
-                serverName,
-                agentName,
-                resp);
+            return new AzureSqlDatabaseAgentJobModel
+            {
+                ResourceGroupName = resourceGroupName,
+                ServerName = serverName,
+                AgentName = agentName,
+                JobName = resp.Name,
+                Description = resp.Description,
+                ResourceId = resp.Id,
+
+                StartTime = resp.Schedule.StartTime,
+                EndTime = resp.Schedule.EndTime,
+                ScheduleType = resp.Schedule.Type,
+                Enabled = resp.Schedule.Enabled,
+                Interval = resp.Schedule.Interval,
+                Type = resp.Type,
+                Version = resp.Version
+            };
         }
 
         #endregion
@@ -496,10 +506,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server the agent is in</param>
         /// <param name="agentName">The agent name</param>
         /// <returns>The converted agent model</returns>
-        public AzureSqlDatabaseAgentJobStepModel GetJobStepByVersion(string resourceGroupName, string serverName, string agentName, string jobName, int jobVersion, string stepName)
+        public AzureSqlDatabaseAgentJobStepVersionModel GetJobStepByVersion(string resourceGroupName, string serverName, string agentName, string jobName, int jobVersion, string stepName)
         {
             var resp = Communicator.GetJobStepByVersion(resourceGroupName, serverName, agentName, jobName, jobVersion, stepName);
-            return CreateJobStepModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepName, resp);
+            return CreateJobStepVersionModelFromResponse(resourceGroupName, serverName, agentName, jobName, jobVersion, stepName, resp);
         }
 
         /// <summary>
@@ -523,7 +533,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName">The agent name</param>
         /// <param name="jobName">The job name</param>
         /// <returns>A list of steps that the job has</returns>
-        public List<AzureSqlDatabaseAgentJobStepModel> GetJobStep(string resourceGroupName, string serverName, string agentName, string jobName)
+        public List<AzureSqlDatabaseAgentJobStepModel> ListJobSteps(string resourceGroupName, string serverName, string agentName, string jobName)
         {
             var resp = Communicator.ListJobStepsByJob(resourceGroupName, serverName, agentName, jobName);
             return resp.Select((step) => CreateJobStepModelFromResponse(resourceGroupName, serverName, agentName, jobName, step.Name, step)).ToList();
@@ -561,6 +571,46 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 ServerName = serverName,
                 AgentName = agentName,
                 JobName = jobName,
+                StepName = stepName,
+                TargetGroupName = new ResourceIdentifier(resp.TargetGroup).ResourceName,
+                CredentialName = new ResourceIdentifier(resp.Credential).ResourceName,
+                CommandText = resp.Action.Value,
+                ExecutionOptions = resp.ExecutionOptions,
+                Output = resp.Output != null ? new JobStepOutput
+                {
+                    ResourceGroupName = resp.Output.ResourceGroupName,
+                    SubscriptionId = resp.Output.SubscriptionId,
+                    Credential = new ResourceIdentifier(resp.Output.Credential).ResourceName,
+                    DatabaseName = resp.Output.DatabaseName,
+                    SchemaName = resp.Output.SchemaName,
+                    ServerName = resp.Output.ServerName,
+                    TableName = resp.Output.TableName,
+                    Type = resp.Output.Type
+                } : null,
+                ResourceId = resp.Id,
+                StepId = resp.StepId,
+                Type = resp.Type
+            };
+
+            return jobStep;
+        }
+
+        private static AzureSqlDatabaseAgentJobStepVersionModel CreateJobStepVersionModelFromResponse(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string jobName,
+            int jobVersion,
+            string stepName,
+            JobStep resp)
+        {
+            AzureSqlDatabaseAgentJobStepVersionModel jobStep = new AzureSqlDatabaseAgentJobStepVersionModel
+            {
+                ResourceGroupName = resourceGroupName,
+                ServerName = serverName,
+                AgentName = agentName,
+                JobName = jobName,
+                Version = jobVersion,
                 StepName = stepName,
                 TargetGroupName = new ResourceIdentifier(resp.TargetGroup).ResourceName,
                 CredentialName = new ResourceIdentifier(resp.Credential).ResourceName,

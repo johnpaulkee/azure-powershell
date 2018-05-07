@@ -19,6 +19,9 @@ using Microsoft.Rest.Azure;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Commands.Sql.Database.Model;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -28,70 +31,70 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.New, "AzureRmSqlDatabaseAgent", 
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlDatabaseAgentModel))]
+    [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
     public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
     {
         /// <summary>
-        /// Gets or sets the Agent's Control Database Object
+        /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The Agent Control Database Object")]
-        [ValidateNotNullOrEmpty]
-        public AzureSqlDatabaseModel InputObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Agent's Control Database Resource Id
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The Agent Control Database Resource Id")]
+            HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
-        public string ResourceId { get; set; }
+        [ResourceGroupCompleter]
+        public override string ResourceGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the Agent's Control Database Name
+        /// Gets or sets the server name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DefaultParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 1,
+            HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
+        public override string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the database name
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            Position = 2,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The database name")]
+        [ValidateNotNullOrEmpty]
+        public override string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent name
         /// </summary>
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "The Agent Control Database Name")]
-        [ValidateNotNullOrEmpty]
-        [Alias("AgentDatabaseName")]
-        public string DatabaseName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Agent's Name
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
-            ParameterSetName = DefaultParameterSet,
             HelpMessage = "The Agent Name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectParameterSet,
+            ParameterSetName = DatabaseObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The Agent Name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = DatabaseResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The Agent Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent's Tags
@@ -103,12 +106,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 4)]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = InputObjectParameterSet,
+            ParameterSetName = DatabaseObjectParameterSet,
             Position = 2,
             HelpMessage = "The Agent Tags")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = ResourceIdParameterSet,
+            ParameterSetName = DatabaseResourceIdParameterSet,
             Position = 2,
             HelpMessage = "The Agent Tags")]
         [ValidateNotNullOrEmpty]
@@ -116,35 +119,34 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public Hashtable Tag { get; set; }
 
         /// <summary>
-        /// Entry point for the cmdlet
+        /// Gets or sets the Agent's Control Database Object
         /// </summary>
-        public override void ExecuteCmdlet()
-        {
-            switch (ParameterSetName)
-            {
-                case InputObjectParameterSet:
-                    this.ResourceGroupName = InputObject.ResourceGroupName;
-                    this.ServerName = InputObject.ServerName;
-                    this.DatabaseName = InputObject.DatabaseName;
-                    break;
-                case ResourceIdParameterSet:
-                    var resourceInfo = new ResourceIdentifier(ResourceId);
-                    this.ResourceGroupName = resourceInfo.ResourceGroupName;
-                    this.ServerName = ResourceIdentifier.GetTypeFromResourceType(resourceInfo.ParentResource);
-                    this.DatabaseName = resourceInfo.ResourceName;
-                    break;
-                default:
-                    break;
-            }
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DatabaseObjectParameterSet,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "The Agent Control Database Object")]
+        [ValidateNotNullOrEmpty]
+        public override AzureSqlDatabaseModel DatabaseObject { get; set; }
 
-            base.ExecuteCmdlet();
-        }
+        /// <summary>
+        /// Gets or sets the Agent's Control Database Resource Id
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = DatabaseResourceIdParameterSet,
+            ValueFromPipelineByPropertyName = true,
+            Position = 0,
+            HelpMessage = "The Agent Control Database Resource Id")]
+        [ValidateNotNullOrEmpty]
+        public override string DatabaseResourceId { get; set; }
 
         /// <summary>
         /// Check to see if the agent already exists in this resource group.
         /// </summary>
         /// <returns>Null if the agent doesn't exist. Otherwise throws exception</returns>
-        protected override AzureSqlDatabaseAgentModel GetEntity()
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> GetEntity()
         {
             try
             {
@@ -174,21 +176,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="model">This is null since the server doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
-        protected override AzureSqlDatabaseAgentModel ApplyUserInputToModel(AzureSqlDatabaseAgentModel model)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentModel> model)
         {
             string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
 
             AzureSqlDatabaseAgentModel newEntity = new AzureSqlDatabaseAgentModel
             {
-                    Location = location,
-                    ResourceGroupName = this.ResourceGroupName,
-                    ServerName = this.ServerName,
-                    AgentName = this.Name,
-                    DatabaseName = this.DatabaseName,
-                    Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true)
+                Location = location,
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.Name,
+                DatabaseName = this.DatabaseName,
+                Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true)
             };
 
-            return newEntity;
+            return new List<AzureSqlDatabaseAgentModel> { newEntity };
         }
 
         /// <summary>
@@ -196,9 +198,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         /// <param name="entity">The agent to create</param>
         /// <returns>The created agent</returns>
-        protected override AzureSqlDatabaseAgentModel PersistChanges(AzureSqlDatabaseAgentModel entity)
+        protected override IEnumerable<AzureSqlDatabaseAgentModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentModel> entity)
         {
-            return ModelAdapter.UpsertSqlDatabaseAgent(entity);
+            return new List<AzureSqlDatabaseAgentModel> {
+                ModelAdapter.UpsertSqlDatabaseAgent(entity.First())
+            };
         }
     }
 }
