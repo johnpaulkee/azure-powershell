@@ -28,7 +28,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultSqlDatabaseSet), 
         OutputType(typeof(JobTarget))]
-    public class AddAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
+    public class AddAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase<AzureSqlDatabaseAgentTargetGroupModel>
     {
         /// <summary>
         /// Gets or sets the resource group name.
@@ -306,7 +306,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The target group object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentTargetGroupModel TargetGroupObject { get; set; }
+        public AzureSqlDatabaseAgentTargetGroupModel TargetGroupObject { get; set; }
 
         /// <summary>
         /// Gets or sets the target group resource id.
@@ -327,7 +327,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The target group resource id")]
         [ValidateNotNullOrEmpty]
-        public override string TargetGroupResourceId { get; set; }
+        public string TargetGroupResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the flag indicating that we want to exclude this target
@@ -337,6 +337,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "Excludes a target.")]
         [ValidateNotNullOrEmpty]
         public override SwitchParameter Exclude { get; set; }
+
+        /// <summary>
+        /// Execution starts here
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.TargetGroupObject);
+            InitializeResourceIdProperties(this.TargetGroupResourceId);
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets the list of existing targets in the target group.

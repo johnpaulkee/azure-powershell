@@ -14,7 +14,6 @@
 
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
-    public class StopAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
+    public class StopAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase<AzureSqlDatabaseAgentJobExecutionModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -93,34 +92,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobExecutionObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The Agent Control Database Object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobExecutionModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobExecutionModel JobExecutionObject { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent's Control Database Object
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobExecutionResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job execution resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string JobExecutionResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeJobExecutionProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.JobExecutionObject);
+            InitializeResourceIdProperties(this.JobExecutionResourceId);
 
             base.ExecuteCmdlet();
         }

@@ -14,7 +14,6 @@
 
 using System.Management.Automation;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
-    public class StartAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobExecutionCmdletBase
+    public class StartAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobExecutionCmdletBase<AzureSqlDatabaseAgentJobModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -81,32 +80,32 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobModel JobObject { get; set; }
+        public AzureSqlDatabaseAgentJobModel JobObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job resource id")]
         [ValidateNotNullOrEmpty]
-        public override string JobResourceId { get; set; }
+        public string JobResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets the switch parameter to indicate whether customer wants to poll completion of job
         /// or if not set, to return job execution id immediately upon creation.
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false)]
-        [Parameter(ParameterSetName = JobObjectParameterSet, Mandatory = false)]
-        [Parameter(ParameterSetName = JobResourceIdParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false)]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false)]
         public SwitchParameter Wait { get; set; }
 
         /// <summary>
@@ -114,6 +113,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
         public SwitchParameter AsJob { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.JobObject);
+            InitializeResourceIdProperties(this.JobResourceId);
+
+            base.ExecuteCmdlet();
+        }
 
         protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {

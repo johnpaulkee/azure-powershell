@@ -24,8 +24,8 @@ using System.Linq;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetModel, IEnumerable<AzureSqlDatabaseAgentTargetModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetCmdletBase<IO> : 
+        AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentTargetModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Parameter sets name for default target group db, server, elastic pool, and shard map
@@ -62,11 +62,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// Flag to determine whether an update to targets in target group is needed in this powershell session
         /// </summary>
         protected bool NeedsUpdate;
-
-        /// <summary>
-        /// Gets or sets the agent server name
-        /// </summary>
-        public virtual string AgentServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the switch parameter for whether or not this target will be excluded.

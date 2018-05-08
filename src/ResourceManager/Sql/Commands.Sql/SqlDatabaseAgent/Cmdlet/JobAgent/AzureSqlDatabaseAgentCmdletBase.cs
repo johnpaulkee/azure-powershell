@@ -21,8 +21,7 @@ using Microsoft.Azure.Commands.Sql.Server.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentModel, IEnumerable<AzureSqlDatabaseAgentModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentCmdletBase<IO> : AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Removing parameter attribute here since we use "Name" as set by powershell standards

@@ -29,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
-    public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase
+    public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase<AzureSqlDatabaseAgentModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -175,9 +175,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// <summary>
         /// Gets or sets the top executions to return in the response
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = true, HelpMessage = "Count returns the top number of executions.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = true, HelpMessage = "Count returns the top number of executions.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = true, HelpMessage = "Count returns the top number of executions.")]
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
         public int? Count { get; set; }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "The agent object.")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
+        public AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
         /// <summary>
         /// Gets or sets the agent resource id
@@ -212,7 +212,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "The agent resource id.")]
         [ValidateNotNullOrEmpty]
-        public override string AgentResourceId { get; set; }
+        public string AgentResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.AgentObject);
+            InitializeResourceIdProperties(this.AgentResourceId);
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets job execution(s) from the service.
@@ -220,50 +231,46 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// <returns></returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobExecutionModel> GetEntity()
         {
-            switch (ParameterSetName)
+            if (this.JobExecutionId != null)
             {
-                case DefaultParameterSet:
+                var jobExecution = ModelAdapter.GetJobExecution(
+                    resourceGroupName: this.ResourceGroupName,
+                    serverName: this.ServerName,
+                    agentName: this.AgentName,
+                    jobName: this.JobName,
+                    jobExecutionId: Guid.Parse(this.JobExecutionId));
 
-                    if (this.JobName != null)
-                    {
-                        return ModelAdapter.ListByJob(
-                            resourceGroupName: this.ResourceGroupName,
-                            serverName: this.ServerName,
-                            agentName: this.AgentName,
-                            jobName: this.JobName,
-                            createTimeMin: this.CreateTimeMin,
-                            createTimeMax: this.CreateTimeMax,
-                            endTimeMin: this.EndTimeMin,
-                            endTimeMax: this.EndTimeMax,
-                            isActive: this.Active.IsPresent ? this.Active : (bool?)null,
-                            top: this.Count);
-                    }
-
-                    return ModelAdapter.ListByAgent(
-                        resourceGroupName: this.ResourceGroupName,
-                        serverName: this.ServerName,
-                        agentName: this.AgentName,
-                        createTimeMin: this.CreateTimeMin,
-                        createTimeMax: this.CreateTimeMax,
-                        endTimeMin: this.EndTimeMin,
-                        endTimeMax: this.EndTimeMax, 
-                        isActive: this.Active.IsPresent ? this.Active : (bool?) null,
-                        top: this.Count);
-
-                case GetRootJobExecution:
-
-                    var rootJobExecution = ModelAdapter.GetJobExecution(
-                        resourceGroupName: this.ResourceGroupName,
-                        serverName: this.ServerName,
-                        agentName: this.AgentName,
-                        jobName: this.JobName,
-                        jobExecutionId: Guid.Parse(this.JobExecutionId));
-
-                    return new List<AzureSqlDatabaseAgentJobExecutionModel> { rootJobExecution };
-
-                default:
-                    throw new PSArgumentException();
+                return new List<AzureSqlDatabaseAgentJobExecutionModel> { jobExecution };
             }
+            else if (this.JobName != null)
+            {
+                var jobExecutions = ModelAdapter.ListByJob(
+                    resourceGroupName: this.ResourceGroupName,
+                    serverName: this.ServerName,
+                    agentName: this.AgentName,
+                    jobName: this.JobName,
+                    createTimeMin: this.CreateTimeMin,
+                    createTimeMax: this.CreateTimeMax,
+                    endTimeMin: this.EndTimeMin,
+                    endTimeMax: this.EndTimeMax,
+                    isActive: this.Active.IsPresent ? this.Active : (bool?)null,
+                    top: this.Count);
+
+                return jobExecutions;
+            }
+
+            var allExecutions = ModelAdapter.ListByAgent(
+                resourceGroupName: this.ResourceGroupName,
+                serverName: this.ServerName,
+                agentName: this.AgentName,
+                createTimeMin: this.CreateTimeMin,
+                createTimeMax: this.CreateTimeMax,
+                endTimeMin: this.EndTimeMin,
+                endTimeMax: this.EndTimeMax,
+                isActive: this.Active.IsPresent ? this.Active : (bool?)null,
+                top: this.Count);
+
+            return allExecutions;
         }
 
         /// <summary>

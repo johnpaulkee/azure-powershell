@@ -28,7 +28,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultSqlDatabaseSet), 
         OutputType(typeof(JobTarget))]
-    public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase
+    public class RemoveAzureSqlDatabaseAgentTarget : AzureSqlDatabaseAgentTargetCmdletBase<AzureSqlDatabaseAgentTargetGroupModel>
     {
         /// <summary>
         /// Gets or sets the resource group name.
@@ -294,7 +294,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The SQL Database Agent Target Group Object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentTargetGroupModel TargetGroupObject { get; set; }
+        public AzureSqlDatabaseAgentTargetGroupModel TargetGroupObject { get; set; }
 
         /// <summary>
         /// Gets or sets the target group resource id.
@@ -315,7 +315,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The target group resource id")]
         [ValidateNotNullOrEmpty]
-        public override string TargetGroupResourceId { get; set; }
+        public string TargetGroupResourceId { get; set; }
+
+        /// <summary>
+        /// Execution starts here
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.TargetGroupObject);
+            InitializeResourceIdProperties(this.TargetGroupResourceId);
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets the list of existing targets in the target group.

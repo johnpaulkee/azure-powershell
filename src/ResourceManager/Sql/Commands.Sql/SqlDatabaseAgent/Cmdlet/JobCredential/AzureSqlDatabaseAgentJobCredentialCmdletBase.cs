@@ -20,8 +20,8 @@ using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobCredentialModel, IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCredentialCmdletBase<IO> : 
+        AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Intialize the job credential adapter

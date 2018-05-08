@@ -16,6 +16,7 @@ using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.Database.Model;
 using Microsoft.Azure.Commands.Sql.Server.Model;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
 using System.Management.Automation;
 
@@ -29,35 +30,24 @@ namespace Microsoft.Azure.Commands.Sql.Common
     /// </summary>
     public abstract class AzureSqlDatabaseAgentCmdletBase<IO, M, A> : AzureSqlCmdletBase<M, A>
     {
+        /// <summary>
+        /// The default parameter sets
+        /// </summary>
         protected const string DefaultParameterSet = "Agent Default Parameter Set";
         protected const string InputObjectParameterSet = "Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "Resource Id Parameter Set";
 
-        /// <summary>
-        /// Azure SQL Database Agent Object Parameter Sets
-        /// </summary>
-        protected const string DatabaseObjectParameterSet      = "Database Object Parameter Set";
-        protected const string ServerObjectParameterSet        = "Server Object Parameter Set";
-        protected const string AgentObjectParameterSet         = "Agent Object Parameter Set";
-        protected const string JobObjectParameterSet           = "Job Object Parameter Set";
-        protected const string JobStepObjectParameterSet       = "Job Step Object Parameter Set";
-        protected const string TargetGroupObjectParameterSet   = "Target Group Object Parameter Set";
-        protected const string JobCredentialObjectParameterSet = "Job Credential Object Parameter Set";
-        protected const string JobExecutionObjectParameterSet  = "Job Execution Object Parameter Set";
-
-        protected const string DatabaseResourceIdParameterSet      = "Database Resource Id Parameter Set";
-        protected const string ServerResourceIdParameterSet        = "Server Resource Id Parameter Set";
-        protected const string AgentResourceIdParameterSet         = "Agent Resource Id Parameter Set";
-        protected const string JobResourceIdParameterSet           = "Job Resource Id Parameter Set";
-        protected const string JobStepResourceIdParameterSet       = "Job Step Resource Id Parameter Set";
-        protected const string TargetGroupResourceIdParameterSet   = "Target Group Resource Id Parameter Set";
-        protected const string JobCredentialResourceIdParameterSet = "Job Credential Resource Id Parameter Set";
-        protected const string JobExecutionResourceIdParameterSet  = "Job Execution Resource Id Parameter Set";
+        public string SubscriptionId { get; set; }
 
         /// <summary>
         /// Gets or sets the server name
         /// </summary>
         public virtual string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent server name (used in target)
+        /// </summary>
+        public virtual string AgentServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the agent name
@@ -70,6 +60,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
         public virtual string JobName { get; set; }
 
         /// <summary>
+        /// Gets or sets the job step name
+        /// </summary>
+        public virtual string StepName { get; set; }
+
+        /// <summary>
         /// Gets or sets the job execution id
         /// </summary>
         public virtual string JobExecutionId { get; set; }
@@ -78,6 +73,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
         /// Gets or sets the target group name
         /// </summary>
         public virtual string TargetGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the credential name
+        /// </summary>
+        public virtual string CredentialName { get; set; }
 
         /// <summary>
         /// Gets or sets the shard map name
@@ -100,257 +100,110 @@ namespace Microsoft.Azure.Commands.Sql.Common
         public virtual string DatabaseName { get; set; }
 
         /// <summary>
-        /// Gets or sets the resource name - depends on the override in child classes
+        /// Initializes the input from model object if necessary
         /// </summary>
-        public virtual string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets server object
-        /// </summary>
-        public virtual IO InputObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets server object
-        /// </summary>
-        public virtual AzureSqlServerModel ServerObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets database object
-        /// </summary>
-        public virtual AzureSqlDatabaseModel DatabaseObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets agent object
-        /// </summary>
-        public virtual AzureSqlDatabaseAgentModel AgentObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets agent object
-        /// </summary>
-        public virtual AzureSqlDatabaseAgentModel JobCredentialObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets target group object
-        /// </summary>
-        public virtual AzureSqlDatabaseAgentTargetGroupModel TargetGroupObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets job object
-        /// </summary>
-        public virtual AzureSqlDatabaseAgentJobModel JobObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets job step object
-        /// </summary>
-        public virtual AzureSqlDatabaseAgentJobStepModel JobStepObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets job execution object
-        /// </summary>
-        public virtual AzureSqlDatabaseAgentJobExecutionModel JobExecutionObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the resource id
-        /// </summary>
-        public virtual string ResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the server resource id
-        /// </summary>
-        public virtual string ServerResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the database resource id
-        /// </summary>
-        public virtual string DatabaseResourceId { get; set; }
-        /// <summary>
-        /// Gets or sets the agent resource id
-        /// </summary>
-        public virtual string AgentResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the target group resource id
-        /// </summary>
-        public virtual string TargetGroupResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job execution resource id
-        /// </summary>
-        public virtual string JobExecutionResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job resource id
-        /// </summary>
-        public virtual string JobResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job step resource id
-        /// </summary>
-        public virtual string JobStepResourceId { get; set; }
-
-        /// <summary>
-        /// Cmdlet execution starts here
-        /// </summary>
-        public override void ExecuteCmdlet()
+        /// <param name="model"></param>
+        public void InitializeInputObjectProperties(IO model)
         {
-            switch (ParameterSetName)
+            if (model == null)
             {
-                case ServerObjectParameterSet:
-                    InitializeServerProperties(this.ServerObject);
-                    break;
-                case DatabaseObjectParameterSet:
-                    InitializeDatabaseProperties(this.DatabaseObject);
-                    break;
-                case AgentObjectParameterSet:
-                    InitializeAgentProperties(this.AgentObject);
-                    break;
-                case TargetGroupObjectParameterSet:
-                    InitializeTargetGroupProperties(this.TargetGroupObject);
-                    break;
-                case JobObjectParameterSet:
-                    this.ResourceGroupName = JobObject.ResourceGroupName;
-                    this.ServerName = JobObject.ServerName;
-                    this.AgentName = JobObject.AgentName;
-                    this.Name = JobObject.JobName;
-                    break;
-                case JobStepObjectParameterSet:
-                    this.ResourceGroupName = JobStepObject.ResourceGroupName;
-                    this.ServerName = JobStepObject.ServerName;
-                    this.AgentName = JobStepObject.AgentName;
-                    this.JobName = JobStepObject.JobName;
-                    this.Name = JobStepObject.StepName;
-                    break;
-                case JobExecutionObjectParameterSet:
-                    this.ResourceGroupName = JobExecutionObject.ResourceGroupName;
-                    this.ServerName = JobExecutionObject.ServerName;
-                    this.AgentName = JobExecutionObject.AgentName;
-                    this.JobName = JobExecutionObject.JobName;
-                    this.JobExecutionId = JobExecutionObject.JobExecutionId.Value.ToString();
-                    break;
-                default:
-                    break;
+                return;
             }
 
-            base.ExecuteCmdlet();
+            var resourceGroupProperty = model.GetType().GetProperty("ResourceGroupName");
+            this.ResourceGroupName = (this.ResourceGroupName == null && resourceGroupProperty != null) ? resourceGroupProperty.GetValue(model).ToString() : this.ResourceGroupName;
+
+            var serverProperty = model.GetType().GetProperty("ServerName");
+            this.ServerName = (this.ServerName == null && serverProperty != null) ? serverProperty.GetValue(model).ToString() : this.ServerName;
+            this.AgentServerName = this.ServerName;
+
+            var databaseProperty = model.GetType().GetProperty("DatabaseName");
+            this.DatabaseName = (this.DatabaseName == null && databaseProperty != null) ? databaseProperty.GetValue(model).ToString() : this.DatabaseName;
+
+            var agentProperty = model.GetType().GetProperty("AgentName");
+            this.AgentName = (this.AgentName == null && agentProperty != null) ? agentProperty.GetValue(model).ToString() : this.AgentName;
+
+            var jobProperty = model.GetType().GetProperty("JobName");
+            this.JobName = (this.JobName == null && jobProperty != null) ? jobProperty.GetValue(model).ToString() : this.JobName;
+
+            var stepProperty = model.GetType().GetProperty("StepName");
+            this.StepName = (this.StepName == null & stepProperty != null) ? stepProperty.GetValue(model).ToString() : this.StepName;
+
+            var targetGroupProperty = model.GetType().GetProperty("TargetGroupName");
+            this.TargetGroupName = (this.TargetGroupName == null && targetGroupProperty != null) ? targetGroupProperty.GetValue(model).ToString() : this.TargetGroupName;
+
+            var jobCredentialProperty = model.GetType().GetProperty("CredentialName");
+            this.CredentialName = (this.CredentialName == null && jobCredentialProperty != null) ? jobCredentialProperty.GetValue(model).ToString() : this.CredentialName;
+
+            var jobExecutionProperty = model.GetType().GetProperty("JobExecutionId");
+            this.JobExecutionId = (this.JobExecutionId == null && jobExecutionProperty != null) ? jobExecutionProperty.GetValue(model).ToString() : this.JobExecutionId;
         }
 
-        #region Server Helpers
-
-        public void InitializeServerProperties(AzureSqlServerModel serverObject)
+        /// <summary>
+        /// Initializes the input from resource id if necessary
+        /// </summary>
+        /// <param name="resourceId"></param>
+        public void InitializeResourceIdProperties(string resourceId)
         {
-            if (serverObject != null)
+            if (resourceId == null)
             {
-                this.ResourceGroupName = serverObject.ResourceGroupName;
-                this.ServerName = serverObject.ServerName;
+                return;
+            }
+
+            string[] tokens = resourceId.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            int length = tokens.Length;
+
+            if (length >= 7)
+            {
+                this.SubscriptionId = tokens[1];
+                this.ResourceGroupName = tokens[3];
+                this.ServerName = tokens[7];
+            }
+
+            if (length >= 9)
+            {
+                if (tokens[8] == "databases")
+                {
+                    this.DatabaseName = tokens[9];
+                }
+                else if (tokens[8] == "jobAgents")
+                {
+                    this.AgentName = tokens[9];
+                }
+            }
+
+            if (length >= 11)
+            {
+                if (tokens[10] == "jobs")
+                {
+                    this.JobName = tokens[11];
+                }
+                else if (tokens[10] == "credentials")
+                {
+                    this.CredentialName = tokens[11];
+                }
+                else if (tokens[10] == "targetGroups")
+                {
+                    this.TargetGroupName = tokens[11];
+                }
+            }
+
+            if (length >= 13)
+            {
+                if (tokens[12] == "steps")
+                {
+                    this.StepName = tokens[13];
+                }
+                else if (tokens[12] == "executions")
+                {
+                    this.JobExecutionId = tokens[13];
+                }
             }
         }
-
-        #endregion
-
-        #region Agent Helpers
-
-        public void InitializeAgentProperties(AzureSqlDatabaseAgentModel agentObject)
-        {
-            if (agentObject != null)
-            {
-                this.ResourceGroupName = agentObject.ResourceGroupName;
-                this.ServerName = agentObject.ServerName;
-                this.Name = agentObject.AgentName;
-            }
-        }
-
-        #endregion
-
-        #region Job Helpers
-
-        public void InitializeJobProperties(AzureSqlDatabaseAgentJobModel jobObject)
-        {
-            if (jobObject != null)
-            {
-                this.ResourceGroupName = jobObject.ResourceGroupName;
-                this.ServerName = jobObject.ServerName;
-                this.AgentName = jobObject.AgentName;
-                this.Name = jobObject.JobName;
-            }
-        }
-
-        #endregion
-
-        #region Job Credential Helpers
-
-        public void InitializeJobCredentialProperties(AzureSqlDatabaseAgentJobCredentialModel jobCredentialObject)
-        {
-            if (jobCredentialObject != null)
-            {
-                this.ResourceGroupName = jobCredentialObject.ResourceGroupName;
-                this.ServerName = jobCredentialObject.ServerName;
-                this.AgentName = jobCredentialObject.AgentName;
-                this.Name = jobCredentialObject.CredentialName;
-            }
-        }
-
-        #endregion
-
-        #region Job Step Helpers
-
-        public void InitializeJobStepProperties(AzureSqlDatabaseAgentJobStepModel jobStep)
-        {
-            if (jobStep != null)
-            {
-                this.ResourceGroupName = jobStep.ResourceGroupName;
-                this.ServerName = jobStep.ServerName;
-                this.AgentName = jobStep.AgentName;
-                this.JobName = jobStep.JobName;
-                this.Name = jobStep.StepName;
-            }
-        }
-
-        #endregion
-
-        #region Job Execution Helpers
-
-        public void InitializeJobExecutionProperties(AzureSqlDatabaseAgentJobExecutionModel jobExecution)
-        {
-            if (jobExecution != null)
-            {
-                this.ResourceGroupName = jobExecution.ResourceGroupName;
-                this.ServerName = jobExecution.ServerName;
-                this.AgentName = jobExecution.AgentName;
-                this.JobName = jobExecution.JobName;
-                this.JobExecutionId = jobExecution.JobExecutionId.Value.ToString();
-            }
-        }
-
-        #endregion
-
-        #region Database Helpers
-
-        public void InitializeDatabaseProperties(AzureSqlDatabaseModel dbObject)
-        {
-            if (dbObject != null)
-            {
-                this.ResourceGroupName = dbObject.ResourceGroupName;
-                this.ServerName = dbObject.ServerName;
-                this.DatabaseName = dbObject.DatabaseName;
-            }
-        }
-
-        #endregion
 
         #region Target Group Helpers
 
         private const string targetGroupResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}";
-
-        public void InitializeTargetGroupProperties(AzureSqlDatabaseAgentTargetGroupModel targetGroupObject)
-        {
-            if (targetGroupObject != null)
-            {
-                this.ResourceGroupName = targetGroupObject.ResourceGroupName;
-                this.ServerName = targetGroupObject.ServerName;
-                this.AgentName = targetGroupObject.AgentName;
-                this.Name = targetGroupObject.TargetGroupName;
-            }
-        }
 
         /// <summary>
         /// 

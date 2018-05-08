@@ -23,8 +23,8 @@ using Microsoft.Azure.Commands.Sql.Database.Model;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobStepCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobStepModel, IEnumerable<AzureSqlDatabaseAgentJobStepModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobStepCmdletBase<IO> : 
+        AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentJobStepModel>, AzureSqlDatabaseAgentAdapter>
     {
         protected const string DefaultOutputDatabaseObject = "Default job step output database object parameter set";
         protected const string DefaultOutputDatabaseId = "Default job step output database id parameter set";

@@ -1,67 +1,62 @@
-﻿using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.Job.JobExecution;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
-using Microsoft.Azure.Management.Sql;
-using Microsoft.Azure.Management.Sql.Models;
-using Microsoft.Rest.Azure;
+﻿using Microsoft.Azure.Management.Sql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
-    public class AzureSqlDatabaseAgentJobExecutionModel : AzureSqlDatabaseAgentJobExecutionBaseModel
+    public class AzureSqlDatabaseAgentJobExecutionModel : AzureSqlDatabaseAgentJobModelBase
     {
-        public AzureSqlDatabaseAgentJobExecutionModel() { }
+        /// <summary>
+        /// Gets or sets the job execution id
+        /// </summary>
+        public Guid? JobExecutionId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job version
+        /// </summary>
+        public int? JobVersion { get; set; }
 
-        private IList<AzureSqlDatabaseAgentJobStepExecutionModel> _steps;
+        /// <summary>
+        /// Gets or sets the lifecycle
+        /// </summary>
+        public string Lifecycle { get; set; }
 
-        public virtual IList<AzureSqlDatabaseAgentJobStepExecutionModel> Steps
-        {
-            get
-            {
-                if (_steps == null)
-                {
-                    IPage<JobExecution> steps = _stepsFunc(this.ResourceGroupName, this.ServerName, this.AgentName, this.JobName, this.JobExecutionId.Value);
-                    _steps = steps.Select((stepExecution) => CreateJobStepExecutionModel(stepExecution)).ToList();
-                    return _steps;
-                }
-                return _steps;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the provisioning state
+        /// </summary>
+        public string ProvisioningState { get; set; }
 
-        private Func<string, string, string, string, Guid, IPage<JobExecution>> _stepsFunc { get; set; }
+        /// <summary>
+        /// Gets or sets the create time
+        /// </summary>
+        public DateTime? CreateTime { get; set; }
 
-        public AzureSqlDatabaseAgentJobExecutionModel(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string jobName,
-            JobExecution resp,
-            SqlManagementClient client)
-        {
-            this.ResourceGroupName = resourceGroupName;
-            this.ServerName = serverName;
-            this.AgentName = agentName;
-            this.JobName = jobName;
+        /// <summary>
+        /// Gets or sets the start time
+        /// </summary>
+        public DateTime? StartTime { get; set; }
 
-            this.JobVersion = resp.JobVersion;
-            this.JobExecutionId = resp.JobExecutionId;
-            this.Lifecycle = resp.Lifecycle;
-            this.ProvisioningState = resp.ProvisioningState;
-            this.CreateTime = resp.CreateTime;
-            this.StartTime = resp.StartTime;
-            this.EndTime = resp.EndTime;
-            this.CurrentAttempts = resp.CurrentAttempts;
-            this.CurrentAttemptStartTime = resp.CurrentAttemptStartTime;
-            this.LastMessage = resp.LastMessage;
+        /// <summary>
+        /// Gets or sets the end time
+        /// </summary>
+        public DateTime? EndTime { get; set; }
 
-            this.ResourceId = resp.Id;
-            this.Type = resp.Type;
+        /// <summary>
+        /// Gets or sets the current attempts
+        /// </summary>
+        public int? CurrentAttempts { get; set; }
 
-            this.Client = client;
+        /// <summary>
+        /// Gets or sets the current attempt start time
+        /// </summary>
+        public DateTime? CurrentAttemptStartTime { get; set; }
 
-            _stepsFunc = (rg, s, a, j, je) => client.JobStepExecutions.ListByJobExecution(rg, s, a, j, je);
-        }
+        /// <summary>
+        /// Gets or sets the last message
+        /// </summary>
+        public string LastMessage { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentModel))]
-    public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    public class RemoveAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -68,7 +68,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the agent input object model
@@ -80,19 +80,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The agent object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(
             Mandatory = true,
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
@@ -105,10 +105,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeAgentProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
+
+            this.Name = this.AgentName;
 
             // Warning confirmation for agent when deleting
             if (!Force.IsPresent &&

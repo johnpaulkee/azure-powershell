@@ -20,8 +20,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentJobCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobModel, IEnumerable<AzureSqlDatabaseAgentJobModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobCmdletBase<IO> : AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentJobModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Agent default parameter sets

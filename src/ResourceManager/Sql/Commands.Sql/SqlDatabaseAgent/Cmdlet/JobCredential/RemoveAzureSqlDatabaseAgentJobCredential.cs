@@ -29,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
-    public class RemoveAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
+    public class RemoveAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase<AzureSqlDatabaseAgentJobCredentialModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -79,7 +79,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The job credential name")]
         [Alias("CredentialName")]
         [ValidateNotNullOrEmpty]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job credential input object to remove
@@ -91,30 +91,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The job credential object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobCredentialModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobCredentialModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the job credential resource id to remove
 		/// </summary>
 		[Parameter(
-            ParameterSetName = JobCredentialResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job credential resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeJobCredentialProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
 
+            this.Name = this.CredentialName;
             base.ExecuteCmdlet();
         }
 

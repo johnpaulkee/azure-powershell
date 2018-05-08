@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJobStep",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    public class RemoveAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
+    public class RemoveAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase<AzureSqlDatabaseAgentJobStepModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -83,7 +83,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 4,
             HelpMessage = "The job step name")]
         [Alias("StepName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job step input object
@@ -95,29 +95,29 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 0,
             HelpMessage = "The job step input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobStepModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job step resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobStepResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job step resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeJobStepProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
+
+            this.Name = this.StepName;
 
             base.ExecuteCmdlet();
         }

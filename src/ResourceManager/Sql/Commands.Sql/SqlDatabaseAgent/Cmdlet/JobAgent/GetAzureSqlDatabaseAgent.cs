@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true, 
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
-    public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    public class GetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase<AzureSqlServerModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -59,13 +59,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = false,
-            ParameterSetName = ServerObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = ServerResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The agent name")]
@@ -77,30 +77,40 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The agent name")]
         [Alias("AgentName")]
         [ValidateNotNullOrEmpty]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent Server Object
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ServerObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The server input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlServerModel ServerObject { get; set; }
+        public AzureSqlServerModel ServerObject { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent Server Resource Id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ServerResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The server resource id")]
-        public override string ServerResourceId { get; set; }
+        public string ServerResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.ServerObject);
+            InitializeResourceIdProperties(this.ServerResourceId);
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets one or more Azure SQL Database Agents from the service.

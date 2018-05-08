@@ -29,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
-    public class NewAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
+    public class NewAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase<AzureSqlDatabaseAgentModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -76,19 +76,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job credential name")]
-        [Parameter(ParameterSetName = AgentObjectParameterSet,
+        [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
-        [Parameter(ParameterSetName = AgentResourceIdParameterSet,
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
         [Alias("CredentialName")]
         [ValidateNotNullOrEmpty]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job's credential
@@ -98,12 +98,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The credential")]
-        [Parameter(ParameterSetName = AgentObjectParameterSet,
+        [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The credential")]
-        [Parameter(ParameterSetName = AgentResourceIdParameterSet,
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 2,
@@ -114,24 +114,35 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the agent model input object
         /// </summary>
-        [Parameter(ParameterSetName = AgentObjectParameterSet,
+        [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
+        public AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the agent resource id
 		/// </summary>
-		[Parameter(ParameterSetName = AgentResourceIdParameterSet,
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public override string AgentResourceId { get; set; }
+        public string AgentResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.AgentObject);
+            InitializeResourceIdProperties(this.AgentResourceId);
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the credential already exists for the agent.

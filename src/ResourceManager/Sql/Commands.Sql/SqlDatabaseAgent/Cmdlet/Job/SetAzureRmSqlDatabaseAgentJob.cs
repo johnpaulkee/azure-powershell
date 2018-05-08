@@ -32,7 +32,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
     [Cmdlet(VerbsCommon.Set, "AzureRmSqlDatabaseAgentJob",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    public class SetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
+    public class SetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase<AzureSqlDatabaseAgentJobModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -178,7 +178,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The job name")]
         [ValidateNotNullOrEmpty]
         [Alias("JobName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the switch parameter run once
@@ -355,7 +355,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job input object")]
@@ -384,14 +384,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The job input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the agent resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job resource id")]
@@ -420,18 +420,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The job resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeJobProperties(this.InputObject);
-            }
-
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
+            this.Name = this.JobName;
             base.ExecuteCmdlet();
         }
 

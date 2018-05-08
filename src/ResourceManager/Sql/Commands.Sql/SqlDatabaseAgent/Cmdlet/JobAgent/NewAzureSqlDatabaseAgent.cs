@@ -32,7 +32,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentModel>))]
-    public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    public class NewAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -82,19 +82,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The Agent Name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DatabaseObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The Agent Name")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DatabaseResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The Agent Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent's Tags
@@ -106,12 +106,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 4)]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = DatabaseObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             Position = 2,
             HelpMessage = "The Agent Tags")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = DatabaseResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             Position = 2,
             HelpMessage = "The Agent Tags")]
         [ValidateNotNullOrEmpty]
@@ -123,24 +123,34 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DatabaseObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The Agent Control Database Object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseModel DatabaseObject { get; set; }
+        public AzureSqlDatabaseModel DatabaseObject { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent's Control Database Resource Id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DatabaseResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The Agent Control Database Resource Id")]
         [ValidateNotNullOrEmpty]
-        public override string DatabaseResourceId { get; set; }
+        public string DatabaseResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.DatabaseObject);
+            InitializeResourceIdProperties(this.DatabaseResourceId);
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the agent already exists in this resource group.

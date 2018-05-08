@@ -29,7 +29,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentJobModel))]
     [OutputType(typeof(List<AzureSqlDatabaseAgentJobModel>))]
-    public class GetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
+    public class GetAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase<AzureSqlDatabaseAgentModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -73,13 +73,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// </summary>
         [Parameter(
             Mandatory = false,
-            ParameterSetName = AgentObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job name")]
@@ -91,31 +91,41 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The job name")]
         [ValidateNotNullOrEmpty]
         [Alias("JobName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the agent input object
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AgentObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
+        public AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
         /// <summary>
         /// Gets or sets the agent resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public override string AgentResourceId { get; set; }
+        public string AgentResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.AgentObject);
+            InitializeResourceIdProperties(this.AgentResourceId);
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Gets a job from the service.

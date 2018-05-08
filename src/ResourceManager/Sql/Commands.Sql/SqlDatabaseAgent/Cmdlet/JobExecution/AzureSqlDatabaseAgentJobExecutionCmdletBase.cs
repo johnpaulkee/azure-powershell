@@ -22,8 +22,7 @@ using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
 {
-    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentJobExecutionModel, IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentJobExecutionCmdletBase<IO> : AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Default parameter sets

@@ -26,7 +26,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     /// Defines the New-AzureRmSqlDatabaseAgentJob Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Remove, "AzureRmSqlDatabaseAgentJob", SupportsShouldProcess = true)]
-    public class RemoveAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase
+    public class RemoveAzureSqlDatabaseAgentJob : AzureSqlDatabaseAgentJobCmdletBase<AzureSqlDatabaseAgentJobModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -71,7 +71,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 3,
             HelpMessage = "The job name")]
         [Alias("JobName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
@@ -89,29 +89,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 0,
             HelpMessage = "The job input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeJobProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
+            this.Name = this.JobName;
 
             // Warning confirmation for agent when deleting
             if (!Force.IsPresent &&

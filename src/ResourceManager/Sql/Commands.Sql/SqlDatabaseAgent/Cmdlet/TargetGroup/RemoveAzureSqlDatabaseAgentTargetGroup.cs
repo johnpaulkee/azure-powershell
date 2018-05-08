@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>))]
-    public class RemoveAzureSqlDatabaseAgentTargetGroup: AzureSqlDatabaseAgentTargetGroupCmdletBase
+    public class RemoveAzureSqlDatabaseAgentTargetGroup: AzureSqlDatabaseAgentTargetGroupCmdletBase<AzureSqlDatabaseAgentTargetGroupModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -79,7 +79,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             HelpMessage = "The target group name")]
         [Alias("TargetGroupName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
@@ -96,28 +96,28 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 0,
             HelpMessage = "The target group object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentTargetGroupModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the agent resource id
 		/// </summary>
-		[Parameter(ParameterSetName = TargetGroupResourceIdParameterSet,
+		[Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The target group resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Execution starts here
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeTargetGroupProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
+
+            this.Name = this.TargetGroupName;
 
             // Warning confirmation for deletion for target group
             if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupDescription, this.Name, this.AgentName),

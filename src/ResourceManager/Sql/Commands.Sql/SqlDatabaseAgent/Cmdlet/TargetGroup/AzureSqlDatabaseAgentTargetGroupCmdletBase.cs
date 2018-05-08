@@ -21,8 +21,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
-    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase : 
-        AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentTargetGroupModel, IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>, AzureSqlDatabaseAgentAdapter>
+    public abstract class AzureSqlDatabaseAgentTargetGroupCmdletBase<IO> : AzureSqlDatabaseAgentCmdletBase<IO, IEnumerable<AzureSqlDatabaseAgentTargetGroupModel>, AzureSqlDatabaseAgentAdapter>
     {
         /// <summary>
         /// Intializes the model adapter

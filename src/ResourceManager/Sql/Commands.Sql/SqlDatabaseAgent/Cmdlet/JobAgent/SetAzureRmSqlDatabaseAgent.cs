@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentModel))]
-    public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase
+    public class SetAzureSqlDatabaseAgent : AzureSqlDatabaseAgentCmdletBase<AzureSqlDatabaseAgentModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -69,7 +69,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the Agent tags
@@ -83,12 +83,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
-            ParameterSetName = AgentObjectParameterSet)]
+            ParameterSetName = InputObjectParameterSet)]
         [Parameter(
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
             Position = 1,
-            ParameterSetName = AgentResourceIdParameterSet)]
+            ParameterSetName = ResourceIdParameterSet)]
         [ValidateNotNullOrEmpty]
         [Alias("Tags")]
         public Hashtable Tag { get; set; }
@@ -98,35 +98,34 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = AgentObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel InputObject { get; set; }
+        public AzureSqlDatabaseAgentModel InputObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(
             Mandatory = true,
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public override string ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == InputObjectParameterSet)
-            {
-                InitializeAgentProperties(this.InputObject);
-            }
+            InitializeInputObjectProperties(this.InputObject);
+            InitializeResourceIdProperties(this.ResourceId);
 
+            this.Name = this.AgentName;
             base.ExecuteCmdlet();
         }
 

@@ -28,7 +28,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobCredentialModel>))]
-    public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase
+    public class GetAzureSqlDatabaseAgentJobCredential : AzureSqlDatabaseAgentJobCredentialCmdletBase<AzureSqlDatabaseAgentModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -77,44 +77,55 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             HelpMessage = "The job credential name")]
         [Parameter(
-            ParameterSetName = AgentObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
         [Parameter(
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             Mandatory = false,
             ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
         [ValidateNotNullOrEmpty]
         [Alias("CredentialName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the agent model input object
         /// </summary>
         [Parameter(
-            ParameterSetName = AgentObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentModel AgentObject { get; set; }
+        public AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
         /// <summary>
 		/// Gets or sets the agent resource id
 		/// </summary>
 		[Parameter(
-            ParameterSetName = AgentResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
-        public override string AgentResourceId { get; set; }
+        public string AgentResourceId { get; set; }
+
+        /// <summary>
+        /// Entry point for the cmdlet
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.AgentObject);
+            InitializeResourceIdProperties(this.AgentResourceId);
+
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the credential already exists for the agent.

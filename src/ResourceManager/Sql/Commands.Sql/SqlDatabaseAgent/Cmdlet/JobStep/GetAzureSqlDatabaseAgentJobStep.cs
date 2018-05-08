@@ -28,7 +28,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepVersionModel))]
     [OutputType(typeof(List<AzureSqlDatabaseAgentJobStepModel>))]
-    public class GetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
+    public class GetAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase<AzureSqlDatabaseAgentJobModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -113,7 +113,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = JobObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             Position = 1,
             HelpMessage = "The job step name")]
         [Parameter(
@@ -123,7 +123,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = JobResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             Position = 1,
             HelpMessage = "The job step name")]
         [Parameter(
@@ -132,7 +132,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 1,
             HelpMessage = "The job step name")]
         [Alias("StepName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job version
@@ -161,7 +161,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobObjectParameterSet,
+            ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job input object")]
@@ -172,14 +172,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 0,
             HelpMessage = "The job input object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobModel JobObject { get; set; }
+        public AzureSqlDatabaseAgentJobModel JobObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job resource id
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = JobResourceIdParameterSet,
+            ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job resource id")]
@@ -190,14 +190,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
             Position = 0,
             HelpMessage = "The job resource id")]
         [ValidateNotNullOrEmpty]
-        public override string JobResourceId { get; set; }
+        public string JobResourceId { get; set; }
 
         /// <summary>
         /// Cmdlet execution starts here
         /// </summary>
         public sealed override void ExecuteCmdlet()
         {
-
+            InitializeInputObjectProperties(this.JobObject);
+            InitializeResourceIdProperties(this.JobResourceId);
 
             base.ExecuteCmdlet();
         }

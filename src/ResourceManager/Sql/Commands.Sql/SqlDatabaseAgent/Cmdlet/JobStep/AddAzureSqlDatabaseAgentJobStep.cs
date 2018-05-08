@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Commands.Sql.Database.Model;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -31,7 +32,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlDatabaseAgentJobStepModel))]
-    public class AddAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase
+    public class AddAzureSqlDatabaseAgentJobStep : AzureSqlDatabaseAgentJobStepCmdletBase<AzureSqlDatabaseAgentJobModel>
     {
         /// <summary>
         /// Gets or sets the resource group name
@@ -181,7 +182,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The job step name")]
         [Alias("StepName")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the job step name
@@ -280,7 +281,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Position = 3,
             ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The credential name")]
-        public string CredentialName { get; set; }
+        public override string CredentialName { get; set; }
 
         [Parameter(
             Mandatory = true,
@@ -520,7 +521,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = InputObjectOutputDatabaseId,
             HelpMessage = "The job object")]
         [ValidateNotNullOrEmpty]
-        public override AzureSqlDatabaseAgentJobModel JobObject { get; set; }
+        public AzureSqlDatabaseAgentJobModel JobObject { get; set; }
 
         /// <summary>
         /// Gets or sets the job resource id
@@ -543,7 +544,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The job resource id")]
-        public override string JobResourceId { get; set; }
+        public string JobResourceId { get; set; }
+
+        /// <summary>
+        /// Cmdlet execution starts here
+        /// </summary>
+        public sealed override void ExecuteCmdlet()
+        {
+            InitializeInputObjectProperties(this.JobObject);
+            InitializeResourceIdProperties(this.JobResourceId);
+            base.ExecuteCmdlet();
+        }
 
         /// <summary>
         /// Check to see if the job step already exists in this job
@@ -608,14 +619,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             {
                 updatedModel.Output = new Management.Sql.Models.JobStepOutput
                 {
-                    // TODO parse database object resource id to get subscription id chosen
-                    //SubscriptionId = this.OutputDatabaseObject != null ? Guid.Parse(this.OutputSubscriptionId) : (Guid?) null,
+                    SubscriptionId = this.OutputDatabaseObject != null ? Guid.Parse(new ResourceIdentifier(this.OutputDatabaseObject.ResourceId).Subscription) : (Guid?) null,
                     ResourceGroupName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.ResourceGroupName : null,
                     ServerName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.ServerName : null,
                     DatabaseName = this.OutputDatabaseObject != null ? this.OutputDatabaseObject.DatabaseName : null,
-                    Credential = this.OutputCredentialName != null ?
-                    CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) :
-                    null,
+                    Credential = this.OutputCredentialName != null ? CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) : null,
+                    SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : null,
+                    TableName = this.OutputTableName != null ? this.OutputTableName : null
+                };
+            }
+
+            if (this.OutputDatabaseResourceId != null)
+            {
+                var databaseIdentifier = new ResourceIdentifier(this.OutputDatabaseResourceId);
+
+                updatedModel.Output = new Management.Sql.Models.JobStepOutput
+                {
+                    SubscriptionId = Guid.Parse(databaseIdentifier.Subscription),
+                    ResourceGroupName = databaseIdentifier.ResourceGroupName,
+                    ServerName = databaseIdentifier.ParentResourceBuilder[1],
+                    DatabaseName = databaseIdentifier.ResourceName,
+                    Credential = this.OutputCredentialName != null ? CreateCredentialId(this.ResourceGroupName, this.ServerName, this.AgentName, this.OutputCredentialName) : null,
                     SchemaName = this.OutputSchemaName != null ? this.OutputSchemaName : null,
                     TableName = this.OutputTableName != null ? this.OutputTableName : null
                 };
