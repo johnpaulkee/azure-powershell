@@ -14,8 +14,6 @@
 
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
@@ -225,16 +223,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             }
 
             var allStepExecutions = ModelAdapter.ListJobExecutionSteps(
-                this.ResourceGroupName,
-                this.ServerName,
-                this.AgentName,
-                this.JobName,
-                Guid.Parse(this.JobExecutionId),
-                this.CreateTimeMin,
-                this.CreateTimeMax,
-                this.EndTimeMin,
-                this.EndTimeMax,
-                this.Active);
+                resourceGroupName: this.ResourceGroupName,
+                serverName: this.ServerName,
+                agentName: this.AgentName,
+                jobName: this.JobName,
+                jobExecutionId: Guid.Parse(this.JobExecutionId),
+                createTimeMin: this.CreateTimeMin,
+                createTimeMax: this.CreateTimeMax,
+                endTimeMin: this.EndTimeMin,
+                endTimeMax: this.EndTimeMax,
+                isActive: this.Active);
 
             return allStepExecutions;
         }

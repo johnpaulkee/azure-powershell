@@ -14,559 +14,713 @@
 
 <#
 	.SYNOPSIS
-	Tests creating a job with min parameters
+	Tests creating a job with min parameters using default parameter sets
     .DESCRIPTION
 	SmokeTest
 #>
 function Test-CreateJob
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+   
     $startTime = Get-Date
     $endTime = $startTime.AddHours(5)
     $startTimeIso8601 =  Get-Date $startTime -format s
     $endTimeIso8601 =  Get-Date $endTime -format s
-
-    # Test min param
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
-    Assert-AreEqual $resp.Description ""
-
-    # Test enabled
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Enabled
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
-    Assert-AreEqual $resp.Description ""
-
-    # Test start and end time
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
-    $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
-    Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
-    Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not 
-    Assert-AreEqual $resp.Description ""
-
-    # Test once
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -Once
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
-
-    # Test recurring - minute interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -MinuteInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
-    Assert-AreEqual $resp.Interval "PT1M"
-
-    # Test recurring - hour interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -HourInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1H"
     
-    # Test recurring - day interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -DayInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1D"
+    try
+    {
+        # Test min param
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
 
-    # Test recurring - week interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -WeekInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1W"
+        # Test enabled
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Enable
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test once
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Description $jn1 -RunOnce
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+
+        # Test recurring - minute interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Description $jn1 -IntervalType Minute -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Interval "PT1M"
+
+        # Test recurring - hour interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Description $jn1 -IntervalType Hour -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1H"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
     
-    # Test recurring - month interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -MonthInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1M"
+        # Test recurring - day interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Description $jn1 -IntervalType Day -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1D"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+
+        # Test recurring - week interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Description $jn1 -IntervalType Week -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1W"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+    
+        # Test recurring - month interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jn1 -Description $jn1 -IntervalType Month -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1M"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
 <#
 	.SYNOPSIS
-	Tests creating a job with input object min parameters
+	Tests creating a job with min parameters using agent object parameter sets
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-CreateJobWithInputObject
+function Test-CreateJobWithAgentObject
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+   
     $startTime = Get-Date
     $endTime = $startTime.AddHours(5)
     $startTimeIso8601 =  Get-Date $startTime -format s
     $endTimeIso8601 =  Get-Date $endTime -format s
-
-    # Test once
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $jn1 -Description $jn1 -Once
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
-
-    # Test recurring - minute interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $jn1 -Description $jn1 -MinuteInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
-    Assert-AreEqual $resp.Interval "PT1M"
-
-    # Test recurring - hour interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $jn1 -Description $jn1 -HourInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1H"
     
-    # Test recurring - day interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $jn1 -Description $jn1 -DayInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1D"
+    try
+    {
+        # Test min param
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
 
-    # Test recurring - week interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $jn1 -Description $jn1 -WeekInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1W"
+        # Test enabled
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Enable
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test once
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Description $jn1 -RunOnce
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+
+        # Test recurring - minute interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Description $jn1 -IntervalType Minute -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Interval "PT1M"
+
+        # Test recurring - hour interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Description $jn1 -IntervalType Hour -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1H"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
     
-    # Test recurring - month interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $jn1 -Description $jn1 -MonthInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1M"
+        # Test recurring - day interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Description $jn1 -IntervalType Day -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1D"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+
+        # Test recurring - week interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Description $jn1 -IntervalType Week -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1W"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+    
+        # Test recurring - month interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $jn1 -Description $jn1 -IntervalType Month -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1M"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
 <#
 	.SYNOPSIS
-	Tests creating a job with input object min parameters
+	Tests creating a job with min parameters using agent resource id parameter sets
     .DESCRIPTION
 	SmokeTest
 #>
-function Test-CreateJobWithResourceId
+function Test-CreateJobWithAgentResourceId
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
     $startTime = Get-Date
     $endTime = $startTime.AddHours(5)
     $startTimeIso8601 =  Get-Date $startTime -format s
     $endTimeIso8601 =  Get-Date $endTime -format s
 
-    # Test once
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -Once
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+    try
+    {
+        # Test min param
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
 
-    # Test recurring - minute interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -MinuteInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
-    Assert-AreEqual $resp.Interval "PT1M"
+        # Test enabled
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Enable
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
 
-    # Test recurring - hour interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -HourInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1H"
+        # Test once
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -RunOnce
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Once"   # defaults to once if not specified
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+
+        # Test recurring - minute interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -IntervalType Minute -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Interval "PT1M"
+
+        # Test recurring - hour interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -IntervalType Hour -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1H"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
     
-    # Test recurring - day interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -DayInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1D"
+        # Test recurring - day interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -IntervalType Day -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1D"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
 
-    # Test recurring - week interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -WeekInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1W"
+        # Test recurring - week interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -IntervalType Week -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1W"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
     
-    # Test recurring - month interval
-    $jn1 = Get-JobName
-    $resp = New-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -MonthInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1M"
+        # Test recurring - month interval
+        $jn1 = Get-JobName
+        $resp = New-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $jn1 -Description $jn1 -IntervalType Month -IntervalCount 1
+        Assert-AreEqual $resp.JobName $jn1
+        Assert-AreEqual $resp.Description $jn1
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1M"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
+<#
+	.SYNOPSIS
+	Tests getting a job with min parameters using default parameter sets, input object parameter sets, and resource id parameter sets
+    .DESCRIPTION
+	SmokeTest
+#>
 function Test-GetJob
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-    $j1 = Create-JobForTest $a1
-    #$j2 = Create-JobForTest $a1
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
-    # Test using default parameters
-    $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $j1.JobName
-    Assert-AreEqual $resp.JobName $j1.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+    try
+    {
+        $j1 = Create-JobForTest $a1
+        $j2 = Create-JobForTest $a1
 
-    # Test get all jobs in a1
-    #$resp = Get-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-    #Assert-AreEqual $resp.Count 2
+        # Test using default parameters
+        $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
 
-    # Test using input object
-    $resp = Get-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $j1.JobName
-    Assert-AreEqual $resp.JobName $j1.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        # Test get all jobs in a1
+        $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName
+        Assert-AreEqual $resp.Count 2
 
-    # Test get all using input object
-    #$resp = Get-AzureRmSqlDatabaseAgentJob -InputObject $a1
-    #Assert-AreEqual $resp.Count 2
+        # Test using input object
+        $resp = Get-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
+
+        # Test get all using input object
+        $resp = Get-AzureRmSqlDatabaseAgentJob -InputObject $a1
+        Assert-AreEqual $resp.Count 2
 
         # Test using resource id
-    $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $j1.JobName
-    Assert-AreEqual $resp.JobName $j1.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
 
-    # Test get all using resource id
-    #$resp = Get-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId
-    #Assert-AreEqual $resp.Count 2
+        # Test get all using resource id
+        $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId
+        Assert-AreEqual $resp.Count 2
 
-    # Test piping
-    $resp = $a1 | Get-AzureRmSqlDatabaseAgentJob -Name $j1.JobName
-    Assert-AreEqual $resp.JobName $j1.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        # Test piping
+        $resp = $a1 | Get-AzureRmSqlDatabaseAgentJob -Name $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
     
-    # Test get all from agent piping
-    #$resp = $a1 | Get-AzureRmSqlDatabaseAgentJob
-    #Assert-AreEqual $resp.Count 2
+        # Test get all from agent piping
+        $resp = $a1 | Get-AzureRmSqlDatabaseAgentJob
+        Assert-AreEqual $resp.Count 2
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
+<#
+	.SYNOPSIS
+	Tests removing a job with min parameters using default parameter sets, input object parameter sets, and resource id parameter sets
+    .DESCRIPTION
+	SmokeTest
+#>
 function Test-RemoveJob
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-    $j1 = Create-JobForTest $a1
-    $j2 = Create-JobForTest $a1
-    $j3 = Create-JobForTest $a1
-    $j4 = Create-JobForTest $a1
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
-    # Test get all from agent piping
-    #$resp = $a1 | Get-AzureRmSqlDatabaseAgentJob
-    #Assert-AreEqual $resp.Count 4
+    try
+    {
+        $j1 = Create-JobForTest $a1
+        $j2 = Create-JobForTest $a1
+        $j3 = Create-JobForTest $a1
+        $j4 = Create-JobForTest $a1
 
-    # Test remove using default parameters
-    $resp = Remove-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $j1.JobName
-    Assert-AreEqual $resp.JobName $j1.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        # Test get all from agent piping
+        $resp = $a1 | Get-AzureRmSqlDatabaseAgentJob
+        Assert-AreEqual $resp.Count 4
 
-    # Test remove using input object
-    $resp = Remove-AzureRmSqlDatabaseAgentJob -InputObject $j2
-    Assert-AreEqual $resp.JobName $j2.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        # Test remove using default parameters
+        $resp = Remove-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
 
-    # Test remove using resource id
-    $resp = Remove-AzureRmSqlDatabaseAgentJob -ResourceId $j3.ResourceId
-    Assert-AreEqual $resp.JobName $j3.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        # Test remove using input object
+        $resp = Remove-AzureRmSqlDatabaseAgentJob -InputObject $j2
+        Assert-AreEqual $resp.JobName $j2.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
 
-    # Test piping
-    $resp = $j4 | Remove-AzureRmSqlDatabaseAgentJob
-    Assert-AreEqual $resp.JobName $j4.JobName
-    Assert-AreEqual $resp.Enabled $false
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-Null $resp.Interval
+        # Test remove using resource id
+        $resp = Remove-AzureRmSqlDatabaseAgentJob -ResourceId $j3.ResourceId
+        Assert-AreEqual $resp.JobName $j3.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
 
-    # Test get all from agent piping
-    #$resp = $a1 | Get-AzureRmSqlDatabaseAgentJob
-    #Assert-AreEqual $resp.Count 0
+        # Test piping
+        $resp = $j4 | Remove-AzureRmSqlDatabaseAgentJob
+        Assert-AreEqual $resp.JobName $j4.JobName
+        Assert-AreEqual $resp.Enabled $false
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-Null $resp.Interval
+
+        # Test get all from agent piping
+        $resp = $a1 | Get-AzureRmSqlDatabaseAgentJob
+        Assert-AreEqual $resp.Count 0
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }    
 }
 
 function Test-UpdateJob
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-    $j1 = Create-JobForTest $a1
-    $jn1 = $j1.JobName
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
     $startTime = Get-Date
     $endTime = $startTime.AddHours(5)
     $startTimeIso8601 =  Get-Date $startTime -format s
     $endTimeIso8601 =  Get-Date $endTime -format s
 
-    # Test enabled
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Enabled
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
-    Assert-AreEqual $resp.Description ""
+    try
+    {
+        $j1 = Create-JobForTest $a1
 
-    # Test start and end time
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
-    $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
-    Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
-    Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description ""
+        # Test enabled
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -Enable
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test disabled
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test start and end time
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
+        $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
+        Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
+        Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description ""
     
-    # Test description
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1
+        # Test description
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -Description $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName
 
-    # Test once
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Once
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1 # description should remain
+        # Test once
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -RunOnce
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName # description should remain
 
-    # Test recurring - minute interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -MinuteInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1 # description should remain
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1M"
+        # Test recurring - minute interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -IntervalType Minute -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName # description should remain
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1M"
 
-    # Test recurring - hour interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -HourInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1H"
+        # Test recurring - hour interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -Description $j1.JobName -IntervalType Hour -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1H"
     
-    # Test recurring - day interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -DayInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1D"
+        # Test recurring - day interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -Description $j1.JobName -IntervalType Day -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1D"
 
-    # Test recurring - week interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -WeekInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1W"
+        # Test recurring - week interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -Description $j1.JobName -IntervalType Week -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1W"
     
-    # Test recurring - month interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -Name $jn1 -Description $jn1 -MonthInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1M"
+        # Test recurring - month interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $j1.JobName -Description $j1.JobName -IntervalType Month -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1M"
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
 function Test-UpdateJobWithInputObject
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-    $j1 = Create-JobForTest $a1
-    $jn1 = $j1.JobName
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
     $startTime = Get-Date
     $endTime = $startTime.AddHours(5)
     $startTimeIso8601 =  Get-Date $startTime -format s
     $endTimeIso8601 =  Get-Date $endTime -format s
 
-    # Test enabled
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Enabled
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
-    Assert-AreEqual $resp.Description ""
+    try
+    {
+        $j1 = Create-JobForTest $a1
 
-    # Test start and end time
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
-    $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
-    Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
-    Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description ""
+         # Test enabled
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Enable
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test disabled
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test start and end time
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
+        $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
+        Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
+        Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description ""
     
-    # Test description
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $jn1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1
+        # Test description
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName
 
-    # Test once
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Once
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1 # description should remain
+        # Test once
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -RunOnce
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName # description should remain
 
-    # Test recurring - minute interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -MinuteInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1 # description should remain
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1M"
+        # Test recurring - minute interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -IntervalType Minute -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName # description should remain
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1M"
 
-    # Test recurring - hour interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $jn1 -HourInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1H"
+        # Test recurring - hour interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $j1.JobName -IntervalType Hour -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1H"
     
-    # Test recurring - day interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $jn1 -DayInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1D"
+        # Test recurring - day interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $j1.JobName -IntervalType Day -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1D"
 
-    # Test recurring - week interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $jn1 -WeekInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1W"
+        # Test recurring - week interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $j1.JobName -IntervalType Week -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1W"
     
-    # Test recurring - month interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $jn1 -MonthInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1M"
+        # Test recurring - month interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -InputObject $j1 -Description $j1.JobName -IntervalType Month -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1M"
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
 function Test-UpdateJobWithResourceId
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-    $j1 = Create-JobForTest $a1
-    $jn1 = $j1.JobName
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
 
     $startTime = Get-Date
     $endTime = $startTime.AddHours(5)
     $startTimeIso8601 =  Get-Date $startTime -format s
     $endTimeIso8601 =  Get-Date $endTime -format s
 
-    # Test enabled
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Enabled
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
-    Assert-AreEqual $resp.Description ""
+    try
+    {
+        $j1 = Create-JobForTest $a1
 
-    # Test start and end time
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
-    $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
-    Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
-    Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description ""
+        # Test enabled
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Enable
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $true # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test disabled
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # defaults to false if not specified
+        Assert-AreEqual $resp.Description ""
+
+        # Test start and end time
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -StartTime $startTimeIso8601 -EndTime $endTimeIso8601
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        $respStartTimeIso8601 = Get-Date $resp.StartTime -format s
+        $respEndTimeIso8601 = Get-Date $resp.EndTime -format s
+        Assert-AreEqual $respStartTimeIso8601 $startTimeIso8601
+        Assert-AreEqual $respEndTimeIso8601 $endTimeIso8601
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description ""
     
-    # Test description
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $jn1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1
+        # Test description
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $j1.JobName
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName
 
-    # Test once
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Once
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.ScheduleType "Once"
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1 # description should remain
+        # Test once
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -RunOnce
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Once"
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName # description should remain
 
-    # Test recurring - minute interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -MinuteInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
-    Assert-AreEqual $resp.Description $jn1 # description should remain
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1M"
+        # Test recurring - minute interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -IntervalType Minute -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Enabled $false # check that enabled was disabled again since Enabled wasn't passed
+        Assert-AreEqual $resp.Description $j1.JobName # description should remain
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1M"
 
-    # Test recurring - hour interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $jn1 -HourInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "PT1H"
+        # Test recurring - hour interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $j1.JobName -IntervalType Hour -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "PT1H"
     
-    # Test recurring - day interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $jn1 -DayInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1D"
+        # Test recurring - day interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $j1.JobName -IntervalType Day -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1D"
 
-    # Test recurring - week interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $jn1 -WeekInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1W"
+        # Test recurring - week interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $j1.JobName -IntervalType Week -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1W"
     
-    # Test recurring - month interval
-    $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $jn1 -MonthInterval 1
-    Assert-AreEqual $resp.JobName $jn1
-    Assert-AreEqual $resp.Description $jn1
-    Assert-AreEqual $resp.ScheduleType "Recurring"
-    Assert-AreEqual $resp.Interval "P1M"
+        # Test recurring - month interval
+        $resp = Set-AzureRmSqlDatabaseAgentJob -ResourceId $j1.ResourceId -Description $j1.JobName -IntervalType Month -IntervalCount 1
+        Assert-AreEqual $resp.JobName $j1.JobName
+        Assert-AreEqual $resp.Description $j1.JobName
+        Assert-AreEqual $resp.ScheduleType "Recurring"
+        Assert-AreEqual $resp.Interval "P1M"
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }

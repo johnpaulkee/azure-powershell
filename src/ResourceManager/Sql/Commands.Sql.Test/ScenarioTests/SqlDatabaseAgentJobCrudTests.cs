@@ -27,6 +27,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         #region Create Tests
 
+        /// <summary>
+        /// Tests creating jobs using default parameters
+        /// </summary>
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestJobCreate()
@@ -34,18 +37,24 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-CreateJob");
         }
 
+        /// <summary>
+        /// Tests creating new jobs using agent object
+        /// </summary>
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreateWithInputObject()
+        public void TestJobCreateWithAgentObject()
         {
-            RunPowerShellTest("Test-CreateJobWithInputObject");
+            RunPowerShellTest("Test-CreateJobWithAgentObject");
         }
 
+        /// <summary>
+        /// Tests creating jobs with agent resource id
+        /// </summary>
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreateWithResourceId()
+        public void TestJobCreateWithAgentResourceId()
         {
-            RunPowerShellTest("Test-CreateJobWithResourceId");
+            RunPowerShellTest("Test-CreateJobWithAgentResourceId");
         }
 
         #endregion

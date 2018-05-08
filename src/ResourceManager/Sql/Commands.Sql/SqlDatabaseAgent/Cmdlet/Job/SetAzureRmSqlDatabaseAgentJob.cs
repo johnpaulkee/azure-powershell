@@ -158,6 +158,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ParameterSetName = JobResourceIdRecurringParameterSet,
             Position = 1,
             HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
+        [ValidateNotNullOrEmpty]
         public JobScheduleReccuringScheduleTypes? IntervalType { get; set; }
 
         /// <summary>
@@ -183,47 +184,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <summary>
         /// Gets or sets the job schedule start time
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobDefaultRunOnceParameterSet,
-            HelpMessage = "The job schedule start time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobDefaultRecurringParameterSet,
-            HelpMessage = "The job schedule start time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobObjectRunOnceParameterSet,
-            HelpMessage = "The job schedule start time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobObjectRecurringParameterSet,
-            HelpMessage = "The job schedule start time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobResourceIdRunOnceParameterSet,
-            HelpMessage = "The job schedule start time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobResourceIdRecurringParameterSet,
-            HelpMessage = "The job schedule start time")]
+        [Parameter(Mandatory = false, HelpMessage = "The job schedule start time")]
         public DateTime? StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the job schedule end time
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobDefaultRecurringParameterSet,
-            HelpMessage = "The job schedule end time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobObjectRecurringParameterSet,
-            HelpMessage = "The job schedule end time")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = JobResourceIdRecurringParameterSet,
-            HelpMessage = "The job schedule end time")]
+        [Parameter(Mandatory = false, HelpMessage = "The job schedule end time")]
         public DateTime? EndTime { get; set; }
 
         /// <summary>
@@ -293,7 +260,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-            this.Name = this.JobName;
+            this.Name = this.Name ?? this.JobName;
             base.ExecuteCmdlet();
         }
 

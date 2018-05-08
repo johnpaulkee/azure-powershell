@@ -41,7 +41,7 @@ function Test-CreateTargetGroup
         Assert-AreEqual $resp1.Members.Count 0
 
         # Test using input object
-        $resp2 = New-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tgName2
+        $resp2 = New-AzureRmSqlDatabaseAgentTargetGroup -AgentObject $a1 -Name $tgName2
         Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp2.AgentName $a1.AgentName
         Assert-AreEqual $resp2.ServerName $s1.ServerName
@@ -49,7 +49,7 @@ function Test-CreateTargetGroup
         Assert-AreEqual $resp2.Members.Count 0
 
         # Test using resource id
-        $resp3 = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId -Name $tgName3
+        $resp3 = New-AzureRmSqlDatabaseAgentTargetGroup -AgentResourceId $a1.ResourceId -Name $tgName3
         Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp3.AgentName $a1.AgentName
         Assert-AreEqual $resp3.ServerName $s1.ServerName
@@ -104,7 +104,7 @@ function Test-GetTargetGroup
         Assert-AreEqual 4 $all.Count
 
         # Test using input object
-        $resp2 = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1 -Name $tg2.TargetGroupName
+        $resp2 = Get-AzureRmSqlDatabaseAgentTargetGroup -AgentObject $a1 -Name $tg2.TargetGroupName
         Assert-AreEqual $resp2.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp2.AgentName $a1.AgentName
         Assert-AreEqual $resp2.ServerName $s1.ServerName
@@ -112,11 +112,11 @@ function Test-GetTargetGroup
         Assert-AreEqual $resp2.Members.Count 0
 
         # Test get all target groups - using input object
-        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -InputObject $a1
+        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -AgentObject $a1
         Assert-AreEqual 4 $all.Count
 
         # Test using resource id
-        $resp3 = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId -Name $tg3.TargetGroupName
+        $resp3 = Get-AzureRmSqlDatabaseAgentTargetGroup -AgentResourceId $a1.ResourceId -Name $tg3.TargetGroupName
         Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp3.AgentName $a1.AgentName
         Assert-AreEqual $resp3.ServerName $s1.ServerName
@@ -124,7 +124,7 @@ function Test-GetTargetGroup
         Assert-AreEqual $resp3.Members.Count 0
 
         # Test get all target groups - using resource id
-        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -ResourceId $a1.ResourceId
+        $all = Get-AzureRmSqlDatabaseAgentTargetGroup -AgentResourceId $a1.ResourceId
         Assert-AreEqual 4 $all.Count
 
         # Test piping
