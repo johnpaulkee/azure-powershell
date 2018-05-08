@@ -36,12 +36,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
         [Parameter(ParameterSetName = GetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
         [ValidateNotNullOrEmpty]
@@ -53,12 +51,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name.")]
         [Parameter(ParameterSetName = GetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name.")]
         [ValidateNotNullOrEmpty]
@@ -69,12 +65,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name.")]
         [Parameter(ParameterSetName = GetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name.")]
         [ValidateNotNullOrEmpty]
@@ -86,11 +80,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             Position = 3,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job name.")]
         [Parameter(ParameterSetName = GetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name.")]
         public override string JobName { get; set; }
@@ -102,12 +94,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             Position = 4,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job execution id.")]
         [Parameter(
             ParameterSetName = GetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job execution id.")]
         public override string JobExecutionId { get; set; }
@@ -118,19 +108,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         [Parameter(
             ParameterSetName = GetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 5,
             HelpMessage = "The job step name.")]
         [Parameter(
             ParameterSetName = InputObjectGetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job step name.")]
         [Parameter(
             ParameterSetName = ResourceIdGetJobStepExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job step name.")]
         public override string StepName { get; set; }
@@ -176,14 +163,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         public SwitchParameter Active { get; set; }
 
         /// <summary>
-        /// Gets or sets the top executions to return in the response
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
-        public int? Count { get; set; }
-
-        /// <summary>
         /// Gets or sets the job execution object input model
         /// </summary>
         [Parameter(
@@ -206,12 +185,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job execution resource id.")]
         [Parameter(ParameterSetName = ResourceIdGetJobStepExecution,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job execution resource id.")]
         [ValidateNotNullOrEmpty]
@@ -224,7 +203,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         {
             InitializeInputObjectProperties(this.JobExecutionObject);
             InitializeResourceIdProperties(this.JobExecutionResourceId);
-
             base.ExecuteCmdlet();
         }
 
@@ -237,12 +215,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
             if (this.StepName != null)
             {
                 var stepExecution = ModelAdapter.GetJobStepExecution(
-                    this.ResourceGroupName,
-                    this.ServerName,
-                    this.AgentName,
-                    this.JobName,
-                    Guid.Parse(this.JobExecutionId),
-                    this.StepName);
+                    resourceGroupName: this.ResourceGroupName,
+                    serverName: this.ServerName,
+                    agentName: this.AgentName,
+                    jobName: this.JobName,
+                    jobExecutionId: Guid.Parse(this.JobExecutionId),
+                    stepName: this.StepName);
                 return new List<AzureSqlDatabaseAgentJobExecutionModel> { stepExecution };
             }
 
@@ -256,9 +234,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
                 this.CreateTimeMax,
                 this.EndTimeMin,
                 this.EndTimeMax,
-                this.Active,
-                null,
-                this.Count);
+                this.Active);
 
             return allStepExecutions;
         }

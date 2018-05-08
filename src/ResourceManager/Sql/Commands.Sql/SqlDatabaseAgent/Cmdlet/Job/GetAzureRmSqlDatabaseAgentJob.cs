@@ -34,12 +34,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
+        [Parameter(Mandatory = true, ParameterSetName = DefaultParameterSet, Position = 0, HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
         [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
@@ -47,48 +42,23 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// <summary>
         /// Gets or sets the server name
         /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
+        [Parameter(Mandatory = true, ParameterSetName = DefaultParameterSet, Position = 1, HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
         public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the server name
         /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
+        [Parameter(Mandatory = true, ParameterSetName = DefaultParameterSet, Position = 2, HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the job name
         /// </summary>
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = InputObjectParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
+        [Parameter(Mandatory = false, ParameterSetName = InputObjectParameterSet, HelpMessage = "The job name")]
+        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "The job name")]
+        [Parameter(Mandatory = false, ParameterSetName = DefaultParameterSet, HelpMessage = "The job name")]
         [ValidateNotNullOrEmpty]
         [Alias("JobName")]
         public string Name { get; set; }
@@ -96,8 +66,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// <summary>
         /// Gets or sets the agent input object
         /// </summary>
-        [Parameter(
-            Mandatory = true,
+        [Parameter(Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,

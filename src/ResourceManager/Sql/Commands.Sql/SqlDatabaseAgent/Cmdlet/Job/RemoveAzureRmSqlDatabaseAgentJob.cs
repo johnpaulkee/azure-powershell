@@ -34,7 +34,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         public override string ResourceGroupName { get; set; }
@@ -43,9 +42,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// Gets or sets the server name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         public override string ServerName { get; set; }
@@ -54,9 +52,8 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         /// Gets or sets the server name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         public override string AgentName { get; set; }
@@ -67,7 +64,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Alias("JobName")]

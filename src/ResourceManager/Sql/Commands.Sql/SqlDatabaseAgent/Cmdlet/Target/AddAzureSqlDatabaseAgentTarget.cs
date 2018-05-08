@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using Microsoft.Azure.Management.Sql.Models;
 
@@ -35,23 +36,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             ParameterSetName = DefaultSqlServerOrElasticPoolSet,
             HelpMessage = "Resource Group Name")]
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             ParameterSetName = DefaultSqlDatabaseSet,
             HelpMessage = "Resource Group Name")]
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             ParameterSetName = DefaultSqlShardMapSet,
             HelpMessage = "Resource Group Name")]
         [ValidateNotNullOrEmpty]
+        [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
@@ -59,18 +58,15 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             ParameterSetName = DefaultSqlServerOrElasticPoolSet,
             HelpMessage = "The server name.")]
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             ParameterSetName = DefaultSqlDatabaseSet,
             HelpMessage = "The server name.")]
         [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             ParameterSetName = DefaultSqlShardMapSet,
             HelpMessage = "The server name.")]
@@ -82,17 +78,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             ParameterSetName = DefaultSqlServerOrElasticPoolSet,
             HelpMessage = "The agent name.")]
         [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             ParameterSetName = DefaultSqlDatabaseSet,
             HelpMessage = "The agent name.")]
         [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             ParameterSetName = DefaultSqlShardMapSet,
             HelpMessage = "The agent name.")]
@@ -104,17 +97,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = DefaultSqlServerOrElasticPoolSet,
             HelpMessage = "The target group name.")]
         [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = DefaultSqlDatabaseSet,
             HelpMessage = "The target group name.")]
         [Parameter(Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = DefaultSqlShardMapSet,
             HelpMessage = "The target group name.")]
@@ -127,47 +117,38 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 4,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
             ParameterSetName = DefaultSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
             ParameterSetName = DefaultSqlDatabaseSet)]
         [Parameter(Mandatory = true,
             Position = 4,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name",
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(ParameterSetName = TargetGroupObjectSqlDatabaseSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupObjectSqlServerOrElasticPoolSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupObjectSqlShardMapSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlDatabaseSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlServerOrElasticPoolSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlShardMapSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [ValidateNotNullOrEmpty]
@@ -178,18 +159,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = false,
-            Position = 6,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
             ParameterSetName = DefaultSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = false,
-            Position = 3,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
             ParameterSetName = TargetGroupObjectSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = false,
-            Position = 3,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Elastic Pool Target Name",
             ParameterSetName = TargetGroupResourceIdSqlServerOrElasticPoolSet)]
         public override string ElasticPoolName { get; set; }
@@ -199,17 +174,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             Position = 5,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
             ParameterSetName = TargetGroupObjectSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
             ParameterSetName = TargetGroupResourceIdSqlShardMapSet)]
         public override string ShardMapName { get; set; }
@@ -219,33 +191,27 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             Position = 5,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
             ParameterSetName = DefaultSqlDatabaseSet)]
         [Parameter(
             Mandatory = true,
             Position = 6,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Database Target Name",
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
             ParameterSetName = TargetGroupObjectSqlDatabaseSet)]
         [Parameter(Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
             ParameterSetName = TargetGroupResourceIdSqlDatabaseSet)]
         [Parameter(Mandatory = true,
             Position = 3,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
             ParameterSetName = TargetGroupObjectSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 3,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Database Target Name",
             ParameterSetName = TargetGroupResourceIdSqlShardMapSet)]
         public override string DatabaseName { get; set; }
@@ -256,36 +222,37 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 5,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = DefaultSqlServerOrElasticPoolSet)]
         [Parameter(
             Mandatory = true,
             Position = 7,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = TargetGroupObjectSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = TargetGroupObjectSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = TargetGroupResourceIdSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Refresh Credential Name",
             ParameterSetName = TargetGroupResourceIdSqlShardMapSet)]
         public override string RefreshCredentialName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag indicating that we want to exclude this target
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Excludes a target.")]
+        [ValidateNotNullOrEmpty]
+        public override SwitchParameter Exclude { get; set; }
 
         /// <summary>
         /// Gets or sets the target group input object.
@@ -313,30 +280,21 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlDatabaseSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The target group resource id")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlServerOrElasticPoolSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The target group resource id")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlShardMapSet,
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The target group resource id")]
         [ValidateNotNullOrEmpty]
         public string TargetGroupResourceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the flag indicating that we want to exclude this target
-        /// </summary>
-        [Parameter(Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "Excludes a target.")]
-        [ValidateNotNullOrEmpty]
-        public override SwitchParameter Exclude { get; set; }
 
         /// <summary>
         /// Execution starts here

@@ -40,31 +40,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRunOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRecurringParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 0,
-            HelpMessage = "The resource group name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
@@ -77,31 +62,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRunOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRecurringParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The server name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
@@ -113,31 +83,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRunOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRecurringParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 2,
-            HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
@@ -149,31 +104,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRunOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRecurringParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
-            HelpMessage = "The job name")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [ValidateNotNullOrEmpty]
@@ -186,19 +126,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobDefaultRunOnceParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The flag to indicate job will be run once")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobObjectRunOnceParameterSet,
-            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The flag to indicate job will be run once")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobResourceIdRunOnceParameterSet,
-            ValueFromPipeline = true,
             Position = 1,
             HelpMessage = "The flag to indicate job will be run once")]
         public SwitchParameter RunOnce { get; set; }
@@ -249,32 +186,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobDefaultRunOnceParameterSet,
-            Position = 5,
             HelpMessage = "The job schedule start time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobDefaultRecurringParameterSet,
-            Position = 6,
             HelpMessage = "The job schedule start time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobObjectRunOnceParameterSet,
-            Position = 2,
             HelpMessage = "The job schedule start time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobObjectRecurringParameterSet,
-            Position = 3,
             HelpMessage = "The job schedule start time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobResourceIdRunOnceParameterSet,
-            Position = 2,
             HelpMessage = "The job schedule start time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobResourceIdRecurringParameterSet,
-            Position = 3,
             HelpMessage = "The job schedule start time")]
         public DateTime? StartTime { get; set; }
 
@@ -284,71 +215,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobDefaultRecurringParameterSet,
-            Position = 7,
             HelpMessage = "The job schedule end time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobObjectRecurringParameterSet,
-            Position = 4,
             HelpMessage = "The job schedule end time")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = JobResourceIdRecurringParameterSet,
-            Position = 4,
             HelpMessage = "The job schedule end time")]
         public DateTime? EndTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job description
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The job description")]
-        public string Description { get; set; }
-
-        /// <summary>
-        /// The flag to enable this job
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
-            HelpMessage = "The flag to enable this job")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobObjectEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The flag to enable this job")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobResourceIdEnableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The flag to enable this job")]
-        public SwitchParameter Enable { get; set; }
-
-        /// <summary>
-        /// The flag to disable this job
-        /// </summary>
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobDefaultDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
-            HelpMessage = "The flag to disable this job")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobObjectDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The flag to disable this job")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobResourceIdDisableParameterSet,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
-            HelpMessage = "The flag to disable this job")]
-        public SwitchParameter Disable { get; set; }
 
         /// <summary>
         /// Gets or sets the agent input object
@@ -371,18 +247,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job input object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobObjectEnableParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job input object")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobObjectDisableParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job input object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentJobModel InputObject { get; set; }
 
@@ -392,35 +256,35 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job resource id")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobResourceIdRunOnceParameterSet,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job resource id")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = JobResourceIdRecurringParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobResourceIdEnableParameterSet,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The job resource id")]
-        [Parameter(
-            Mandatory = true,
-            ParameterSetName = JobResourceIdDisableParameterSet,
-            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the enable switch flag.
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The flag to indicate customer wants this job to be enabled.")]
+        public SwitchParameter Enable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job description
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The job description")]
+        public string Description { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
@@ -467,58 +331,63 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentJobModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentJobModel> model)
         {
-            //var existingEntity = model.First();
+            var existingEntity = model.First();
 
-            //AzureSqlDatabaseAgentJobModel newEntity = new AzureSqlDatabaseAgentJobModel
-            //{
-            //    ResourceGroupName = this.ResourceGroupName,
-            //    ServerName = this.ServerName,
-            //    AgentName = this.AgentName,
-            //    JobName = this.Name,
-            //    Description = this.Description != null ? this.Description : existingEntity.Description,
-            //    Enabled = this.Enabled.IsPresent,
-            //    StartTime = this.StartTime != null ? this.StartTime : existingEntity.StartTime,
-            //    EndTime = this.EndTime != null ? this.EndTime : existingEntity.EndTime
-            //};
+            AzureSqlDatabaseAgentJobModel updatedEntity = new AzureSqlDatabaseAgentJobModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.ServerName,
+                AgentName = this.AgentName,
+                JobName = this.Name,
+                Description = this.Description != null ? this.Description : existingEntity.Description,
+                StartTime = this.StartTime != null ? this.StartTime : existingEntity.StartTime,
+                EndTime = this.EndTime != null ? this.EndTime : existingEntity.EndTime,
+                ScheduleType = this.RunOnce.IsPresent ? JobScheduleType.Once :
+                               this.IntervalType.HasValue ? JobScheduleType.Recurring : (JobScheduleType?) existingEntity.ScheduleType,
+                Enabled = this.Enable.IsPresent
+            };
 
-            //// Check what flags are set
-            //bool onceIsPresent = this.Once.IsPresent;
-            //bool recurringIsPresent = this.MonthInterval.HasValue ||
-            //                          this.WeekInterval.HasValue ||
-            //                          this.DayInterval.HasValue ||
-            //                          this.HourInterval.HasValue ||
-            //                          this.MinuteInterval.HasValue;
+            if (updatedEntity.ScheduleType != null && updatedEntity.ScheduleType == JobScheduleType.Recurring)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
 
-            //// Set up job schedule params
-            //if (onceIsPresent)
-            //{
-            //    // Customer requested job to run once
-            //    newEntity.ScheduleType = JobScheduleType.Once;
-            //}
-            //else if (recurringIsPresent)
-            //{
-            //    // Customer requested job to be a recurring time interval
-            //    // Can monthly, weekly, daily, hourly, or every X minutes.
-            //    newEntity.ScheduleType = JobScheduleType.Recurring;
+                // Create basic ISO 8601 duration - Basic string builder implementation
+                // XmlConvert.ToString(timeSpan) only supports up to days. Weeks and months need to be supported
+                stringBuilder.Append("P");
 
-            //    StringBuilder stringBuilder = new StringBuilder();
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Hour ||
+                    this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Minute)
+                {
+                    stringBuilder.Append("T");
+                }
 
-            //    stringBuilder.Append("P");
-            //    if (this.HourInterval.HasValue || this.MinuteInterval.HasValue) stringBuilder.Append("T");
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Month ||
+                    this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Minute)
+                {
+                    stringBuilder.Append(this.IntervalCount + "M");
+                }
 
-            //    if (this.MonthInterval.HasValue) stringBuilder.Append(this.MonthInterval.Value.ToString() + "M");
-            //    if (this.WeekInterval.HasValue) stringBuilder.Append(this.WeekInterval.Value.ToString() + "W");
-            //    if (this.DayInterval.HasValue) stringBuilder.Append(this.DayInterval.Value.ToString() + "D");
-            //    if (this.HourInterval.HasValue) stringBuilder.Append(this.HourInterval.Value.ToString() + "H");
-            //    if (this.MinuteInterval.HasValue) stringBuilder.Append(this.MinuteInterval.Value.ToString() + "M");
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Week)
+                {
+                    stringBuilder.Append(this.IntervalCount + "W");
+                }
 
-            //    string interval = stringBuilder.ToString();
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Day)
+                {
+                    stringBuilder.Append(this.IntervalCount + "D");
+                }
 
-            //    newEntity.Interval = interval;
-            //}
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Hour)
+                {
+                    stringBuilder.Append(this.IntervalCount + "H");
+                }
 
-            //return new List<AzureSqlDatabaseAgentJobModel> { newEntity };
-            return null;
+                string interval = stringBuilder.ToString();
+
+                updatedEntity.Interval = interval;
+            }
+
+            return new List<AzureSqlDatabaseAgentJobModel> { updatedEntity };
         }
 
         /// <summary>

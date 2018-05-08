@@ -248,7 +248,6 @@
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobStepModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentJobVersionModel.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentModel.cs" />
-    <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentResourceIdentifier.cs" />
     <Compile Include="SqlDatabaseAgent\Model\AzureSqlDatabaseAgentTargetGroupModel.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentAdapter.cs" />
     <Compile Include="SqlDatabaseAgent\Services\AzureSqlDatabaseAgentCommunicator.cs" />

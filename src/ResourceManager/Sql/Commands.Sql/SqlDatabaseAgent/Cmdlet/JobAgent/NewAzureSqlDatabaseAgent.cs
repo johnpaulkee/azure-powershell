@@ -40,7 +40,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
@@ -53,7 +52,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
@@ -64,7 +62,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             ParameterSetName = DefaultParameterSet,
             HelpMessage = "The database name")]
@@ -76,20 +73,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             ParameterSetName = DefaultParameterSet,
             HelpMessage = "The Agent Name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The Agent Name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The Agent Name")]
         [ValidateNotNullOrEmpty]
@@ -102,17 +96,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = false,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "The Agent Tags",
-            Position = 4)]
+            HelpMessage = "The Agent Tags")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = InputObjectParameterSet,
-            Position = 2,
             HelpMessage = "The Agent Tags")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = ResourceIdParameterSet,
-            Position = 2,
             HelpMessage = "The Agent Tags")]
         [ValidateNotNullOrEmpty]
         [Alias("Tags")]

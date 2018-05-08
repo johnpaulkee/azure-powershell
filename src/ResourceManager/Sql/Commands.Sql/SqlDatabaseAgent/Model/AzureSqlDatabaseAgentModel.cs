@@ -21,10 +21,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
     /// </summary>
     public class AzureSqlDatabaseAgentModel : AzureSqlDatabaseAgentBaseModel
     {
-        public AzureSqlDatabaseAgentModel()
-        {
-        }
-
         /// <summary>
         /// Gets or sets the location the sql database agent is in
         /// </summary>

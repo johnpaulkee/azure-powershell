@@ -19,10 +19,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     public class AzureSqlDatabaseAgentJobStepModel : AzureSqlDatabaseAgentJobModelBase
     {
-        public AzureSqlDatabaseAgentJobStepModel()
-        {
-        }
-
         /// <summary>
         /// The job step's step name
         /// </summary>

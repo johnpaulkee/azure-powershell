@@ -23,9 +23,5 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         ///  Gets or sets the job name
         /// </summary>
         public string JobName { get; set; }
-
-        public AzureSqlDatabaseAgentJobModelBase()
-        {
-        }
     }
 }

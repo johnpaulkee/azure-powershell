@@ -111,32 +111,32 @@ namespace Microsoft.Azure.Commands.Sql.Common
             }
 
             var resourceGroupProperty = model.GetType().GetProperty("ResourceGroupName");
-            this.ResourceGroupName = (this.ResourceGroupName == null && resourceGroupProperty != null) ? resourceGroupProperty.GetValue(model).ToString() : this.ResourceGroupName;
+            this.ResourceGroupName = (resourceGroupProperty != null) ? resourceGroupProperty.GetValue(model).ToString() : this.ResourceGroupName;
 
             var serverProperty = model.GetType().GetProperty("ServerName");
-            this.ServerName = (this.ServerName == null && serverProperty != null) ? serverProperty.GetValue(model).ToString() : this.ServerName;
+            this.ServerName = (serverProperty != null) ? serverProperty.GetValue(model).ToString() : this.ServerName;
             this.AgentServerName = this.ServerName;
 
             var databaseProperty = model.GetType().GetProperty("DatabaseName");
-            this.DatabaseName = (this.DatabaseName == null && databaseProperty != null) ? databaseProperty.GetValue(model).ToString() : this.DatabaseName;
+            this.DatabaseName = (databaseProperty != null) ? databaseProperty.GetValue(model).ToString() : this.DatabaseName;
 
             var agentProperty = model.GetType().GetProperty("AgentName");
-            this.AgentName = (this.AgentName == null && agentProperty != null) ? agentProperty.GetValue(model).ToString() : this.AgentName;
+            this.AgentName = (agentProperty != null) ? agentProperty.GetValue(model).ToString() : this.AgentName;
 
             var jobProperty = model.GetType().GetProperty("JobName");
-            this.JobName = (this.JobName == null && jobProperty != null) ? jobProperty.GetValue(model).ToString() : this.JobName;
+            this.JobName = (jobProperty != null) ? jobProperty.GetValue(model).ToString() : this.JobName;
 
             var stepProperty = model.GetType().GetProperty("StepName");
-            this.StepName = (this.StepName == null & stepProperty != null) ? stepProperty.GetValue(model).ToString() : this.StepName;
+            this.StepName = (stepProperty != null) ? stepProperty.GetValue(model).ToString() : this.StepName;
 
             var targetGroupProperty = model.GetType().GetProperty("TargetGroupName");
-            this.TargetGroupName = (this.TargetGroupName == null && targetGroupProperty != null) ? targetGroupProperty.GetValue(model).ToString() : this.TargetGroupName;
+            this.TargetGroupName = (targetGroupProperty != null) ? targetGroupProperty.GetValue(model).ToString() : this.TargetGroupName;
 
             var jobCredentialProperty = model.GetType().GetProperty("CredentialName");
-            this.CredentialName = (this.CredentialName == null && jobCredentialProperty != null) ? jobCredentialProperty.GetValue(model).ToString() : this.CredentialName;
+            this.CredentialName = (jobCredentialProperty != null) ? jobCredentialProperty.GetValue(model).ToString() : this.CredentialName;
 
             var jobExecutionProperty = model.GetType().GetProperty("JobExecutionId");
-            this.JobExecutionId = (this.JobExecutionId == null && jobExecutionProperty != null) ? jobExecutionProperty.GetValue(model).ToString() : this.JobExecutionId;
+            this.JobExecutionId = (jobExecutionProperty != null) ? jobExecutionProperty.GetValue(model).ToString() : this.JobExecutionId;
         }
 
         /// <summary>

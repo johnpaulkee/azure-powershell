@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Microsoft.Rest.Azure;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
 {
@@ -37,40 +38,40 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
+        [ValidateNotNullOrEmpty]
+        [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the server name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
         public override string ServerName { get; set; }
 
         /// <summary>
         /// Gets or sets the server name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
 
         /// <summary>
         /// Gets or sets the job name
         /// </summary>
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         public override string JobName { get; set; }
@@ -81,7 +82,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job execution id.")]
         [ValidateNotNullOrEmpty]

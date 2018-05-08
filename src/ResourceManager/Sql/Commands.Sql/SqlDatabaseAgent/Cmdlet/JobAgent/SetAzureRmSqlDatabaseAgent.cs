@@ -39,7 +39,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
@@ -52,7 +51,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
@@ -63,7 +61,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultParameterSet,
             Position = 2,
             HelpMessage = "The agent name")]
@@ -77,17 +74,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
-            Position = 3,
             ParameterSetName = DefaultParameterSet)]
         [Parameter(
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
-            Position = 1,
             ParameterSetName = InputObjectParameterSet)]
         [Parameter(
             Mandatory = false,
             HelpMessage = "The tags to associate with the Azure SQL Database Agent",
-            Position = 1,
             ParameterSetName = ResourceIdParameterSet)]
         [ValidateNotNullOrEmpty]
         [Alias("Tags")]

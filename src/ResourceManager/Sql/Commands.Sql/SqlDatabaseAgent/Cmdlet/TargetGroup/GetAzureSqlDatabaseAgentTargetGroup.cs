@@ -36,7 +36,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
@@ -49,7 +48,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
@@ -61,7 +59,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
@@ -73,18 +70,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             ParameterSetName = DefaultParameterSet,
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
             HelpMessage = "The target group name")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
             HelpMessage = "The target group name")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            Position = 1,
             HelpMessage = "The target group name")]
         [ValidateNotNullOrEmpty]
         [Alias("TargetGroupName")]
@@ -97,7 +88,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The SQL Database Agent Parent Object")]
+            HelpMessage = "The agent object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
@@ -108,7 +99,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The resource id of the credential to remove")]
+            HelpMessage = "The agent resource id")]
         [ValidateNotNullOrEmpty]
         public string AgentResourceId { get; set; }
 

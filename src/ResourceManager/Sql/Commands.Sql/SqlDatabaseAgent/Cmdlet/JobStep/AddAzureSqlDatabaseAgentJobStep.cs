@@ -40,19 +40,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseObject,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseId,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
@@ -65,19 +62,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseObject,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseId,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         public override string ServerName { get; set; }
@@ -88,19 +82,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseObject,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseId,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         public override string AgentName { get; set; }
@@ -111,19 +102,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseObject,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseId,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         public override string JobName { get; set; }
@@ -134,19 +122,16 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseObject,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultOutputDatabaseId,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job step name")]
         [Parameter(
@@ -172,13 +157,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 1,
-            ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdOutputDatabaseObject,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
             Position = 1,
-            ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The job step name")]
         [Alias("StepName")]
@@ -231,7 +214,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 2,
-            ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdOutputDatabaseId,
             HelpMessage = "The target group name")]
         public override string TargetGroupName { get; set; }
@@ -331,10 +313,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public string CommandText { get; set; }
 
         [Parameter(
-           Mandatory = true,
-           Position = 8,
-           ParameterSetName = DefaultOutputDatabaseObject,
-           HelpMessage = "The output database object")]
+            Mandatory = true,
+            Position = 8,
+            ParameterSetName = DefaultOutputDatabaseObject,
+            HelpMessage = "The output database object")]
         [Parameter(
             Mandatory = true,
             Position = 5,
@@ -348,10 +330,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         public AzureSqlDatabaseModel OutputDatabaseObject { get; set; }
 
         [Parameter(
-           Mandatory = true,
-           Position = 8,
-           ParameterSetName = DefaultOutputDatabaseId,
-           HelpMessage = "The output database resource id")]
+            Mandatory = true,
+            Position = 8,
+            ParameterSetName = DefaultOutputDatabaseId,
+            HelpMessage = "The output database resource id")]
         [Parameter(
             Mandatory = true,
             Position = 5,

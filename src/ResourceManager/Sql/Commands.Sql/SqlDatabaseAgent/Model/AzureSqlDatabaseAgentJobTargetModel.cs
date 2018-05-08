@@ -26,12 +26,40 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         /// Gets or sets the target group name
         /// </summary>
         public string TargetGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the membership type
+        /// </summary>
         public JobTargetGroupMembershipType? MembershipType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target type
+        /// </summary>
         public string TargetType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target server name
+        /// </summary>
         public string TargetServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target database name
+        /// </summary>
         public string TargetDatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target elastic pool name
+        /// </summary>
         public string TargetElasticPoolName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target shard map name
+        /// </summary>
         public string TargetShardMapName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the refresh credential name
+        /// </summary>
         public string RefreshCredentialName { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public string TargetGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the target group members
+        /// Gets or sets the targets
         /// </summary>
         public IList<AzureSqlDatabaseAgentTargetModel> Targets { get; set; }
     }

@@ -21,6 +21,7 @@ using Microsoft.Azure.Management.Sql.Models;
 using Microsoft.WindowsAzure.Commands.Common;
 using System;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 {
@@ -633,53 +634,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
 
             return jobStep;
-        }
-
-        #endregion
-
-        #region Job Version
-
-        /// <summary>
-        /// Gets a job version
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>The upserted job step</returns>
-        public AzureSqlDatabaseAgentJobVersionModel GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName, int version)
-        {
-            var resp = Communicator.GetJobVersion(resourceGroupName, serverName, agentName, jobName, version);
-            return CreateJobVersionModelFromResponse(resourceGroupName, serverName, agentName, jobName, resp);
-        }
-
-
-        /// <summary>
-        /// Gets all job versions from a job
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>The upserted job step</returns>
-        public List<AzureSqlDatabaseAgentJobVersionModel> GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName)
-        {
-            var resp = Communicator.GetJobVersion(resourceGroupName, serverName, agentName, jobName);
-            return resp.Select((version) => CreateJobVersionModelFromResponse(resourceGroupName, serverName, agentName, jobName, version)).ToList();
-        }
-
-        public AzureSqlDatabaseAgentJobVersionModel CreateJobVersionModelFromResponse(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string jobName,
-            Management.Sql.Models.JobVersion resp)
-        {
-            return new AzureSqlDatabaseAgentJobVersionModel
-            {
-                ResourceGroupName = resourceGroupName,
-                ServerName = serverName,
-                AgentName = agentName,
-                JobName = jobName,
-                Version = int.Parse(resp.Name),
-                ResourceId = resp.Id,
-                Type = resp.Type
-            };
-        }
+        }        
 
         #endregion
 
@@ -749,7 +704,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             int? skip = null,
             int? top = null)
         {
-            // TODO: scrape job name here
             var resp = Communicator.ListJobExecutionsByAgent(
                 resourceGroupName,
                 serverName,
@@ -762,15 +716,37 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 skip,
                 top);
 
-            return resp.Select((jobExecution) =>
+            List<AzureSqlDatabaseAgentJobExecutionModel> executions = resp.Select((jobExecution) =>
                 CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName,
-                GetJobName(jobExecution.Id), jobExecution)).ToList();
-        }
+                new ResourceIdentifier(jobExecution.Id).ParentResourceBuilder[5], jobExecution)).ToList();
 
-        public string GetJobName(string jobExecutionResourceId)
-        {
-            var resourceId = new AzureSqlDatabaseAgentResourceIdentifier(jobExecutionResourceId);
-            return resourceId.JobName;
+            if (resp.NextPageLink != null)
+            {
+                Match match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                int toSkip = int.Parse(match.Groups[1].Value);
+
+                while (top > toSkip)
+                {
+                    resp = Communicator.ListJobExecutionsByAgent(
+                        resourceGroupName,
+                        serverName,
+                        agentName,
+                        createTimeMin,
+                        createTimeMax,
+                        endTimeMin,
+                        endTimeMax,
+                        isActive,
+                        toSkip,
+                        top);
+
+                    executions.AddRange(resp.Select((jobExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, new ResourceIdentifier(jobExecution.Id).ParentResourceBuilder[5], jobExecution)));
+
+                    match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                    toSkip = int.Parse(match.Groups[1].Value);
+                }
+            }
+
+            return executions;
         }
 
         /// <summary>
@@ -779,7 +755,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="resourceGroupName">The resource group name</param>
         /// <param name="serverName">The server the agent is in</param>
         /// <param name="agentName">The agent name</param>
-        public List<AzureSqlDatabaseAgentJobStepExecutionModel> ListByJob(
+        public List<AzureSqlDatabaseAgentJobExecutionModel> ListByJob(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -801,7 +777,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 skip, 
                 top);
 
-            return resp.Select((stepExecution) => CreateJobStepExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, stepExecution)).ToList();
+            return resp.Select((rootExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, rootExecution)).ToList();
         }
 
         #endregion

@@ -19,8 +19,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
 {
     public class AzureSqlDatabaseAgentJobModel : AzureSqlDatabaseAgentJobModelBase
     {
-        public AzureSqlDatabaseAgentJobModel() { }
-
         /// <summary>
         /// Gets or sets the description of the job
         /// </summary>

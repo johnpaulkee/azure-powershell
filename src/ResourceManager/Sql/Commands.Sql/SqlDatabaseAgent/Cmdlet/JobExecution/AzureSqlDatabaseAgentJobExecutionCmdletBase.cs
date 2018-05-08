@@ -27,21 +27,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// <summary>
         /// Default parameter sets
         /// </summary>
-        protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
-
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
-        protected const string InputObjectGetRootJobExecution = "Input Object GetRootJobExecution Parameter Set";
-
-        /// <summary>
-        /// Resource id parameter sets
-        /// </summary>
-        protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
-
-        /// <summary>
-        /// Default parameter sets
-        /// </summary>
         protected const string GetJobStepExecution = "GetJobStepExecution Parameter Set";
 
         /// <summary>

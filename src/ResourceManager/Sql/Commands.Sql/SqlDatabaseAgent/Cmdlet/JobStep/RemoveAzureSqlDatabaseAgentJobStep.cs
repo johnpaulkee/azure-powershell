@@ -18,6 +18,7 @@ using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 
 namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
 {
@@ -35,9 +36,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
+        [ValidateNotNullOrEmpty]
+        [ResourceGroupCompleter]
         public override string ResourceGroupName { get; set; }
 
         /// <summary>
@@ -46,9 +48,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
+        [ValidateNotNullOrEmpty]
         public override string ServerName { get; set; }
 
         /// <summary>
@@ -57,9 +59,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
+        [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
 
         /// <summary>
@@ -68,9 +70,9 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
+        [ValidateNotNullOrEmpty]
         public override string JobName { get; set; }
 
         /// <summary>
@@ -79,10 +81,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job step name")]
         [Alias("StepName")]
+        [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
         /// <summary>

@@ -37,7 +37,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [ValidateNotNullOrEmpty]
@@ -50,7 +49,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [ValidateNotNullOrEmpty]
@@ -62,7 +60,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [ValidateNotNullOrEmpty]
@@ -73,17 +70,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job credential name")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The job credential name")]
         [Alias("CredentialName")]
@@ -95,17 +89,14 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The credential")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The credential")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The credential")]
         [ValidateNotNullOrEmpty]

@@ -14,8 +14,6 @@
 
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model;
-using Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services;
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
@@ -26,22 +24,34 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
     /// Defines the Get-AzureRmSqlDatabaseAgentJobExecution Cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlDatabaseAgentJobExecution",
-        SupportsShouldProcess = true,
-        DefaultParameterSetName = DefaultParameterSet)]
+        SupportsShouldProcess = true)]
     [OutputType(typeof(IEnumerable<AzureSqlDatabaseAgentJobExecutionModel>))]
     public class GetAzureSqlDatabaseAgentJobExecution : AzureSqlDatabaseAgentJobExecutionCmdletBase<AzureSqlDatabaseAgentModel>
     {
+        /// <summary>
+        /// Default parameter sets
+        /// </summary>
+        protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
+
+        /// <summary>
+        /// Input object parameter sets
+        /// </summary>
+        protected const string InputObjectGetRootJobExecution = "Input Object GetRootJobExecution Parameter Set";
+
+        /// <summary>
+        /// Resource id parameter sets
+        /// </summary>
+        protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
+
         /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
         [ValidateNotNullOrEmpty]
@@ -53,12 +63,10 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name.")]
         [ValidateNotNullOrEmpty]
@@ -69,47 +77,50 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name.")]
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name.")]
         [ValidateNotNullOrEmpty]
         public override string AgentName { get; set; }
 
         /// <summary>
-        /// Gets or sets the job name
+        /// Gets or sets the top executions to return in the response
         /// </summary>
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = true, Position = 3, HelpMessage = "Count returns the top number of executions.")]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = true, Position = 2, HelpMessage = "Count returns the top number of executions.")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = true, Position = 2, HelpMessage = "Count returns the top number of executions.")]
+        public int? Count { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job name
+        /// </summary>        
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = GetRootJobExecution,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
             HelpMessage = "The job name.")]
         [Parameter(ParameterSetName = InputObjectParameterSet,
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
-            HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = InputObjectGetRootJobExecution,
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 3,
             HelpMessage = "The job name.")]
         [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true,
             HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
+        [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name.")]
+        [Parameter(
+            ParameterSetName = InputObjectGetRootJobExecution,
+            Mandatory = true,
+            Position = 1,
+            HelpMessage = "The job name.")]
+        [Parameter(
+            ParameterSetName = ResourceIdGetRootJobExecution,
+            Mandatory = true,
+            Position = 1,
+            HelpMessage = "The job name.")]
+        [ValidateNotNullOrEmpty]
         public override string JobName { get; set; }
 
         /// <summary>
@@ -117,19 +128,17 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// </summary>
         [Parameter(ParameterSetName = GetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
             Position = 4,
             HelpMessage = "The job execution id.")]
         [Parameter(ParameterSetName = InputObjectGetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
+            Position = 2,
             HelpMessage = "The job execution id.")]
         [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
             Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            Position = 4,
+            Position = 2,
             HelpMessage = "The job execution id.")]
+        [ValidateNotNullOrEmpty]
         public override string JobExecutionId { get; set; }
 
         /// <summary>
@@ -143,73 +152,67 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         /// <summary>
         /// Gets or sets the max create time
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by create time max")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by create time max")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by create time max")]
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
         public DateTime? CreateTimeMax { get; set; }
 
         /// <summary>
         /// Gets or sets the min end time
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by end time min.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by end time min.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by end time min.")]
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
         public DateTime? EndTimeMin { get; set; }
 
         /// <summary>
         /// Gets or sets the max end time
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by end time max.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by end time max.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by end time max.")]
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
         public DateTime? EndTimeMax { get; set; }
 
         /// <summary>
         /// Gets or sets the active switch parameter. Filters by active/in progress executions
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Flag to filter by active executions.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Flag to filter by active executions.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Flag to filter by active executions.")]
+        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
+        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Filter by create time min")]
         public SwitchParameter Active { get; set; }
-
-        /// <summary>
-        /// Gets or sets the top executions to return in the response
-        /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
-        [Parameter(ParameterSetName = InputObjectParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
-        [Parameter(ParameterSetName = ResourceIdParameterSet, Mandatory = false, HelpMessage = "Count returns the top number of executions.")]
-        public int? Count { get; set; }
 
         /// <summary>
         /// Gets or sets the agent object input model
         /// </summary>
         [Parameter(
             ParameterSetName = InputObjectParameterSet,
+            Position = 0,
             Mandatory = true,
             ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent object.")]
+            HelpMessage = "The job execution id.")]
         [Parameter(
             ParameterSetName = InputObjectGetRootJobExecution,
+            Position = 0,
             Mandatory = true,
             ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "The agent object.")]
+            HelpMessage = "The job execution id.")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseAgentModel AgentObject { get; set; }
 
         /// <summary>
         /// Gets or sets the agent resource id
         /// </summary>
-        [Parameter(ParameterSetName = ResourceIdParameterSet,
-            Mandatory = true,
-            ValueFromPipeline = true,
+        [Parameter(
+            ParameterSetName = ResourceIdParameterSet,
             Position = 0,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
             HelpMessage = "The agent resource id.")]
-        [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
-            Mandatory = true,
-            ValueFromPipeline = true,
+        [Parameter(
+            ParameterSetName = ResourceIdGetRootJobExecution,
             Position = 0,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
             HelpMessage = "The agent resource id.")]
         [ValidateNotNullOrEmpty]
         public string AgentResourceId { get; set; }
@@ -221,7 +224,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.JobExecution
         {
             InitializeInputObjectProperties(this.AgentObject);
             InitializeResourceIdProperties(this.AgentResourceId);
-
             base.ExecuteCmdlet();
         }
 

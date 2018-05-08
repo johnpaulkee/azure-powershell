@@ -36,13 +36,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultGetVersionParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The resource group name")]
         public override string ResourceGroupName { get; set; }
@@ -53,13 +51,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultGetVersionParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "The server name")]
         public override string ServerName { get; set; }
@@ -70,13 +66,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultGetVersionParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 2,
             HelpMessage = "The agent name")]
         public override string AgentName { get; set; }
@@ -87,13 +81,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = DefaultGetVersionParameterSet,
-            ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job name")]
         public override string JobName { get; set; }
@@ -104,7 +96,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = false,
             ParameterSetName = DefaultParameterSet,
-            Position = 4,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
@@ -114,7 +105,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = false,
             ParameterSetName = InputObjectParameterSet,
-            Position = 1,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,
@@ -124,7 +114,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet.Job
         [Parameter(
             Mandatory = false,
             ParameterSetName = ResourceIdParameterSet,
-            Position = 1,
             HelpMessage = "The job step name")]
         [Parameter(
             Mandatory = true,

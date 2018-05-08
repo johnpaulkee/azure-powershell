@@ -249,7 +249,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName">The agent name</param>
         /// <param name="jobName">The job name</param>
         /// <returns>A new job execution</returns>
-        public Management.Sql.Models.JobExecution BeginCreate(
+        public JobExecution BeginCreate(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -266,7 +266,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName"></param>
         /// <param name="jobName"></param>
         /// <returns></returns>
-        public Management.Sql.Models.JobExecution CreateJobExecution(
+        public JobExecution CreateJobExecution(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -283,7 +283,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName"></param>
         /// <param name="jobName"></param>
         /// <returns>The agent belonging to specified server</returns>
-        public Management.Sql.Models.JobExecution GetJobExecution(
+        public JobExecution GetJobExecution(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -300,19 +300,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server name</param>
         /// <param name="agentName">The agent name</param>
         /// <returns>A list of credentials belonging to specified agent</returns>
-        public IPage<Management.Sql.Models.JobExecution> ListJobExecutionsByAgent(
+        public IPage<JobExecution> ListJobExecutionsByAgent(
             string resourceGroupName,
             string serverName,
             string agentName,
-            DateTime? createTimeMin,
-            DateTime? createTimeMax,
-            DateTime? endTimeMin,
-            DateTime? endTimeMax,
-            bool? isActive,
-            int? skip,
-            int? top)
+            DateTime? createTimeMin = null,
+            DateTime? createTimeMax = null,
+            DateTime? endTimeMin = null,
+            DateTime? endTimeMax = null,
+            bool? isActive = null,
+            int? skip = null,
+            int? top = null)
         {
-            // TODO: .NET SDK update should include top executions too
             return GetCurrentSqlClient().JobExecutions.ListByAgent(
                 resourceGroupName: resourceGroupName,
                 serverName: serverName,
@@ -333,7 +332,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server name</param>
         /// <param name="agentName">The agent name</param>
         /// <returns>A list of credentials belonging to specified agent</returns>
-        public IPage<Management.Sql.Models.JobExecution> ListJobExecutionsByJob(
+        public IPage<JobExecution> ListJobExecutionsByJob(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -392,7 +391,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="jobExecutionId"></param>
         /// <param name="stepName"></param>
         /// <returns></returns>
-        public Management.Sql.Models.JobExecution GetJobStepExecution(
+        public JobExecution GetJobStepExecution(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -403,7 +402,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return GetCurrentSqlClient().JobStepExecutions.Get(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName);
         }
 
-        public IPage<Management.Sql.Models.JobExecution> ListJobExecutionSteps(
+        public IPage<JobExecution> ListJobExecutionSteps(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -437,7 +436,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 
         #region Job Target Executions
 
-        public Management.Sql.Models.JobExecution GetJobTargetExecution(
+        public JobExecution GetJobTargetExecution(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -449,7 +448,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             return GetCurrentSqlClient().JobTargetExecutions.Get(resourceGroupName, serverName, agentName, jobName, jobExecutionId, stepName, targetId);
         }
 
-        public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutions(
+        public IPage<JobExecution> ListJobTargetExecutions(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -478,7 +477,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 top);
         }
 
-        public IPage<Management.Sql.Models.JobExecution> ListJobTargetExecutionsByStep(
+        public IPage<JobExecution> ListJobTargetExecutionsByStep(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -525,13 +524,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="stepName">The target groups name</param>
         /// <param name="parameters">The target group's create parameters</param>
         /// <returns>The created target group</returns>
-        public Management.Sql.Models.JobStep CreateOrUpdateJobStep(
+        public JobStep CreateOrUpdateJobStep(
             string resourceGroupName,
             string serverName,
             string agentName,
             string jobName,
             string stepName,
-            Management.Sql.Models.JobStep parameters)
+            JobStep parameters)
         {
             return GetCurrentSqlClient().JobSteps.CreateOrUpdate(resourceGroupName, serverName, agentName, jobName, stepName, parameters);
         }
@@ -545,7 +544,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="jobName">The job name</param>
         /// <param name="stepName">The step name</param>
         /// <returns>The job step belonging to the job</returns>
-        public Management.Sql.Models.JobStep GetJobStep(
+        public JobStep GetJobStep(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -565,7 +564,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="jobVersion">The job version</param>
         /// <param name="stepName">The step name</param>
         /// <returns>A list of steps in a job for specific job version</returns>
-        public Management.Sql.Models.JobStep GetJobStepByVersion(
+        public JobStep GetJobStepByVersion(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -585,7 +584,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="jobName">The job name</param>
         /// <param name="jobVersion">The job version</param>
         /// <returns>Pages of job steps for a job for a specific version</returns>
-        public Rest.Azure.IPage<Management.Sql.Models.JobStep> ListJobStepsByVersion(
+        public IPage<JobStep> ListJobStepsByVersion(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -604,7 +603,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName">The agent name</param>
         /// <param name="jobName">The job name</param>
         /// <returns>Pages of job steps for a job</returns>
-        public Rest.Azure.IPage<Management.Sql.Models.JobStep> ListJobStepsByJob(
+        public IPage<JobStep> ListJobStepsByJob(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -635,13 +634,13 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
 
         #region Job Version Methods
 
-        public Management.Sql.Models.JobVersion GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName, int jobVersion)
+        public JobVersion GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName, int jobVersion)
         {
             var resp = GetCurrentSqlClient().JobVersions.Get(resourceGroupName, serverName, agentName, jobName, jobVersion);
             return resp;
         }
 
-        public IPage<Management.Sql.Models.JobVersion> GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName)
+        public IPage<JobVersion> GetJobVersion(string resourceGroupName, string serverName, string agentName, string jobName)
         {
             var resp = GetCurrentSqlClient().JobVersions.ListByJob(resourceGroupName, serverName, agentName, jobName);
             return resp;
@@ -660,12 +659,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="targetGroupName">The target groups name</param>
         /// <param name="parameters">The target group's create parameters</param>
         /// <returns>The created target group</returns>
-        public Management.Sql.Models.JobTargetGroup CreateOrUpdateTargetGroup(
+        public JobTargetGroup CreateOrUpdateTargetGroup(
             string resourceGroupName,
             string serverName,
             string agentName,
             string targetGroupName,
-            Management.Sql.Models.JobTargetGroup parameters)
+            JobTargetGroup parameters)
         {
             return GetCurrentSqlClient().JobTargetGroups.CreateOrUpdate(resourceGroupName, serverName, agentName, targetGroupName, parameters);
         }
@@ -678,7 +677,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="agentName"></param>
         /// <param name="targetGroupName"></param>
         /// <returns>The target group belonging to specified agent</returns>
-        public Management.Sql.Models.JobTargetGroup GetTargetGroup(
+        public JobTargetGroup GetTargetGroup(
             string resourceGroupName,
             string serverName,
             string agentName,
@@ -694,7 +693,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
         /// <param name="serverName">The server name</param>
         /// <param name="agentName">The agent name</param>
         /// <returns>A list of target groups belonging to specified agent</returns>
-        public IPage<Management.Sql.Models.JobTargetGroup> GetTargetGroup(
+        public IPage<JobTargetGroup> GetTargetGroup(
             string resourceGroupName,
             string serverName,
             string agentName)
