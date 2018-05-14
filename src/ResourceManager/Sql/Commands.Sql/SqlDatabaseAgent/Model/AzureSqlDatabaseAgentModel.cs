@@ -42,6 +42,11 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model
         public int? WorkerCount { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent's state.
+        /// </summary>
+        public string State { get; set; }
+
+        /// <summary>
         /// Gets or sets the tags associated with the server.
         /// </summary>
         public Dictionary<string, string> Tags { get; set; }

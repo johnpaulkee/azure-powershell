@@ -331,25 +331,25 @@ function Test-GetJob
         Assert-AreEqual $resp.Count 2
 
         # Test using input object
-        $resp = Get-AzureRmSqlDatabaseAgentJob -InputObject $a1 -Name $j1.JobName
+        $resp = Get-AzureRmSqlDatabaseAgentJob -AgentObject $a1 -Name $j1.JobName
         Assert-AreEqual $resp.JobName $j1.JobName
         Assert-AreEqual $resp.Enabled $false
         Assert-AreEqual $resp.ScheduleType "Once"
         Assert-Null $resp.Interval
 
         # Test get all using input object
-        $resp = Get-AzureRmSqlDatabaseAgentJob -InputObject $a1
+        $resp = Get-AzureRmSqlDatabaseAgentJob -AgentObject $a1
         Assert-AreEqual $resp.Count 2
 
         # Test using resource id
-        $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId -Name $j1.JobName
+        $resp = Get-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId -Name $j1.JobName
         Assert-AreEqual $resp.JobName $j1.JobName
         Assert-AreEqual $resp.Enabled $false
         Assert-AreEqual $resp.ScheduleType "Once"
         Assert-Null $resp.Interval
 
         # Test get all using resource id
-        $resp = Get-AzureRmSqlDatabaseAgentJob -ResourceId $a1.ResourceId
+        $resp = Get-AzureRmSqlDatabaseAgentJob -AgentResourceId $a1.ResourceId
         Assert-AreEqual $resp.Count 2
 
         # Test piping

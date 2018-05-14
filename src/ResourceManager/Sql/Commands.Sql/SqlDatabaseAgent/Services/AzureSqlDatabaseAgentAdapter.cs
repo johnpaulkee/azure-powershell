@@ -151,6 +151,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 ResourceId = resp.Id,
                 Tags = TagsConversionHelper.CreateTagDictionary(TagsConversionHelper.CreateTagHashtable(resp.Tags), false),
                 DatabaseId = resp.DatabaseId,
+                State = resp.State,
                 Type = resp.Type
             };
 
