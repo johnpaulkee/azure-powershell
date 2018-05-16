@@ -229,7 +229,7 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
                 AgentName = this.AgentName,
                 JobName = this.Name,
                 Description = this.Description,
-                StartTime = this.StartTime != null ? this.StartTime : null,
+                StartTime = this.StartTime != null ? this.StartTime : DateTime.Now, // defaults to current date time
                 EndTime = this.EndTime != null ? this.EndTime : null,
                 ScheduleType = this.RunOnce.IsPresent ? JobScheduleType.Once :
                                this.IntervalType.HasValue ? JobScheduleType.Recurring : (JobScheduleType?) null,

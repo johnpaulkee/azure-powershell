@@ -78,66 +78,6 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             return new AzureSqlDatabaseAgentAdapter(DefaultContext);
         }
 
-        /// <summary>
-        /// Updates the existing list of targets with the new target if it doesn't already exist in the list.
-        /// </summary>
-        /// <param name="existingTargets">The list of existing targets in the target group</param>
-        /// <returns>An updated list of targets.</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetModel> existingTargets)
-        {
-            this.Target = new AzureSqlDatabaseAgentTargetModel
-            {
-                TargetGroupName = this.TargetGroupName,
-                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
-                    JobTargetGroupMembershipType.Exclude :
-                    JobTargetGroupMembershipType.Include,
-                TargetType = GetTargetType(),
-                TargetServerName = MyInvocation.BoundParameters.ContainsKey("ServerName") ? this.ServerName: null,
-                TargetDatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
-                TargetElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
-                TargetShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
-                RefreshCredentialName = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.RefreshCredentialName) : null,
-            };
-
-            this.ExistingTargets = existingTargets.ToList();
-            this.NeedsUpdate = UpdateExistingTargets();
-
-            // If we don't need to send an update, send back an empty list.
-            if (!this.NeedsUpdate)
-            {
-                return new List<AzureSqlDatabaseAgentTargetModel>();
-            }
-
-            return this.ExistingTargets;
-        }
-
-        /// <summary>
-        /// Sends the changes to the service -> Creates or updates the target if necessary
-        /// </summary>
-        /// <param name="updatedTargets">The list of updated targets</param>
-        /// <returns>The target that was created/updated or null if nothing changed.</returns>
-        protected override IEnumerable<AzureSqlDatabaseAgentTargetModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetModel> updatedTargets)
-        {
-            // If we don't need to update the target group member's return null.
-            if (!this.NeedsUpdate)
-            {
-                return null;
-            }
-
-            // Update list of targets
-            AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
-            {
-                ResourceGroupName = this.ResourceGroupName,
-                ServerName = this.AgentServerName,
-                AgentName = this.AgentName,
-                TargetGroupName = this.TargetGroupName,
-                Targets = updatedTargets.ToList()
-            };
-
-            var resp = ModelAdapter.UpsertTargetGroup(model).Targets.ToList();
-
-            return new List<AzureSqlDatabaseAgentTargetModel> { this.Target };
-        }
 
         /// <summary>
         /// Helper for determining based on parameter set what target type this target should be.

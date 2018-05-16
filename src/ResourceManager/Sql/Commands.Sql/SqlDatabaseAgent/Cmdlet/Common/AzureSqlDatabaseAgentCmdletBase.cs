@@ -114,8 +114,16 @@ namespace Microsoft.Azure.Commands.Sql.Common
             this.ResourceGroupName = (resourceGroupProperty != null) ? resourceGroupProperty.GetValue(model).ToString() : this.ResourceGroupName;
 
             var serverProperty = model.GetType().GetProperty("ServerName");
-            this.ServerName = (serverProperty != null) ? serverProperty.GetValue(model).ToString() : this.ServerName;
-            this.AgentServerName = this.ServerName;
+
+            if (serverProperty != null)
+            {
+                string value = serverProperty.GetValue(model).ToString();
+                this.AgentServerName = value;
+                if (this.ServerName == null)
+                {
+                    this.ServerName = value;
+                }
+            }
 
             var databaseProperty = model.GetType().GetProperty("DatabaseName");
             this.DatabaseName = (databaseProperty != null) ? databaseProperty.GetValue(model).ToString() : this.DatabaseName;

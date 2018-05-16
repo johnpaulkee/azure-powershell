@@ -360,15 +360,18 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
             Mandatory = true,
             Position = 0,
             ParameterSetName = InputObjectParameterSet,
+            ValueFromPipeline = true,
             HelpMessage = "The job step object")]
         [Parameter(
             Mandatory = true,
             Position = 0,
+            ValueFromPipeline = true,
             ParameterSetName = InputObjectRemoveOutputParameterSet,
             HelpMessage = "The job step object")]
         [Parameter(
             Mandatory = true,
             Position = 0,
+            ValueFromPipeline = true,
             ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
             HelpMessage = "The job step object")]
         [ValidateNotNullOrEmpty]
@@ -380,16 +383,19 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         [Parameter(
             Mandatory = true,
             Position = 0,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdParameterSet,
             HelpMessage = "The job step resource id")]
         [Parameter(
             Mandatory = true,
             Position = 0,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdRemoveOutputParameterSet,
             HelpMessage = "The job step resource id")]
         [Parameter(
             Mandatory = true,
             Position = 0,
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
             HelpMessage = "The job step resource id")]
         [ValidateNotNullOrEmpty]

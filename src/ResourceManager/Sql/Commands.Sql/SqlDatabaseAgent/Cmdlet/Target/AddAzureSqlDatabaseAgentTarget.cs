@@ -312,8 +312,77 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Cmdlet
         /// <returns>The list of existing targets</returns>
         protected override IEnumerable<AzureSqlDatabaseAgentTargetModel> GetEntity()
         {
-            List<AzureSqlDatabaseAgentTargetModel> existingTargets = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName).Targets.ToList();
+            AzureSqlDatabaseAgentTargetGroupModel targetGroup = ModelAdapter.GetTargetGroup(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.TargetGroupName);
+            List<AzureSqlDatabaseAgentTargetModel> existingTargets = targetGroup.Targets.ToList();
             return existingTargets;
+        }
+
+        /// <summary>
+        /// Updates the existing list of targets with the new target if it doesn't already exist in the list.
+        /// </summary>
+        /// <param name="existingTargets">The list of existing targets in the target group</param>
+        /// <returns>An updated list of targets.</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetModel> ApplyUserInputToModel(IEnumerable<AzureSqlDatabaseAgentTargetModel> existingTargets)
+        {
+            // Update refresh credential
+            foreach (AzureSqlDatabaseAgentTargetModel target in existingTargets)
+            {
+                target.RefreshCredentialName = CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, target.RefreshCredentialName);
+            }
+
+            this.Target = new AzureSqlDatabaseAgentTargetModel
+            {
+                TargetGroupName = this.TargetGroupName,
+                MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
+                    JobTargetGroupMembershipType.Exclude :
+                    JobTargetGroupMembershipType.Include,
+                TargetType = GetTargetType(),
+                TargetServerName = MyInvocation.BoundParameters.ContainsKey("ServerName") ? this.ServerName : null,
+                TargetDatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
+                TargetElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
+                TargetShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
+                RefreshCredentialName = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.RefreshCredentialName) : null,
+            };
+
+            this.ExistingTargets = existingTargets.ToList();
+            this.NeedsUpdate = UpdateExistingTargets();
+
+            // If we don't need to send an update, send back an empty list.
+            if (!this.NeedsUpdate)
+            {
+                return new List<AzureSqlDatabaseAgentTargetModel>();
+            }
+
+            return this.ExistingTargets;
+        }
+
+
+        /// <summary>
+        /// Sends the changes to the service -> Creates or updates the target if necessary
+        /// </summary>
+        /// <param name="updatedTargets">The list of updated targets</param>
+        /// <returns>The target that was created/updated or null if nothing changed.</returns>
+        protected override IEnumerable<AzureSqlDatabaseAgentTargetModel> PersistChanges(IEnumerable<AzureSqlDatabaseAgentTargetModel> updatedTargets)
+        {
+            // If we don't need to update the target group member's return null.
+            if (!this.NeedsUpdate)
+            {
+                return null;
+            }
+
+            // Update list of targets
+            AzureSqlDatabaseAgentTargetGroupModel model = new AzureSqlDatabaseAgentTargetGroupModel
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ServerName = this.AgentServerName,
+                AgentName = this.AgentName,
+                TargetGroupName = this.TargetGroupName,
+                Targets = updatedTargets.ToList()
+            };
+
+            var resp = ModelAdapter.UpsertTargetGroup(model).Targets.ToList();
+
+            return new List<AzureSqlDatabaseAgentTargetModel> { this.Target };
         }
 
         /// <summary>

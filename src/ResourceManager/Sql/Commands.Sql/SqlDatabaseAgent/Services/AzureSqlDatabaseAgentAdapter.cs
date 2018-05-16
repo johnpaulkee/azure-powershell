@@ -295,6 +295,26 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
             };
         }
 
+        protected AzureSqlDatabaseAgentTargetModel CreateAzureSqlDatabaseAgentTargetModel(
+            string resourceGroupName,
+            string serverName,
+            string agentName,
+            string targetGroupName,
+            JobTarget target)
+        {
+            return new AzureSqlDatabaseAgentTargetModel
+            {
+                TargetGroupName = targetGroupName,
+                MembershipType = target.MembershipType,
+                TargetType = target.Type,
+                RefreshCredentialName = new ResourceIdentifier(target.RefreshCredential).ResourceName,
+                TargetServerName = target.ServerName,
+                TargetDatabaseName = target.DatabaseName,
+                TargetElasticPoolName = target.ElasticPoolName,
+                TargetShardMapName = target.ShardMapName,
+            };
+        }
+
         /// <summary>
         /// Gets a SQL Database Agent associated to a server
         /// </summary>
@@ -347,32 +367,12 @@ namespace Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Services
                 ServerName = serverName,
                 AgentName = agentName,
                 TargetGroupName = resp.Name,
-                Targets = resp.Members.Select((target) => CreateTargetModel(resourceGroupName, serverName, agentName, resp.Name, target)).ToList(),
+                Targets = resp.Members.Select((target) => CreateAzureSqlDatabaseAgentTargetModel(resourceGroupName, serverName, agentName, resp.Name, target)).ToList(),
                 ResourceId = resp.Id,
                 Type = resp.Type
             };
 
             return targetGroup;
-        }
-
-        protected AzureSqlDatabaseAgentTargetModel CreateTargetModel(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string targetGroupName,
-            JobTarget target)
-        {
-            return new AzureSqlDatabaseAgentTargetModel
-            {
-                TargetGroupName = targetGroupName,
-                MembershipType = target.MembershipType,
-                TargetType = target.Type,
-                RefreshCredentialName = target.RefreshCredential,
-                TargetServerName = target.ServerName,
-                TargetDatabaseName = target.DatabaseName,
-                TargetElasticPoolName = target.ElasticPoolName,
-                TargetShardMapName = target.ShardMapName,
-            };
         }
 
         #endregion
