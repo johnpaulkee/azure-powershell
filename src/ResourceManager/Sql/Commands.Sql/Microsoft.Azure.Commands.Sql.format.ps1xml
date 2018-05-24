@@ -475,9 +475,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobCredentialModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobCredentialModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobCredentialModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobCredentialModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -504,9 +504,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -587,9 +587,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentTargetGroupModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobTargetGroupModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentTargetGroupModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobTargetGroupModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -636,9 +636,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentTargetModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobTargetModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentTargetModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobTargetModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -701,9 +701,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobVersionModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobVersionModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobVersionModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobVersionModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -748,9 +748,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobStepModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobStepModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -834,9 +834,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobStepVersionModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepVersionModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobStepVersionModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepVersionModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -921,9 +921,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobAgentModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobAgentModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -974,9 +974,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobExecutionModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobExecutionModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -1039,9 +1039,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobStepExecutionModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepExecutionModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobStepExecutionModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepExecutionModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -1122,9 +1122,9 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobTargetExecutionModel</Name>
+      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobTargetExecutionModel</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.SqlDatabaseAgent.Model.AzureSqlDatabaseAgentJobTargetExecutionModel</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobTargetExecutionModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
