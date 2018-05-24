@@ -241,6 +241,11 @@ CmdletsToExport = 'Add-AzureRmApplicationGatewayAuthenticationCertificate',
     'Reset-AzureRmVirtualNetworkGateway', 
     'Set-AzureRmVirtualNetworkGatewayDefaultSite', 
     'Remove-AzureRmVirtualNetworkGatewayDefaultSite', 
+	'New-AzureRmVpnClientIpsecPolicy', 
+	'New-AzureRmVpnClientIpsecParameter', 
+	'Set-AzureRmVpnClientIpsecParameter', 
+	'Get-AzureRmVpnClientIpsecParameter'	
+	'Remove-AzureRmVpnClientIpsecParameter',
     'Remove-AzureRmLocalNetworkGateway', 
     'Get-AzureRmLocalNetworkGateway', 'New-AzureRmLocalNetworkGateway', 
     'Set-AzureRmLocalNetworkGateway', 
@@ -317,7 +322,10 @@ CmdletsToExport = 'Add-AzureRmApplicationGatewayAuthenticationCertificate',
     'New-AzureRmApplicationSecurityGroup', 
     'Remove-AzureRmApplicationSecurityGroup', 
     'Get-AzureRmApplicationSecurityGroup', 
-    'New-AzureRmPublicIpTag'
+    'New-AzureRmPublicIpTag',
+    'New-AzureRmDdosProtectionPlan',
+    'Get-AzureRmDdosProtectionPlan',
+    'Remove-AzureRmDdosProtectionPlan'
 
 # Variables to export from this module
 # VariablesToExport = @()
