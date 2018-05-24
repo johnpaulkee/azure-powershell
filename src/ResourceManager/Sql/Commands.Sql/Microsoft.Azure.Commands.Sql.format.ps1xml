@@ -511,15 +511,6 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
             <Label>JobName</Label>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -548,15 +539,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>JobName</PropertyName>
               </TableColumnItem>
@@ -594,15 +576,6 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
             <Label>TargetGroupName</Label>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -613,15 +586,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>TargetGroupName</PropertyName>
               </TableColumnItem>
@@ -701,68 +665,12 @@
       </TableControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobVersionModel</Name>
-      <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobVersionModel</TypeName>
-      </ViewSelectedBy>
-      <TableControl>
-        <TableHeaders>
-          <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>JobName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Version</Label>
-          </TableColumnHeader>
-        </TableHeaders>
-        <TableRowEntries>
-          <TableRowEntry>
-            <Wrap/>
-            <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>JobName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Version</PropertyName>
-              </TableColumnItem>
-            </TableColumnItems>
-          </TableRowEntry>
-        </TableRowEntries>
-      </TableControl>
-    </View>
-    <View>
       <Name>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepModel</Name>
       <ViewSelectedBy>
         <TypeName>Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobStepModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
-          <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
           <TableColumnHeader>
             <Label>JobName</Label>
           </TableColumnHeader>
@@ -792,15 +700,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>JobName</PropertyName>
               </TableColumnItem>
@@ -841,15 +740,6 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
             <Label>JobName</Label>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -878,15 +768,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>JobName</PropertyName>
               </TableColumnItem>
@@ -981,15 +862,6 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
             <Label>JobName</Label>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -1009,15 +881,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>JobName</PropertyName>
               </TableColumnItem>
@@ -1045,15 +908,6 @@
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
-          <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
           <TableColumnHeader>
             <Label>JobName</Label>
           </TableColumnHeader>
@@ -1083,15 +937,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>JobName</PropertyName>
               </TableColumnItem>
@@ -1129,15 +974,6 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>ResourceGroupName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>ServerName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>AgentName</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
             <Label>JobName</Label>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -1172,15 +1008,6 @@
           <TableRowEntry>
             <Wrap/>
             <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>ResourceGroupName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ServerName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>AgentName</PropertyName>
-              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>JobName</PropertyName>
               </TableColumnItem>
