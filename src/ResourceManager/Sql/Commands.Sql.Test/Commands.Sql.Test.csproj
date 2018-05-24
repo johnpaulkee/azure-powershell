@@ -773,15 +773,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestElasticPoolCancelOperation.json">
-<<<<<<< HEAD
-=======
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolUpdate.json">
+  	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolUpdate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolCreate.json">
->>>>>>> preview
+	  <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolCreate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.FailoverGroupTests\TestCreateFailoverGroup_AutomaticPolicy.json">
