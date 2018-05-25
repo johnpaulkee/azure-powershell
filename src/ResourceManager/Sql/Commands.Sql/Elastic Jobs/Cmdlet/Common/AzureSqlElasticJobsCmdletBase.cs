@@ -31,18 +31,10 @@ namespace Microsoft.Azure.Commands.Sql.Common
     public abstract class AzureSqlElasticJobsCmdletBase<IO, M, A> : AzureSqlCmdletBase<M, A>
     {
         /// <summary>
-        /// The default parameter set
+        /// The default parameter sets
         /// </summary>
         protected const string DefaultParameterSet = "Default Parameter Set";
-
-        /// <summary>
-        /// The input object parameter set
-        /// </summary>
         protected const string InputObjectParameterSet = "Input Object Parameter Set";
-
-        /// <summary>
-        /// The resource id parameter set
-        /// </summary>
         protected const string ResourceIdParameterSet = "Resource Id Parameter Set";
 
         /// <summary>
@@ -225,7 +217,7 @@ namespace Microsoft.Azure.Commands.Sql.Common
         private const string targetGroupResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="targetGroupName"></param>
         /// <returns></returns>
@@ -273,7 +265,7 @@ namespace Microsoft.Azure.Commands.Sql.Common
 
         #endregion
 
-        #region 
+        #region
 
         public string GetJobNameFromJobExecutionResourceId(string jobExecutionResourceId)
         {

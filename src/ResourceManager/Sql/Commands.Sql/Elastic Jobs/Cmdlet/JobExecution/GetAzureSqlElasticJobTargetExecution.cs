@@ -194,14 +194,14 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
                 var targetStepExecutions = ModelAdapter.ListJobTargetExecutionsByStep(
                     resourceGroupName: this.ResourceGroupName,
                     serverName: this.ServerName,
-                    agentName: this.AgentName, 
-                    jobName: this.JobName, 
-                    jobExecutionId: Guid.Parse(this.JobExecutionId), 
+                    agentName: this.AgentName,
+                    jobName: this.JobName,
+                    jobExecutionId: Guid.Parse(this.JobExecutionId),
                     stepName: this.StepName,
-                    createTimeMin: this.CreateTimeMin, 
-                    createTimeMax: this.CreateTimeMax, 
+                    createTimeMin: this.CreateTimeMin,
+                    createTimeMax: this.CreateTimeMax,
                     endTimeMin: this.EndTimeMin,
-                    endTimeMax: this.EndTimeMax, 
+                    endTimeMax: this.EndTimeMax,
                     top: this.Count);
 
                 return targetStepExecutions;

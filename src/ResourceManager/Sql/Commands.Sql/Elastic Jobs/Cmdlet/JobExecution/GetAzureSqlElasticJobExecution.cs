@@ -96,7 +96,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
 
         /// <summary>
         /// Gets or sets the job name
-        /// </summary>        
+        /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = false,
             HelpMessage = "The job name.")]

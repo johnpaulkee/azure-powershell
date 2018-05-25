@@ -24,7 +24,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// Defines the elastic job agent cmdlet base
     /// </summary>
     /// <typeparam name="IO"></typeparam>
-    public abstract class AzureSqlElasticJobAgentCmdletBase<IO> : 
+    public abstract class AzureSqlElasticJobAgentCmdletBase<IO> :
         AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobAgentModel>, AzureSqlElasticJobAdapter>
     {
         /// <summary>
