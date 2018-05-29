@@ -57,15 +57,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = false,
+            ParameterSetName = DefaultParameterSet,
+            HelpMessage = "The agent name")]
+        [Parameter(
+            Mandatory = false,
             ParameterSetName = InputObjectParameterSet,
             HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = ResourceIdParameterSet,
-            HelpMessage = "The agent name")]
-        [Parameter(
-            Mandatory = false,
-            ParameterSetName = DefaultParameterSet,
             HelpMessage = "The agent name")]
         [Alias("AgentName")]
         [ValidateNotNullOrEmpty]
@@ -105,22 +105,23 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         }
 
         /// <summary>
-        /// Gets one or more Azure SQL Database Agents from the service.
+        /// Gets one or more elastic job agents from the service.
         /// </summary>
         /// <returns></returns>
         protected override IEnumerable<AzureSqlElasticJobAgentModel> GetEntity()
         {
             ICollection<AzureSqlElasticJobAgentModel> results = null;
 
-            // Lets us return a list of agents
+            // Returns a list of agents
             if (this.Name == null)
             {
                 results = ModelAdapter.ListAgents(this.ResourceGroupName, this.ServerName);
             }
+            // Returns an agent
             else
             {
                 results = new List<AzureSqlElasticJobAgentModel>();
-                results.Add(ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name));
+                results.Add(ModelAdapter.GetAgent(this.ResourceGroupName, this.ServerName, this.Name));
             }
 
             return results;
@@ -138,8 +139,6 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
         /// <summary>
         /// No changes, thus nothing to persist.
-        /// Note: even though we technically don't need to override this, we want to pass the entity forward so that we can take advantage of
-        /// powershell's understanding of a list with one item defaulting to just the item itself.
         /// </summary>
         /// <param name="entity">The entity retrieved</param>
         /// <returns>The unchanged entity</returns>

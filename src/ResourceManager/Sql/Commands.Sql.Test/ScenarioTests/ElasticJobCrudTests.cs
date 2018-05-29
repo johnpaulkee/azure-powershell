@@ -19,9 +19,9 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 {
-    public class SqlDatabaseAgentJobCrudTests : SqlTestsBase
+    public class ElasticJobCrudTests : SqlTestsBase
     {
-        public SqlDatabaseAgentJobCrudTests(ITestOutputHelper output) : base(output)
+        public ElasticJobCrudTests(ITestOutputHelper output) : base(output)
         {
         }
 

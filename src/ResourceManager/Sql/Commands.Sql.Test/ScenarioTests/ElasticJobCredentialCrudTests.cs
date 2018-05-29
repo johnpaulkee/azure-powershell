@@ -13,44 +13,61 @@
 // ----------------------------------------------------------------------------------
 
 using Microsoft.Azure.Commands.ScenarioTest.SqlTests;
+using Microsoft.Azure.ServiceManagemenet.Common.Models;
 using Microsoft.WindowsAzure.Commands.ScenarioTest;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 {
-    public class SqlDatabaseAgentTargetCrudTests : SqlTestsBase
+    public class ElasticJobCredentialCrudTests : SqlTestsBase
     {
-        public SqlDatabaseAgentTargetCrudTests(ITestOutputHelper output) : base(output)
+        public ElasticJobCredentialCrudTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetDatabase()
-        {
-            RunPowerShellTest("Test-DatabaseTarget");
-        }
+        #region Create Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetServer()
+        public void TestJobCredentialCreate()
         {
-            RunPowerShellTest("Test-ServerTarget");
+            RunPowerShellTest("Test-CreateJobCredential");
         }
+
+        #endregion
+
+        #region Update Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetElasticPool()
+        public void TestJobCredentialUpdate()
         {
-            RunPowerShellTest("Test-ElasticPoolTarget");
+            RunPowerShellTest("Test-UpdateJobCredential");
         }
+
+        #endregion
+
+        #region Get Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetShardMap()
+        public void TestJobCredentialGet()
         {
-            RunPowerShellTest("Test-ShardMapTarget");
+            RunPowerShellTest("Test-GetJobCredential");
         }
+
+        #endregion
+
+        #region Remove Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialRemove()
+        {
+            RunPowerShellTest("Test-RemoveJobCredential");
+        }
+
+        #endregion
     }
 }

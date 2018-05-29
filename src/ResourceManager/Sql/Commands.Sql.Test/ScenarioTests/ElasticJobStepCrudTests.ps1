@@ -13,10 +13,10 @@
 # ----------------------------------------------------------------------------------
 
 <#
-	.SYNOPSIS
-	Tests creating a job with min parameters
+    .SYNOPSIS
+    Tests creating a job with min parameters
     .DESCRIPTION
-	SmokeTest
+    SmokeTest
 #>
 function Test-CreateJobStep
 {
@@ -305,9 +305,9 @@ function Test-UpdateJobStep
     Assert-AreEqual $resp.Output.Credential $jso1.CredentialName
 
     # Test update output subscription id
-    $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputSubscriptionId $jso2.SubscriptionId 
+    $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputSubscriptionId $jso2.SubscriptionId
     Assert-AreEqual $resp.Output.SubscriptionId $jso2.SubscriptionId
-    
+
     # Test update output resource group
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputResourceGroupName $jso2.ResourceGroupName
     Assert-AreEqual $resp.Output.ResourceGroupName $jso2.ResourceGroupName
@@ -327,15 +327,15 @@ function Test-UpdateJobStep
     # Test update output table name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputTableName $jso2.TableName
     Assert-AreEqual $resp.Output.TableName $jso2.TableName
-    
+
     # Test update output credential name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputCredentialName $jso2.CredentialName
     Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
 
-    # Test update job step remove output 
+    # Test update job step remove output
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -RemoveOutput
     Assert-Null $resp.Output
- 
+
      # Test update execution option timeout seconds
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -TimeoutSeconds 100
     Assert-AreEqual $resp.ExecutionOptions.TimeoutSeconds 100
@@ -400,9 +400,9 @@ function Test-UpdateJobStepWithInputObject
     Assert-AreEqual $resp.Output.Credential $jso1.CredentialName
 
     # Test update output subscription id
-    $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -OutputSubscriptionId $jso2.SubscriptionId 
+    $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -OutputSubscriptionId $jso2.SubscriptionId
     Assert-AreEqual $resp.Output.SubscriptionId $jso2.SubscriptionId
-    
+
     # Test update output resource group
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -OutputResourceGroupName $jso2.ResourceGroupName
     Assert-AreEqual $resp.Output.ResourceGroupName $jso2.ResourceGroupName
@@ -422,15 +422,15 @@ function Test-UpdateJobStepWithInputObject
     # Test update output table name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -OutputTableName $jso2.TableName
     Assert-AreEqual $resp.Output.TableName $jso2.TableName
-    
+
     # Test update output credential name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -OutputCredentialName $jso2.CredentialName
     Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
 
-    # Test update job step remove output 
+    # Test update job step remove output
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -RemoveOutput
     Assert-Null $resp.Output
- 
+
      # Test update execution option timeout seconds
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -InputObject $js1 -TimeoutSeconds 100
     Assert-AreEqual $resp.ExecutionOptions.TimeoutSeconds 100
@@ -495,9 +495,9 @@ function Test-UpdateJobStepWithResourceId
     Assert-AreEqual $resp.Output.Credential $jso1.CredentialName
 
     # Test update output subscription id
-    $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -OutputSubscriptionId $jso2.SubscriptionId 
+    $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -OutputSubscriptionId $jso2.SubscriptionId
     Assert-AreEqual $resp.Output.SubscriptionId $jso2.SubscriptionId
-    
+
     # Test update output resource group
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -OutputResourceGroupName $jso2.ResourceGroupName
     Assert-AreEqual $resp.Output.ResourceGroupName $jso2.ResourceGroupName
@@ -517,15 +517,15 @@ function Test-UpdateJobStepWithResourceId
     # Test update output table name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -OutputTableName $jso2.TableName
     Assert-AreEqual $resp.Output.TableName $jso2.TableName
-    
+
     # Test update output credential name
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -OutputCredentialName $jso2.CredentialName
     Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
 
-    # Test update job step remove output 
+    # Test update job step remove output
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -RemoveOutput
     Assert-Null $resp.Output
- 
+
      # Test update execution option timeout seconds
     $resp = Set-AzureRmSqlDatabaseAgentJobStep -ResourceId $js1.ResourceId -TimeoutSeconds 100
     Assert-AreEqual $resp.ExecutionOptions.TimeoutSeconds 100
@@ -590,9 +590,9 @@ function Test-UpdateJobStepWithPiping
     Assert-AreEqual $resp.Output.Credential $jso1.CredentialName
 
     # Test update output subscription id
-    $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -OutputSubscriptionId $jso2.SubscriptionId 
+    $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -OutputSubscriptionId $jso2.SubscriptionId
     Assert-AreEqual $resp.Output.SubscriptionId $jso2.SubscriptionId
-    
+
     # Test update output resource group
     $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -OutputResourceGroupName $jso2.ResourceGroupName
     Assert-AreEqual $resp.Output.ResourceGroupName $jso2.ResourceGroupName
@@ -612,15 +612,15 @@ function Test-UpdateJobStepWithPiping
     # Test update output table name
     $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -OutputTableName $jso2.TableName
     Assert-AreEqual $resp.Output.TableName $jso2.TableName
-    
+
     # Test update output credential name
     $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -OutputCredentialName $jso2.CredentialName
     Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
 
-    # Test update job step remove output 
+    # Test update job step remove output
     $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -RemoveOutput
     Assert-Null $resp.Output
- 
+
      # Test update execution option timeout seconds
     $resp = $js1 | Set-AzureRmSqlDatabaseAgentJobStep -TimeoutSeconds 100
     Assert-AreEqual $resp.ExecutionOptions.TimeoutSeconds 100
@@ -751,6 +751,6 @@ function Test-GetJobStep
     Assert-AreEqual $resp.CredentialName $js1.CredentialName
 
     # Test get all with input object
-    $resp = Get-AzureRmSqlDatabaseAgentJobStep -ResourceId $j1.ResourceId 
+    $resp = Get-AzureRmSqlDatabaseAgentJobStep -ResourceId $j1.ResourceId
     Assert-AreEqual $resp.Count 2
 }

@@ -100,9 +100,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(
+        /// Gets or sets the agent resource id
+        /// </summary>
+        [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
@@ -118,8 +118,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-
-            this.Name = this.AgentName;
+            this.Name = this.Name ?? this.AgentName;
             base.ExecuteCmdlet();
         }
 
@@ -132,7 +131,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("AgentName: {0}", Name);
-                return new List<AzureSqlElasticJobAgentModel> { ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name) };
+                return new List<AzureSqlElasticJobAgentModel> { ModelAdapter.GetAgent(this.ResourceGroupName, this.ServerName, this.Name) };
             }
             catch (CloudException ex)
             {
@@ -156,16 +155,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlElasticJobAgentModel> ApplyUserInputToModel(IEnumerable<AzureSqlElasticJobAgentModel> model)
         {
-            string location = ModelAdapter.GetServerLocationAndThrowIfAgentNotSupportedByServer(this.ResourceGroupName, this.ServerName);
-
             AzureSqlElasticJobAgentModel newEntity = new AzureSqlElasticJobAgentModel
             {
-                Location = location,
-                ResourceGroupName = this.ResourceGroupName,
-                ServerName = this.ServerName,
-                AgentName = this.Name,
-                DatabaseName = model.First().DatabaseName,
+                ResourceGroupName = model.FirstOrDefault().ResourceGroupName,
+                ServerName = model.FirstOrDefault().ServerName,
+                AgentName = model.FirstOrDefault().AgentName,
+                DatabaseName = model.FirstOrDefault().DatabaseName, // Note: control database cannot be updated
+                Location = model.FirstOrDefault().Location,
                 Tags = TagsConversionHelper.ReadOrFetchTags(this, model.First().Tags),
+                WorkerCount = model.FirstOrDefault().WorkerCount    // TODO: In the future, we will expose this.
             };
 
             return new List<AzureSqlElasticJobAgentModel> { newEntity };
@@ -178,11 +176,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <returns>The created agent</returns>
         protected override IEnumerable<AzureSqlElasticJobAgentModel> PersistChanges(IEnumerable<AzureSqlElasticJobAgentModel> entity)
         {
-            // Note: We are currently using PATCH, but in the future we plan on exposing worker count for public preview.
-            // Hence the reason we are using Set instead of Update as we will call a PUT in the future instead of current PATCH request.
-            return new List<AzureSqlElasticJobAgentModel> {
-                ModelAdapter.UpdateSqlDatabaseAgent(entity.First())
-            };
+            // Note: We are currently using Update / PATCH.
+            // We will need to update this to UpsertAgent when we expose worker count when we GA.
+            return new List<AzureSqlElasticJobAgentModel> { ModelAdapter.UpdateAgent(entity.First()) };
         }
     }
 }

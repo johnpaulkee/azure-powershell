@@ -181,13 +181,13 @@
     <Compile Include="ScenarioTests\DatabaseCrudStretchTests.cs" />
     <Compile Include="ScenarioTests\ServerDnsAliasTests.cs" />
     <Compile Include="ScenarioTests\ServerUpgradeTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentCrudTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentJobCredentialCrudTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentJobCrudTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentJobExecutionCrudTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentJobStepCrudTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.cs" />
-    <Compile Include="ScenarioTests\SqlDatabaseAgentTargetCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobAgentCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobCredentialCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobExecutionCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobStepCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobTargetGroupCrudTests.cs" />
+    <Compile Include="ScenarioTests\ElasticJobTargetCrudTests.cs" />
     <Compile Include="ScenarioTests\ThreatDetectionClassicStorageTests.cs" />
     <Compile Include="ScenarioTests\ThreatDetectionTests.cs" />
     <Compile Include="ScenarioTests\DatabaseActivationTests.cs" />
@@ -231,25 +231,25 @@
     <None Include="ScenarioTests\ServerUpgradeTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobAgentCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentJobCredentialCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobCredentialCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentJobCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentJobExecutionCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobExecutionCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentJobStepCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobStepCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentTargetGroupCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobTargetGroupCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ScenarioTests\SqlDatabaseAgentTargetCrudTests.ps1">
+    <None Include="ScenarioTests\ElasticJobTargetCrudTests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ScenarioTests\ThreatDetectionClassicStorageTests.ps1">
@@ -667,10 +667,10 @@
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.DatabaseCrudTests\TestDatabaseUpdateWithZoneRedundancyNotSpecified.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.DatabaseCrudTests\TestVcoreDatabaseCreate.json">
+    <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.DatabaseCrudTests\TestVcoreDatabaseCreate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.DatabaseCrudTests\TestVcoreDatabaseUpdate.json">
+    <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.DatabaseCrudTests\TestVcoreDatabaseUpdate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.DatabaseReplicationTests\TestCreateDatabaseCopy.json">
@@ -775,10 +775,10 @@
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestElasticPoolCancelOperation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  	<None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolUpdate.json">
+    <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolUpdate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	  <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolCreate.json">
+    <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.ElasticPoolCrudTests\TestVcoreElasticPoolCreate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SessionRecords\Microsoft.Azure.Commands.Sql.Test.ScenarioTests.FailoverGroupTests\TestCreateFailoverGroup_AutomaticPolicy.json">

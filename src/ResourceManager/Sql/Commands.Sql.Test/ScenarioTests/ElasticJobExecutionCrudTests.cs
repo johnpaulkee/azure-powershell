@@ -19,41 +19,41 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 {
-    public class SqlDatabaseAgentTargetGroupCrudTests : SqlTestsBase
+    public class ElasticJobExecutionCrudTests : SqlTestsBase
     {
-        public SqlDatabaseAgentTargetGroupCrudTests(ITestOutputHelper output) : base(output)
+        public ElasticJobExecutionCrudTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        #region Create Tests
+        #region Start Job Execution Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupCreate()
+        public void TestJobExecutionCreate()
         {
-            RunPowerShellTest("Test-CreateTargetGroup");
-        }
-
-        #endregion
-
-        #region Get Tests
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupGet()
-        {
-            RunPowerShellTest("Test-GetTargetGroup");
+            RunPowerShellTest("Test-CreateJob");
         }
 
         #endregion
 
-        #region Remove Tests
+        #region Get Job Execution Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupRemove()
+        public void TestJoExecutionGet()
         {
-            RunPowerShellTest("Test-RemoveTargetGroup");
+            RunPowerShellTest("Test-GetJobExecution");
+        }
+
+        #endregion
+
+        #region Stop Job Execution Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobExecutionStop()
+        {
+            RunPowerShellTest("Test-StopJobExecution");
         }
 
         #endregion

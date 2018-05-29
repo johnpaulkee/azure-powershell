@@ -19,9 +19,9 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 {
-    public class SqlDatabaseAgentJobStepCrudTests : SqlTestsBase
+    public class ElasticJobAgentCrudTests : SqlTestsBase
     {
-        public SqlDatabaseAgentJobStepCrudTests(ITestOutputHelper output) : base(output)
+        public ElasticJobAgentCrudTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -29,9 +29,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreate()
+        public void TestAgentCreate()
         {
-            RunPowerShellTest("Test-CreateJobStep");
+            RunPowerShellTest("Test-CreateAgent");
         }
 
         #endregion
@@ -40,30 +40,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdate()
+        public void TestAgentUpdate()
         {
-            RunPowerShellTest("Test-UpdateJobStep");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithInputObject()
-        {
-            RunPowerShellTest("Test-UpdateJobStepWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithResourceId()
-        {
-            RunPowerShellTest("Test-UpdateJobStepWithResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithPiping()
-        {
-            RunPowerShellTest("Test-UpdateJobStepWithPiping");
+            RunPowerShellTest("Test-UpdateAgent");
         }
 
         #endregion
@@ -72,9 +51,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGet()
+        public void TestAgentGet()
         {
-            RunPowerShellTest("Test-GetJobStep");
+            RunPowerShellTest("Test-GetAgent");
         }
 
         #endregion
@@ -83,9 +62,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemove()
+        public void TestAgentRemove()
         {
-            RunPowerShellTest("Test-RemoveJobStep");
+            RunPowerShellTest("Test-RemoveAgent");
         }
 
         #endregion

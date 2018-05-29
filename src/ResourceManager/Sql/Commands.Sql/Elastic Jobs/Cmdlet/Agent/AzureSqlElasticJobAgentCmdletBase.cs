@@ -23,9 +23,8 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// <summary>
     /// Defines the elastic job agent cmdlet base
     /// </summary>
-    /// <typeparam name="IO"></typeparam>
-    public abstract class AzureSqlElasticJobAgentCmdletBase<IO> :
-        AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobAgentModel>, AzureSqlElasticJobAdapter>
+    /// <typeparam name="IO">The input object model type</typeparam>
+    public abstract class AzureSqlElasticJobAgentCmdletBase<IO> : AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobAgentModel>, AzureSqlElasticJobAdapter>
     {
         /// <summary>
         /// Removing parameter attribute here since we use "Name" as set by powershell standards

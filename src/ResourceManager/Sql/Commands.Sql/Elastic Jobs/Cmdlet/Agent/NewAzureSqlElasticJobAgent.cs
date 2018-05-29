@@ -151,7 +151,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             try
             {
                 WriteDebugWithTimestamp("AgentName: {0}", Name);
-                ModelAdapter.GetSqlDatabaseAgent(this.ResourceGroupName, this.ServerName, this.Name);
+                ModelAdapter.GetAgent(this.ResourceGroupName, this.ServerName, this.Name);
             }
             catch (CloudException ex)
             {
@@ -201,7 +201,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         protected override IEnumerable<AzureSqlElasticJobAgentModel> PersistChanges(IEnumerable<AzureSqlElasticJobAgentModel> entity)
         {
             return new List<AzureSqlElasticJobAgentModel> {
-                ModelAdapter.UpsertSqlDatabaseAgent(entity.First())
+                ModelAdapter.UpsertAgent(entity.First())
             };
         }
     }

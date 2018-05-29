@@ -22,11 +22,6 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Model
     public class AzureSqlElasticJobAgentModel : AzureSqlElasticJobsBaseModel
     {
         /// <summary>
-        /// Gets or sets the location the sql database agent is in
-        /// </summary>
-        public string Location { get; set; }
-
-        /// <summary>
         /// Gets or sets the database name for the sql database agent name.
         /// </summary>
         public string DatabaseName { get; set; }
@@ -45,6 +40,11 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Model
         /// Gets or sets the agent's state.
         /// </summary>
         public string State { get; set; }
+
+        /// <summary>
+        /// Gets or sets the location the elastic job agent is in
+        /// </summary>
+        public string Location { get; set; }
 
         /// <summary>
         /// Gets or sets the tags associated with the server.

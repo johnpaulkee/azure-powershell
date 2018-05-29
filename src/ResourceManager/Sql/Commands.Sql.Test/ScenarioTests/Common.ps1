@@ -176,6 +176,18 @@ function Create-BasicTestEnvironmentWithParams ($params, $location, $serverVersi
 }
 
 <#
+Creates the basic test environment needed to perform the Elastic Job agent tests
+#>
+function Create-ElasticJobAgentTestEnvironment ($rg)
+{
+	#$server = Create-ServerForTest $rg "westus2"
+	#$db = Create-DatabaseForTest $server
+	#$agent = Create-AgentForTest $db
+	$agent = Get-AzureRmSqlElasticJobAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
+	return $agent
+}
+
+<#
 .SYNOPSIS
 Creates the test environment needed to perform the Sql data masking tests
 #>
