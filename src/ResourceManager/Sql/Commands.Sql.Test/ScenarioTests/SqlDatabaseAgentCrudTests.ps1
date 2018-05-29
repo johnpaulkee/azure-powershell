@@ -13,10 +13,10 @@
 # ----------------------------------------------------------------------------------
 
 <#
-	.SYNOPSIS
-	Tests creating an agent using default parameters
+    .SYNOPSIS
+    Tests creating an agent using default parameters
     .DESCRIPTION
-	SmokeTest
+    SmokeTest
 #>
 function Test-CreateAgent
 {
@@ -32,10 +32,10 @@ function Test-CreateAgent
     $agentName3 = Get-AgentName
     $agentName4 = Get-AgentName
 
-    try 
+    try
     {
         # Test using default parameters
-    	$resp1 = New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -DatabaseName $db1.DatabaseName -AgentName $agentName1
+        $resp1 = New-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -DatabaseName $db1.DatabaseName -AgentName $agentName1
 
         Assert-AreEqual $resp1.AgentName $agentName1
         Assert-AreEqual $resp1.ServerName $s1.ServerName
@@ -81,10 +81,10 @@ function Test-CreateAgent
 }
 
 <#
-	.SYNOPSIS
-	Tests updating an agent
+    .SYNOPSIS
+    Tests updating an agent
     .DESCRIPTION
-	SmokeTest
+    SmokeTest
 #>
 function Test-UpdateAgent
 {
@@ -102,7 +102,7 @@ function Test-UpdateAgent
     try
     {
         # Test using default parameters
-    	$resp1 = Set-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Tag $tags1
+        $resp1 = Set-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName -Tag $tags1
 
         Assert-AreEqual $resp1.AgentName $a1.AgentName
         Assert-AreEqual $resp1.ServerName $s1.ServerName
@@ -124,7 +124,7 @@ function Test-UpdateAgent
         Assert-AreEqual $resp2.WorkerCount 100
         Assert-AreEqual $resp2.Tags.Dept "CS"
         Assert-Null $resp2.AnotherTag
-        
+
         # Test using resource id
         $resp3 = Set-AzureRmSqlDatabaseAgent -ResourceId $a1.ResourceId -Tag $tags3
 
@@ -154,10 +154,10 @@ function Test-UpdateAgent
 }
 
 <#
-	.SYNOPSIS
-	Tests getting an agent
+    .SYNOPSIS
+    Tests getting an agent
     .DESCRIPTION
-	SmokeTest
+    SmokeTest
 #>
 function Test-GetAgent
 {
@@ -171,7 +171,7 @@ function Test-GetAgent
     $a1 = Create-AgentForTest $db1
     $a2 = Create-AgentForTest $db2
     $a3 = Create-AgentForTest $db3
-    
+
     try {
         # Test using default parameters
         $resp1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName $rg1.ResourceGroupName -ServerName $s1.ServerName -AgentName $a1.AgentName
@@ -210,7 +210,7 @@ function Test-GetAgent
         Assert-AreEqual $resp3.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp3.Location $s1.Location
         Assert-AreEqual $resp3.WorkerCount 100
-        
+
         # Test get all agents in s2 using resource id
         $all = Get-AzureRmSqlDatabaseAgent -ServerInputObject $s2
         Assert-AreEqual 1 $all.Count
@@ -218,22 +218,22 @@ function Test-GetAgent
         # Test piping - Get all agents in s1
         $all = $s1 | Get-AzureRmSqlDatabaseAgent
         Assert-AreEqual 2 $all.Count
-        
+
         # Test piping - Get all agents in servers with resource group $rg1
         $all = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlDatabaseAgent
         Assert-AreEqual 3 $all.Count
     }
     finally
     {
-    	Remove-ResourceGroupForTest $rg1
+        Remove-ResourceGroupForTest $rg1
     }
 }
 
 <#
-	.SYNOPSIS
-	Tests removing an agent
+    .SYNOPSIS
+    Tests removing an agent
     .DESCRIPTION
-	SmokeTest
+    SmokeTest
 #>
 function Test-RemoveAgent
 {
@@ -287,7 +287,7 @@ function Test-RemoveAgent
         Assert-AreEqual $resp4.Location $s1.Location
         Assert-AreEqual $resp4.WorkerCount 100
     }
-    finally 
+    finally
     {
         Remove-ResourceGroupForTest $rg1
     }

@@ -183,10 +183,10 @@ function Create-DataMaskingTestEnvironment ($testSuffix)
 {
 	$params = Get-SqlDataMaskingTestEnvironmentParameters $testSuffix
 	$password = $params.pwd
-    $secureString = ($password | ConvertTo-SecureString -asPlainText -Force)
-    $credentials = new-object System.Management.Automation.PSCredential($params.loginName, $secureString)
+	$secureString = ($password | ConvertTo-SecureString -asPlainText -Force)
+	$credentials = new-object System.Management.Automation.PSCredential($params.loginName, $secureString)
 	New-AzureRmResourceGroup -Name $params.rgname -Location "West Central US"
-    New-AzureRmSqlServer -ResourceGroupName  $params.rgname -ServerName $params.serverName -ServerVersion "12.0" -Location "West Central US" -SqlAdministratorCredentials $credentials
+	New-AzureRmSqlServer -ResourceGroupName  $params.rgname -ServerName $params.serverName -ServerVersion "12.0" -Location "West Central US" -SqlAdministratorCredentials $credentials
 	New-AzureRmSqlServerFirewallRule -ResourceGroupName  $params.rgname -ServerName $params.serverName -StartIpAddress 0.0.0.0 -EndIpAddress 255.255.255.255 -FirewallRuleName "ddmRule"
 	New-AzureRmSqlDatabase -ResourceGroupName $params.rgname -ServerName $params.serverName -DatabaseName $params.databaseName
 	$fullServerName = $params.serverName + ".database.windows.net"
@@ -298,7 +298,7 @@ Gets valid resource group name
 #>
 function Get-ResourceGroupName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -307,7 +307,7 @@ Gets valid server name
 #>
 function Get-ServerName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -316,7 +316,7 @@ Gets valid user name
 #>
 function Get-UserName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -325,7 +325,7 @@ Gets valid database name
 #>
 function Get-DatabaseName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -334,7 +334,7 @@ Gets valid elastic pool name
 #>
 function Get-ElasticPoolName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -343,7 +343,7 @@ Gets valid agent name
 #>
 function Get-AgentName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -352,7 +352,7 @@ Gets valid target group name
 #>
 function Get-TargetGroupName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -361,7 +361,7 @@ Gets valid job credential name
 #>
 function Get-JobCredentialName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -370,7 +370,7 @@ Gets valid job name
 #>
 function Get-JobName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -379,7 +379,7 @@ Gets valid job step name
 #>
 function Get-JobStepName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -388,7 +388,7 @@ Gets valid subscription id
 #>
 function Get-SubscriptionId
 {
-    return [guid]::NewGuid().ToString()
+	return [guid]::NewGuid().ToString()
 }
 
 <#
@@ -397,7 +397,7 @@ Gets valid schema name
 #>
 function Get-SchemaName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -406,7 +406,7 @@ Gets valid table name
 #>
 function Get-TableName
 {
-    return getAssetname
+	return getAssetname
 }
 
 <#
@@ -415,7 +415,7 @@ Gets valid failover group name
 #>
 function Get-FailoverGroupName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -424,7 +424,7 @@ Gets valid virtual network rule name
 #>
 function Get-VirtualNetworkRuleName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -433,7 +433,7 @@ Gets valid server dns alias name
 #>
 function Get-ServerDnsAliasName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -441,18 +441,18 @@ function Get-ServerDnsAliasName
 Gets test mode - 'Record' or 'Playback'
 #>
 function Get-SqlTestMode {
-    try {
-        $testMode = [Microsoft.Azure.Test.HttpRecorder.HttpMockServer]::Mode;
-        $testMode = $testMode.ToString();
-    } catch {
-        if ($PSItem.Exception.Message -like '*Unable to find type*') {
-            $testMode = 'Record';
-        } else {
-            throw;
-        }
-    }
+	try {
+		$testMode = [Microsoft.Azure.Test.HttpRecorder.HttpMockServer]::Mode;
+		$testMode = $testMode.ToString();
+	} catch {
+		if ($PSItem.Exception.Message -like '*Unable to find type*') {
+			$testMode = 'Record';
+		} else {
+			throw;
+		}
+	}
 
-    return $testMode
+	return $testMode
 }
 
 <#
@@ -472,8 +472,8 @@ function Get-ProviderLocation($provider)
 			if ($location -eq $null)
 			{
 				return "East US"
-			} 
-            else
+			}
+			else
 			{
 				return $location.Locations[0]
 			}
@@ -524,7 +524,7 @@ function Get-Credential
 {
 	$serverLogin = Get-UserName
 	$serverPassword = "t357ingP@s5w0rd!"
-	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force)) 
+	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force))
 	return $credentials
 }
 
@@ -536,7 +536,7 @@ function Get-Credential
 {
 	$serverLogin = Get-UserName
 	$serverPassword = "t357ingP@s5w0rd!"
-	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force)) 
+	$credentials = new-object System.Management.Automation.PSCredential($serverLogin, ($serverPassword | ConvertTo-SecureString -asPlainText -Force))
 	return $credentials
 }
 
@@ -571,7 +571,7 @@ function Create-ElasticPoolForTest ($server)
 #>
 function Create-DatabaseForTest ($server)
 {
-    $dbName = Get-DatabaseName
+	$dbName = Get-DatabaseName
 	$db = New-AzureRmSqlDatabase -ResourceGroupName $server.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName -Edition Standard -MaxSizeBytes 250GB -RequestedServiceObjectiveName S0
 	return $db
 }
@@ -582,8 +582,8 @@ function Create-DatabaseForTest ($server)
 #>
 function Create-AgentForTest ($db)
 {
-    $agentName = Get-AgentName
-    return New-AzureRmSqlDatabaseAgent -ResourceGroupName $db.ResourceGroupName -ServerName $db.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
+	$agentName = Get-AgentName
+	return New-AzureRmSqlDatabaseAgent -ResourceGroupName $db.ResourceGroupName -ServerName $db.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
 }
 
 <#
@@ -592,11 +592,11 @@ function Create-AgentForTest ($db)
 #>
 function Create-JobCredentialForTest ($a)
 {
-    $credentialName = Get-JobCredentialName
-    $credential = Get-ServerCredential
+	$credentialName = Get-JobCredentialName
+	$credential = Get-ServerCredential
 
-    $jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
-    return $jobCredential
+	$jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
+	return $jobCredential
 }
 
 <#
@@ -605,9 +605,9 @@ function Create-JobCredentialForTest ($a)
 #>
 function Create-TargetGroupForTest ($a)
 {
-    $targetGroupName = Get-TargetGroupName
-    $tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
-    return $tg
+	$targetGroupName = Get-TargetGroupName
+	$tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
+	return $tg
 }
 
 <#
@@ -616,10 +616,10 @@ function Create-TargetGroupForTest ($a)
 #>
 function Create-JobForTest ($a, $enabled = $false)
 {
-    $jobName = Get-JobName
-    
-    $job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
-    return $job
+	$jobName = Get-JobName
+
+	$job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
+	return $job
 }
 
 <#
@@ -628,9 +628,9 @@ function Create-JobForTest ($a, $enabled = $false)
 #>
 function Create-JobStepForTest ($j, $tg, $c, $ct)
 {
-    $jobStepName = Get-JobStepName
-    $jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $ct
-    return $jobStep
+	$jobStepName = Get-JobStepName
+	$jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $ct
+	return $jobStep
 }
 
 <#
@@ -641,11 +641,11 @@ function Create-JobStepOutputForTest ($cred)
 {
 	return @{ SubscriptionId = Get-SubscriptionId;
 			  ResourceGroupName = Get-ResourceGroupName;
-              ServerName = Get-ServerName;
-              DatabaseName = Get-DatabaseName;
-              SchemaName = Get-SchemaName;
-              TableName = Get-TableName;
-              CredentialName = $cred.CredentialName;
+			  ServerName = Get-ServerName;
+			  DatabaseName = Get-DatabaseName;
+			  SchemaName = Get-SchemaName;
+			  TableName = Get-TableName;
+			  CredentialName = $cred.CredentialName;
 		}
 }
 
@@ -704,48 +704,48 @@ Gets the parameters for import/export tests
 #>
 function Get-SqlDatabaseImportExportTestEnvironmentParameters ($testSuffix)
 {
-    $databaseName = "sql-ie-cmdlet-db" + $testSuffix;
-    $password = [Microsoft.Azure.Test.TestUtilities]::GenerateName("IEp@ssw0rd");
-    #Fake storage account data. Used for playback mode
-    $exportBacpacUri = "http://test.blob.core.windows.net/bacpacs"
-    $importBacpacUri = "http://test.blob.core.windows.net/bacpacs/test.bacpac"
-    $storageKey = "StorageKey"
+	$databaseName = "sql-ie-cmdlet-db" + $testSuffix;
+	$password = [Microsoft.Azure.Test.TestUtilities]::GenerateName("IEp@ssw0rd");
+	#Fake storage account data. Used for playback mode
+	$exportBacpacUri = "http://test.blob.core.windows.net/bacpacs"
+	$importBacpacUri = "http://test.blob.core.windows.net/bacpacs/test.bacpac"
+	$storageKey = "StorageKey"
 
-    $testMode = [System.Environment]::GetEnvironmentVariable("AZURE_TEST_MODE")
-    if($testMode -eq "Record"){
-        $exportBacpacUri = [System.Environment]::GetEnvironmentVariable("TEST_EXPORT_BACPAC")
-        $importBacpacUri = [System.Environment]::GetEnvironmentVariable("TEST_IMPORT_BACPAC")
-        $storageKey = [System.Environment]::GetEnvironmentVariable("TEST_STORAGE_KEY")
+	$testMode = [System.Environment]::GetEnvironmentVariable("AZURE_TEST_MODE")
+	if($testMode -eq "Record"){
+		$exportBacpacUri = [System.Environment]::GetEnvironmentVariable("TEST_EXPORT_BACPAC")
+		$importBacpacUri = [System.Environment]::GetEnvironmentVariable("TEST_IMPORT_BACPAC")
+		$storageKey = [System.Environment]::GetEnvironmentVariable("TEST_STORAGE_KEY")
 
-       if ([System.string]::IsNullOrEmpty($exportBacpacUri)){
-          throw "The TEST_EXPORT_BACPAC environment variable should point to a bacpac that has been uploaded to Azure blob storage ('e.g.' https://test.blob.core.windows.net/bacpacs/empty.bacpac)"
-       }
-       if ([System.string]::IsNullOrEmpty($importBacpacUri)){
-          throw "The  TEST_IMPORT_BACPAC environment variable should point to an Azure blob storage ('e.g.' https://test.blob.core.windows.net/bacpacs)"
-       }
-       if ([System.string]::IsNullOrEmpty($storageKey)){
-          throw "The  TEST_STORAGE_KEY environment variable should point to a valid storage key for an existing Azure storage account"
-       }
-    }
+	   if ([System.string]::IsNullOrEmpty($exportBacpacUri)){
+		  throw "The TEST_EXPORT_BACPAC environment variable should point to a bacpac that has been uploaded to Azure blob storage ('e.g.' https://test.blob.core.windows.net/bacpacs/empty.bacpac)"
+	   }
+	   if ([System.string]::IsNullOrEmpty($importBacpacUri)){
+		  throw "The  TEST_IMPORT_BACPAC environment variable should point to an Azure blob storage ('e.g.' https://test.blob.core.windows.net/bacpacs)"
+	   }
+	   if ([System.string]::IsNullOrEmpty($storageKey)){
+		  throw "The  TEST_STORAGE_KEY environment variable should point to a valid storage key for an existing Azure storage account"
+	   }
+	}
 
 	return @{
-              rgname = "sql-ie-cmdlet-test-rg" +$testSuffix;
-              serverName = "sql-ie-cmdlet-server" +$testSuffix;
-              databaseName = $databaseName;
-              userName = "testuser";
-              firewallRuleName = "sql-ie-fwrule" +$testSuffix;
-              password = $password;
-              storageKeyType = "StorageAccessKey";
-              storageKey = $storageKey;
-              exportBacpacUri = $exportBacpacUri + "/" + $databaseName + ".bacpac";
-              importBacpacUri = $importBacpacUri;
-              location = "Australia East";
-              version = "12.0";
-              databaseEdition = "Standard";
-              serviceObjectiveName = "S0";
-              databaseMaxSizeBytes = "5000000";
-              authType = "Sql";
-             }
+			  rgname = "sql-ie-cmdlet-test-rg" +$testSuffix;
+			  serverName = "sql-ie-cmdlet-server" +$testSuffix;
+			  databaseName = $databaseName;
+			  userName = "testuser";
+			  firewallRuleName = "sql-ie-fwrule" +$testSuffix;
+			  password = $password;
+			  storageKeyType = "StorageAccessKey";
+			  storageKey = $storageKey;
+			  exportBacpacUri = $exportBacpacUri + "/" + $databaseName + ".bacpac";
+			  importBacpacUri = $importBacpacUri;
+			  location = "Australia East";
+			  version = "12.0";
+			  databaseEdition = "Standard";
+			  serviceObjectiveName = "S0";
+			  databaseMaxSizeBytes = "5000000";
+			  authType = "Sql";
+			 }
 }
 
 <#
@@ -754,7 +754,7 @@ Gets valid sync group name
 #>
 function Get-SyncGroupName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -763,7 +763,7 @@ Gets valid sync member name
 #>
 function Get-SyncMemberName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -772,7 +772,7 @@ Gets valid sync agent name
 #>
 function Get-SyncAgentName
 {
-    return getAssetName
+	return getAssetName
 }
 
 <#
@@ -781,9 +781,9 @@ Gets the values of the parameters used by the sync group tests
 #>
 function Get-SqlSyncGroupTestEnvironmentParameters ()
 {
-    return @{ intervalInSeconds = 300;
-              conflictResolutionPolicy = "HubWin";
-              }
+	return @{ intervalInSeconds = 300;
+			  conflictResolutionPolicy = "HubWin";
+			  }
 }
 
 <#
@@ -792,9 +792,9 @@ Gets the values of the parameters used by the sync member tests
 #>
 function Get-SqlSyncMemberTestEnvironmentParameters ()
 {
-     return @{ syncDirection = "Bidirectional";
-               databaseType = "AzureSqlDatabase";
-               }
+	 return @{ syncDirection = "Bidirectional";
+			   databaseType = "AzureSqlDatabase";
+			   }
 }
 
 <#
@@ -803,11 +803,11 @@ Gets dns name according to environment
 #>
 function Get-DNSNameBasedOnEnvironment ()
 {
-     $connectingString = [System.Environment]::GetEnvironmentVariable("TEST_CSM_ORGID_AUTHENTICATION")
-     $parsedString = [Microsoft.Azure.Test.TestUtilities]::ParseConnectionString($connectingString)
-     $environment = $parsedString[[Microsoft.Azure.Test.TestEnvironment]::EnvironmentKey]
-     if ($environment -eq "Dogfood"){
-         return ".sqltest-eg1.mscds.com"
-     }
-     return ".database.windows.net"
+	 $connectingString = [System.Environment]::GetEnvironmentVariable("TEST_CSM_ORGID_AUTHENTICATION")
+	 $parsedString = [Microsoft.Azure.Test.TestUtilities]::ParseConnectionString($connectingString)
+	 $environment = $parsedString[[Microsoft.Azure.Test.TestEnvironment]::EnvironmentKey]
+	 if ($environment -eq "Dogfood"){
+		 return ".sqltest-eg1.mscds.com"
+	 }
+	 return ".database.windows.net"
 }
