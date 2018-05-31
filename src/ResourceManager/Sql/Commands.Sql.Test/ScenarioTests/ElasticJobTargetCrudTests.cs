@@ -62,7 +62,7 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetServerRemoveWithTargetGrouObject()
+        public void TestTargetServerRemoveWithTargetGroupObject()
         {
             RunPowerShellTest("Test-RemoveServerTargetWithTargetGroupObject");
         }
@@ -162,7 +162,7 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetElasticPoolAddWithPiping()
         {
-            RunPowerShellTest("Test-AddElasticPoolTargetPiping");
+            RunPowerShellTest("Test-AddElasticPoolTargetWithPiping");
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestTargetElasticPoolRemoveWithPiping()
         {
-            RunPowerShellTest("Test-RemoveElasticPoolTargetPiping");
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithPiping");
         }
 
         [Fact]

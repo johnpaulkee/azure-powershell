@@ -365,6 +365,15 @@ function Get-ElasticPoolName
 
 <#
 .SYNOPSIS
+Gets valid shard map name
+#>
+function Get-ShardMapName
+{
+	return getAssetName
+}
+
+<#
+.SYNOPSIS
 Gets valid agent name
 #>
 function Get-AgentName

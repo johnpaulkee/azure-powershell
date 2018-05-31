@@ -168,7 +168,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
             {
                 this.SubscriptionId = tokens[1];
                 this.ResourceGroupName = tokens[3];
-                this.ServerName = tokens[7];
+                this.AgentServerName = tokens[7];
+                if (this.ServerName == null)
+                {
+                    this.ServerName = tokens[7];
+                }
             }
 
             if (length >= 9)

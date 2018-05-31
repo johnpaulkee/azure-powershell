@@ -12,9 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 using Microsoft.Azure.Management.Sql.Models;
-using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Model
 {
@@ -62,41 +60,5 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Model
         /// Gets or sets the refresh credential name
         /// </summary>
         public string RefreshCredentialName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the refresh credential id
-        /// </summary>
-        public string RefreshCredentialId { get; set; }
-
-        public AzureSqlElasticJobTargetModel() { }
-
-        /// <summary>
-        /// Creates the AzureSqlElasticJobTargetModel
-        /// </summary>
-        /// <param name="resourceGroupName">The resource group name</param>
-        /// <param name="serverName">The server name</param>
-        /// <param name="agentName">The agent name</param>
-        /// <param name="targetGroupName">The target group name</param>
-        /// <param name="target">The Job Target</param>
-        public AzureSqlElasticJobTargetModel(
-            string resourceGroupName,
-            string serverName,
-            string agentName,
-            string targetGroupName,
-            JobTarget target)
-        {
-            this.ResourceGroupName = resourceGroupName;
-            this.ServerName = serverName;
-            this.AgentName = agentName;
-            this.TargetGroupName = TargetGroupName;
-            this.TargetServerName = target.ServerName;
-            this.TargetDatabaseName = target.DatabaseName;
-            this.TargetElasticPoolName = target.ElasticPoolName;
-            this.TargetShardMapName = target.ShardMapName;
-            this.TargetType = target.Type;
-            this.MembershipType = target.MembershipType;
-            this.RefreshCredentialName = new ResourceIdentifier(target.RefreshCredential).ResourceName;
-            this.RefreshCredentialId = target.RefreshCredential;
-        }
     }
 }

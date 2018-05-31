@@ -302,7 +302,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Services
                 DatabaseName = target.TargetDatabaseName,
                 ServerName = target.TargetServerName,
                 ElasticPoolName = target.TargetElasticPoolName,
-                RefreshCredential = target.RefreshCredentialId,
+                RefreshCredential = target.RefreshCredentialName,
                 ShardMapName = target.TargetShardMapName,
                 Type = target.TargetType
             };
@@ -324,7 +324,20 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Services
             string targetGroupName,
             JobTarget target)
         {
-            return new AzureSqlElasticJobTargetModel(resourceGroupName, serverName, agentName, targetGroupName, target);
+            return new AzureSqlElasticJobTargetModel
+            {
+                ResourceGroupName = resourceGroupName,
+                ServerName = serverName,
+                AgentName = agentName,
+                TargetGroupName = targetGroupName,
+                MembershipType = target.MembershipType,
+                TargetType = target.Type,
+                RefreshCredentialName = new ResourceIdentifier(target.RefreshCredential).ResourceName,
+                TargetServerName = target.ServerName,
+                TargetDatabaseName = target.DatabaseName,
+                TargetElasticPoolName = target.ElasticPoolName,
+                TargetShardMapName = target.ShardMapName,
+            };
         }
 
         /// <summary>
