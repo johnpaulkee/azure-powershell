@@ -155,7 +155,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <summary>
         /// Generates the model from user input.
         /// </summary>
-        /// <param name="model">This is null since the server doesn't exist yet</param>
+        /// <param name="model">This is null since the job execuution doesn't exist yet</param>
         /// <returns>The generated model from user input</returns>
         protected override IEnumerable<AzureSqlElasticJobExecutionModel> ApplyUserInputToModel(IEnumerable<AzureSqlElasticJobExecutionModel> model)
         {
@@ -171,10 +171,10 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         }
 
         /// <summary>
-        /// Sends the changes to the service -> Creates the agent
+        /// Sends the changes to the service -> Creates a job execution for the job
         /// </summary>
-        /// <param name="entity">The agent to create</param>
-        /// <returns>The created agent</returns>
+        /// <param name="entity">The job execution entity</param>
+        /// <returns>A job execution</returns>
         protected override IEnumerable<AzureSqlElasticJobExecutionModel> PersistChanges(IEnumerable<AzureSqlElasticJobExecutionModel> entity)
         {
             AzureSqlElasticJobExecutionModel resp;

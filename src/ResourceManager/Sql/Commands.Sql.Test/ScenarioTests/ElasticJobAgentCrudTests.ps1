@@ -37,7 +37,7 @@ function Test-CreateAgentWithDefaultParam
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -66,7 +66,7 @@ function Test-CreateAgentWithDatabaseObject
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -95,7 +95,7 @@ function Test-CreateAgentWithDatabaseResourceId
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -124,7 +124,7 @@ function Test-CreateAgentWithPiping
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -152,7 +152,7 @@ function Test-UpdateAgentWithDefaultParam
     }
     finally
     {
-        #Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -180,7 +180,7 @@ function Test-UpdateAgentWithInputObject
     }
     finally
     {
-        #Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -208,7 +208,7 @@ function Test-UpdateAgentWithResourceId
     }
     finally
     {
-        #Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -236,7 +236,7 @@ function Test-UpdateAgentWithPiping
     }
     finally
     {
-        #Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -249,7 +249,8 @@ function Test-GetAgentWithDefaultParam
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
 
-    try {
+    try
+    {
         # Test using default parameters
         $resp = Get-AzureRmSqlElasticJobAgent -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -261,7 +262,7 @@ function Test-GetAgentWithDefaultParam
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -288,7 +289,7 @@ function Test-GetAgentWithServerObject
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -302,7 +303,8 @@ function Test-GetAgentWithServerResourceId
     $a1 = Create-ElasticJobAgentTestEnvironment
     $s1 = Get-AzureRmSqlServer -ServerName $a1.ServerName -ResourceGroupName $a1.ResourceGroupName
 
-    try {
+    try
+    {
         # Test using server resource id
         $resp = Get-AzureRmSqlElasticJobAgent -ServerResourceId $s1.ResourceId -AgentName $a1.AgentName
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -314,7 +316,7 @@ function Test-GetAgentWithServerResourceId
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -327,20 +329,26 @@ function Test-GetAgentWithPiping
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $s1 = Get-AzureRmSqlServer -ServerName $a1.ServerName -ResourceGroupName $a1.ResourceGroupName
+    $db2 = $s1 | New-AzureRmSqlDatabase -Name (Get-DatabaseName)
+    $a2 = $db2 | New-AzureRmSqlElasticJobAgent -Name (Get-AgentName)
 
-    try {
+    try
+    {
         # Test using piping
-        $resp = Get-AzureRmSqlElasticJobAgent -ServerResourceId $s1.ResourceId -AgentName $a1.AgentName
+        $resp = $s1 | Get-AzureRmSqlElasticJobAgent -Name $a1.AgentName
         Assert-AreEqual $resp.AgentName $a1.AgentName
         Assert-AreEqual $resp.ServerName $a1.ServerName
         Assert-AreEqual $resp.DatabaseName $a1.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
+
+        $resp = $s1 | Get-AzureRmSqlElasticJobAgent
+        Assert-AreEqual $resp.Count 2
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -369,7 +377,7 @@ function Test-RemoveAgentWithDefaultParam
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -398,7 +406,7 @@ function Test-RemoveAgentWithInputObject
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -427,7 +435,7 @@ function Test-RemoveAgentWithResourceId
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }
 
@@ -456,6 +464,6 @@ function Test-RemoveAgentWithPiping
     }
     finally
     {
-        # Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $a1
     }
 }

@@ -197,6 +197,7 @@ function Create-ElasticJobAgentTestEnvironment ()
 		$rg = New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
 		$adminCred = Get-ServerCredential
 		$server = New-AzureRmSqlServer -ResourceGroupName $rg.ResourceGroupName -ServerName $serverName -Location $location -SqlAdministratorCredentials $adminCred
+		$server | New-AzureRmSqlServerFirewallRule -AllowAllAzureIPs
 		$db = New-AzureRmSqlDatabase -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName
 		$agent = New-AzureRmSqlElasticJobAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -Name $agentName
 	}
@@ -655,7 +656,6 @@ function Create-TargetGroupForTest ($a)
 function Create-JobForTest ($a, $enabled = $false)
 {
 	$jobName = Get-JobName
-
 	$job = New-AzureRmSqlElasticJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
 	return $job
 }
