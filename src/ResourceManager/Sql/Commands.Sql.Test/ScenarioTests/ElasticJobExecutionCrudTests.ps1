@@ -28,7 +28,7 @@ function Test-StartJob()
 		Test-StartJobWithJobResourceId $a1
 		Test-StartJobWithPiping $a1
 	}
-	catch
+	finally
 	{
 		# Remove-ResourceGroupForTest $a1
 	}
@@ -50,7 +50,7 @@ function Test-StopJob()
 		Test-StopJobWithJobExecutionResourceId $a1
 		Test-StopJobWithPiping $a1
 	}
-	catch
+	finally
 	{
 		# Remove-ResourceGroupForTest $a1
 	}
@@ -72,7 +72,7 @@ function Test-GetJobExecution()
 		Test-GetJobExecutionWithAgentResourceId $a1
 		Test-GetJobExecutionWithPiping $a1
 	}
-	catch
+	finally
 	{
 		# Remove-ResourceGroupForTest $a1
 	}
@@ -94,7 +94,7 @@ function Test-GetJobStepExecution()
 		Test-GetJobStepExecutionWithJobExecutionResourceId $a1
 		Test-GetJobStepExecutionWithPiping $a1
 	}
-	catch
+	finally
 	{
 		# Remove-ResourceGroupForTest $a1
 	}
@@ -116,7 +116,7 @@ function Test-GetJobTargetExecution()
 		Test-GetJobTargetExecutionWithJobExecutionResourceId $a1
 		Test-GetJobTargetExecutionWithPiping $a1
 	}
-	catch
+	finally
 	{
 		# Remove-ResourceGroupForTest $a1
 	}
@@ -127,6 +127,7 @@ function Test-GetJobTargetExecution()
 	Tests starting a job with default parameters
 #>
 function Test-StartJobWithDefaultParam ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -154,6 +155,7 @@ function Test-StartJobWithDefaultParam ($a1)
 	Tests starting a job with job object
 #>
 function Test-StartJobWithJobObject ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -181,6 +183,7 @@ function Test-StartJobWithJobObject ($a1)
 	Tests starting a job with job resource id
 #>
 function Test-StartJobWithJobResourceId ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -236,6 +239,7 @@ function Test-StartJobWithPiping ($a1)
 	Tests stop job with default param
 #>
 function Test-StopJobWithDefaultParam ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -255,6 +259,7 @@ function Test-StopJobWithDefaultParam ($a1)
 	Tests stop job with job execution object
 #>
 function Test-StopJobWithJobExecutionObject ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -274,6 +279,7 @@ function Test-StopJobWithJobExecutionObject ($a1)
 	Tests creating a job with min parameters
 #>
 function Test-StopJobWithJobExecutionResourceId ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -293,6 +299,7 @@ function Test-StopJobWithJobExecutionResourceId ($a1)
 	Tests creating a job with min parameters
 #>
 function Test-StopJobWithPiping ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -312,6 +319,7 @@ function Test-StopJobWithPiping ($a1)
 	Tests get job execution with default param
 #>
 function Test-GetJobExecutionWithDefaultParam ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -343,6 +351,7 @@ function Test-GetJobExecutionWithDefaultParam ($a1)
 	Tests get job execution with agent object
 #>
 function Test-GetJobExecutionWithAgentObject ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -374,6 +383,7 @@ function Test-GetJobExecutionWithAgentObject ($a1)
 	Tests get job execution with agent resource id
 #>
 function Test-GetJobExecutionWithAgentResourceId ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -405,6 +415,7 @@ function Test-GetJobExecutionWithAgentResourceId ($a1)
 	Tests get job execution with piping
 #>
 function Test-GetJobExecutionWithPiping ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -434,6 +445,7 @@ function Test-GetJobExecutionWithPiping ($a1)
 	Tests get job step execution with default param
 #>
 function Test-GetJobStepExecutionWithDefaultParam ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -458,6 +470,7 @@ function Test-GetJobStepExecutionWithDefaultParam ($a1)
 	Tests get job step execution with job execution object
 #>
 function Test-GetJobStepExecutionWithJobExecutionObject ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -482,6 +495,7 @@ function Test-GetJobStepExecutionWithJobExecutionObject ($a1)
 	Tests get job step execution with job execution resource id
 #>
 function Test-GetJobStepExecutionWithJobExecutionResourceId ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -508,6 +522,7 @@ function Test-GetJobStepExecutionWithJobExecutionResourceId ($a1)
 	Tests get job step execution with piping
 #>
 function Test-GetJobStepExecutionWithPiping ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -534,6 +549,7 @@ function Test-GetJobStepExecutionWithPiping ($a1)
 	Tests get job step execution with default param
 #>
 function Test-GetJobTargetExecutionWithDefaultParam ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -559,6 +575,7 @@ function Test-GetJobTargetExecutionWithDefaultParam ($a1)
 	Tests get job step execution with job execution object
 #>
 function Test-GetJobTargetExecutionWithJobExecutionObject ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -585,6 +602,7 @@ function Test-GetJobTargetExecutionWithJobExecutionObject ($a1)
 	Tests get job step execution with job execution resource id
 #>
 function Test-GetJobTargetExecutionWithJobExecutionResourceId ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
@@ -611,6 +629,7 @@ function Test-GetJobTargetExecutionWithJobExecutionResourceId ($a1)
 	Tests get job step execution with piping
 #>
 function Test-GetJobTargetExecutionWithPiping ($a1)
+{
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1

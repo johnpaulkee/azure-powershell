@@ -112,7 +112,6 @@ namespace Microsoft.Azure.Commands.Sql.Common
             this.ResourceGroupName = (resourceGroupProperty != null) ? resourceGroupProperty.GetValue(model).ToString() : this.ResourceGroupName;
 
             var serverProperty = model.GetType().GetProperty("ServerName");
-
             if (serverProperty != null)
             {
                 string value = serverProperty.GetValue(model).ToString();
@@ -136,10 +135,24 @@ namespace Microsoft.Azure.Commands.Sql.Common
             this.StepName = (stepProperty != null) ? stepProperty.GetValue(model).ToString() : this.StepName;
 
             var targetGroupProperty = model.GetType().GetProperty("TargetGroupName");
-            this.TargetGroupName = (targetGroupProperty != null) ? targetGroupProperty.GetValue(model).ToString() : this.TargetGroupName;
+            if (targetGroupProperty != null)
+            {
+                string value = targetGroupProperty.GetValue(model).ToString();
+                if (this.TargetGroupName == null)
+                {
+                    this.TargetGroupName = value;
+                }
+            }
 
             var jobCredentialProperty = model.GetType().GetProperty("CredentialName");
-            this.CredentialName = (jobCredentialProperty != null) ? jobCredentialProperty.GetValue(model).ToString() : this.CredentialName;
+            if (jobCredentialProperty != null)
+            {
+                string value = jobCredentialProperty.GetValue(model).ToString();
+                if (this.CredentialName == null)
+                {
+                    this.CredentialName = value;
+                }
+            }
 
             var jobExecutionProperty = model.GetType().GetProperty("JobExecutionId");
             this.JobExecutionId = (jobExecutionProperty != null) ? jobExecutionProperty.GetValue(model).ToString() : this.JobExecutionId;

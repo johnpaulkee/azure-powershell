@@ -31,7 +31,7 @@ function Test-CreateJobStep
 	}
 	finally
 	{
-		# Remove-ResourceGroupForTest $a1
+		Remove-ResourceGroupForTest $a1
 	}
 }
 
@@ -53,7 +53,7 @@ function Test-GetJobStep
 	}
 	finally
 	{
-		# Remove-ResourceGroupForTest $a1
+		Remove-ResourceGroupForTest $a1
 	}
 }
 
@@ -75,7 +75,7 @@ function Test-UpdateJobStep
 	}
 	finally
 	{
-		# Remove-ResourceGroupForTest $a1
+		Remove-ResourceGroupForTest $a1
 	}
 }
 
@@ -90,14 +90,14 @@ function Test-RemoveJobStep
 
 	try
 	{
-		Test-UpdateJobStepWithDefaultParam $a1
-		Test-UpdateJobStepWithInputObject $a1
-		Test-UpdateJobStepWithResourceId $a1
-	  Test-UpdateJobStepWithPiping $a1
+		Test-RemoveJobStepWithDefaultParam $a1
+		Test-RemoveJobStepWithInputObject $a1
+		Test-RemoveJobStepWithResourceId $a1
+	  Test-RemoveJobStepWithPiping $a1
 	}
 	finally
 	{
-		# Remove-ResourceGroupForTest $a1
+		Remove-ResourceGroupForTest $a1
 	}
 }
 
@@ -131,7 +131,7 @@ function Test-CreateJobStepWithDefaultParam ($a1)
 
 	# Test add job step using max params - output database object
 	$jsn1 = Get-JobStepName
-	$js1 = Add-AzureRmSqlElasticJobStep -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -JobName $j1.JobName -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1.ResourceId -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
+	$js1 = Add-AzureRmSqlElasticJobStep -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -JobName $j1.JobName -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1 -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
 	Assert-AreEqual $js1.ResourceGroupName $a1.ResourceGroupName
 	Assert-AreEqual $js1.ServerName $a1.ServerName
 	Assert-AreEqual $js1.AgentName $a1.AgentName
@@ -204,7 +204,7 @@ function Test-CreateJobStepWithJobObject ($a1)
 
 	# Test add job step using max params - output database object
 	$jsn1 = Get-JobStepName
-	$js1 = Add-AzureRmSqlElasticJobStep -JobObject $j1 -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1.ResourceId -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
+	$js1 = Add-AzureRmSqlElasticJobStep -JobObject $j1 -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1 -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
 	Assert-AreEqual $js1.ResourceGroupName $a1.ResourceGroupName
 	Assert-AreEqual $js1.ServerName $a1.ServerName
 	Assert-AreEqual $js1.AgentName $a1.AgentName
@@ -277,7 +277,7 @@ function Test-CreateJobStepWithJobResourceId ($a1)
 
 	# Test add job step using max params - output database object
 	$jsn1 = Get-JobStepName
-	$js1 = Add-AzureRmSqlElasticJobStep -JobResourceId $j1.ResourceId -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1.ResourceId -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
+	$js1 = Add-AzureRmSqlElasticJobStep -JobResourceId $j1.ResourceId -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1 -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
 	Assert-AreEqual $js1.ResourceGroupName $a1.ResourceGroupName
 	Assert-AreEqual $js1.ServerName $a1.ServerName
 	Assert-AreEqual $js1.AgentName $a1.AgentName
@@ -350,7 +350,7 @@ function Test-CreateJobStepWithPiping ($a1)
 
 	# Test add job step using max params - output database object
 	$jsn1 = Get-JobStepName
-	$js1 = $j1 | Add-AzureRmSqlElasticJobStep -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1.ResourceId -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
+	$js1 = $j1 | Add-AzureRmSqlElasticJobStep -Name $jsn1 -TargetGroupName $tg1.TargetGroupName -CredentialName $jc1.CredentialName -CommandText $ct1 -TimeoutSeconds 1000 -RetryAttempts 100 -InitialRetryIntervalSeconds 10 -MaximumRetryIntervalSeconds 1000 -RetryIntervalBackoffMultiplier 5.0 -OutputDatabaseObject $db1 -OutputTableName $tableName -OutputCredentialName $jc1.CredentialName -OutputSchemaName $schemaName
 	Assert-AreEqual $js1.ResourceGroupName $a1.ResourceGroupName
 	Assert-AreEqual $js1.ServerName $a1.ServerName
 	Assert-AreEqual $js1.AgentName $a1.AgentName
@@ -453,8 +453,8 @@ function Test-UpdateJobStepWithDefaultParam ($a1)
 	Assert-AreEqual $resp.Output.TableName $tableName2
 
 	# Test update output credential name
-	$resp = Set-AzureRmSqlElasticJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputCredentialName $jso2.CredentialName
-	Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
+	$resp = Set-AzureRmSqlElasticJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -OutputCredentialName $jc2.CredentialName
+	Assert-AreEqual $resp.Output.Credential $jc2.CredentialName
 
 	# Test update job step remove output
 	$resp = Set-AzureRmSqlElasticJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName -RemoveOutput
@@ -528,9 +528,6 @@ function Test-UpdateJobStepWithInputObject ($a1)
 	Assert-AreEqual $resp.Output.ResourceGroupName $db1.ResourceGroupName
 	Assert-AreEqual $resp.Output.ServerName $db1.ServerName
 	Assert-AreEqual $resp.Output.DatabaseName $db1.DatabaseName
-	Assert-AreEqual $resp.Output.SchemaName $schemaName
-	Assert-AreEqual $resp.Output.TableName $tableName
-	Assert-AreEqual $resp.Output.Credential $jc1.CredentialName
 
 	# Test update output schema name
 	$resp = Set-AzureRmSqlElasticJobStep -InputObject $js1 -OutputSchemaName $schemaName2
@@ -541,8 +538,8 @@ function Test-UpdateJobStepWithInputObject ($a1)
 	Assert-AreEqual $resp.Output.TableName $tableName2
 
 	# Test update output credential name
-	$resp = Set-AzureRmSqlElasticJobStep -InputObject $js1 -OutputCredentialName $jso2.CredentialName
-	Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
+	$resp = Set-AzureRmSqlElasticJobStep -InputObject $js1 -OutputCredentialName $jc2.CredentialName
+	Assert-AreEqual $resp.Output.Credential $jc2.CredentialName
 
 	# Test update job step remove output
 	$resp = Set-AzureRmSqlElasticJobStep -InputObject $js1 -RemoveOutput
@@ -629,8 +626,8 @@ function Test-UpdateJobStepWithResourceId ($a1)
 	Assert-AreEqual $resp.Output.TableName $tableName2
 
 	# Test update output credential name
-	$resp = Set-AzureRmSqlElasticJobStep -ResourceId $js1.ResourceId -OutputCredentialName $jso2.CredentialName
-	Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
+	$resp = Set-AzureRmSqlElasticJobStep -ResourceId $js1.ResourceId -OutputCredentialName $jc2.CredentialName
+	Assert-AreEqual $resp.Output.Credential $jc2.CredentialName
 
 	# Test update job step remove output
 	$resp = Set-AzureRmSqlElasticJobStep -ResourceId $js1.ResourceId -RemoveOutput
@@ -717,8 +714,8 @@ function Test-UpdateJobStepWithPiping ($a1)
 	Assert-AreEqual $resp.Output.TableName $tableName2
 
 	# Test update output credential name
-	$resp = $js1 | Set-AzureRmSqlElasticJobStep -OutputCredentialName $jso2.CredentialName
-	Assert-AreEqual $resp.Output.Credential $jso2.CredentialName
+	$resp = $js1 | Set-AzureRmSqlElasticJobStep -OutputCredentialName $jc2.CredentialName
+	Assert-AreEqual $resp.Output.Credential $jc2.CredentialName
 
 	# Test update job step remove output
 	$resp = $js1 | Set-AzureRmSqlElasticJobStep -RemoveOutput
@@ -783,14 +780,14 @@ function Test-RemoveJobStepWithInputObject ($a1)
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with input object
-	$resp = Remove-AzureRmSqlElasticJobStep -InputObject $js2
-	Assert-AreEqual $resp.ResourceGroupName $js2.ResourceGroupName
-	Assert-AreEqual $resp.ServerName $js2.ServerName
-	Assert-AreEqual $resp.AgentName $js2.AgentName
-	Assert-AreEqual $resp.JobName $js2.JobName
-	Assert-AreEqual $resp.StepName $js2.StepName
-	Assert-AreEqual $resp.TargetGroupName $js2.TargetGroupName
-	Assert-AreEqual $resp.CredentialName $js2.CredentialName
+	$resp = Remove-AzureRmSqlElasticJobStep -InputObject $js1
+	Assert-AreEqual $resp.ResourceGroupName $js1.ResourceGroupName
+	Assert-AreEqual $resp.ServerName $js1.ServerName
+	Assert-AreEqual $resp.AgentName $js1.AgentName
+	Assert-AreEqual $resp.JobName $js1.JobName
+	Assert-AreEqual $resp.StepName $js1.StepName
+	Assert-AreEqual $resp.TargetGroupName $js1.TargetGroupName
+	Assert-AreEqual $resp.CredentialName $js1.CredentialName
 }
 
 <#
@@ -807,14 +804,14 @@ function Test-RemoveJobStepWithResourceId ($a1)
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with resource id
-	$resp = Remove-AzureRmSqlElasticJobStep -ResourceId $js3.ResourceId
-	Assert-AreEqual $resp.ResourceGroupName $js3.ResourceGroupName
-	Assert-AreEqual $resp.ServerName $js3.ServerName
-	Assert-AreEqual $resp.AgentName $js3.AgentName
-	Assert-AreEqual $resp.JobName $js3.JobName
-	Assert-AreEqual $resp.StepName $js3.StepName
-	Assert-AreEqual $resp.TargetGroupName $js3.TargetGroupName
-	Assert-AreEqual $resp.CredentialName $js3.CredentialName
+	$resp = Remove-AzureRmSqlElasticJobStep -ResourceId $js1.ResourceId
+	Assert-AreEqual $resp.ResourceGroupName $js1.ResourceGroupName
+	Assert-AreEqual $resp.ServerName $js1.ServerName
+	Assert-AreEqual $resp.AgentName $js1.AgentName
+	Assert-AreEqual $resp.JobName $js1.JobName
+	Assert-AreEqual $resp.StepName $js1.StepName
+	Assert-AreEqual $resp.TargetGroupName $js1.TargetGroupName
+	Assert-AreEqual $resp.CredentialName $js1.CredentialName
 }
 
 <#
@@ -828,7 +825,10 @@ function Test-RemoveJobStepWithPiping ($a1)
 	$tg1 = Create-TargetGroupForTest $a1
 	$j1 = Create-JobForTest $a1
 	$ct1 = "SELECT 1"
+
+	# Create 2 steps
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
+	$js2 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with piping
 	$resp = $js1 | Remove-AzureRmSqlElasticJobStep
@@ -839,6 +839,11 @@ function Test-RemoveJobStepWithPiping ($a1)
 	Assert-AreEqual $resp.StepName $js1.StepName
 	Assert-AreEqual $resp.TargetGroupName $js1.TargetGroupName
 	Assert-AreEqual $resp.CredentialName $js1.CredentialName
+
+	# Test remove all steps from job - should only have 1 left
+	$allStepsForJob = $j1 | Get-AzureRmSqlElasticJobStep
+	$resp = $allStepsForJob | Remove-AzureRmSqlElasticJobStep
+	Assert-AreEqual $resp.Count 1
 }
 
 <#
@@ -853,7 +858,7 @@ function Test-GetJobStepWithDefaultParam ($a1)
 	$j1 = Create-JobForTest $a1
 	$ct1 = "SELECT 1"
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
-	$js2 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
+	Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with default params
 	$resp = Get-AzureRmSqlElasticJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName -Name $js1.StepName
@@ -867,7 +872,7 @@ function Test-GetJobStepWithDefaultParam ($a1)
 
 	# Test get all steps
 	$resp = Get-AzureRmSqlElasticJobStep -ResourceGroupName $js1.ResourceGroupName -ServerName $js1.ServerName -AgentName $js1.AgentName -JobName $js1.JobName
-	Assert-IsTrue { $resp.Count -ge 2 }
+	Assert-True { $resp.Count -ge 2 }
 }
 
 <#
@@ -882,7 +887,7 @@ function Test-GetJobStepWithJobObject ($a1)
 	$j1 = Create-JobForTest $a1
 	$ct1 = "SELECT 1"
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
-	$js2 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
+	Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with job object
 	$resp = Get-AzureRmSqlElasticJobStep -JobObject $j1 -Name $js1.StepName
@@ -896,7 +901,7 @@ function Test-GetJobStepWithJobObject ($a1)
 
 	# Test get all steps
 	$resp = Get-AzureRmSqlElasticJobStep -JobObject $j1
-	Assert-IsTrue { $resp.Count -ge 2 }
+	Assert-True { $resp.Count -ge 2 }
 }
 
 <#
@@ -911,7 +916,7 @@ function Test-GetJobStepWithJobResourceId ($a1)
 	$j1 = Create-JobForTest $a1
 	$ct1 = "SELECT 1"
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
-	$js2 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
+	Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with resource id
 	$resp = Get-AzureRmSqlElasticJobStep -JobResourceId $j1.ResourceId -Name $js1.StepName
@@ -925,7 +930,7 @@ function Test-GetJobStepWithJobResourceId ($a1)
 
 	# Test get all steps
 	$resp = Get-AzureRmSqlElasticJobStep -JobResourceId $j1.ResourceId
-	Assert-IsTrue { $resp.Count -ge 2 }
+	Assert-True { $resp.Count -ge 2 }
 }
 
 <#
@@ -940,7 +945,7 @@ function Test-GetJobStepWithPiping ($a1)
 	$j1 = Create-JobForTest $a1
 	$ct1 = "SELECT 1"
 	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
-	$js2 = Create-JobStepForTest $j1 $tg1 $jc1 $ct1
+	Create-JobStepForTest $j1 $tg1 $jc1 $ct1
 
 	# Test with resource id
 	$resp = $j1 | Get-AzureRmSqlElasticJobStep -Name $js1.StepName
@@ -954,5 +959,5 @@ function Test-GetJobStepWithPiping ($a1)
 
 	# Test get all steps
 	$resp = $j1 | Get-AzureRmSqlElasticJobStep
-	Assert-IsTrue { $resp.Count -ge 2 }
+	Assert-True { $resp.Count -ge 2 }
 }

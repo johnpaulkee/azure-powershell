@@ -13,31 +13,90 @@
 # ----------------------------------------------------------------------------------
 
 <#
+	.SYNOPSIS
+	Tests creating a target group
+#>
+function Test-CreateTargetGroup
+{
+	# Setup
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
+	try
+	{
+		Test-CreateTargetGroupWithDefaultParam $a1
+		Test-CreateTargetGroupWithAgentObject $a1
+		Test-CreateTargetGroupWithAgentResourceId $a1
+		Test-CreateTargetGroupWithPiping $a1
+	}
+	finally
+	{
+		Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
+	.SYNOPSIS
+	Tests getting target group
+#>
+function Test-GetTargetGroup
+{
+	# Setup
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
+	try
+	{
+		Test-GetTargetGroupWithDefaultParam $a1
+		Test-GetTargetGroupWithAgentObject $a1
+		Test-GetTargetGroupWithAgentResourceId $a1
+		Test-GetTargetGroupWithPiping $a1
+	}
+	finally
+	{
+		Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
+	.SYNOPSIS
+	Tests removing target group
+#>
+function Test-RemoveTargetGroup
+{
+	# Setup
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
+	try
+	{
+		Test-RemoveTargetGroupWithDefaultParam $a1
+		Test-RemoveTargetGroupWithInputObject $a1
+		Test-RemoveTargetGroupWithResourceId $a1
+		Test-RemoveTargetGroupWithPiping $a1
+	}
+	finally
+	{
+		Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
     .SYNOPSIS
     Tests creating a target group with default params
     .DESCRIPTION
     SmokeTest
 #>
-function Test-CreateTargetGroupWithDefaultParam
+function Test-CreateTargetGroupWithDefaultParam ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
-    try
-    {
-        # Test using default parameters
-        $resp = New-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tgName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tgName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test using default parameters
+    $resp = New-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tgName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tgName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -46,26 +105,19 @@ function Test-CreateTargetGroupWithDefaultParam
     .DESCRIPTION
     SmokeTest
 #>
-function Test-CreateTargetGroupWithAgentObject
+function Test-CreateTargetGroupWithAgentObject ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
-    try
-    {
-        # Test using input object
-        $resp = New-AzureRmSqlElasticJobTargetGroup -AgentObject $a1 -Name $tgName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tgName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test using input object
+    $resp = New-AzureRmSqlElasticJobTargetGroup -AgentObject $a1 -Name $tgName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tgName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -74,26 +126,19 @@ function Test-CreateTargetGroupWithAgentObject
     .DESCRIPTION
     SmokeTest
 #>
-function Test-CreateTargetGroupWithAgentResourceId
+function Test-CreateTargetGroupWithAgentResourceId ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
-    try
-    {
-        # Test using resource id
-        $resp = New-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId -Name $tgName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tgName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test using resource id
+    $resp = New-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId -Name $tgName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tgName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -102,26 +147,19 @@ function Test-CreateTargetGroupWithAgentResourceId
     .DESCRIPTION
     SmokeTest
 #>
-function Test-CreateTargetGroupWithPiping
+function Test-CreateTargetGroupWithPiping ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
-    try
-    {
-        # Test piping
-        $resp = $a1 | New-AzureRmSqlElasticJobTargetGroup -Name $tgName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tgName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test piping
+    $resp = $a1 | New-AzureRmSqlElasticJobTargetGroup -Name $tgName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tgName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -130,31 +168,24 @@ function Test-CreateTargetGroupWithPiping
     .DESCRIPTION
     SmokeTest
 #>
-function Test-GetTargetGroupWithDefaultParam
+function Test-GetTargetGroupWithDefaultParam ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test using default parameters
-        $resp = Get-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tg.TargetGroupName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
+    # Test using default parameters
+    $resp = Get-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tg.TargetGroupName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 
-        # Test get all with default parameters
-        $resp = Get-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName
-        Assert-True { $resp.Count -ge 2 }
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test get all with default parameters
+    $resp = Get-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName
+    Assert-True { $resp.Count -ge 2 }
 }
 
 <#
@@ -163,31 +194,24 @@ function Test-GetTargetGroupWithDefaultParam
     .DESCRIPTION
     SmokeTest
 #>
-function Test-GetTargetGroupWithAgentObject
+function Test-GetTargetGroupWithAgentObject ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test using input object
-        $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentObject $a1 -Name $tg.TargetGroupName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
+    # Test using input object
+    $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentObject $a1 -Name $tg.TargetGroupName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 
-        # Test get all with default parameters
-        $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentObject $a1
-        Assert-True { $resp.Count -ge 2 }
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test get all with default parameters
+    $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentObject $a1
+    Assert-True { $resp.Count -ge 2 }
 }
 
 <#
@@ -196,31 +220,24 @@ function Test-GetTargetGroupWithAgentObject
     .DESCRIPTION
     SmokeTest
 #>
-function Test-GetTargetGroupWithAgentResourceId
+function Test-GetTargetGroupWithAgentResourceId ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1 
 
-    try
-    {
-        # Test using resource id
-        $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId -Name $tg.TargetGroupName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
+    # Test using resource id
+    $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId -Name $tg.TargetGroupName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 
-        # Test get all with default parameters
-        $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId
-        Assert-True { $resp.Count -ge 2 }
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test get all with default parameters
+    $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId
+    Assert-True { $resp.Count -ge 2 }
 }
 
 <#
@@ -229,26 +246,19 @@ function Test-GetTargetGroupWithAgentResourceId
     .DESCRIPTION
     SmokeTest
 #>
-function Test-GetTargetGroupWithPiping
+function Test-GetTargetGroupWithPiping ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test piping
-        $resp = $a1 | Get-AzureRmSqlElasticJobTargetGroup -Name $tg.TargetGroupName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test piping
+    $resp = $a1 | Get-AzureRmSqlElasticJobTargetGroup -Name $tg.TargetGroupName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -257,26 +267,19 @@ function Test-GetTargetGroupWithPiping
     .DESCRIPTION
     SmokeTest
 #>
-function Test-RemoveTargetGroupWithDefaultParam
+function Test-RemoveTargetGroupWithDefaultParam ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test using default parameters
-        $resp = Remove-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tg.TargetGroupName
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test using default parameters
+    $resp = Remove-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tg.TargetGroupName
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -285,26 +288,19 @@ function Test-RemoveTargetGroupWithDefaultParam
     .DESCRIPTION
     SmokeTest
 #>
-function Test-RemoveTargetGroupWithInputObject
+function Test-RemoveTargetGroupWithInputObject ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test using input object
-        $resp = Remove-AzureRmSqlElasticJobTargetGroup -InputObject $tg
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test using input object
+    $resp = Remove-AzureRmSqlElasticJobTargetGroup -InputObject $tg
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -313,26 +309,19 @@ function Test-RemoveTargetGroupWithInputObject
     .DESCRIPTION
     SmokeTest
 #>
-function Test-RemoveTargetGroupWithResourceId
+function Test-RemoveTargetGroupWithResourceId ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test using resource id
-        $resp = Remove-AzureRmSqlElasticJobTargetGroup -ResourceId $tg.ResourceId
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test using resource id
+    $resp = Remove-AzureRmSqlElasticJobTargetGroup -ResourceId $tg.ResourceId
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 }
 
 <#
@@ -341,30 +330,23 @@ function Test-RemoveTargetGroupWithResourceId
     .DESCRIPTION
     SmokeTest
 #>
-function Test-RemoveTargetGroupWithPiping
+function Test-RemoveTargetGroupWithPiping ($a1)
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1
 
-    try
-    {
-        # Test piping
-        $resp = $tg | Remove-AzureRmSqlElasticJobTargetGroup
-        Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-        Assert-AreEqual $resp.AgentName $a1.AgentName
-        Assert-AreEqual $resp.ServerName $a1.ServerName
-        Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
-        Assert-AreEqual $resp.Members.Count 0
+    # Test piping
+    $resp = $tg | Remove-AzureRmSqlElasticJobTargetGroup
+    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $a1.AgentName
+    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
+    Assert-AreEqual $resp.Members.Count 0
 
-        # Test remove all
-        $all = $a1 | Get-AzureRmSqlElasticJobTargetGroup
-        $resp = $all | Remove-AzureRmSqlElasticJobTargetGroup
-        Assert-True { $resp.Count -ge 2 }
-    }
-    finally
-    {
-        #Remove-ResourceGroupForTest $a1
-    }
+    # Test remove all
+    $all = $a1 | Get-AzureRmSqlElasticJobTargetGroup
+    $resp = $all | Remove-AzureRmSqlElasticJobTargetGroup
+    Assert-True { $resp.Count -ge 2 }
 }
