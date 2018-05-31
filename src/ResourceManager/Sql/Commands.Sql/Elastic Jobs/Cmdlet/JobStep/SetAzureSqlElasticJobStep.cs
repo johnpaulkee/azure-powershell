@@ -432,7 +432,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 {
                     // This is what we want.  We looked and there is no agent with this name.
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobStepNotExists, this.Name, this.JobName),
+                        string.Format(Properties.Resources.AzureElasticJobStepNotExists, this.Name, this.JobName),
                         "JobStep");
                 }
 

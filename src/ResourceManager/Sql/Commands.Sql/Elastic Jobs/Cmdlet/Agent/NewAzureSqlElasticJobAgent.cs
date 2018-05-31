@@ -167,7 +167,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             // The agent already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentExists, this.Name, this.ServerName),
+                string.Format(Properties.Resources.AzureElasticJobAgentExists, this.Name, this.ServerName),
                 "AgentName");
         }
 

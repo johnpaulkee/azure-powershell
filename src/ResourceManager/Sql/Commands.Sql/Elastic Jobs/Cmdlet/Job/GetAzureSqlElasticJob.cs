@@ -23,7 +23,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
     /// <summary>
     /// Defines the Get-AzureRmSqlElasticJob Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlElasticJob", 
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlElasticJob",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlElasticJobModel))]
@@ -119,7 +119,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
                 {
                     // The job does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.Name, this.AgentName),
+                        string.Format(Properties.Resources.AzureElasticJobNotExists, this.Name, this.AgentName),
                         "JobName");
                 }
 

@@ -109,8 +109,8 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
 
             // Warning confirmation for agent when deleting
             if (!Force.IsPresent &&
-                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobDescription, this.Name, this.ServerName),
-                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentJobWarning, this.Name, this.ServerName),
+                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveElasticJobDescription, this.Name, this.ServerName),
+                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveElasticJobWarning, this.Name, this.ServerName),
                                Properties.Resources.ShouldProcessCaption))
             {
                 return;
@@ -138,7 +138,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
                 {
                     // The job doesn't exists
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobNotExists, this.Name, this.AgentName),
+                        string.Format(Properties.Resources.AzureElasticJobNotExists, this.Name, this.AgentName),
                         "JobName");
                 }
 

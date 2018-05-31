@@ -159,7 +159,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             // The credential already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialExists, this.Name, this.AgentName),
+                string.Format(Properties.Resources.AzureElasticJobCredentialExists, this.Name, this.AgentName),
                 "CredentialName");
         }
 

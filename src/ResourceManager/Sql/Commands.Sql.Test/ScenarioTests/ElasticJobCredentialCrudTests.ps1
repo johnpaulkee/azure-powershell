@@ -306,7 +306,7 @@ function Test-GetJobCredentialWithAgentObject
     .DESCRIPTION
     SmokeTest
 #>
-function Test-GetJobCredentialWithDefaultParam
+function Test-GetJobCredentialWithAgentResourceId
 {
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment

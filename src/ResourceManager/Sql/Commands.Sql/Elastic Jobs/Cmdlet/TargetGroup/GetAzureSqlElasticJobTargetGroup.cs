@@ -24,7 +24,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// <summary>
     /// Defines the Get-AzureRmSqlElasticJobTargetGroup Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlElasticJobTargetGroup", 
+    [Cmdlet(VerbsCommon.Get, "AzureRmSqlElasticJobTargetGroup",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlElasticJobTargetGroupModel>))]
@@ -93,9 +93,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobAgentModel AgentObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+        /// Gets or sets the agent resource id
+        /// </summary>
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -140,7 +140,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 {
                     // The target group does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.Name, this.AgentName),
+                        string.Format(Properties.Resources.AzureElasticJobTargetGroupNotExists, this.Name, this.AgentName),
                         "TargetGroupName");
                 }
 

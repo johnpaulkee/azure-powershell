@@ -97,9 +97,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobAgentModel AgentObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+        /// Gets or sets the agent resource id
+        /// </summary>
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
@@ -142,7 +142,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             // The credential already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupExists, this.Name, this.AgentName),
+                string.Format(Properties.Resources.AzureElasticJobTargetGroupExists, this.Name, this.AgentName),
                 "TargetGroupName");
         }
 

@@ -139,7 +139,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 {
                     // The job execution does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobExecutionNotExists, this.JobExecutionId, this.JobName),
+                        string.Format(Properties.Resources.AzureElasticJobExecutionNotExists, this.JobExecutionId, this.JobName),
                         "JobExecution");
                 }
 

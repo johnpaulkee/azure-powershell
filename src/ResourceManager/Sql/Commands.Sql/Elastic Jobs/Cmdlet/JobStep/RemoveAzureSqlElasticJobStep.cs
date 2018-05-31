@@ -140,7 +140,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
                 {
                     // The job doesn't exists
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobStepNotExists, this.Name, this.JobName),
+                        string.Format(Properties.Resources.AzureElasticJobStepNotExists, this.Name, this.JobName),
                         "JobName");
                 }
 

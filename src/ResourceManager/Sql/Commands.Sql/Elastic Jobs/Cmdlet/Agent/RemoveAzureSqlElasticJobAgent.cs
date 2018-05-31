@@ -79,9 +79,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobAgentModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(
+        /// Gets or sets the agent resource id
+        /// </summary>
+        [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
@@ -108,8 +108,8 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             // Warning confirmation for agent when deleting
             if (!Force.IsPresent &&
-                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentDescription, this.Name, this.ServerName),
-                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentWarning, this.Name, this.ServerName),
+                !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveElasticJobAgentDescription, this.Name, this.ServerName),
+                               string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveElasticJobAgentWarning, this.Name, this.ServerName),
                                Properties.Resources.ShouldProcessCaption))
             {
                 return;
@@ -135,7 +135,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 {
                     // The agent doesn't exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentNotExists, this.Name, this.ServerName),
+                        string.Format(Properties.Resources.AzureElasticJobAgentNotExists, this.Name, this.ServerName),
                         "AgentName");
                 }
 

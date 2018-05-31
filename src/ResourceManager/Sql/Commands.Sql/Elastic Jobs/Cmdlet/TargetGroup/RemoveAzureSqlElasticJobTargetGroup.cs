@@ -118,8 +118,8 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             // Warning confirmation for deletion for target group
             // Should only show warning if target has members
             // TODO: perform check if target group has members
-            if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupDescription, this.Name, this.AgentName),
-                   string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupWarning, this.Name, this.AgentName),
+            if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveElasticJobTargetGroupDescription, this.Name, this.AgentName),
+                   string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveElasticJobTargetGroupWarning, this.Name, this.AgentName),
                    Properties.Resources.ShouldProcessCaption))
             {
                 return;
@@ -147,8 +147,8 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 {
                     // The target group does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentTargetGroupNotExists, this.Name, this.AgentName),
-                        "CredentialName");
+                        string.Format(Properties.Resources.AzureElasticJobTargetGroupNotExists, this.Name, this.AgentName),
+                        "TargetGroupName");
                 }
 
                 // Unexpected exception encountered

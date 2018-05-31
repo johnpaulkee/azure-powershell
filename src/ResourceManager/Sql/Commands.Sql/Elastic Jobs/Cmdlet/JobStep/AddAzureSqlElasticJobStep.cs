@@ -562,7 +562,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             // The job step already exists
             throw new PSArgumentException(
-                string.Format(Properties.Resources.AzureSqlDatabaseAgentJobStepExists, this.Name, this.JobName),
+                string.Format(Properties.Resources.AzureElasticJobStepExists, this.Name, this.JobName),
                 "JobStep");
         }
 

@@ -158,7 +158,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 {
                     // The credential does not exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureSqlDatabaseAgentJobCredentialNotExists, this.Name, this.AgentName),
+                        string.Format(Properties.Resources.AzureElasticJobCredentialNotExists, this.Name, this.AgentName),
                         "CredentialName");
                 }
 
