@@ -28,7 +28,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlElasticJob Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlElasticJob", 
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlElasticJob",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     public class NewAzureSqlElasticJob : AzureSqlElasticJobCmdletBase<AzureSqlElasticJobAgentModel>
@@ -88,11 +88,11 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <summary>
         /// Get or sets the job schedule interval type
         /// </summary>
-        [Parameter(Mandatory = true, ParameterSetName = AgentDefaultRecurringParameterSet, Position = 4, 
+        [Parameter(Mandatory = true, ParameterSetName = AgentDefaultRecurringParameterSet, Position = 4,
             HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
-        [Parameter(Mandatory = true, ParameterSetName = AgentObjectRecurringParameterSet, Position = 2, 
+        [Parameter(Mandatory = true, ParameterSetName = AgentObjectRecurringParameterSet, Position = 2,
             HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
-        [Parameter(Mandatory = true, ParameterSetName = AgentResourceIdRecurringParameterSet, Position = 2, 
+        [Parameter(Mandatory = true, ParameterSetName = AgentResourceIdRecurringParameterSet, Position = 2,
             HelpMessage = "The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month")]
         public JobScheduleReccuringScheduleTypes? IntervalType { get; set; }
 
@@ -244,13 +244,13 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 // XmlConvert.ToString(timeSpan) only supports up to days. Weeks and months need to be supported
                 stringBuilder.Append("P");
 
-                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Hour || 
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Hour ||
                     this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Minute)
                 {
                     stringBuilder.Append("T");
                 }
 
-                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Month || 
+                if (this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Month ||
                     this.IntervalType.Value == JobScheduleReccuringScheduleTypes.Minute)
                 {
                     stringBuilder.Append(this.IntervalCount + "M");

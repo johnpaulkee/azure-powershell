@@ -19,15 +19,16 @@ using System.Management.Automation;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.Sql.ElasticJobs.Model;
 using Microsoft.Azure.Management.Sql.Models;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 {
     /// <summary>
     /// Defines the Add-AzureRmSqlElasticJobTarget Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Add, "AzureRmSqlElasticJobTarget", 
+    [Cmdlet(VerbsCommon.Add, "AzureRmSqlElasticJobTarget",
         SupportsShouldProcess = true,
-        DefaultParameterSetName = DefaultSqlDatabaseSet), 
+        DefaultParameterSetName = DefaultSqlDatabaseSet),
         OutputType(typeof(JobTarget))]
     public class AddAzureSqlElasticJobTarget : AzureSqlElasticJobTargetCmdletBase<AzureSqlElasticJobTargetGroupModel>
     {
@@ -330,19 +331,20 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
                 target.RefreshCredentialName = CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, target.RefreshCredentialName);
             }
 
-            this.Target = new AzureSqlElasticJobTargetModel
+            var jobTarget = new JobTarget
             {
-                TargetGroupName = this.TargetGroupName,
+                ServerName = ServerName,
+                DatabaseName = DatabaseName,
+                ElasticPoolName = ElasticPoolName,
                 MembershipType = MyInvocation.BoundParameters.ContainsKey("Exclude") ?
                     JobTargetGroupMembershipType.Exclude :
                     JobTargetGroupMembershipType.Include,
-                TargetType = GetTargetType(),
-                TargetServerName = MyInvocation.BoundParameters.ContainsKey("ServerName") ? this.ServerName : null,
-                TargetDatabaseName = MyInvocation.BoundParameters.ContainsKey("DatabaseName") ? this.DatabaseName : null,
-                TargetElasticPoolName = MyInvocation.BoundParameters.ContainsKey("ElasticPoolName") ? this.ElasticPoolName : null,
-                TargetShardMapName = MyInvocation.BoundParameters.ContainsKey("ShardMapName") ? this.ShardMapName : null,
-                RefreshCredentialName = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.RefreshCredentialName) : null,
+                RefreshCredential = MyInvocation.BoundParameters.ContainsKey("RefreshCredentialName") ? CreateCredentialId(this.ResourceGroupName, this.AgentServerName, this.AgentName, this.RefreshCredentialName) : null,
+                ShardMapName = ShardMapName,
+                Type = GetTargetType()
             };
+
+            this.Target = new AzureSqlElasticJobTargetModel(ResourceGroupName, ServerName, AgentName, TargetGroupName, jobTarget);
 
             this.ExistingTargets = existingTargets.ToList();
             this.NeedsUpdate = UpdateExistingTargets();
@@ -355,7 +357,6 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             return this.ExistingTargets;
         }
-
 
         /// <summary>
         /// Sends the changes to the service -> Creates or updates the target if necessary

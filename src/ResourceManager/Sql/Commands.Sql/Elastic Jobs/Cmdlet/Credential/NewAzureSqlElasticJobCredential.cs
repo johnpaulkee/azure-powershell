@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// <summary>
     /// Defines the New-AzureRmSqlElasticJobCredential Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "AzureRmSqlElasticJobCredential", 
+    [Cmdlet(VerbsCommon.New, "AzureRmSqlElasticJobCredential",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlElasticJobCredentialModel>))]
@@ -114,9 +114,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobAgentModel AgentObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+        /// Gets or sets the agent resource id
+        /// </summary>
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -131,7 +131,6 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         {
             InitializeInputObjectProperties(this.AgentObject);
             InitializeResourceIdProperties(this.AgentResourceId);
-
             base.ExecuteCmdlet();
         }
 

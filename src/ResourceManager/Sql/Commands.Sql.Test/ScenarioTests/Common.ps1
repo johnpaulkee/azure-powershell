@@ -183,7 +183,21 @@ function Create-ElasticJobAgentTestEnvironment ($rg)
 	#$server = Create-ServerForTest $rg "westus2"
 	#$db = Create-DatabaseForTest $server
 	#$agent = Create-AgentForTest $db
-	$agent = Get-AzureRmSqlElasticJobAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
+	try
+	{
+		$agent = Get-AzureRmSqlElasticJobAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
+	}
+	catch
+	{
+		#$rg = New-AzureRmResourceGroup -Name powershell -Location "westus2"
+		#$password = "Yukon900!"
+		#$secureString = ($password | ConvertTo-SecureString -asPlainText -Force)
+		#$credentials = new-object System.Management.Automation.PSCredential("cloudsa", $secureString)
+		#$server = New-AzureRmSqlServer -ResourceGroupName powershell -ServerName jpagentserver -SqlAdministratorCredentials $credentials -Location westus2
+		#$db = New-AzureRmSqlDatabase -ResourceGroupName powershell -DatabaseName jpdb1 -ServerName jpagentserver
+		$agent = New-AzureRmSqlElasticJobAgent -ResourceGroupName powershell -ServerName jpagentserver -DatabaseName jpdb1 -Name jpagent
+	}
+
 	return $agent
 }
 
@@ -590,58 +604,58 @@ function Create-DatabaseForTest ($server)
 
 <#
 	.SYNOPSIS
-	Creates a sql database agent with test params
+	Creates a sql elastic job agent with test params
 #>
 function Create-AgentForTest ($db)
 {
 	$agentName = Get-AgentName
-	return New-AzureRmSqlDatabaseAgent -ResourceGroupName $db.ResourceGroupName -ServerName $db.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
+	return New-AzureRmSqlElasticJobAgent -ResourceGroupName $db.ResourceGroupName -ServerName $db.ServerName -DatabaseName $db.DatabaseName -AgentName $agentName
 }
 
 <#
 	.SYNOPSIS
-	Creates a sql database agent job credential with test params
+	Creates a elastic job credential with test params
 #>
 function Create-JobCredentialForTest ($a)
 {
 	$credentialName = Get-JobCredentialName
 	$credential = Get-ServerCredential
 
-	$jobCredential = New-AzureRmSqlDatabaseAgentJobCredential -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
+	$jobCredential = New-AzureRmSqlElasticJobCredential -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -CredentialName $credentialName -Credential $credential
 	return $jobCredential
 }
 
 <#
 	.SYNOPSIS
-	Creates a sql database agent target group with test params
+	Creates a elastic job target group with test params
 #>
 function Create-TargetGroupForTest ($a)
 {
 	$targetGroupName = Get-TargetGroupName
-	$tg = New-AzureRmSqlDatabaseAgentTargetGroup -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
+	$tg = New-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -TargetGroupName $targetGroupName
 	return $tg
 }
 
 <#
 	.SYNOPSIS
-	Creates a sql database agent job with test params
+	Creates a elastic job with test params
 #>
 function Create-JobForTest ($a, $enabled = $false)
 {
 	$jobName = Get-JobName
 
-	$job = New-AzureRmSqlDatabaseAgentJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
+	$job = New-AzureRmSqlElasticJob -ResourceGroupName $a.ResourceGroupName -ServerName $a.ServerName -AgentName $a.AgentName -Name $jobName
 	return $job
 }
 
 <#
 	.SYNOPSIS
-	Creates a sql database agent job step with test params
+	Creates a elastic job step with test params
 #>
 function Create-JobStepForTest ($j, $tg, $c, $ct)
 {
 	$jobStepName = Get-JobStepName
-	$jobStep = Add-AzureRmSqlDatabaseAgentJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $ct
+	$jobStep = Add-AzureRmSqlElasticJobStep -ResourceGroupName $j.ResourceGroupName -ServerName $j.ServerName -AgentName $j.AgentName -JobName $j.jobName -Name $jobStepName -TargetGroupName $tg.TargetGroupName -CredentialName $c.CredentialName -CommandText $ct
 	return $jobStep
 }
 

@@ -24,7 +24,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// <summary>
     /// Defines the Remove-AzureRmSqlElasticJobCredential Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlElasticJobCredential", 
+    [Cmdlet(VerbsCommon.Remove, "AzureRmSqlElasticJobCredential",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlElasticJobCredentialModel>))]
@@ -68,7 +68,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// Gets or sets the job credential's name.
         /// </summary>
         [Parameter(
-            ParameterSetName = DefaultParameterSet, 
+            ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             Position = 3,
             HelpMessage = "The job credential name")]
@@ -85,13 +85,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             ValueFromPipeline = true,
             Position = 0,
             HelpMessage = "The job credential object")]
-        [ValidateNotNullOrEmpty]
         public AzureSqlElasticJobCredentialModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the job credential resource id to remove
-		/// </summary>
-		[Parameter(
+        /// Gets or sets the job credential resource id to remove
+        /// </summary>
+        [Parameter(
             ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -107,8 +106,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-
-            this.Name = this.CredentialName;
+            this.Name = this.Name ?? this.CredentialName;
             base.ExecuteCmdlet();
         }
 
@@ -157,8 +155,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <returns>The created job credential</returns>
         protected override IEnumerable<AzureSqlElasticJobCredentialModel> PersistChanges(IEnumerable<AzureSqlElasticJobCredentialModel> entity)
         {
-            var existingEntity = entity.First();
-            ModelAdapter.RemoveJobCredential(existingEntity.ResourceGroupName, existingEntity.ServerName, existingEntity.AgentName, existingEntity.CredentialName);
+            ModelAdapter.RemoveJobCredential(this.ResourceGroupName, this.ServerName, this.AgentName, this.Name);
             return entity;
         }
     }

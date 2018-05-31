@@ -27,30 +27,226 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetDatabase()
+        public void TestTargetServerAddWithDefaultParam()
         {
-            RunPowerShellTest("Test-DatabaseTarget");
+            RunPowerShellTest("Test-AddServerTargetWithDefaultParam");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetServer()
+        public void TestTargetServerAddWithTargetGroupObject()
         {
-            RunPowerShellTest("Test-ServerTarget");
+            RunPowerShellTest("Test-AddServerTargetWithTargetGroupObject");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetElasticPool()
+        public void TestTargetServerAddWithTargetGroupResourceId()
         {
-            RunPowerShellTest("Test-ElasticPoolTarget");
+            RunPowerShellTest("Test-AddServerTargetWithTargetGroupResourceId");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetShardMap()
+        public void TestTargetServerAddWithPiping()
         {
-            RunPowerShellTest("Test-ShardMapTarget");
+            RunPowerShellTest("Test-AddServerTargetWithPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetServerRemoveWithDefaultParam()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetServerRemoveWithTargetGrouObject()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetServerRemoveWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetServerRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveServerTargetWithPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseAddWithDefaultParam()
+        {
+            RunPowerShellTest("Test-AddDatabaseTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseAddWithTargetGroupObject()
+        {
+            RunPowerShellTest("Test-AddDatabaseTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseAddWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-AddDatabaseTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseAddWithPiping()
+        {
+            RunPowerShellTest("Test-AddDatabaseTargetWithPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseRemoveWithDefaultParam()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseRemoveWithTargetGroupObject()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseRemoveWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetDatabaseRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveDatabaseTargetWithPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolAddWithDefaultParam()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolAddWithTargetGroupObject()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolAddWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolAddWithPiping()
+        {
+            RunPowerShellTest("Test-AddElasticPoolTargetPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolRemoveWithDefaultParam()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolRemoveWithTargetGroupObject()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolRemoveWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetElasticPoolRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveElasticPoolTargetPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapAddWithDefaultParam()
+        {
+            RunPowerShellTest("Test-AddShardMapTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapAddWithTargetGroupObject()
+        {
+            RunPowerShellTest("Test-AddShardMapTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapAddWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-AddShardMapTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapAddWithPiping()
+        {
+            RunPowerShellTest("Test-AddShardMapTargetWithPiping");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapRemoveWithDefaultParam()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapRemoveWithTargetGroupObject()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithTargetGroupObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapRemoveWithTargetGroupResourceId()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithTargetGroupResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetShardMapRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveShardMapTargetWithPiping");
         }
     }
 }

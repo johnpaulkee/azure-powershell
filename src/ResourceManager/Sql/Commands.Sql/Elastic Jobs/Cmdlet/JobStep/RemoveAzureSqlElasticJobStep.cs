@@ -117,9 +117,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-
-            this.Name = this.StepName;
-
+            this.Name = this.Name ?? this.StepName;
             base.ExecuteCmdlet();
         }
 

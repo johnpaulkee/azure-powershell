@@ -14,138 +14,244 @@
 
 <#
 	.SYNOPSIS
-	Tests creating a job with min parameters
-    .DESCRIPTION
+	Tests starting a job with default parameters
+	.DESCRIPTION
 	SmokeTest
 #>
-function Test-StartJobExecution
+function Test-StartJobDefaultParam
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
 
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
+	try
+	{
+		$je = Start-AzureRmSqlElasticJob -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -JobName $j1.JobName
+	}
+	catch
+	{
+		#Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
+	.SYNOPSIS
+	Tests starting a job with job object
+	.DESCRIPTION
+	SmokeTest
+#>
+function Test-StartJobWithJobObject
+{
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	try
+	{
+		$je = Start-AzureRmSqlElasticJob -JobObject $j1
+	}
+	catch
+	{
+		#	Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
+	.SYNOPSIS
+	Tests starting a job with job resource id
+	.DESCRIPTION
+	SmokeTest
+#>
+function Test-StartJobWithJobResourceId
+{
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	try
+	{
+		$je = Start-AzureRmSqlElasticJob -JobResourceId $j1.ResourceId
+	}
+	catch
+	{
+		# Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
+	.SYNOPSIS
+	Tests starting a job with piping
+	.DESCRIPTION
+	SmokeTest
+#>
+function Test-StartJobWithPiping
+{
+	# Setup
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	try
+	{
+		$je = $j1 | Start-AzureRmSqlElasticJob
+	}
+	catch
+	{
+		# Remove-ResourceGroupForTest $a1
+	}
 }
 
 <#
 	.SYNOPSIS
 	Tests creating a job with min parameters
-    .DESCRIPTION
+	.DESCRIPTION
 	SmokeTest
 #>
-function Test-StartJobExecutionWithInputObject
+function Test-GetJobExecutionWithDefaultParam
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
 
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
+	$je = $j1 | Start-AzureRmSqlElasticJob
+	$all = Get-AzureRmSqlElasticJobExecution -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Count 10
+}
+
+function Test-GetJobExecutionWithAgentObject
+{
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	$je = $j1 | Start-AzureRmSqlElasticJob
+	$all = Get-AzureRmSqlElasticJobExecution -AgentObject $a1 -Count 10
+}
+
+function Test-GetJobExecutionWithAgentResourceId
+{
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	$je = $j1 | Start-AzureRmSqlElasticJob
+	$all = Get-AzureRmSqlElasticJobExecution -AgentResourceId $a1.ResourceId -Count 10
+}
+
+function Test-GetJobExecutionWithPiping
+{
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	$je = $j1 | Start-AzureRmSqlElasticJob
+	$all = $a1 | Get-AzureRmSqlElasticJobExecution -Count 10
 }
 
 <#
 	.SYNOPSIS
 	Tests creating a job with min parameters
-    .DESCRIPTION
+	.DESCRIPTION
 	SmokeTest
 #>
-function Test-StartJobExecutionWithResourceId
+function Test-StopJobExecutionWithDefaultParam
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
 
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
+	$je = $j1 | Start-AzureRmSqlElasticJob
+	$je = Stop-AzureRmSqlElasticJobExecution -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -JobName $j1.JobName -JobExecutionId $je.JobExecutionId
 }
 
 <#
 	.SYNOPSIS
 	Tests creating a job with min parameters
-    .DESCRIPTION
+	.DESCRIPTION
 	SmokeTest
 #>
-function Test-GetJobExecution
+function Test-StopJobExecutionWithJobExecutionObject
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
-    
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
 
-    $all = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -Steps
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -Targets
-
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -StepName $js1.StepName
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -StepName $js1.StepName -Targets
-}
-
-function Test-GetJobExecutionWithInputObject
-{
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
-    
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
-
-    $all = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -Steps
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -Targets
-
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -StepName $js1.StepName
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -StepName $js1.StepName -Targets
-}
-
-function Test-GetJobExecutionWithResourceId
-{
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
-    
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
-
-    $all = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent
-
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -Steps
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -Targets
-
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -StepName $js1.StepName
-    $resp = Get-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId -StepName $js1.StepName -Targets
+	try
+	{
+		$je = $j1 | Start-AzureRmSqlElasticJob
+		$je = Stop-AzureRmSqlElasticJobExecution -JobExecutionObject $je
+	}
+	finally
+	{
+		# Remove-ResourceGroupForTest $a1
+	}
 }
 
 <#
 	.SYNOPSIS
 	Tests creating a job with min parameters
-    .DESCRIPTION
+	.DESCRIPTION
 	SmokeTest
 #>
-function Test-StopJobExecution
+function Test-StopJobExecutionWithJobExecutionResourceId
 {
-    $a1 = Get-AzureRmSqlDatabaseAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
-    $jc1 = Create-JobCredentialForTest $a1
-    $tg1 = Create-TargetGroupForTest $a1
-    $j1 = Create-JobForTest $a1
-    $js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
 
-    $je = Start-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName
-    $je = Stop-AzureRmSqlDatabaseAgentJobExecution -ResourceGroupName powershell -ServerName jpagentserver -AgentName jpagent -JobName $j1.JobName -JobExecutionId $je.JobExecutionId
+	try
+	{
+		$je = $j1 | Start-AzureRmSqlElasticJob
+		$je = Stop-AzureRmSqlElasticJobExecution -JobExecutionResourceId $je.ResourceId
+	}
+	catch
+	{
+		# Remove-ResourceGroupForTest $a1
+	}
+}
+
+<#
+	.SYNOPSIS
+	Tests creating a job with min parameters
+	.DESCRIPTION
+	SmokeTest
+#>
+function Test-StopJobExecutionWithPiping
+{
+	$a1 = Create-ElasticJobAgentTestEnvironment
+	$jc1 = Create-JobCredentialForTest $a1
+	$tg1 = Create-TargetGroupForTest $a1
+	$j1 = Create-JobForTest $a1
+	$js1 = Create-JobStepForTest $j1 $tg1 $jc1 "SELECT 1"
+
+	try
+	{
+		$je = $j1 | Start-AzureRmSqlElasticJob
+		$je = $je | Stop-AzuureRmSqlElasticJobExecution
+	}
+	catch
+	{
+		# Remove-ResourceGroupForTest $a1
+	}
 }

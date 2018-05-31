@@ -105,7 +105,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-            this.Name = this.JobName;
+            this.Name = this.Name ?? this.JobName;
 
             // Warning confirmation for agent when deleting
             if (!Force.IsPresent &&

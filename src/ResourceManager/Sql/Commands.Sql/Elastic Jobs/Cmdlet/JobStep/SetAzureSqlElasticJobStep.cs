@@ -408,9 +408,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-
-            this.Name = this.StepName;
-
+            this.Name = this.Name ?? this.StepName;
             base.ExecuteCmdlet();
         }
 
@@ -485,7 +483,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
                 // Output database object was given
                 if (this.OutputDatabaseObject != null)
-                { 
+                {
                     updatedModel.Output = new Management.Sql.Models.JobStepOutput
                     {
                         SubscriptionId = this.OutputDatabaseObject != null ? Guid.Parse(new ResourceIdentifier(this.OutputDatabaseObject.ResourceId).Subscription) : existingEntity.Output.SubscriptionId,

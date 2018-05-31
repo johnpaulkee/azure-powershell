@@ -32,9 +32,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         /// </summary>
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreate()
+        public void TestJobCreateWithDefaultParam()
         {
-            RunPowerShellTest("Test-CreateJob");
+            RunPowerShellTest("Test-CreateJobWithDefaultParam");
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobUpdate()
+        public void TestJobUpdateWithDefaultParam()
         {
-            RunPowerShellTest("Test-UpdateJob");
+            RunPowerShellTest("Test-UpdateJobWithDefaultParam");
         }
 
         [Fact]
@@ -88,20 +88,47 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobGet()
+        public void TestJobGetWithDefaultParam()
         {
-            RunPowerShellTest("Test-GetJob");
+            RunPowerShellTest("Test-GetJobWithDefaultParam");
         }
 
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobGetWithAgentObject()
+        {
+            RunPowerShellTest("Test-GetJobWithAgentObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobGetWithAgentResourceId()
+        {
+            RunPowerShellTest("Test-GetJobWithAgentResourceId");
+        }
         #endregion
 
         #region Remove Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobRemove()
+        public void TestJobRemoveWithDefaultParam()
         {
-            RunPowerShellTest("Test-RemoveJob");
+            RunPowerShellTest("Test-RemoveJobWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobRemoveWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveJobWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobRemoveWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveJobWithResourceId");
         }
 
         #endregion

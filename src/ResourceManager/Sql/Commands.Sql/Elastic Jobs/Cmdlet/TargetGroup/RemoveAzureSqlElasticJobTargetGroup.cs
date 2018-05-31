@@ -70,7 +70,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <summary>
         /// Gets or sets the target group name
         /// </summary>
-        [Parameter(ParameterSetName = DefaultParameterSet, 
+        [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             Position = 3,
             HelpMessage = "The target group name")]
@@ -95,9 +95,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobTargetGroupModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the agent resource id
-		/// </summary>
-		[Parameter(ParameterSetName = ResourceIdParameterSet,
+        /// Gets or sets the agent resource id
+        /// </summary>
+        [Parameter(ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
@@ -113,9 +113,11 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
 
-            this.Name = this.TargetGroupName;
+            this.Name = this.Name ?? this.TargetGroupName;
 
             // Warning confirmation for deletion for target group
+            // Should only show warning if target has members
+            // TODO: perform check if target group has members
             if (!Force.IsPresent && !ShouldProcess(string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupDescription, this.Name, this.AgentName),
                    string.Format(CultureInfo.InvariantCulture, Properties.Resources.RemoveSqlDatabaseAgentTargetGroupWarning, this.Name, this.AgentName),
                    Properties.Resources.ShouldProcessCaption))

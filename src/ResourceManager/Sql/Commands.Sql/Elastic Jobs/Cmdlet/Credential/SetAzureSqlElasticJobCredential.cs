@@ -24,7 +24,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// <summary>
     /// Defines the Set-AzureRmSqlElasticJobCredential Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Set, "AzureRmSqlElasticJobCredential", 
+    [Cmdlet(VerbsCommon.Set, "AzureRmSqlElasticJobCredential",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(AzureSqlElasticJobCredentialModel))]
@@ -72,7 +72,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = true,
-            ParameterSetName = DefaultParameterSet, 
+            ParameterSetName = DefaultParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 3,
             HelpMessage = "The job credential name")]
@@ -117,9 +117,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         public AzureSqlElasticJobCredentialModel InputObject { get; set; }
 
         /// <summary>
-		/// Gets or sets the job credential resource id
-		/// </summary>
-		[Parameter(
+        /// Gets or sets the job credential resource id
+        /// </summary>
+        [Parameter(
             ParameterSetName = ResourceIdParameterSet,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -135,8 +135,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-
-            this.Name = this.CredentialName;
+            this.Name = this.Name ?? this.CredentialName;
             base.ExecuteCmdlet();
         }
 

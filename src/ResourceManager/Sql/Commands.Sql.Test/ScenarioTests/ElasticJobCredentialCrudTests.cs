@@ -30,20 +30,61 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialCreate()
+        public void TestJobCredentialCreateWithDefaultParam()
         {
-            RunPowerShellTest("Test-CreateJobCredential");
+            RunPowerShellTest("Test-CreateJobCredentialWithDefaultParam");
         }
 
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialCreateWithAgentObject()
+        {
+            RunPowerShellTest("Test-CreateJobCredentialWithAgentObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialCreateWithAgentResourceId()
+        {
+            RunPowerShellTest("Test-CreateJobCredentialWithAgentResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialCreateWithPiping()
+        {
+            RunPowerShellTest("Test-CreateJobCredentialWithPiping");
+        }
         #endregion
 
         #region Update Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialUpdate()
+        public void TestJobCredentialUpdateWithDefaultParam()
         {
-            RunPowerShellTest("Test-UpdateJobCredential");
+            RunPowerShellTest("Test-UpdateJobCredentialWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialUpdateWithInputObject()
+        {
+            RunPowerShellTest("Test-UpdateJobCredentialWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateJobCredentialWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialUpdateWithPiping()
+        {
+            RunPowerShellTest("Test-UpdateJobCredentialWithPiping");
         }
 
         #endregion
@@ -52,9 +93,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialGet()
+        public void TestJobCredentialGetWithDefaultParam()
         {
-            RunPowerShellTest("Test-GetJobCredential");
+            RunPowerShellTest("Test-GetJobCredentialWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialGetWithAgentObject()
+        {
+            RunPowerShellTest("Test-GetJobCredentialWithAgentObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialGetWithAgentResourceId()
+        {
+            RunPowerShellTest("Test-GetJobCredentialWithAgentResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialGetWithPiping()
+        {
+            RunPowerShellTest("Test-GetJobCredentialWithPiping");
         }
 
         #endregion
@@ -63,9 +125,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCredentialRemove()
+        public void TestJobCredentialRemoveWithDefaultParam()
         {
-            RunPowerShellTest("Test-RemoveJobCredential");
+            RunPowerShellTest("Test-RemoveJobCredentialWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialRemoveWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveJobCredentialWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialRemoveWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveJobCredentialWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCredentialRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveJobCredentialWithPiping");
         }
 
         #endregion
