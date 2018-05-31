@@ -35,7 +35,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// Intializes the model adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
-        /// <returns>The Azure SQL Database Agent adapter</returns>
+        /// <returns>The Azure Elastic Job adapter</returns>
         protected override AzureSqlElasticJobAdapter InitModelAdapter(IAzureSubscription subscription)
         {
             return new AzureSqlElasticJobAdapter(DefaultContext);

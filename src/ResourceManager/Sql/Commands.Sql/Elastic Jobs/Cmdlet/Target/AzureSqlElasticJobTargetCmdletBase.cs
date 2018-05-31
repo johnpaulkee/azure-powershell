@@ -26,7 +26,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// The elastic job target cmdlet base
     /// </summary>
     /// <typeparam name="IO">The input object model</typeparam>
-    public abstract class AzureSqlElasticJobTargetCmdletBase<IO> : 
+    public abstract class AzureSqlElasticJobTargetCmdletBase<IO> :
         AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobTargetModel>, AzureSqlElasticJobAdapter>
     {
         /// <summary>
@@ -74,7 +74,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// Intializes the model adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
-        /// <returns>The Azure SQL Database Agent Target Group adapter</returns>
+        /// <returns>The Azure Elastic Job Adapter</returns>
         protected override AzureSqlElasticJobAdapter InitModelAdapter(IAzureSubscription subscription)
         {
             return new AzureSqlElasticJobAdapter(DefaultContext);

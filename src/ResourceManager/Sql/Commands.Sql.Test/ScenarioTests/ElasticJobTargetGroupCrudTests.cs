@@ -29,9 +29,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupCreate()
+        public void TestTargetGroupCreateWithDefaultParam()
         {
-            RunPowerShellTest("Test-CreateTargetGroup");
+            RunPowerShellTest("Test-CreateTargetGroupWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupCreateWithAgentObject()
+        {
+            RunPowerShellTest("Test-CreateTargetGroupWithAgentObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupCreateWithAgentResourceId()
+        {
+            RunPowerShellTest("Test-CreateTargetGroupWithAgentResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupCreateWithPiping()
+        {
+            RunPowerShellTest("Test-CreateTargetGroupWithPiping");
         }
 
         #endregion
@@ -40,20 +61,61 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupGet()
+        public void TestTargetGroupGetWithDefaultParam()
         {
-            RunPowerShellTest("Test-GetTargetGroup");
+            RunPowerShellTest("Test-GetTargetGroupWithDefaultParam");
         }
 
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupGetWithAgentObject()
+        {
+            RunPowerShellTest("Test-GetTargetGroupWithAgentObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupGetWithAgentResourceId()
+        {
+            RunPowerShellTest("Test-GetTargetGroupWithAgentResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupGetWithPiping()
+        {
+            RunPowerShellTest("Test-GetTargetGroupWithPiping");
+        }
         #endregion
 
         #region Remove Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestTargetGroupRemove()
+        public void TestTargetGroupRemoveWithDefaultParam()
         {
-            RunPowerShellTest("Test-RemoveTargetGroup");
+            RunPowerShellTest("Test-RemoveTargetGroupWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupRemoveWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveTargetGroupWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupRemoveWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveTargetGroupWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestTargetGroupRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveTargetGroupWithPiping");
         }
 
         #endregion

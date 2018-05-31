@@ -73,15 +73,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            HelpMessage = "The tags to associate with the Azure Elastic Job",
             ParameterSetName = DefaultParameterSet)]
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            HelpMessage = "The tags to associate with the Azure Elastic Job",
             ParameterSetName = InputObjectParameterSet)]
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure SQL Database Agent",
+            HelpMessage = "The tags to associate with the Azure Elastic Job",
             ParameterSetName = ResourceIdParameterSet)]
         [ValidateNotNullOrEmpty]
         [Alias("Tags")]

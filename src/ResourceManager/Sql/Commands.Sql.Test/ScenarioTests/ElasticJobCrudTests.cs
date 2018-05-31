@@ -57,6 +57,13 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-CreateJobWithAgentResourceId");
         }
 
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobCreateWithPiping()
+        {
+            RunPowerShellTest("Test-CreateJobWithPiping");
+        }
+
         #endregion
 
         #region Update Tests
@@ -80,6 +87,13 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         public void TestJobUpdateWithResourceId()
         {
             RunPowerShellTest("Test-UpdateJobWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobUpdateWithPiping()
+        {
+            RunPowerShellTest("Test-UpdateJobWithPiping");
         }
 
         #endregion
@@ -106,6 +120,14 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
             RunPowerShellTest("Test-GetJobWithAgentResourceId");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobGetWithPiping()
+        {
+            RunPowerShellTest("Test-GetJobWithPiping");
+        }
+
         #endregion
 
         #region Remove Tests
@@ -129,6 +151,13 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         public void TestJobRemoveWithResourceId()
         {
             RunPowerShellTest("Test-RemoveJobWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveJobWithPiping");
         }
 
         #endregion

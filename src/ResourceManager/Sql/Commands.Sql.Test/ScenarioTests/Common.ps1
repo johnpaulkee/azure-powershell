@@ -660,22 +660,6 @@ function Create-JobStepForTest ($j, $tg, $c, $ct)
 }
 
 <#
-.SYNOPSIS
-Create job step output
-#>
-function Create-JobStepOutputForTest ($cred)
-{
-	return @{ SubscriptionId = Get-SubscriptionId;
-			  ResourceGroupName = Get-ResourceGroupName;
-			  ServerName = Get-ServerName;
-			  DatabaseName = Get-DatabaseName;
-			  SchemaName = Get-SchemaName;
-			  TableName = Get-TableName;
-			  CredentialName = $cred.CredentialName;
-		}
-}
-
-<#
 	.SYNOPSIS
 	Remove a server that is no longer needed for tests
 #>

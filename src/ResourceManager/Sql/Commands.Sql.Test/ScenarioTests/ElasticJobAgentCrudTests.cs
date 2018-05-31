@@ -29,9 +29,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentCreate()
+        public void TestAgentCreateWithDefaultParam()
         {
-            RunPowerShellTest("Test-CreateAgent");
+            RunPowerShellTest("Test-CreateAgentWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentCreateWithDatabaseObject()
+        {
+            RunPowerShellTest("Test-CreateAgentWithDatabaseObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentCreateWithDatabaseResourceId()
+        {
+            RunPowerShellTest("Test-CreateAgentWithDatabaseResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentCreateWithPiping()
+        {
+            RunPowerShellTest("Test-CreateAgentWithPiping");
         }
 
         #endregion
@@ -40,9 +61,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentUpdate()
+        public void TestAgentUpdateWithDefaultParam()
         {
-            RunPowerShellTest("Test-UpdateAgent");
+            RunPowerShellTest("Test-UpdateAgentWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentUpdateWithInputObject()
+        {
+            RunPowerShellTest("Test-UpdateAgentWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentUpdateWithResourceId()
+        {
+            RunPowerShellTest("Test-UpdateAgentWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentUpdateWithPiping()
+        {
+            RunPowerShellTest("Test-UpdateAgentWithPiping");
         }
 
         #endregion
@@ -51,9 +93,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentGet()
+        public void TestAgentGetWithDefaultParam()
         {
-            RunPowerShellTest("Test-GetAgent");
+            RunPowerShellTest("Test-GetAgentWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithServerObject()
+        {
+            RunPowerShellTest("Test-GetAgentWithServerObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithServerResourceId()
+        {
+            RunPowerShellTest("Test-GetAgentWithServerResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentGetWithPiping()
+        {
+            RunPowerShellTest("Test-GetAgentWithPiping");
         }
 
         #endregion
@@ -62,9 +125,30 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestAgentRemove()
+        public void TestAgentRemoveWithDefaultParam()
         {
-            RunPowerShellTest("Test-RemoveAgent");
+            RunPowerShellTest("Test-RemoveAgentWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentRemoveWithInputObject()
+        {
+            RunPowerShellTest("Test-RemoveAgentWithInputObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentRemoveWithResourceId()
+        {
+            RunPowerShellTest("Test-RemoveAgentWithResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestAgentRemoveWithPiping()
+        {
+            RunPowerShellTest("Test-RemoveAgentWithPiping");
         }
 
         #endregion
