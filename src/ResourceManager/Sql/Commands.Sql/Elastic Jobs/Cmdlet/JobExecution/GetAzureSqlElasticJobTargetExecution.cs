@@ -179,7 +179,6 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
         {
             InitializeInputObjectProperties(this.JobExecutionObject);
             InitializeResourceIdProperties(this.JobExecutionResourceId);
-
             base.ExecuteCmdlet();
         }
 

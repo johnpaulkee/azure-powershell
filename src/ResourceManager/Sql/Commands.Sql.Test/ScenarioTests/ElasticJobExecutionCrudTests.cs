@@ -25,34 +25,66 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         {
         }
 
-        #region Start Job Execution Tests
+        #region Start Job Tests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStartWithDefaultParam()
+        public void TestJobStartWithDefaultParam()
         {
             RunPowerShellTest("Test-StartJobWithDefaultParam");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStartWithJobObject()
+        public void TestJobStartWithJobObject()
         {
             RunPowerShellTest("Test-StartJobWithJobObject");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStartWithJobResourceId()
+        public void TestJobStartWithJobResourceId()
         {
             RunPowerShellTest("Test-StartJobWithJobResourceId");
         }
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStartWithPiping()
+        public void TestJobStartWithPiping()
         {
             RunPowerShellTest("Test-StartJobWithPiping");
+        }
+
+        #endregion
+
+        #region Stop Job Tests
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStopWithDefaultParam()
+        {
+            RunPowerShellTest("Test-StopJobWithDefaultParam");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStopWithJobExecutionObject()
+        {
+            RunPowerShellTest("Test-StopJobWithJobExecutionObject");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStopWithJobExecutionResourceId()
+        {
+            RunPowerShellTest("Test-StopJobWithJobExecutionResourceId");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStopWithPiping()
+        {
+            RunPowerShellTest("Test-StopJobWithPiping");
         }
 
         #endregion
@@ -149,38 +181,6 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         public void TestJobTargetExecutionGetWithPiping()
         {
             RunPowerShellTest("Test-GetJobTargetExecutionWithPiping");
-        }
-
-        #endregion
-
-        #region Stop Job Tests
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStopWithDefaultParam()
-        {
-            RunPowerShellTest("Test-StopJobWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStopWithJobExecutionObject()
-        {
-            RunPowerShellTest("Test-StopJobWithJobExecutionObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStopWithJobExecutionResourceId()
-        {
-            RunPowerShellTest("Test-StopJobWithJobExecutionResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobExecutionStopWithPiping()
-        {
-            RunPowerShellTest("Test-StopJobWithPiping");
         }
 
         #endregion
