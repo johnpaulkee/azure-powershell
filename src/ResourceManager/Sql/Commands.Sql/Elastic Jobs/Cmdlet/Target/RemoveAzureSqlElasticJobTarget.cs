@@ -107,38 +107,47 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         [Parameter(Mandatory = true,
             Position = 4,
             HelpMessage = "Server Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = true,
             Position = 4,
             HelpMessage = "Server Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultSqlDatabaseSet)]
         [Parameter(Mandatory = true,
             Position = 4,
             HelpMessage = "Server Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(ParameterSetName = TargetGroupObjectSqlDatabaseSet,
             Mandatory = true,
             Position = 1,
+            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupObjectSqlServerOrElasticPoolSet,
             Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupObjectSqlShardMapSet,
             Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlDatabaseSet,
             Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
             Position = 1,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlServerOrElasticPoolSet,
             Mandatory = true,
             Position = 1,
+            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name")]
         [Parameter(ParameterSetName = TargetGroupResourceIdSqlShardMapSet,
             Mandatory = true,
             Position = 1,
+            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Server Target Name")]
         public override string ServerName { get; set; }
 
@@ -147,12 +156,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// </summary>
         [Parameter(Mandatory = false,
             HelpMessage = "Elastic Pool Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = false,
             HelpMessage = "Elastic Pool Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupObjectSqlServerOrElasticPoolSet)]
         [Parameter(Mandatory = false,
             HelpMessage = "Elastic Pool Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupResourceIdSqlServerOrElasticPoolSet)]
         public override string ElasticPoolName { get; set; }
 
@@ -161,15 +173,18 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// </summary>
         [Parameter(Mandatory = true,
             Position = 5,
+            ValueFromPipelineByPropertyName = true,
             HelpMessage = "Shard Map Target Name",
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
             HelpMessage = "Shard Map Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupObjectSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
             HelpMessage = "Shard Map Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupResourceIdSqlShardMapSet)]
         public override string ShardMapName { get; set; }
 
@@ -179,23 +194,28 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         [Parameter(Mandatory = true,
             Position = 5,
             HelpMessage = "Database Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultSqlDatabaseSet)]
         [Parameter(
             Mandatory = true,
             Position = 6,
-            HelpMessage = "Shard Map Database Target Name",
+            HelpMessage = "Database Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = DefaultSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 2,
             HelpMessage = "Database Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupObjectSqlDatabaseSet)]
         [Parameter(Mandatory = true,
             Position = 2,
             HelpMessage = "Database Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupResourceIdSqlDatabaseSet)]
         [Parameter(Mandatory = true,
             Position = 3,
             HelpMessage = "Database Target Name",
+            ValueFromPipelineByPropertyName = true,
             ParameterSetName = TargetGroupObjectSqlShardMapSet)]
         [Parameter(Mandatory = true,
             Position = 3,

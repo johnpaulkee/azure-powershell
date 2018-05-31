@@ -74,17 +74,17 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             Mandatory = true,
             Position = 3,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = InputObjectParameterSet,
             Position = 1,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent Name")]
         [Parameter(
             Mandatory = true,
             ParameterSetName = ResourceIdParameterSet,
             Position = 1,
-            HelpMessage = "The Agent Name")]
+            HelpMessage = "The agent Name")]
         [ValidateNotNullOrEmpty]
         [Alias("AgentName")]
         public string Name { get; set; }
@@ -95,15 +95,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         [Parameter(
             Mandatory = false,
             ParameterSetName = DefaultParameterSet,
-            HelpMessage = "The Agent Tags")]
+            HelpMessage = "The agent tags")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = InputObjectParameterSet,
-            HelpMessage = "The Agent Tags")]
+            HelpMessage = "The agent tags")]
         [Parameter(
             Mandatory = false,
             ParameterSetName = ResourceIdParameterSet,
-            HelpMessage = "The Agent Tags")]
+            HelpMessage = "The agent tags")]
         [ValidateNotNullOrEmpty]
         [Alias("Tags")]
         public Hashtable Tag { get; set; }
@@ -116,7 +116,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             ParameterSetName = InputObjectParameterSet,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "The Agent Control Database Object")]
+            HelpMessage = "The control database object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlDatabaseModel DatabaseObject { get; set; }
 
@@ -128,7 +128,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             ParameterSetName = ResourceIdParameterSet,
             ValueFromPipelineByPropertyName = true,
             Position = 0,
-            HelpMessage = "The Agent Control Database Resource Id")]
+            HelpMessage = "The control database resource id")]
         [ValidateNotNullOrEmpty]
         public string DatabaseResourceId { get; set; }
 

@@ -31,16 +31,11 @@ namespace Microsoft.Azure.Commands.Sql.Common
     public abstract class AzureSqlElasticJobsCmdletBase<IO, M, A> : AzureSqlCmdletBase<M, A>
     {
         /// <summary>
-        /// The default parameter sets
+        /// The parameter sets
         /// </summary>
-        protected const string DefaultParameterSet = "Default Parameter Set";
+        protected const string DefaultParameterSet = "Default Parameter Set"; // used as (default) parameter set mostly
         protected const string InputObjectParameterSet = "Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "Resource Id Parameter Set";
-
-        /// <summary>
-        /// Gets or sets the subscription id
-        /// </summary>
-        public string SubscriptionId { get; set; }
 
         /// <summary>
         /// Gets or sets the server name
@@ -103,9 +98,9 @@ namespace Microsoft.Azure.Commands.Sql.Common
         public virtual string DatabaseName { get; set; }
 
         /// <summary>
-        /// Initializes the input from model object if necessary
+        /// Initializes the input from model object
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The given input object</param>
         public void InitializeInputObjectProperties(IO model)
         {
             if (model == null)
@@ -153,7 +148,7 @@ namespace Microsoft.Azure.Commands.Sql.Common
         /// <summary>
         /// Initializes the input from resource id if necessary
         /// </summary>
-        /// <param name="resourceId"></param>
+        /// <param name="resourceId">The given resource id</param>
         public void InitializeResourceIdProperties(string resourceId)
         {
             if (resourceId == null)
@@ -166,7 +161,6 @@ namespace Microsoft.Azure.Commands.Sql.Common
 
             if (length >= 7)
             {
-                this.SubscriptionId = tokens[1];
                 this.ResourceGroupName = tokens[3];
                 this.AgentServerName = tokens[7];
                 if (this.ServerName == null)
@@ -216,14 +210,16 @@ namespace Microsoft.Azure.Commands.Sql.Common
             }
         }
 
-        #region Target Group Helpers
-
         private const string targetGroupResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}";
+        private const string credentialResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}";
 
         /// <summary>
-        ///
+        /// Creates the target group id
         /// </summary>
-        /// <param name="targetGroupName"></param>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="serverName">The server name</param>
+        /// <param name="agentName">The agent name</param>
+        /// <param name="targetGroupName">The target group name</param>
         /// <returns></returns>
         protected string CreateTargetGroupId(
             string resourceGroupName,
@@ -244,10 +240,14 @@ namespace Microsoft.Azure.Commands.Sql.Common
                             targetGroupName);
         }
 
-        #endregion
-
-        #region Credential Helpers
-
+        /// <summary>
+        /// Creates the credential id
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="serverName">The server name</param>
+        /// <param name="agentName">The agent name</param>
+        /// <param name="credentialName">The credential name</param>
+        /// <returns></returns>
         protected string CreateCredentialId(
             string resourceGroupName,
             string serverName,
@@ -259,23 +259,12 @@ namespace Microsoft.Azure.Commands.Sql.Common
                 return null;
             }
 
-            return string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}",
+            return string.Format(credentialResourceIdTemplate,
                             DefaultContext.Subscription.Id,
                             resourceGroupName,
                             serverName,
                             agentName,
                             credentialName);
         }
-
-        #endregion
-
-        #region
-
-        public string GetJobNameFromJobExecutionResourceId(string jobExecutionResourceId)
-        {
-            return "";
-        }
-
-        #endregion
     }
 }

@@ -126,6 +126,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             }
 
             base.ExecuteCmdlet();
+            this.Name = null; // Clear name
         }
 
         /// <summary>

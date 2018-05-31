@@ -30,13 +30,20 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
     public class GetAzureSqlElasticJobStepExecution : AzureSqlElasticJobExecutionCmdletBase<AzureSqlElasticJobExecutionModel>
     {
         /// <summary>
+        /// The parameter sets
+        /// </summary>
+        protected const string GetJobStepExecutionDefaultParam = "The get job step parameter Set";
+        protected const string GetJobStepExecutionJobExecutionModel = "The get job step parameter set using job execution object model";
+        protected const string GetJobStepExecutionJobExecutionResourceId = "The get job step parameter set using job executoin resource id";
+
+        /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,
             Mandatory = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
-        [Parameter(ParameterSetName = GetJobStepExecution,
+        [Parameter(ParameterSetName = GetJobStepExecutionDefaultParam,
             Mandatory = true,
             Position = 0,
             HelpMessage = "The resource group name.")]
@@ -51,7 +58,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Mandatory = true,
             Position = 1,
             HelpMessage = "The server name.")]
-        [Parameter(ParameterSetName = GetJobStepExecution,
+        [Parameter(ParameterSetName = GetJobStepExecutionDefaultParam,
             Mandatory = true,
             Position = 1,
             HelpMessage = "The server name.")]
@@ -65,7 +72,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Mandatory = true,
             Position = 2,
             HelpMessage = "The agent name.")]
-        [Parameter(ParameterSetName = GetJobStepExecution,
+        [Parameter(ParameterSetName = GetJobStepExecutionDefaultParam,
             Mandatory = true,
             Position = 2,
             HelpMessage = "The agent name.")]
@@ -79,7 +86,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Mandatory = true,
             Position = 3,
             HelpMessage = "The job name.")]
-        [Parameter(ParameterSetName = GetJobStepExecution,
+        [Parameter(ParameterSetName = GetJobStepExecutionDefaultParam,
             Mandatory = true,
             Position = 3,
             HelpMessage = "The job name.")]
@@ -94,7 +101,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Position = 4,
             HelpMessage = "The job execution id.")]
         [Parameter(
-            ParameterSetName = GetJobStepExecution,
+            ParameterSetName = GetJobStepExecutionDefaultParam,
             Mandatory = true,
             Position = 4,
             HelpMessage = "The job execution id.")]
@@ -104,17 +111,17 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
         /// Gets or sets the job step name
         /// </summary>
         [Parameter(
-            ParameterSetName = GetJobStepExecution,
+            ParameterSetName = GetJobStepExecutionDefaultParam,
             Mandatory = true,
             Position = 5,
             HelpMessage = "The job step name.")]
         [Parameter(
-            ParameterSetName = InputObjectGetJobStepExecution,
+            ParameterSetName = GetJobStepExecutionJobExecutionModel,
             Mandatory = true,
             Position = 1,
             HelpMessage = "The job step name.")]
         [Parameter(
-            ParameterSetName = ResourceIdGetJobStepExecution,
+            ParameterSetName = GetJobStepExecutionJobExecutionResourceId,
             Mandatory = true,
             Position = 1,
             HelpMessage = "The job step name.")]
@@ -170,7 +177,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Position = 0,
             HelpMessage = "The agent object.")]
         [Parameter(
-            ParameterSetName = InputObjectGetJobStepExecution,
+            ParameterSetName = GetJobStepExecutionJobExecutionModel,
             Mandatory = true,
             ValueFromPipeline = true,
             Position = 0,
@@ -186,7 +193,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             ValueFromPipelineByPropertyName = true,
             Position = 0,
             HelpMessage = "The job execution resource id.")]
-        [Parameter(ParameterSetName = ResourceIdGetJobStepExecution,
+        [Parameter(ParameterSetName = GetJobStepExecutionJobExecutionResourceId,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             Position = 0,

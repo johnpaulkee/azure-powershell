@@ -103,8 +103,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         {
             InitializeInputObjectProperties(this.InputObject);
             InitializeResourceIdProperties(this.ResourceId);
-
-            this.Name = this.AgentName;
+            this.Name = this.Name ?? this.AgentName;
 
             // Warning confirmation for agent when deleting
             if (!Force.IsPresent &&
@@ -116,6 +115,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             }
 
             base.ExecuteCmdlet();
+            this.Name = null; // Clear name
         }
 
         /// <summary>

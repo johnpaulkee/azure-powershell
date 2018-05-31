@@ -25,11 +25,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
     [Cmdlet(VerbsCommon.Get, "AzureRmSqlElasticJobStep",
         SupportsShouldProcess = true,
         DefaultParameterSetName = DefaultParameterSet)]
-    [OutputType(typeof(AzureSqlElasticJobStepModel))]
-    [OutputType(typeof(AzureSqlElasticJobStepVersionModel))]
-    [OutputType(typeof(List<AzureSqlElasticJobStepModel>))]
     public class GetAzureSqlElasticJobStep : AzureSqlElasticJobStepCmdletBase<AzureSqlElasticJobModel>
     {
+        /// <summary>
+        /// The parameter sets
+        /// </summary>
+        protected const string DefaultGetVersionParameterSet = "Default get job step version parameter set";
+        protected const string JobObjectGetVersionParameterSet = "Job object get job step version parameter set";
+        protected const string JobResourceIdGetVersionParameterSet = "Job resource id get job step version parameter set";
+
         /// <summary>
         /// Gets or sets the resource group name
         /// </summary>

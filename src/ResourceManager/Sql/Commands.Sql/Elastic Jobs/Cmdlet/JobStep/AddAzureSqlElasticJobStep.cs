@@ -34,6 +34,16 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     public class AddAzureSqlElasticJobStep : AzureSqlElasticJobStepCmdletBase<AzureSqlElasticJobModel>
     {
         /// <summary>
+        /// The parameter sets
+        /// </summary>
+        protected const string DefaultOutputDatabaseObject = "Default job step output database object parameter set";
+        protected const string DefaultOutputDatabaseId = "Default job step output database id parameter set";
+        protected const string InputObjectOutputDatabaseObject = "Input object job step output database object parameter set";
+        protected const string InputObjectOutputDatabaseId = "Input object job step output database id parameter set";
+        protected const string ResourceIdOutputDatabaseObject = "Resource id job step output database object parameter set";
+        protected const string ResourceIdOutputDatabaseId = "Resource id job step output database id parameter set";
+
+        /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(

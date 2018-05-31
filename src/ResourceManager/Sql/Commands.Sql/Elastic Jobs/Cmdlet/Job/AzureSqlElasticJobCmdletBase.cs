@@ -24,53 +24,10 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// Defines the elastic job cmdlet base
     /// </summary>
     /// <typeparam name="IO">The input object model</typeparam>
-    public abstract class AzureSqlElasticJobCmdletBase<IO> : 
-        AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobModel>, AzureSqlElasticJobAdapter>
+    public abstract class AzureSqlElasticJobCmdletBase<IO> :  AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobModel>, AzureSqlElasticJobAdapter>
     {
         /// <summary>
-        /// Agent default parameter sets
-        /// </summary>
-        protected const string AgentDefaultRunOnceParameterSet = "Agent Default Run Once Parameter Set";
-        protected const string AgentDefaultRecurringParameterSet = "Agent Default Recurring Parameter Set";
-
-        /// <summary>
-        /// Agent object parameter sets
-        /// </summary>
-        protected const string AgentObjectRunOnceParameterSet = "Agent Object Run Once Parameter Set";
-        protected const string AgentObjectRecurringParameterSet = "Agent Object Recurring Parameter Set";
-
-        /// <summary>
-        /// Agent resource id parameter sets
-        /// </summary>
-        protected const string AgentResourceIdRunOnceParameterSet = "Agent Resource Id Run Once Parameter Set";
-        protected const string AgentResourceIdRecurringParameterSet= "Agent Resource Id Recurring Parameter Set";
-
-        /// <summary>
-        /// Job default parameter sets
-        /// </summary>
-        protected const string JobDefaultRunOnceParameterSet = "Job Default Run Once Parameter Set";
-        protected const string JobDefaultRecurringParameterSet = "Job Default Recurring Parameter Set";
-        protected const string JobDefaultEnableParameterSet = "Job Default Enable Job Parameter Set";
-        protected const string JobDefaultDisableParameterSet = "Job Default Disable Job Parameter Set";
-
-        /// <summary>
-        /// Job object parameter sets
-        /// </summary>
-        protected const string JobObjectRunOnceParameterSet = "Job Object Run Once Parameter Set";
-        protected const string JobObjectRecurringParameterSet = "Job Object Recurring Parameter Set";
-        protected const string JobObjectEnableParameterSet = "Job Object Enable Parameter Set";
-        protected const string JobObjectDisableParameterSet = "Job Object Disable Parameter Set";
-
-        /// <summary>
-        /// Job resource id parameter sets
-        /// </summary>
-        protected const string JobResourceIdRunOnceParameterSet = "Job Resource Id Run Once Parameter Set";
-        protected const string JobResourceIdRecurringParameterSet = "Job Resource Id Recurring Parameter Set";
-        protected const string JobResourceIdEnableParameterSet = "Job Resource Id Enable Job Parameter Set";
-        protected const string JobResourceIdDisableParameterSet = "Job Resource Id Disable Job Parameter Set";
-
-        /// <summary>
-        /// Intializes the model adapter
+        /// Intializes the adapter
         /// </summary>
         /// <param name="subscription">The subscription the cmdlets are operation under</param>
         /// <returns>The Azure Elastic Job Job adapter</returns>

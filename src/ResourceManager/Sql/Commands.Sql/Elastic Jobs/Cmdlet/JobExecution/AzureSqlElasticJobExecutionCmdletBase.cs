@@ -27,37 +27,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
     public abstract class AzureSqlElasticJobExecutionCmdletBase<IO> : AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobExecutionModel>, AzureSqlElasticJobAdapter>
     {
         /// <summary>
-        /// Default parameter sets
-        /// </summary>
-        protected const string GetJobStepExecution = "GetJobStepExecution Parameter Set";
-
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
-        protected const string InputObjectGetJobStepExecution = "Input Object GetJobStepExecution Parameter Set";
-
-        /// <summary>
-        /// Resource id parameter sets
-        /// </summary>
-        protected const string ResourceIdGetJobStepExecution = "Resource Id GetJobStepExecution Parameter Set";
-
-        /// <summary>
-        /// Default parameter sets
-        /// </summary>
-        protected const string GetJobTargetExecution = "GetJobTargetExecution Parameter Set";
-
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
-        protected const string InputObjectGetJobTargetExecution = "Input Object GetJobTargetExecution Parameter Set";
-
-        /// <summary>
-        /// Resource id parameter sets
-        /// </summary>
-        protected const string ResourceIdGetJobTargetExecution = "Resource Id GetJobTargetExecution Parameter Set";
-
-        /// <summary>
-        /// Initialize the job execution adapter
+        /// Initialize the adapter
         /// </summary>
         /// <param name="subscription"></param>
         /// <returns></returns>

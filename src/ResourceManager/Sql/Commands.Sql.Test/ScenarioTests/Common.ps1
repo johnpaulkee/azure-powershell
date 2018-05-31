@@ -178,24 +178,27 @@ function Create-BasicTestEnvironmentWithParams ($params, $location, $serverVersi
 <#
 Creates the basic test environment needed to perform the Elastic Job agent tests
 #>
-function Create-ElasticJobAgentTestEnvironment ($rg)
+function Create-ElasticJobAgentTestEnvironment ()
 {
-	#$server = Create-ServerForTest $rg "westus2"
-	#$db = Create-DatabaseForTest $server
-	#$agent = Create-AgentForTest $db
+	$resourceGroupName = "ElasticJobsPowershellTestRg"
+	$serverName = "ElasticJobsPowershellServer"
+	$agentName = "ElasticJobsPowershellAgent"
+	$dbName = "ElasticJobsPowershellDb"
+
 	try
 	{
-		$agent = Get-AzureRmSqlElasticJobAgent -ResourceGroupName powershell -ServerName jpagentserver -Name jpagent
+		# Try fetching existing agent to speed up tests
+		$agent = Get-AzureRmSqlElasticJobAgent -ResourceGroupName $resourceGroupName -ServerName $serverName -Name $agentName
 	}
 	catch
 	{
-		#$rg = New-AzureRmResourceGroup -Name powershell -Location "westus2"
-		#$password = "Yukon900!"
-		#$secureString = ($password | ConvertTo-SecureString -asPlainText -Force)
-		#$credentials = new-object System.Management.Automation.PSCredential("cloudsa", $secureString)
-		#$server = New-AzureRmSqlServer -ResourceGroupName powershell -ServerName jpagentserver -SqlAdministratorCredentials $credentials -Location westus2
-		#$db = New-AzureRmSqlDatabase -ResourceGroupName powershell -DatabaseName jpdb1 -ServerName jpagentserver
-		$agent = New-AzureRmSqlElasticJobAgent -ResourceGroupName powershell -ServerName jpagentserver -DatabaseName jpdb1 -Name jpagent
+		# If agent doesn't exist, then create rg, server, db, and agent
+		$location = Get-Location "Microsoft.Sql" "operations" "West US 2"
+		$rg = New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
+		$adminCred = Get-ServerCredential
+		$server = New-AzureRmSqlServer -ResourceGroupName $rg.ResourceGroupName -ServerName $serverName -Location $location -SqlAdministratorCredentials $adminCred
+		$db = New-AzureRmSqlDatabase -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName
+		$agent = New-AzureRmSqlElasticJobAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -Name $agentName
 	}
 
 	return $agent

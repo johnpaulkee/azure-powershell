@@ -23,25 +23,19 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
     /// <summary>
     /// Defines the Get-AzureRmSqlElasticJobExecution Cmdlet
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "AzureRmSqlElasticJobExecution",
-        SupportsShouldProcess = true)]
+    [Cmdlet(
+        VerbsCommon.Get, "AzureRmSqlElasticJobExecution",
+        SupportsShouldProcess = true,
+        DefaultParameterSetName = DefaultParameterSet)]
     [OutputType(typeof(IEnumerable<AzureSqlElasticJobExecutionModel>))]
     public class GetAzureSqlElasticJobExecution : AzureSqlElasticJobExecutionCmdletBase<AzureSqlElasticJobAgentModel>
     {
         /// <summary>
-        /// Default parameter sets
+        /// The parameter sets
         /// </summary>
-        protected const string GetRootJobExecution = "GetRootJobExecution Parameter Set";
-
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
-        protected const string InputObjectGetRootJobExecution = "Input Object GetRootJobExecution Parameter Set";
-
-        /// <summary>
-        /// Resource id parameter sets
-        /// </summary>
-        protected const string ResourceIdGetRootJobExecution = "Resource Id GetRootJobExecution Parameter Set";
+        protected const string GetRootJobExecution = "The get root job execution parameter set";
+        protected const string GetRootJobExecutionByAgentObject = "The get root job execution by agent object parameter set";
+        protected const string GetRootJobExecutionByAgentResourceId = "The get root job execution by agent resource id parameter set";
 
         /// <summary>
         /// Gets or sets the resource group name
@@ -111,12 +105,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Position = 3,
             HelpMessage = "The job name.")]
         [Parameter(
-            ParameterSetName = InputObjectGetRootJobExecution,
+            ParameterSetName = GetRootJobExecutionByAgentObject,
             Mandatory = true,
             Position = 1,
             HelpMessage = "The job name.")]
         [Parameter(
-            ParameterSetName = ResourceIdGetRootJobExecution,
+            ParameterSetName = GetRootJobExecutionByAgentResourceId,
             Mandatory = true,
             Position = 1,
             HelpMessage = "The job name.")]
@@ -130,11 +124,11 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             Mandatory = true,
             Position = 4,
             HelpMessage = "The job execution id.")]
-        [Parameter(ParameterSetName = InputObjectGetRootJobExecution,
+        [Parameter(ParameterSetName = GetRootJobExecutionByAgentObject,
             Mandatory = true,
             Position = 2,
             HelpMessage = "The job execution id.")]
-        [Parameter(ParameterSetName = ResourceIdGetRootJobExecution,
+        [Parameter(ParameterSetName = GetRootJobExecutionByAgentResourceId,
             Mandatory = true,
             Position = 2,
             HelpMessage = "The job execution id.")]
@@ -191,7 +185,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             ValueFromPipeline = true,
             HelpMessage = "The job execution id.")]
         [Parameter(
-            ParameterSetName = InputObjectGetRootJobExecution,
+            ParameterSetName = GetRootJobExecutionByAgentObject,
             Position = 0,
             Mandatory = true,
             ValueFromPipeline = true,
@@ -209,7 +203,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "The agent resource id.")]
         [Parameter(
-            ParameterSetName = ResourceIdGetRootJobExecution,
+            ParameterSetName = GetRootJobExecutionByAgentResourceId,
             Position = 0,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,

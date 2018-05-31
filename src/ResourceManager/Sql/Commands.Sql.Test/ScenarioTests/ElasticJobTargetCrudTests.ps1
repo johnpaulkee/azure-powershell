@@ -193,6 +193,11 @@ function Test-AddServerTargetWithPiping()
 		Assert-AreEqual $resp.RefreshCredentialName $jc1.CredentialName
 		Assert-AreEqual $resp.MembershipType "Include"
 		Assert-AreEqual $resp.TargetType "SqlServer"
+
+		# Add all server targets in subscription
+		$allServers = Get-AzureRmSqlServer
+		$resp = $allServers | Add-AzureRmSqlElasticJobTarget -TargetGroupObject $tg1 -RefreshCredentialName $jc1.CredentialName
+		Assert-AreEqual $resp.Count $allServers.Count
 	}
 	finally
 	{
@@ -315,10 +320,10 @@ function Test-RemoveServerTargetWithPiping
 
 	# Add targets
 	$tg1 | Add-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -RefreshCredentialName $jc1.CredentialName
+	$tg1 | Add-AzureRmSqlElasticJobTarget -ServerName $a1.ServerName -RefreshCredentialName $jc1.CredentialName # Add agent server
 
 	try
 	{
-		# Remove s2
 		$resp = $tg1 | Remove-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -RefreshCredentialName $jc1.CredentialName
 		Assert-AreEqual $resp.TargetServerName $targetServerName1
 		Assert-AreEqual $resp.RefreshCredentialName $jc1.CredentialName
@@ -328,6 +333,11 @@ function Test-RemoveServerTargetWithPiping
 		# Try remove again - should have no resp
 		$resp = $tg1 | Remove-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -RefreshCredentialName $jc1.CredentialName
 		Assert-Null $resp
+
+		# Try remove all server targets in subscription
+		$allServers = Get-AzureRmSqlServer
+		$resp = $allServers | Remove-AzureRmSqlElasticJobTarget -TargetGroupObject $tg1 -RefreshCredentialName $jc1.CredentialName
+		Assert-NotNull $resp
 	}
 	finally
 	{
@@ -524,6 +534,11 @@ function Test-AddDatabaseTargetWithPiping()
 		Assert-AreEqual $resp.TargetDatabaseName $targetDatabaseName1
 		Assert-AreEqual $resp.MembershipType "Include"
 		Assert-AreEqual $resp.TargetType "SqlDatabase"
+
+		# Add all dbs
+		$allDbs = Get-AzureRmSqlServer | Get-AzureRmSqlDatabase
+		$resp = $tg1 | Add-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -DatabaseName $targetDatabaseName1
+		Assert-NotNull $resp # Assert added dbs
 	}
 	finally
 	{
@@ -644,6 +659,7 @@ function Test-RemoveDatabaseTargetWithPiping
 
 	# Add targets
 	$tg1 | Add-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -DatabaseName $targetDatabaseName1
+	$tg1 | Add-AzureRmSqlElasticJobTarget -ServerName $a1.ServerName -DatabaseName $a1.DatabaseName
 
 	try
 	{
@@ -656,6 +672,11 @@ function Test-RemoveDatabaseTargetWithPiping
 		# Try remove again - should have no resp
 		$resp = $tg1 | Remove-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -DatabaseName $targetDatabaseName1
 		Assert-Null $resp
+
+	 # Remove all dbs
+		$allDbs = Get-AzureRmSqlServer | Get-AzureRmSqlDatabase
+		$resp = $tg1 | remove-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -DatabaseName $targetDatabaseName1
+		Assert-NotNull $resp # Assert added dbs
 	}
 	finally
 	{
@@ -826,6 +847,7 @@ function Test-AddElasticPoolTargetWithPiping()
 {
 	# Setup
 	$a1 = Create-ElasticJobAgentTestEnvironment
+	$ep1 = Create-ElasticPoolForTest $a1 # create pool on agent's server
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$targetServerName1 = Get-ServerName
@@ -860,6 +882,11 @@ function Test-AddElasticPoolTargetWithPiping()
 		Assert-AreEqual $resp.RefreshCredentialName $jc1.CredentialName
 		Assert-AreEqual $resp.MembershipType "Include"
 		Assert-AreEqual $resp.TargetType "SqlElasticPool"
+
+		# Add all pools
+		$allEps = Get-AzureRmSqlServer | Get-AzureRmSqlElasticPool
+		$resp = $allEps | Add-AzureRmSqlElasticJobTarget -TargetGroupObject $tg1 -RefreshCredentialName $jc1.CredentialName
+		Assert-NotNull $resp
 	}
 	finally
 	{
@@ -982,6 +1009,7 @@ function Test-RemoveElasticPoolTargetWithPiping
 {
 	# Setup
 	$a1 = Create-ElasticJobAgentTestEnvironment
+	$ep1 = Create-ElasticPoolForTest $a1	
 	$jc1 = Create-JobCredentialForTest $a1
 	$tg1 = Create-TargetGroupForTest $a1
 	$targetServerName1 = Get-ServerName
@@ -1003,6 +1031,11 @@ function Test-RemoveElasticPoolTargetWithPiping
 		# Try remove again - should have no resp
 		$resp = $tg1 | Remove-AzureRmSqlElasticJobTarget -ServerName $targetServerName1 -ElasticPoolName $targetElasticPoolName1 -RefreshCredentialName $jc1.CredentialName
 		Assert-Null $resp
+
+		# Remove all pools
+		$allEps = Get-AzureRmSqlServer | Get-AzureRmSqlElasticPool
+		$resp = $allEps | Add-AzureRmSqlElasticJobTarget -TargetGroupObject $tg1 -RefreshCredentialName $jc1.CredentialName
+		Assert-NotNull $resp
 	}
 	finally
 	{

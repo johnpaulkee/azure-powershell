@@ -135,6 +135,7 @@ function Test-GetTargetGroupWithDefaultParam
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
+    $tg2 = Create-TargetGroupForTest $a1
 
     try
     {
@@ -145,6 +146,10 @@ function Test-GetTargetGroupWithDefaultParam
         Assert-AreEqual $resp.ServerName $a1.ServerName
         Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
         Assert-AreEqual $resp.Members.Count 0
+
+        # Test get all with default parameters
+        $resp = Get-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName
+        Assert-True { $resp.Count -ge 2 }
     }
     finally
     {
@@ -163,6 +168,7 @@ function Test-GetTargetGroupWithAgentObject
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
+    $tg2 = Create-TargetGroupForTest $a1
 
     try
     {
@@ -173,6 +179,10 @@ function Test-GetTargetGroupWithAgentObject
         Assert-AreEqual $resp.ServerName $a1.ServerName
         Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
         Assert-AreEqual $resp.Members.Count 0
+
+        # Test get all with default parameters
+        $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentObject $a1
+        Assert-True { $resp.Count -ge 2 }
     }
     finally
     {
@@ -191,6 +201,7 @@ function Test-GetTargetGroupWithAgentResourceId
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
+    $tg2 = Create-TargetGroupForTest $a1 
 
     try
     {
@@ -201,6 +212,10 @@ function Test-GetTargetGroupWithAgentResourceId
         Assert-AreEqual $resp.ServerName $a1.ServerName
         Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
         Assert-AreEqual $resp.Members.Count 0
+
+        # Test get all with default parameters
+        $resp = Get-AzureRmSqlElasticJobTargetGroup -AgentResourceId $a1.ResourceId
+        Assert-True { $resp.Count -ge 2 }
     }
     finally
     {
@@ -331,6 +346,7 @@ function Test-RemoveTargetGroupWithPiping
     # Setup
     $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
+    $tg2 = Create-TargetGroupForTest $a1
 
     try
     {
@@ -341,6 +357,11 @@ function Test-RemoveTargetGroupWithPiping
         Assert-AreEqual $resp.ServerName $a1.ServerName
         Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
         Assert-AreEqual $resp.Members.Count 0
+
+        # Test remove all
+        $all = $a1 | Get-AzureRmSqlElasticJobTargetGroup
+        $resp = $all | Remove-AzureRmSqlElasticJobTargetGroup
+        Assert-True { $resp.Count -ge 2 }
     }
     finally
     {

@@ -34,20 +34,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     public class SetAzureSqlElasticJobStep : AzureSqlElasticJobStepCmdletBase<AzureSqlElasticJobStepModel>
     {
         /// <summary>
-        /// Default parameter sets
+        /// The parameter sets
         /// </summary>
         protected const string DefaultRemoveOutputParameterSet = "Default remove output parameter set";
         protected const string DefaultAddDatabaseResourceIdParameterSet = "Default add database resource id parameter set";
-
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
         protected const string InputObjectRemoveOutputParameterSet = "Input Object remove output parameter set";
         protected const string InputObjectAddDatabaseResourceIdParameterSet = "Input Object add database resource id parameter set";
-
-        /// <summary>
-        /// Input object parameter sets
-        /// </summary>
         protected const string ResourceIdRemoveOutputParameterSet = "Resource id remove output parameter set";
         protected const string ResourceIdAddDatabaseResourceIdParameterSet = "Resource id add database resource id parameter set";
 
@@ -410,6 +402,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             InitializeResourceIdProperties(this.ResourceId);
             this.Name = this.Name ?? this.StepName;
             base.ExecuteCmdlet();
+            this.Name = null; // Clear name
         }
 
         /// <summary>

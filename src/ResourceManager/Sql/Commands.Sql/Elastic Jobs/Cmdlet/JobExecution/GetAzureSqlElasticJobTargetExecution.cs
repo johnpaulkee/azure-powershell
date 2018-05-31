@@ -30,6 +30,13 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
     public class GetAzureSqlElasticJobTargetExecution : AzureSqlElasticJobExecutionCmdletBase<AzureSqlElasticJobExecutionModel>
     {
         /// <summary>
+        /// The parameter sets
+        /// </summary>
+        protected const string GetJobTargetExecution = "GetJobTargetExecution Parameter Set";
+        protected const string InputObjectGetJobTargetExecution = "Input Object GetJobTargetExecution Parameter Set";
+        protected const string ResourceIdGetJobTargetExecution = "Resource Id GetJobTargetExecution Parameter Set";
+
+        /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(ParameterSetName = DefaultParameterSet,

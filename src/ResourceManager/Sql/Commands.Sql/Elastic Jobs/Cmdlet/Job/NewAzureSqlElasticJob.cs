@@ -34,6 +34,16 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     public class NewAzureSqlElasticJob : AzureSqlElasticJobCmdletBase<AzureSqlElasticJobAgentModel>
     {
         /// <summary>
+        /// The Parameter Set
+        /// </summary>
+        protected const string AgentDefaultRunOnceParameterSet = "Agent Default Run Once Parameter Set";
+        protected const string AgentDefaultRecurringParameterSet = "Agent Default Recurring Parameter Set";
+        protected const string AgentObjectRunOnceParameterSet = "Agent Object Run Once Parameter Set";
+        protected const string AgentObjectRecurringParameterSet = "Agent Object Recurring Parameter Set";
+        protected const string AgentResourceIdRunOnceParameterSet = "Agent Resource Id Run Once Parameter Set";
+        protected const string AgentResourceIdRecurringParameterSet = "Agent Resource Id Recurring Parameter Set";
+
+        /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = DefaultParameterSet, Position = 0, HelpMessage = "The resource group name")]

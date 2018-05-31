@@ -119,6 +119,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.Job
             InitializeResourceIdProperties(this.ResourceId);
             this.Name = this.Name ?? this.StepName;
             base.ExecuteCmdlet();
+            this.Name = null; // Clear name
         }
 
         /// <summary>

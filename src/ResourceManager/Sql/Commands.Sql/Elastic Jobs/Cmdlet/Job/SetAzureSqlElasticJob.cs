@@ -34,6 +34,16 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     public class SetAzureSqlElasticJob : AzureSqlElasticJobCmdletBase<AzureSqlElasticJobModel>
     {
         /// <summary>
+        /// The parameter sets
+        /// </summary>
+        protected const string JobDefaultRunOnceParameterSet = "Job Default Run Once Parameter Set";
+        protected const string JobDefaultRecurringParameterSet = "Job Default Recurring Parameter Set";
+        protected const string JobObjectRunOnceParameterSet = "Job Object Run Once Parameter Set";
+        protected const string JobObjectRecurringParameterSet = "Job Object Recurring Parameter Set";
+        protected const string JobResourceIdRunOnceParameterSet = "Job Resource Id Run Once Parameter Set";
+        protected const string JobResourceIdRecurringParameterSet = "Job Resource Id Recurring Parameter Set";
+
+        /// <summary>
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
@@ -261,6 +271,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             InitializeResourceIdProperties(this.ResourceId);
             this.Name = this.Name ?? this.JobName;
             base.ExecuteCmdlet();
+            this.Name = null; // Clear name
         }
 
         /// <summary>

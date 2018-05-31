@@ -24,23 +24,8 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
     /// The elastic job step cmdlet base
     /// </summary>
     /// <typeparam name="IO">The input object model</typeparam>
-    public abstract class AzureSqlElasticJobStepCmdletBase<IO> : 
-        AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobStepModel>, AzureSqlElasticJobAdapter>
+    public abstract class AzureSqlElasticJobStepCmdletBase<IO> : AzureSqlElasticJobsCmdletBase<IO, IEnumerable<AzureSqlElasticJobStepModel>, AzureSqlElasticJobAdapter>
     {
-        protected const string DefaultOutputDatabaseObject = "Default job step output database object parameter set";
-        protected const string DefaultOutputDatabaseId = "Default job step output database id parameter set";
-
-        protected const string InputObjectOutputDatabaseObject = "Input object job step output database object parameter set";
-        protected const string InputObjectOutputDatabaseId = "Input object job step output database id parameter set";
-
-        protected const string ResourceIdOutputDatabaseObject = "Resource id job step output database object parameter set";
-        protected const string ResourceIdOutputDatabaseId = "Resource id job step output database id parameter set";
-
-
-        protected const string DefaultGetVersionParameterSet = "Default get job step version parameter set";
-        protected const string JobObjectGetVersionParameterSet = "Job object get job step version parameter set";
-        protected const string JobResourceIdGetVersionParameterSet = "Job resource id get job step version parameter set";
-
         /// <summary>
         /// Intializes the model adapter
         /// </summary>

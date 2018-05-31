@@ -29,30 +29,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreateWithDefaultParam()
+        public void TestJobStepCreate()
         {
-            RunPowerShellTest("Test-CreateJobStepWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreateWithJobObject()
-        {
-            RunPowerShellTest("Test-CreateJobStepWithJobObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreateWithJobResourceId()
-        {
-            RunPowerShellTest("Test-CreateJobStepWithJobResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepCreateWithPiping()
-        {
-            RunPowerShellTest("Test-CreateJobStepWithPiping");
+            RunPowerShellTest("Test-CreateJobStep");
         }
 
         #endregion
@@ -61,30 +40,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithDefaultParam()
+        public void TestJobStepUpdate()
         {
-            RunPowerShellTest("Test-UpdateJobStepWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithInputObject()
-        {
-            RunPowerShellTest("Test-UpdateJobStepWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithResourceId()
-        {
-            RunPowerShellTest("Test-UpdateJobStepWithResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepUpdateWithPiping()
-        {
-            RunPowerShellTest("Test-UpdateJobStepWithPiping");
+            RunPowerShellTest("Test-UpdateJobStep");
         }
 
         #endregion
@@ -93,30 +51,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGetWithDefaultParam()
+        public void TestJobStepGet()
         {
-            RunPowerShellTest("Test-GetJobStepWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGetWithJobObject()
-        {
-            RunPowerShellTest("Test-GetJobStepWithJobObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGetWithJobResourceId()
-        {
-            RunPowerShellTest("Test-GetJobStepWithJobResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepGetWithPiping()
-        {
-            RunPowerShellTest("Test-GetJobStepWithPiping");
+            RunPowerShellTest("Test-GetJobStep");
         }
 
         #endregion
@@ -125,30 +62,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemoveWithDefaultParam()
+        public void TestJobStepRemove()
         {
-            RunPowerShellTest("Test-RemoveJobStepWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemoveWithInputObject()
-        {
-            RunPowerShellTest("Test-RemoveJobStepWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemoveWithResourceId()
-        {
-            RunPowerShellTest("Test-RemoveJobStepWithResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobStepRemoveWithPiping()
-        {
-            RunPowerShellTest("Test-RemoveJobStepWithPiping");
+            RunPowerShellTest("Test-RemoveJobStep");
         }
 
         #endregion

@@ -73,15 +73,15 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// </summary>
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure Elastic Job",
+            HelpMessage = "The agent tags",
             ParameterSetName = DefaultParameterSet)]
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure Elastic Job",
+            HelpMessage = "The agent tags",
             ParameterSetName = InputObjectParameterSet)]
         [Parameter(
             Mandatory = false,
-            HelpMessage = "The tags to associate with the Azure Elastic Job",
+            HelpMessage = "The agent tags",
             ParameterSetName = ResourceIdParameterSet)]
         [ValidateNotNullOrEmpty]
         [Alias("Tags")]
@@ -120,6 +120,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             InitializeResourceIdProperties(this.ResourceId);
             this.Name = this.Name ?? this.AgentName;
             base.ExecuteCmdlet();
+            this.Name = null; // Clear name
         }
 
         /// <summary>

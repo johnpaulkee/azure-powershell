@@ -32,36 +32,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         /// </summary>
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreateWithDefaultParam()
+        public void TestJobCreate()
         {
-            RunPowerShellTest("Test-CreateJobWithDefaultParam");
-        }
-
-        /// <summary>
-        /// Tests creating new jobs using agent object
-        /// </summary>
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreateWithAgentObject()
-        {
-            RunPowerShellTest("Test-CreateJobWithAgentObject");
-        }
-
-        /// <summary>
-        /// Tests creating jobs with agent resource id
-        /// </summary>
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreateWithAgentResourceId()
-        {
-            RunPowerShellTest("Test-CreateJobWithAgentResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobCreateWithPiping()
-        {
-            RunPowerShellTest("Test-CreateJobWithPiping");
+            RunPowerShellTest("Test-CreateJob");
         }
 
         #endregion
@@ -70,30 +43,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobUpdateWithDefaultParam()
+        public void TestJobUpdate()
         {
-            RunPowerShellTest("Test-UpdateJobWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobUpdateWithInputObject()
-        {
-            RunPowerShellTest("Test-UpdateJobWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobUpdateWithResourceId()
-        {
-            RunPowerShellTest("Test-UpdateJobWithResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobUpdateWithPiping()
-        {
-            RunPowerShellTest("Test-UpdateJobWithPiping");
+            RunPowerShellTest("Test-UpdateJob");
         }
 
         #endregion
@@ -102,30 +54,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobGetWithDefaultParam()
+        public void TestJobGet()
         {
-            RunPowerShellTest("Test-GetJobWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobGetWithAgentObject()
-        {
-            RunPowerShellTest("Test-GetJobWithAgentObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobGetWithAgentResourceId()
-        {
-            RunPowerShellTest("Test-GetJobWithAgentResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobGetWithPiping()
-        {
-            RunPowerShellTest("Test-GetJobWithPiping");
+            RunPowerShellTest("Test-GetJob");
         }
 
         #endregion
@@ -134,30 +65,9 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobRemoveWithDefaultParam()
+        public void TestJobRemove()
         {
-            RunPowerShellTest("Test-RemoveJobWithDefaultParam");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobRemoveWithInputObject()
-        {
-            RunPowerShellTest("Test-RemoveJobWithInputObject");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobRemoveWithResourceId()
-        {
-            RunPowerShellTest("Test-RemoveJobWithResourceId");
-        }
-
-        [Fact]
-        [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestJobRemoveWithPiping()
-        {
-            RunPowerShellTest("Test-RemoveJobWithPiping");
+            RunPowerShellTest("Test-RemoveJob");
         }
 
         #endregion
