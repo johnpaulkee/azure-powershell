@@ -31,16 +31,21 @@ New-AzureRmSqlElasticJobTargetGroup [-Name] <String> [-AgentResourceId] <String>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **New-AzureRmSqlElasticJobTargetGroup** cmdlet creates a new target group
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $agent | New-AzureRmSqlElasticJobTargetGroup -Name tg1
+
+TargetGroupName Targets
+--------------- -------
+tg1
+
 ```
 
-{{ Add example description here }}
+Creates an empty target group
 
 ## PARAMETERS
 

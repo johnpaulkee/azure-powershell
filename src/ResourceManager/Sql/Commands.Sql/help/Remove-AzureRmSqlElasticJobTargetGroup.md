@@ -32,16 +32,21 @@ Remove-AzureRmSqlElasticJobTargetGroup [-Force] [-ResourceId] <String>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Remove-AzureRmSqlElasticJobTargetGroup** cmdlet removes a target group and it's targets
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $agent | Remove-AzureRmSqlElasticJobTargetGroup -Name tg1
+
+TargetGroupName Targets
+--------------- -------
+tg1             (s1,db1)
+
 ```
 
-{{ Add example description here }}
+Removes a target group and it's targets
 
 ## PARAMETERS
 
