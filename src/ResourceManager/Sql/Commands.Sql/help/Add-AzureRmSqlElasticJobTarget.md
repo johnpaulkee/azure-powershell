@@ -79,16 +79,48 @@ Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-ShardMapName]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Add-AzureRmSqlElasticJobTarget** cmdlet adds a target resource to a target group
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Add a server target
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $tg | Add-AzureRmSqlElasticJobTarget -ServerName s1 -RefreshCredentialName cred1
+
+TargetGroupName TargetType TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ---------- ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlServer  s1                                                                           cred1                 Include
 ```
 
-{{ Add example description here }}
+### Example 2 - Add a database target
+```powershell
+PS C:\> $tg | Add-AzureRmSqlElasticJobTarget -ServerName s1 -DatabaseName db2
+
+TargetGroupName TargetType  TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ----------  ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlDatabase s1               db2                                                                               Include
+```
+
+### Example 3 - Add an elastic pool target
+```powershell
+PS C:\> $tg | Add-AzureRmSqlElasticJobTarget -ServerName s1 -ElasticPoolName ep1 -RefreshCredentialName cred1
+
+TargetGroupName TargetType     TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ----------     ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlElasticPool s1                                  ep1                                      cred1                 Include
+```
+
+### Example 4 - Add a shard map target
+```powershell
+PS C:\> $tg | Add-AzureRmSqlElasticJobTarget -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+
+TargetGroupName TargetType  TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ----------  ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlShardMap s1               db1                                      sm1                cred1                 Include
+
+```
+
+Adds a target (server, elastic pool, database, and shard map) to a target group
 
 ## PARAMETERS
 

@@ -78,16 +78,48 @@ Remove-AzureRmSqlElasticJobTarget [-ServerName] <String> [-ShardMapName] <String
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Remove-AzureRmSqlElasticJobTarget** cmdlet removes a target resource to a target group
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Remove a server target
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $tg | Remove-AzureRmSqlElasticJobTarget -ServerName s1 -RefreshCredentialName cred1
+
+TargetGroupName TargetType TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ---------- ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlServer  s1                                                                           cred1                 Include
 ```
 
-{{ Add example description here }}
+### Example 2 - Remove a database target
+```powershell
+PS C:\> $tg | Remove-AzureRmSqlElasticJobTarget -ServerName s1 -DatabaseName db2
+
+TargetGroupName TargetType  TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ----------  ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlDatabase s1               db2                                                                               Include
+```
+
+### Example 3 - Remove an elastic pool target
+```powershell
+PS C:\> $tg | Remove-AzureRmSqlElasticJobTarget -ServerName s1 -ElasticPoolName ep1 -RefreshCredentialName cred1
+
+TargetGroupName TargetType     TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ----------     ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlElasticPool s1                                  ep1                                      cred1                 Include
+```
+
+### Example 4 - Remove a shard map target
+```powershell
+PS C:\> $tg | Remove-AzureRmSqlElasticJobTarget -ServerName s1 -ShardMapName sm1 -DatabaseName db1 -RefreshCredentialName cred1
+
+TargetGroupName TargetType  TargetServerName TargetDatabaseName TargetElasticPoolName TargetShardMapName RefreshCredentialName MembershipType
+--------------- ----------  ---------------- ------------------ --------------------- ------------------ --------------------- --------------
+tg1             SqlShardMap s1               db1                                      sm1                cred1                 Include
+
+```
+
+Removes a target (server, elastic pool, database, and shard map) from a target group
 
 ## PARAMETERS
 
