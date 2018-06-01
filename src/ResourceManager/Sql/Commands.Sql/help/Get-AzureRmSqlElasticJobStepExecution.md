@@ -5,42 +5,54 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AzureRmSqlElasticJobTargetExecution
+# Get-AzureRmSqlElasticJobStepExecution
 
 ## SYNOPSIS
-Gets one or more job target executions
+{{Fill in the Synopsis}}
 
 ## SYNTAX
 
 ### Default Parameter Set (Default)
 ```
-Get-AzureRmSqlElasticJobTargetExecution [-ResourceGroupName] <String> [-ServerName] <String>
- [-AgentName] <String> [-JobName] <String> [-JobExecutionId] <String> [-StepName <String>]
- [-CreateTimeMin <DateTime>] [-CreateTimeMax <DateTime>] [-EndTimeMin <DateTime>] [-EndTimeMax <DateTime>]
- [-Active] [-Count] <Int32> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Get-AzureRmSqlElasticJobStepExecution [-ResourceGroupName] <String> [-ServerName] <String>
+ [-AgentName] <String> [-JobName] <String> [-JobExecutionId] <String> [-CreateTimeMin <DateTime>]
+ [-CreateTimeMax <DateTime>] [-EndTimeMin <DateTime>] [-EndTimeMax <DateTime>] [-Active]
+ [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### GetJobTargetExecution Parameter Set
+### The get job step parameter Set
 ```
-Get-AzureRmSqlElasticJobTargetExecution -StepName <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
+Get-AzureRmSqlElasticJobStepExecution [-ResourceGroupName] <String> [-ServerName] <String>
+ [-AgentName] <String> [-JobName] <String> [-JobExecutionId] <String> [-StepName] <String>
+ [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
+### The get job step parameter set using job execution object model
+```
+Get-AzureRmSqlElasticJobStepExecution [-StepName] <String>
+ [-JobExecutionObject] <AzureSqlElasticJobExecutionModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
  [-Confirm] [<CommonParameters>]
+```
+
+### The get job step parameter set using job executoin resource id
+```
+Get-AzureRmSqlElasticJobStepExecution [-StepName] <String> [-JobExecutionResourceId] <String>
+ [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Input Object Parameter Set
 ```
-Get-AzureRmSqlElasticJobTargetExecution [-StepName <String>] [-CreateTimeMin <DateTime>]
- [-CreateTimeMax <DateTime>] [-EndTimeMin <DateTime>] [-EndTimeMax <DateTime>] [-Active] [-Count] <Int32>
+Get-AzureRmSqlElasticJobStepExecution [-CreateTimeMin <DateTime>] [-CreateTimeMax <DateTime>]
+ [-EndTimeMin <DateTime>] [-EndTimeMax <DateTime>] [-Active]
  [-JobExecutionObject] <AzureSqlElasticJobExecutionModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
  [-Confirm] [<CommonParameters>]
 ```
 
 ### Resource Id Parameter Set
 ```
-Get-AzureRmSqlElasticJobTargetExecution [-StepName <String>] [-CreateTimeMin <DateTime>]
- [-CreateTimeMax <DateTime>] [-EndTimeMin <DateTime>] [-EndTimeMax <DateTime>] [-Active] [-Count] <Int32>
- [-JobExecutionResourceId] <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Get-AzureRmSqlElasticJobStepExecution [-CreateTimeMin <DateTime>] [-CreateTimeMax <DateTime>]
+ [-EndTimeMin <DateTime>] [-EndTimeMax <DateTime>] [-Active] [-JobExecutionResourceId] <String>
+ [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -77,26 +89,11 @@ The agent name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set
+Parameter Sets: Default Parameter Set, The get job step parameter Set
 Aliases:
 
 Required: True
 Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Count
-Count returns the top number of executions.
-
-```yaml
-Type: Int32
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
-Aliases:
-
-Required: True
-Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -182,7 +179,7 @@ The job execution id.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set
+Parameter Sets: Default Parameter Set, The get job step parameter Set
 Aliases:
 
 Required: True
@@ -197,7 +194,7 @@ The agent object.
 
 ```yaml
 Type: AzureSqlElasticJobExecutionModel
-Parameter Sets: Input Object Parameter Set
+Parameter Sets: The get job step parameter set using job execution object model, Input Object Parameter Set
 Aliases:
 
 Required: True
@@ -212,7 +209,7 @@ The job execution resource id.
 
 ```yaml
 Type: String
-Parameter Sets: Resource Id Parameter Set
+Parameter Sets: The get job step parameter set using job executoin resource id, Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -227,7 +224,7 @@ The job name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set
+Parameter Sets: Default Parameter Set, The get job step parameter Set
 Aliases:
 
 Required: True
@@ -242,7 +239,7 @@ The resource group name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set
+Parameter Sets: Default Parameter Set, The get job step parameter Set
 Aliases:
 
 Required: True
@@ -257,7 +254,7 @@ The server name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set
+Parameter Sets: Default Parameter Set, The get job step parameter Set
 Aliases:
 
 Required: True
@@ -272,23 +269,11 @@ The job step name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: GetJobTargetExecution Parameter Set
+Parameter Sets: The get job step parameter Set, The get job step parameter set using job execution object model, The get job step parameter set using job executoin resource id
 Aliases:
 
 Required: True
-Position: Named
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -326,16 +311,19 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel
 System.String
 
+
 ## OUTPUTS
 
-### System.Collections.Generic.IEnumerable`1[[Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel, Microsoft.Azure.Commands.Sql, Version=4.4.0.0, Culture=neutral, PublicKeyToken=null]]
+### System.Collections.Generic.IEnumerable`1[[Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel, Microsoft.Azure.Commands.Sql, Version=4.5.0.0, Culture=neutral, PublicKeyToken=null]]
+
 
 ## NOTES
 

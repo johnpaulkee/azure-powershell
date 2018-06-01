@@ -12,7 +12,7 @@ Gets one or more job executions
 
 ## SYNTAX
 
-### Default Parameter Set
+### Default Parameter Set (Default)
 ```
 Get-AzureRmSqlElasticJobExecution [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-Count] <Int32> [-JobName <String>] [-CreateTimeMin <DateTime>] [-CreateTimeMax <DateTime>]
@@ -20,7 +20,7 @@ Get-AzureRmSqlElasticJobExecution [-ResourceGroupName] <String> [-ServerName] <S
  [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### GetRootJobExecution Parameter Set
+### The get root job execution parameter set
 ```
 Get-AzureRmSqlElasticJobExecution [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  -JobName <String> [-JobExecutionId] <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
@@ -43,14 +43,14 @@ Get-AzureRmSqlElasticJobExecution [-Count] <Int32> [-JobName <String>] [-CreateT
  [<CommonParameters>]
 ```
 
-### Input Object GetRootJobExecution Parameter Set
+### The get root job execution by agent object parameter set
 ```
 Get-AzureRmSqlElasticJobExecution -JobName <String> [-JobExecutionId] <String>
  [-AgentObject] <AzureSqlElasticJobAgentModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
-### Resource Id GetRootJobExecution Parameter Set
+### The get root job execution by agent resource id parameter set
 ```
 Get-AzureRmSqlElasticJobExecution -JobName <String> [-JobExecutionId] <String> [-AgentResourceId] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -90,7 +90,7 @@ The agent name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, GetRootJobExecution Parameter Set
+Parameter Sets: Default Parameter Set, The get root job execution parameter set
 Aliases:
 
 Required: True
@@ -105,7 +105,7 @@ The job execution id.
 
 ```yaml
 Type: AzureSqlElasticJobAgentModel
-Parameter Sets: Input Object Parameter Set, Input Object GetRootJobExecution Parameter Set
+Parameter Sets: Input Object Parameter Set, The get root job execution by agent object parameter set
 Aliases:
 
 Required: True
@@ -120,7 +120,7 @@ The agent resource id.
 
 ```yaml
 Type: String
-Parameter Sets: Resource Id Parameter Set, Resource Id GetRootJobExecution Parameter Set
+Parameter Sets: Resource Id Parameter Set, The get root job execution by agent resource id parameter set
 Aliases:
 
 Required: True
@@ -225,7 +225,7 @@ The job execution id.
 
 ```yaml
 Type: String
-Parameter Sets: GetRootJobExecution Parameter Set, Input Object GetRootJobExecution Parameter Set, Resource Id GetRootJobExecution Parameter Set
+Parameter Sets: The get root job execution parameter set, The get root job execution by agent object parameter set, The get root job execution by agent resource id parameter set
 Aliases:
 
 Required: True
@@ -252,7 +252,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: GetRootJobExecution Parameter Set, Input Object GetRootJobExecution Parameter Set, Resource Id GetRootJobExecution Parameter Set
+Parameter Sets: The get root job execution parameter set, The get root job execution by agent object parameter set, The get root job execution by agent resource id parameter set
 Aliases:
 
 Required: True
@@ -267,7 +267,7 @@ The resource group name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, GetRootJobExecution Parameter Set
+Parameter Sets: Default Parameter Set, The get root job execution parameter set
 Aliases:
 
 Required: True
@@ -282,7 +282,7 @@ The server name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, GetRootJobExecution Parameter Set
+Parameter Sets: Default Parameter Set, The get root job execution parameter set
 Aliases:
 
 Required: True
@@ -324,19 +324,16 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobAgentModel
 System.String
 
-
 ## OUTPUTS
 
 ### System.Collections.Generic.IEnumerable`1[[Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel, Microsoft.Azure.Commands.Sql, Version=4.4.0.0, Culture=neutral, PublicKeyToken=null]]
-
 
 ## NOTES
 
