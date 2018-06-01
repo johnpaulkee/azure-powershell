@@ -463,31 +463,31 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <summary>
         /// Gets or sets the timeout seconds
         /// </summary>
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = false, HelpMessage = "The timeout seconds")]
         public int? TimeoutSeconds { get; set; }
 
         /// <summary>
         /// Gets or sets the retry attempts
         /// </summary>
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = false, HelpMessage = "The retry attempts")]
         public int? RetryAttempts { get; set; }
 
         /// <summary>
         /// Gets or sets the initial retry interval seconds
         /// </summary>
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = false, HelpMessage = "The initial retry interval seconds")]
         public int? InitialRetryIntervalSeconds { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum retry interval seconds
         /// </summary>
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = false, HelpMessage = "The maximum retry interval seconds")]
         public int? MaximumRetryIntervalSeconds { get; set; }
 
         /// <summary>
         /// Gets or sets the retry interval backoff multiplier
         /// </summary>
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = false, HelpMessage = "The retry interval back off multiplier")]
         public double? RetryIntervalBackoffMultiplier { get; set; }
 
         /// <summary>
