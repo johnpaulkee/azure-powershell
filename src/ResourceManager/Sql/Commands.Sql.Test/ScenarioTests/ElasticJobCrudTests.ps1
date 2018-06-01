@@ -107,7 +107,7 @@ function Test-RemoveJob
 #>
 function Test-CreateJobWithDefaultParam($a1)
 {
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -189,7 +189,7 @@ function Test-CreateJobWithDefaultParam($a1)
 function Test-CreateJobWithAgentObject($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -271,7 +271,7 @@ function Test-CreateJobWithAgentObject($a1)
 function Test-CreateJobWithAgentResourceId($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -353,7 +353,7 @@ function Test-CreateJobWithAgentResourceId($a1)
 function Test-CreateJobWithPiping($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -524,7 +524,7 @@ function Test-GetJobWithPiping($a1)
 function Test-UpdateJobWithDefaultParam($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -613,7 +613,7 @@ function Test-UpdateJobWithDefaultParam($a1)
 function Test-UpdateJobWithInputObject($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -702,7 +702,7 @@ function Test-UpdateJobWithInputObject($a1)
 function Test-UpdateJobWithResourceId($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
@@ -792,7 +792,7 @@ function Test-UpdateJobWithResourceId($a1)
 function Test-UpdateJobWithPiping($a1)
 {
 	# Setup
-	$startTime = Get-Date
+	$startTime = Get-Date "2018-05-31T23:58:57"
 	$endTime = $startTime.AddHours(5)
 	$startTimeIso8601 =  Get-Date $startTime -format s
 	$endTimeIso8601 =  Get-Date $endTime -format s
