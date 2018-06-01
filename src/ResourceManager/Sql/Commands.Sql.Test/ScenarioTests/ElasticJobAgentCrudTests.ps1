@@ -142,10 +142,13 @@ function Test-GetAgent
     # Setup
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
+    $s2 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $s1
     $db2 = Create-DatabaseForTest $s1
+    $db3 = Create-DatabaseForTest $s2
     $a1 = Create-AgentForTest $db1
     $a2 = Create-AgentForTest $db2
+    $a3 = Create-AgentForTest $db3
     $agentName = Get-AgentName
 
     try
@@ -186,8 +189,13 @@ function Test-GetAgent
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
 
+        # Get all in s1
         $resp = $s1 | Get-AzureRmSqlElasticJobAgent
         Assert-AreEqual $resp.Count 2
+
+        # Get all agents in servers in rg1
+        $resp = Get-AzureRmSqlServer -ResourceGroupName $rg1.ResourceGroupName | Get-AzureRmSqlElasticJobAgent
+        Assert-AreEqual $resp.Count 3
     }
     finally
     {
