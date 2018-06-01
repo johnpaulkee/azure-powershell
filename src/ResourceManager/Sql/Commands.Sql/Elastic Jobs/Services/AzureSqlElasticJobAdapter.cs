@@ -808,7 +808,32 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Services
                 skip,
                 top);
 
-            return resp.Select((rootExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, rootExecution)).ToList();
+            List<AzureSqlElasticJobExecutionModel> executions = resp.Select((rootExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, rootExecution)).ToList();
+
+            if (resp.NextPageLink != null)
+            {
+                Match match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                int toSkip = int.Parse(match.Groups[1].Value);
+
+                while (top > toSkip)
+                {
+                    resp = Communicator.ListJobExecutionsByJob(
+                        resourceGroupName, serverName, agentName,
+                        jobName,
+                        createTimeMin, createTimeMax,
+                        endTimeMin, endTimeMax,
+                        isActive,
+                        toSkip,
+                        top);
+
+                    executions.AddRange(resp.Select((rootExecution) => CreateJobExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, rootExecution)).ToList());
+
+                    match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                    toSkip = int.Parse(match.Groups[1].Value);
+                }
+            }
+
+            return executions;
         }
 
         #endregion
@@ -933,7 +958,32 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Services
                 isActive,
                 skip, top);
 
-            return resp.Select((targetExecution) => CreateJobTargetExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, targetExecution)).ToList();
+            List<AzureSqlElasticJobTargetExecutionModel> executions = resp.Select((jobTargetExecution) =>
+                CreateJobTargetExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, jobTargetExecution)).ToList();
+
+            if (resp.NextPageLink != null)
+            {
+                Match match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                int toSkip = int.Parse(match.Groups[1].Value);
+
+                while (top > toSkip)
+                {
+                    resp = Communicator.ListJobTargetExecutionsByStep(
+                        resourceGroupName, serverName, agentName,
+                        jobName, jobExecutionId, stepName,
+                        createTimeMin, createTimeMax,
+                        endTimeMin, endTimeMax,
+                        isActive,
+                        toSkip, top);
+
+                    executions.AddRange(resp.Select((jobTargetExecution) => CreateJobTargetExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, jobTargetExecution)));
+
+                    match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                    toSkip = int.Parse(match.Groups[1].Value);
+                }
+            }
+
+            return executions;
         }
 
         /// <summary>
@@ -968,7 +1018,31 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Services
                 isActive,
                 skip, top);
 
-            return resp.Select((targetExecution) => CreateJobTargetExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, targetExecution)).ToList();
+            List<AzureSqlElasticJobTargetExecutionModel> executions = resp.Select((targetExecution) => CreateJobTargetExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, targetExecution)).ToList();
+
+            if (resp.NextPageLink != null)
+            {
+                Match match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                int toSkip = int.Parse(match.Groups[1].Value);
+
+                while (top > toSkip)
+                {
+                    resp = Communicator.ListJobTargetExecutions(
+                        resourceGroupName, serverName, agentName,
+                        jobName, jobExecutionId,
+                        createTimeMin, createTimeMax,
+                        endTimeMin, endTimeMax,
+                        isActive,
+                        toSkip, top);
+
+                    executions.AddRange(resp.Select((targetExecution) => CreateJobTargetExecutionModelFromResponse(resourceGroupName, serverName, agentName, jobName, targetExecution)).ToList());
+
+                    match = Regex.Match(resp.NextPageLink, @"skip=(\d*)");
+                    toSkip = int.Parse(match.Groups[1].Value);
+                }
+            }
+
+            return executions;
         }
 
         /// <summary>
