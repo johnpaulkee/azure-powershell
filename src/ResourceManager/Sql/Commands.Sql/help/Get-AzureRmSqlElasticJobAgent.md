@@ -31,16 +31,20 @@ Get-AzureRmSqlElasticJobAgent [-Name <String>] [-ServerResourceId] <String>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Get-AzureRmSqlElasticJobAgent** cmdlet gets one or more Elastic Job agents
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Get-AzureRmSqlElasticJobAgent -ResourceGroupName rg -ServerName elasticjobserver -Name agent
+
+ResourceGroupName ServerName       DatabaseName AgentName State Tags
+----------------- ----------       ------------ --------- ----- ----
+rg                elasticjobserver jobdb        agent     Ready
 ```
 
-{{ Add example description here }}
+Gets an Elastic Job agent
 
 ## PARAMETERS
 

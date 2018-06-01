@@ -31,16 +31,20 @@ Remove-AzureRmSqlElasticJobAgent [-ResourceId] <String> [-Force] [-DefaultProfil
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Remove-AzureRmSqlElasticJobAgent** cmdlet removes an Elastic Job agent
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Remove-AzureRmSqlElasticJobAgent -ResourceGroupName rg -ServerName elasticjobserver -Name agent
+
+ResourceGroupName ServerName       DatabaseName AgentName State Tags
+----------------- ----------       ------------ --------- ----- ----
+rg                elasticjobserver jobdb        agent     Ready {[Octopus, Agent]}
 ```
 
-{{ Add example description here }}
+Removes an Elastic Job agent
 
 ## PARAMETERS
 

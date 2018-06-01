@@ -31,16 +31,20 @@ Set-AzureRmSqlElasticJobAgent [-Tag <Hashtable>] [-ResourceId] <String>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Set-AzureRmSqlElasticJobAgent** cmdlet updates an Elastic Job agents
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Set-AzureRmSqlElasticJobAgent -ResourceGroupName rg -ServerName elasticjobserver -Name agent -Tag @{ Octopus = "Agent" }
+
+ResourceGroupName ServerName       DatabaseName AgentName State Tags
+----------------- ----------       ------------ --------- ----- ----
+rg                elasticjobserver jobdb        agent     Ready {[Octopus, Agent]}
 ```
 
-{{ Add example description here }}
+Updates an Elastic Job agent
 
 ## PARAMETERS
 

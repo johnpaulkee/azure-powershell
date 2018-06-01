@@ -32,16 +32,20 @@ New-AzureRmSqlElasticJobAgent [-Name] <String> [-Tag <Hashtable>] [-DatabaseReso
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **New-AzureRmSqlElasticJobAgent** cmdlet creates a new Elastic Job agent
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> New-AzureRmSqlElasticJobAgent -ResourceGroupName rg -ServerName elasticjobserver -DatabaseName jobdb -Name agent
+
+ResourceGroupName ServerName       DatabaseName AgentName State Tags
+----------------- ----------       ------------ --------- ----- ----
+rg                elasticjobserver jobdb        agent     Ready
 ```
 
-{{ Add example description here }}
+Creates a new Elastic Job agent
 
 ## PARAMETERS
 
