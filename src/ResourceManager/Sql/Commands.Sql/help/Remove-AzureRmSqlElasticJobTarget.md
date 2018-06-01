@@ -126,19 +126,7 @@ Database Target Name
 
 ```yaml
 Type: String
-Parameter Sets: Sql Database Target Type, Sql Shard Map Target Type, Sql Database Input Object Parameter Set, Sql Shard Map Input Object Parameter Set, Sql Database TargetGroupResourceId Parameter Set
-Aliases:
-
-Required: True
-Position: 5
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: Sql Shard Map TargetGroupResourceId Parameter Set
+Parameter Sets: Sql Database Target Type, Sql Shard Map Target Type, Sql Database Input Object Parameter Set, Sql Shard Map Input Object Parameter Set, Sql Database TargetGroupResourceId Parameter Set, Sql Shard Map TargetGroupResourceId Parameter Set
 Aliases:
 
 Required: True
@@ -213,7 +201,19 @@ Server Target Name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Sql Database Target Type, Sql Shard Map Target Type, Sql Database Input Object Parameter Set, Sql Server or Elastic Pool Input Object Parameter Set, Sql Shard Map Input Object Parameter Set, Sql Database TargetGroupResourceId Parameter Set, Sql Server or Elastic Pool TargetGroupResourceId Parameter Set, Sql Shard Map TargetGroupResourceId Parameter Set
+Aliases:
+
+Required: True
+Position: 4
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+```yaml
+Type: String
+Parameter Sets: Sql Server or Elastic Pool Target Type
 Aliases:
 
 Required: True

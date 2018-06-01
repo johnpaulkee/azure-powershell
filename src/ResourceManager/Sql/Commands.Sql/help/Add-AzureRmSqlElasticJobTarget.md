@@ -14,66 +14,67 @@ Adds a target to a target group
 
 ### Sql Database Target Type (Default)
 ```
-Add-AzureRmSqlElasticJobTarget [-ResourceGroupName] <String> [-AgentServerName] <String> [-AgentName] <String>
- [-TargetGroupName] <String> [-ServerName] <String> [-DatabaseName] <String> [-Exclude]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ResourceGroupName] <String> [-AgentServerName] <String>
+ [-AgentName] <String> [-TargetGroupName] <String> [-ServerName] <String> [-DatabaseName] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Sql Server or Elastic Pool Target Type
 ```
-Add-AzureRmSqlElasticJobTarget [-ResourceGroupName] <String> [-AgentServerName] <String> [-AgentName] <String>
- [-TargetGroupName] <String> [-ServerName] <String> [-ElasticPoolName <String>]
- [-RefreshCredentialName] <String> [-Exclude] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ResourceGroupName] <String> [-AgentServerName] <String>
+ [-AgentName] <String> [-TargetGroupName] <String> [-ServerName] <String> [-ElasticPoolName <String>]
+ [-RefreshCredentialName] <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
 ### Sql Shard Map Target Type
 ```
-Add-AzureRmSqlElasticJobTarget [-ResourceGroupName] <String> [-AgentServerName] <String> [-AgentName] <String>
- [-TargetGroupName] <String> [-ServerName] <String> [-ShardMapName] <String> [-DatabaseName] <String>
- [-RefreshCredentialName] <String> [-Exclude] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ResourceGroupName] <String> [-AgentServerName] <String>
+ [-AgentName] <String> [-TargetGroupName] <String> [-ServerName] <String> [-ShardMapName] <String>
+ [-DatabaseName] <String> [-RefreshCredentialName] <String> [-DefaultProfile <IAzureContextContainer>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Sql Database Input Object Parameter Set
 ```
-Add-AzureRmSqlElasticJobTarget [-ServerName] <String> [-DatabaseName] <String> [-Exclude]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-DatabaseName] <String>
  [-TargetGroupObject] <AzureSqlElasticJobTargetGroupModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
  [-Confirm] [<CommonParameters>]
 ```
 
 ### Sql Server or Elastic Pool Input Object Parameter Set
 ```
-Add-AzureRmSqlElasticJobTarget [-ServerName] <String> [-ElasticPoolName <String>]
- [-RefreshCredentialName] <String> [-Exclude] [-TargetGroupObject] <AzureSqlElasticJobTargetGroupModel>
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-ElasticPoolName <String>]
+ [-RefreshCredentialName] <String> [-TargetGroupObject] <AzureSqlElasticJobTargetGroupModel>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Sql Shard Map Input Object Parameter Set
 ```
-Add-AzureRmSqlElasticJobTarget [-ServerName] <String> [-ShardMapName] <String> [-DatabaseName] <String>
- [-RefreshCredentialName] <String> [-Exclude] [-TargetGroupObject] <AzureSqlElasticJobTargetGroupModel>
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-ShardMapName] <String>
+ [-DatabaseName] <String> [-RefreshCredentialName] <String>
+ [-TargetGroupObject] <AzureSqlElasticJobTargetGroupModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
+ [-Confirm] [<CommonParameters>]
 ```
 
 ### Sql Database TargetGroupResourceId Parameter Set
 ```
-Add-AzureRmSqlElasticJobTarget [-ServerName] <String> [-DatabaseName] <String> [-Exclude]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-DatabaseName] <String>
  [-TargetGroupResourceId] <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
 ### Sql Server or Elastic Pool TargetGroupResourceId Parameter Set
 ```
-Add-AzureRmSqlElasticJobTarget [-ServerName] <String> [-ElasticPoolName <String>]
- [-RefreshCredentialName] <String> [-Exclude] [-TargetGroupResourceId] <String>
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-ElasticPoolName <String>]
+ [-RefreshCredentialName] <String> [-TargetGroupResourceId] <String> [-DefaultProfile <IAzureContextContainer>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Sql Shard Map TargetGroupResourceId Parameter Set
 ```
-Add-AzureRmSqlElasticJobTarget [-ServerName] <String> [-ShardMapName] <String> [-DatabaseName] <String>
- [-RefreshCredentialName] <String> [-Exclude] [-TargetGroupResourceId] <String>
+Add-AzureRmSqlElasticJobTarget [-Exclude] [-ServerName] <String> [-ShardMapName] <String>
+ [-DatabaseName] <String> [-RefreshCredentialName] <String> [-TargetGroupResourceId] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 

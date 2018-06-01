@@ -19,14 +19,14 @@ Set-AzureRmSqlElasticJob [-ResourceGroupName] <String> [-ServerName] <String> [-
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job Default Run Once Parameter Set
+### Set Job Run Once Parameter Set
 ```
 Set-AzureRmSqlElasticJob [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-Name] <String> [-RunOnce] [-StartTime <DateTime>] [-EndTime <DateTime>] [-Enable] [-Description <String>]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job Default Recurring Parameter Set
+### Set Job Recurring Parameter Set
 ```
 Set-AzureRmSqlElasticJob [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-Name] <String> [-IntervalType] <JobScheduleReccuringScheduleTypes> [-IntervalCount] <UInt32>
@@ -34,28 +34,28 @@ Set-AzureRmSqlElasticJob [-ResourceGroupName] <String> [-ServerName] <String> [-
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job Object Run Once Parameter Set
+### Set Job Run Once Parameter Set Using Job Object
 ```
 Set-AzureRmSqlElasticJob [-RunOnce] [-StartTime <DateTime>] [-EndTime <DateTime>]
  [-InputObject] <AzureSqlElasticJobModel> [-Enable] [-Description <String>]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job Resource Id Run Once Parameter Set
+### Set Job Run Once Parameter Set Using Job Resource Id
 ```
 Set-AzureRmSqlElasticJob [-RunOnce] [-StartTime <DateTime>] [-EndTime <DateTime>] [-ResourceId] <String>
  [-Enable] [-Description <String>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
-### Job Object Recurring Parameter Set
+### Set Job Recurring Parameter Set Using Job Object
 ```
 Set-AzureRmSqlElasticJob [-IntervalType] <JobScheduleReccuringScheduleTypes> [-IntervalCount] <UInt32>
  [-StartTime <DateTime>] [-EndTime <DateTime>] [-InputObject] <AzureSqlElasticJobModel> [-Enable]
  [-Description <String>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job Resource Id Recurring Parameter Set
+### Set Job Recurring Parameter Set Using Job Resource Id
 ```
 Set-AzureRmSqlElasticJob [-IntervalType] <JobScheduleReccuringScheduleTypes> [-IntervalCount] <UInt32>
  [-StartTime <DateTime>] [-EndTime <DateTime>] [-ResourceId] <String> [-Enable] [-Description <String>]
@@ -94,7 +94,7 @@ The agent name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Job Default Run Once Parameter Set, Job Default Recurring Parameter Set
+Parameter Sets: Default Parameter Set, Set Job Run Once Parameter Set, Set Job Recurring Parameter Set
 Aliases:
 
 Required: True
@@ -169,7 +169,7 @@ The job input object
 
 ```yaml
 Type: AzureSqlElasticJobModel
-Parameter Sets: Job Object Run Once Parameter Set, Job Object Recurring Parameter Set, Input Object Parameter Set
+Parameter Sets: Set Job Run Once Parameter Set Using Job Object, Set Job Recurring Parameter Set Using Job Object, Input Object Parameter Set
 Aliases:
 
 Required: True
@@ -184,7 +184,7 @@ The recurring schedule interval count
 
 ```yaml
 Type: UInt32
-Parameter Sets: Job Default Recurring Parameter Set, Job Object Recurring Parameter Set, Job Resource Id Recurring Parameter Set
+Parameter Sets: Set Job Recurring Parameter Set, Set Job Recurring Parameter Set Using Job Object, Set Job Recurring Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -199,7 +199,7 @@ The recurring schedule interval type - Can be Minute, Hour, Day, Week, Month
 
 ```yaml
 Type: JobScheduleReccuringScheduleTypes
-Parameter Sets: Job Default Recurring Parameter Set, Job Object Recurring Parameter Set, Job Resource Id Recurring Parameter Set
+Parameter Sets: Set Job Recurring Parameter Set, Set Job Recurring Parameter Set Using Job Object, Set Job Recurring Parameter Set Using Job Resource Id
 Aliases:
 Accepted values: Minute, Hour, Day, Week, Month
 
@@ -215,7 +215,7 @@ The job name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Job Default Run Once Parameter Set, Job Default Recurring Parameter Set
+Parameter Sets: Default Parameter Set, Set Job Run Once Parameter Set, Set Job Recurring Parameter Set
 Aliases: JobName
 
 Required: True
@@ -230,7 +230,7 @@ The resource group name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Job Default Run Once Parameter Set, Job Default Recurring Parameter Set
+Parameter Sets: Default Parameter Set, Set Job Run Once Parameter Set, Set Job Recurring Parameter Set
 Aliases:
 
 Required: True
@@ -245,7 +245,7 @@ The job resource id
 
 ```yaml
 Type: String
-Parameter Sets: Job Resource Id Run Once Parameter Set, Job Resource Id Recurring Parameter Set, Resource Id Parameter Set
+Parameter Sets: Set Job Run Once Parameter Set Using Job Resource Id, Set Job Recurring Parameter Set Using Job Resource Id, Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -260,7 +260,7 @@ The flag to indicate job will be run once
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Job Default Run Once Parameter Set, Job Object Run Once Parameter Set, Job Resource Id Run Once Parameter Set
+Parameter Sets: Set Job Run Once Parameter Set, Set Job Run Once Parameter Set Using Job Object, Set Job Run Once Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -275,7 +275,7 @@ The server name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Job Default Run Once Parameter Set, Job Default Recurring Parameter Set
+Parameter Sets: Default Parameter Set, Set Job Run Once Parameter Set, Set Job Recurring Parameter Set
 Aliases:
 
 Required: True

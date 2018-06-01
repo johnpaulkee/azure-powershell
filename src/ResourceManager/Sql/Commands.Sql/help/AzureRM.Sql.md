@@ -15,7 +15,7 @@ This topic displays help topics for the Azure SQL Database Cmdlets.
 Adds one or more databases to an Azure SQL Database Failover Group.
 
 ### [Add-AzureRmSqlElasticJobStep](Add-AzureRmSqlElasticJobStep.md)
-Adds one or more job steps to a job
+Adds a job step to a job
 
 ### [Add-AzureRmSqlElasticJobTarget](Add-AzureRmSqlElasticJobTarget.md)
 Adds a target to a target group
@@ -143,6 +143,12 @@ Gets elastic pool recommendations.
 ### [Get-AzureRmSqlElasticPoolRecommendedAction](Get-AzureRmSqlElasticPoolRecommendedAction.md)
 Gets one or more recommended actions for an Azure SQL Elastic Pool Advisor.
 
+### [Get-AzureRmSqlManagedDatabase](Get-AzureRmSqlManagedDatabase.md)
+Gets one or more managed databases.
+
+### [Get-AzureRmSqlManagedInstance](Get-AzureRmSqlManagedInstance.md)
+Returns information about SQL Database Managed instances.
+
 ### [Get-AzureRmSqlServer](Get-AzureRmSqlServer.md)
 Returns information about SQL Database servers.
 
@@ -237,7 +243,7 @@ This command creates a new Azure SQL Database Failover Group.
 Imports a .bacpac file and create a new database on the server.
 
 ### [New-AzureRmSqlDatabaseInstanceFailoverGroup](New-AzureRmSqlDatabaseInstanceFailoverGroup.md)
-This command creates a new Instance Failover Group.
+This command creates a new Azure SQL Database Instance Failover Group.
 
 ### [New-AzureRmSqlDatabaseRestorePoint](New-AzureRmSqlDatabaseRestorePoint.md)
 Creates a new restore point from which a SQL Database can be restored.
@@ -259,6 +265,12 @@ Creates a new target group
 
 ### [New-AzureRmSqlElasticPool](New-AzureRmSqlElasticPool.md)
 Creates an elastic database pool for a SQL Database.
+
+### [New-AzureRmSqlManagedDatabase](New-AzureRmSqlManagedDatabase.md)
+Creates a managed database.
+
+### [New-AzureRmSqlManagedInstance](New-AzureRmSqlManagedInstance.md)
+Creates a SQL Database Managed instance.
 
 ### [New-AzureRmSqlServer](New-AzureRmSqlServer.md)
 Creates a SQL Database server.
@@ -341,6 +353,12 @@ Removes the target group
 ### [Remove-AzureRmSqlElasticPool](Remove-AzureRmSqlElasticPool.md)
 Deletes an elastic database pool.
 
+### [Remove-AzureRmSqlManagedDatabase](Remove-AzureRmSqlManagedDatabase.md)
+Removes an Azure SQL Managed database.
+
+### [Remove-AzureRmSqlManagedInstance](Remove-AzureRmSqlManagedInstance.md)
+Removes an Azure SQL Database Managed instance.
+
 ### [Remove-AzureRmSqlServer](Remove-AzureRmSqlServer.md)
 Removes an Azure SQL Database server.
 
@@ -382,6 +400,9 @@ Removes an Azure SQL Database Sync Member.
 
 ### [Restore-AzureRmSqlDatabase](Restore-AzureRmSqlDatabase.md)
 Restores a SQL database.
+
+### [Restore-AzureRmSqlManagedDatabase](Restore-AzureRmSqlManagedDatabase.md)
+Restores a SQL Managed database.
 
 ### [Resume-AzureRmSqlDatabase](Resume-AzureRmSqlDatabase.md)
 Resumes a SQL Data Warehouse database.
@@ -448,6 +469,9 @@ Updates auto execute status of an Azure SQL Elastic Pool Advisor.
 
 ### [Set-AzureRmSqlElasticPoolRecommendedActionState](Set-AzureRmSqlElasticPoolRecommendedActionState.md)
 Updates the state of an Azure SQL Elastic Pool recommended action.
+
+### [Set-AzureRmSqlManagedInstance](Set-AzureRmSqlManagedInstance.md)
+Modifies properties of a SQL Database Managed instance. Properties that are not specified are set to their default values.
 
 ### [Set-AzureRmSqlServer](Set-AzureRmSqlServer.md)
 Modifies properties of a SQL Database server.
@@ -526,6 +550,9 @@ Executes a failover of an Azure SQL Database Failover Group.
 
 ### [Switch-AzureRmSqlDatabaseInstanceFailoverGroup](Switch-AzureRmSqlDatabaseInstanceFailoverGroup.md)
 Executes a failover of an Instance Failover Group.
+
+### [Update-AzureRmSqlManagedInstance](Update-AzureRmSqlManagedInstance.md)
+Modifies properties of a SQL Database Managed instance. Only properties that are explicitly set will be updated.
 
 ### [Update-AzureRmSqlSyncGroup](Update-AzureRmSqlSyncGroup.md)
 Updates an Azure SQL Database Sync Group.

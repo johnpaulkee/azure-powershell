@@ -21,12 +21,6 @@ Get-AzureRmSqlElasticJobTargetExecution [-ResourceGroupName] <String> [-ServerNa
  [<CommonParameters>]
 ```
 
-### GetJobTargetExecution Parameter Set
-```
-Get-AzureRmSqlElasticJobTargetExecution -StepName <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
- [-Confirm] [<CommonParameters>]
-```
-
 ### Input Object Parameter Set
 ```
 Get-AzureRmSqlElasticJobTargetExecution [-StepName <String>] [-CreateTimeMin <DateTime>]
@@ -62,7 +56,7 @@ Flag to filter by active executions.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -92,7 +86,7 @@ Count returns the top number of executions.
 
 ```yaml
 Type: Int32
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -107,7 +101,7 @@ Filter by create time max
 
 ```yaml
 Type: DateTime
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -122,7 +116,7 @@ Filter by create time min
 
 ```yaml
 Type: DateTime
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -152,7 +146,7 @@ Filter by end time max.
 
 ```yaml
 Type: DateTime
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -167,7 +161,7 @@ Filter by end time min.
 
 ```yaml
 Type: DateTime
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -272,22 +266,10 @@ The job step name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Input Object Parameter Set, Resource Id Parameter Set
+Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: GetJobTargetExecution Parameter Set
-Aliases:
-
-Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False

@@ -20,7 +20,7 @@ Get-AzureRmSqlElasticJobExecution [-ResourceGroupName] <String> [-ServerName] <S
  [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### The get root job execution parameter set
+### Get Job Execution Parameter Set
 ```
 Get-AzureRmSqlElasticJobExecution [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  -JobName <String> [-JobExecutionId] <String> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
@@ -43,14 +43,14 @@ Get-AzureRmSqlElasticJobExecution [-Count] <Int32> [-JobName <String>] [-CreateT
  [<CommonParameters>]
 ```
 
-### The get root job execution by agent object parameter set
+### Get Job Execution Parameter Set Using Agent Object
 ```
 Get-AzureRmSqlElasticJobExecution -JobName <String> [-JobExecutionId] <String>
  [-AgentObject] <AzureSqlElasticJobAgentModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
-### The get root job execution by agent resource id parameter set
+### Get Job Execution Parameter Set using Agent Resource Id
 ```
 Get-AzureRmSqlElasticJobExecution -JobName <String> [-JobExecutionId] <String> [-AgentResourceId] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -90,7 +90,7 @@ The agent name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get root job execution parameter set
+Parameter Sets: Default Parameter Set, Get Job Execution Parameter Set
 Aliases:
 
 Required: True
@@ -105,7 +105,7 @@ The job execution id.
 
 ```yaml
 Type: AzureSqlElasticJobAgentModel
-Parameter Sets: Input Object Parameter Set, The get root job execution by agent object parameter set
+Parameter Sets: Input Object Parameter Set, Get Job Execution Parameter Set Using Agent Object
 Aliases:
 
 Required: True
@@ -120,7 +120,7 @@ The agent resource id.
 
 ```yaml
 Type: String
-Parameter Sets: Resource Id Parameter Set, The get root job execution by agent resource id parameter set
+Parameter Sets: Resource Id Parameter Set, Get Job Execution Parameter Set using Agent Resource Id
 Aliases:
 
 Required: True
@@ -225,7 +225,7 @@ The job execution id.
 
 ```yaml
 Type: String
-Parameter Sets: The get root job execution parameter set, The get root job execution by agent object parameter set, The get root job execution by agent resource id parameter set
+Parameter Sets: Get Job Execution Parameter Set, Get Job Execution Parameter Set Using Agent Object, Get Job Execution Parameter Set using Agent Resource Id
 Aliases:
 
 Required: True
@@ -252,7 +252,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: The get root job execution parameter set, The get root job execution by agent object parameter set, The get root job execution by agent resource id parameter set
+Parameter Sets: Get Job Execution Parameter Set, Get Job Execution Parameter Set Using Agent Object, Get Job Execution Parameter Set using Agent Resource Id
 Aliases:
 
 Required: True
@@ -267,7 +267,7 @@ The resource group name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get root job execution parameter set
+Parameter Sets: Default Parameter Set, Get Job Execution Parameter Set
 Aliases:
 
 Required: True
@@ -282,7 +282,7 @@ The server name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get root job execution parameter set
+Parameter Sets: Default Parameter Set, Get Job Execution Parameter Set
 Aliases:
 
 Required: True

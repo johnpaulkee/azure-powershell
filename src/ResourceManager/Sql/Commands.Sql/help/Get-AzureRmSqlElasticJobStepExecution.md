@@ -20,21 +20,21 @@ Get-AzureRmSqlElasticJobStepExecution [-ResourceGroupName] <String> [-ServerName
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### The get job step parameter Set
+### Get Job Step Execution Parameter Set
 ```
 Get-AzureRmSqlElasticJobStepExecution [-ResourceGroupName] <String> [-ServerName] <String>
  [-AgentName] <String> [-JobName] <String> [-JobExecutionId] <String> [-StepName] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### The get job step parameter set using job execution object model
+### Get Job Step Execution Parameter Set Using Job Execution Object
 ```
 Get-AzureRmSqlElasticJobStepExecution [-StepName] <String>
  [-JobExecutionObject] <AzureSqlElasticJobExecutionModel> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
  [-Confirm] [<CommonParameters>]
 ```
 
-### The get job step parameter set using job executoin resource id
+### Get Job Step Execution Parameter Set Using Job Execution Resource Id
 ```
 Get-AzureRmSqlElasticJobStepExecution [-StepName] <String> [-JobExecutionResourceId] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -89,7 +89,7 @@ The agent name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get job step parameter Set
+Parameter Sets: Default Parameter Set, Get Job Step Execution Parameter Set
 Aliases:
 
 Required: True
@@ -179,7 +179,7 @@ The job execution id.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get job step parameter Set
+Parameter Sets: Default Parameter Set, Get Job Step Execution Parameter Set
 Aliases:
 
 Required: True
@@ -194,7 +194,7 @@ The agent object.
 
 ```yaml
 Type: AzureSqlElasticJobExecutionModel
-Parameter Sets: The get job step parameter set using job execution object model, Input Object Parameter Set
+Parameter Sets: Get Job Step Execution Parameter Set Using Job Execution Object, Input Object Parameter Set
 Aliases:
 
 Required: True
@@ -209,7 +209,7 @@ The job execution resource id.
 
 ```yaml
 Type: String
-Parameter Sets: The get job step parameter set using job executoin resource id, Resource Id Parameter Set
+Parameter Sets: Get Job Step Execution Parameter Set Using Job Execution Resource Id, Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -224,7 +224,7 @@ The job name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get job step parameter Set
+Parameter Sets: Default Parameter Set, Get Job Step Execution Parameter Set
 Aliases:
 
 Required: True
@@ -239,7 +239,7 @@ The resource group name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get job step parameter Set
+Parameter Sets: Default Parameter Set, Get Job Step Execution Parameter Set
 Aliases:
 
 Required: True
@@ -254,7 +254,7 @@ The server name.
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, The get job step parameter Set
+Parameter Sets: Default Parameter Set, Get Job Step Execution Parameter Set
 Aliases:
 
 Required: True
@@ -269,7 +269,7 @@ The job step name.
 
 ```yaml
 Type: String
-Parameter Sets: The get job step parameter Set, The get job step parameter set using job execution object model, The get job step parameter set using job executoin resource id
+Parameter Sets: Get Job Step Execution Parameter Set, Get Job Step Execution Parameter Set Using Job Execution Object, Get Job Step Execution Parameter Set Using Job Execution Resource Id
 Aliases:
 
 Required: True
@@ -311,19 +311,16 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel
 System.String
 
-
 ## OUTPUTS
 
 ### System.Collections.Generic.IEnumerable`1[[Microsoft.Azure.Commands.Sql.ElasticJobs.Model.AzureSqlElasticJobExecutionModel, Microsoft.Azure.Commands.Sql, Version=4.5.0.0, Culture=neutral, PublicKeyToken=null]]
-
 
 ## NOTES
 
