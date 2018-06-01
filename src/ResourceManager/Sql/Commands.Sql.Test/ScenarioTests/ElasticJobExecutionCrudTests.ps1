@@ -204,8 +204,8 @@ function Test-GetJobExecution
 		Assert-AreEqual $je.JobVersion $jobExecution.JobVersion
 
 		# There should be no active executions
-		$allExecutions = $a1 | Get-AzureRmSqlElasticJobExecution -Count 10 -CreateTimeMin (Get-Date "2018-05-31T23:58:57") -CreateTimeMax (Get-Date "2018-07-31T23:58:57") -EndTimeMin (Get-Date "2018-06-31T23:58:57") -EndTimeMax (Get-Date "2018-07-31T23:58:57") -Active
-		$jobExecutions = $a1 | Get-AzureRmSqlElasticJobExecution -Count 10 -CreateTimeMin (Get-Date "2018-05-31T23:58:57") -CreateTimeMax (Get-Date "2018-07-31T23:58:57") -EndTimeMin (Get-Date "2018-06-31T23:58:57") -EndTimeMax (Get-Date "2018-07-31T23:58:57") -Active
+		$allExecutions = $a1 | Get-AzureRmSqlElasticJobExecution -Count 10 -CreateTimeMin "2018-05-31T23:58:57" -CreateTimeMax "2018-07-31T23:58:57" -EndTimeMin "2018-06-30T23:58:57" -EndTimeMax "2018-07-31T23:58:57" -Active
+		$jobExecutions = $a1 | Get-AzureRmSqlElasticJobExecution -Count 10 -CreateTimeMin "2018-05-31T23:58:57" -CreateTimeMax "2018-07-31T23:58:57" -EndTimeMin "2018-06-30T23:58:57" -EndTimeMax "2018-07-31T23:58:57" -Active
 		Assert-Null $allExecutions
 		Assert-Null $jobExecutions
 	}
@@ -263,8 +263,8 @@ function Test-GetJobStepExecution
 		Assert-NotNull 	$stepExecution.StepName
 
 		# Test filters
-		$allStepExecutions = $je | Get-AzureRmSqlElasticJobStepExecution -CreateTimeMin (Get-Date "2018-05-31T23:58:57") `
-			-CreateTimeMax (Get-Date "2018-07-31T23:58:57") -EndTimeMin (Get-Date "2018-06-31T23:58:57") -EndTimeMax (Get-Date "2018-07-31T23:58:57") -Active
+		$allStepExecutions = $je | Get-AzureRmSqlElasticJobStepExecution -CreateTimeMin "2018-05-31T23:58:57" `
+			-CreateTimeMax "2018-07-31T23:58:57" -EndTimeMin "2018-06-30T23:58:57" -EndTimeMax "2018-07-31T23:58:57" -Active
 		Assert-Null $allStepExecutions
 	}
 	finally
@@ -327,8 +327,8 @@ function Test-GetJobTargetExecution
 		Assert-AreEqual $targetExecution.TargetDatabaseName $a1.DatabaseName
 
 		# Test job target execution piping
-		$allTargetExecutions = $je | Get-AzureRmSqlElasticJobTargetExecution -Count 10 -CreateTimeMin (Get-Date "2018-05-31T23:58:57") -CreateTimeMax (Get-Date "2018-07-31T23:58:57") -EndTimeMin (Get-Date "2018-06-31T23:58:57") -EndTimeMax (Get-Date "2018-07-31T23:58:57") -Active
-		$stepTargetExecutions = $je | Get-AzureRmSqlElasticJobTargetExecution -StepName $js1.StepName -Count 10 -CreateTimeMin (Get-Date "2018-05-31T23:58:57") -CreateTimeMax (Get-Date "2018-07-31T23:58:57") -EndTimeMin (Get-Date "2018-06-31T23:58:57") -EndTimeMax (Get-Date "2018-07-31T23:58:57") -Active
+		$allTargetExecutions = $je | Get-AzureRmSqlElasticJobTargetExecution -Count 10 -CreateTimeMin "2018-05-31T23:58:57" -CreateTimeMax "2018-07-31T23:58:57" -EndTimeMin "2018-06-30T23:58:57" -EndTimeMax "2018-07-31T23:58:57" -Active
+		$stepTargetExecutions = $je | Get-AzureRmSqlElasticJobTargetExecution -StepName $js1.StepName -Count 10 -CreateTimeMin "2018-05-31T23:58:57" -CreateTimeMax "2018-07-31T23:58:57" -EndTimeMin "2018-06-30T23:58:57" -EndTimeMax "2018-07-31T23:58:57" -Active
 		Assert-Null $allTargetExecutions
 		Assert-Null $stepTargetExecutions
 	}
