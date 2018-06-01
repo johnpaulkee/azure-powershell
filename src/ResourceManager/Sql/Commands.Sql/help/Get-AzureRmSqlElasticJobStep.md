@@ -51,7 +51,7 @@ Get-AzureRmSqlElasticJobStep -Name <String> [-Version] <Int32> [-JobResourceId] 
 ```
 
 ## DESCRIPTION
-Gets a job step from a job
+The **Get-AzureRmSqlElasticJobStep** cmdlet gets one or more job steps from a job
 
 ## EXAMPLES
 

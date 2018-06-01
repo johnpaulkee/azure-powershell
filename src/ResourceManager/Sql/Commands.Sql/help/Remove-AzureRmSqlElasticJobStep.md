@@ -32,7 +32,7 @@ Remove-AzureRmSqlElasticJobStep [-ResourceId] <String> [-DefaultProfile <IAzureC
 ```
 
 ## DESCRIPTION
-Removes a job step from a job
+The **Remove-AzureRmSqlElasticJobStep** cmdlet removes a job step from a job
 
 ## EXAMPLES
 

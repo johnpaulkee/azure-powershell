@@ -103,7 +103,7 @@ Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-Cred
 ```
 
 ## DESCRIPTION
-Adds a job step to a job
+The **Add-AzureRmSqlElasticJobStep** cmdlet adds a job step to a job
 
 ## EXAMPLES
 

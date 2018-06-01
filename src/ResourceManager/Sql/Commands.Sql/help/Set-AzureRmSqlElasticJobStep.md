@@ -103,7 +103,7 @@ Set-AzureRmSqlElasticJobStep [-TargetGroupName <String>] [-CredentialName <Strin
 ```
 
 ## DESCRIPTION
-Updates a job step from a job
+The **Set-AzureRmSqlElasticJobStep** cmdlet updates a job step
 
 ## EXAMPLES
 
