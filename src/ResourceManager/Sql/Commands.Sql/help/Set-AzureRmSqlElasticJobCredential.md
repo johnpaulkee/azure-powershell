@@ -33,16 +33,20 @@ Set-AzureRmSqlElasticJobCredential [-Credential] <PSCredential> [-ResourceId] <S
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Set-AzureRmSqlElasticJobCredential** cmdlet updates a job credential
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\>  $agent | Set-AzureRmSqlElasticJobCredential -Name cred1 -Credential (Get-Credential)
+
+CredentialName UserName
+-------------- --------
+cred1          user2
 ```
 
-{{ Add example description here }}
+Updates a job credential
 
 ## PARAMETERS
 

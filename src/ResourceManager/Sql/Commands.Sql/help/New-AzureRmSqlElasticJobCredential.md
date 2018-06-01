@@ -33,16 +33,20 @@ New-AzureRmSqlElasticJobCredential [-Name] <String> [-Credential] <PSCredential>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **New-AzureRmSqlElasticJobCredential** cmdlet creates a new job credential
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\>  $agent | New-AzureRmSqlElasticJobCredential -Name cred1 -Credential (Get-Credential)
+
+CredentialName UserName
+-------------- --------
+cred1          user1
 ```
 
-{{ Add example description here }}
+Creates a new job credential
 
 ## PARAMETERS
 

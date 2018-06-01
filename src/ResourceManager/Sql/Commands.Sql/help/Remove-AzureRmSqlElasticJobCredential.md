@@ -32,16 +32,20 @@ Remove-AzureRmSqlElasticJobCredential [-ResourceId] <String> [-DefaultProfile <I
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Remove-AzureRmSqlElasticJobCredential** cmdlet removes a job credential
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\>  $agent | Remove-AzureRmSqlElasticJobCredential -Name cred1
+
+CredentialName UserName
+-------------- --------
+cred1          user2
 ```
 
-{{ Add example description here }}
+Removes a job credential
 
 ## PARAMETERS
 

@@ -31,16 +31,20 @@ Get-AzureRmSqlElasticJobCredential [-Name <String>] [-AgentResourceId] <String>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Get-AzureRmSqlElasticJobCredential** cmdlet gets one or more job credentials
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\>  $agent | Get-AzureRmSqlElasticJobCredential -Name cred1
+
+CredentialName UserName
+-------------- --------
+cred1          user1
 ```
 
-{{ Add example description here }}
+Gets a job credential
 
 ## PARAMETERS
 
