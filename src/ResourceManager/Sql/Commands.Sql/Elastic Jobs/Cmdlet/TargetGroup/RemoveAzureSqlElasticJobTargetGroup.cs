@@ -127,6 +127,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
 
             base.ExecuteCmdlet();
             this.Name = null; // Clear name
+            this.TargetGroupName = null; // Clear target group name
         }
 
         /// <summary>

@@ -18,6 +18,8 @@
 #>
 function Test-CreateJobCredential
 {
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
 	try
 	{
 		Test-CreateJobCredentialWithDefaultParam $a1
@@ -38,6 +40,8 @@ function Test-CreateJobCredential
 #>
 function Test-GetJobCredential
 {
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
 	try
 	{
 		Test-GetJobCredentialWithDefaultParam $a1
@@ -57,6 +61,8 @@ function Test-GetJobCredential
 #>
 function Test-UpdateJobCredential
 {
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
 	try
 	{
 		Test-UpdateJobCredentialWithDefaultParam $a1
@@ -74,8 +80,10 @@ function Test-UpdateJobCredential
 	.SYNOPSIS
 	Tests removing job credential
 #>
-function Test-UpdateJobCredential
+function Test-RemoveJobCredential
 {
+	$a1 = Create-ElasticJobAgentTestEnvironment
+
 	try
 	{
 		Test-RemoveJobCredentialWithDefaultParam $a1
@@ -96,7 +104,6 @@ function Test-UpdateJobCredential
 function Test-CreateJobCredentialWithDefaultParam ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$cn1 = Get-JobCredentialName
 	$c1 = Get-ServerCredential
 
@@ -115,7 +122,6 @@ function Test-CreateJobCredentialWithDefaultParam ($a1)
 function Test-CreateJobCredentialWithAgentObject ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$cn1 = Get-JobCredentialName
 	$c1 = Get-ServerCredential
 
@@ -134,7 +140,6 @@ function Test-CreateJobCredentialWithAgentObject ($a1)
 function Test-CreateJobCredentialWithAgentResourceId ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$cn1 = Get-JobCredentialName
 	$c1 = Get-ServerCredential
 
@@ -153,7 +158,6 @@ function Test-CreateJobCredentialWithAgentResourceId ($a1)
 function Test-CreateJobCredentialWithPiping ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$cn1 = Get-JobCredentialName
 	$c1 = Get-ServerCredential
 
@@ -172,7 +176,6 @@ function Test-CreateJobCredentialWithPiping ($a1)
 function Test-UpdateJobCredentialWithDefaultParam ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test default parameters
@@ -192,7 +195,6 @@ function Test-UpdateJobCredentialWithDefaultParam ($a1)
 function Test-UpdateJobCredentialWithInputObject ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test job credential input object
@@ -212,7 +214,6 @@ function Test-UpdateJobCredentialWithInputObject ($a1)
 function Test-UpdateJobCredentialWithResourceId ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test job credential resource id
@@ -232,7 +233,6 @@ function Test-UpdateJobCredentialWithResourceId ($a1)
 function Test-UpdateJobCredentialWithPiping ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test piping
@@ -252,11 +252,10 @@ function Test-UpdateJobCredentialWithPiping ($a1)
 function Test-GetJobCredentialWithDefaultParam ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 	$jc2 = Create-JobCredentialForTest $a1
 
-		# Test default parameters - get specific credential
+	# Test default parameters - get specific credential
 	$resp = Get-AzureRmSqlElasticJobCredential -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $jc1.CredentialName
 	Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
 	Assert-AreEqual $resp.ServerName $a1.ServerName
@@ -276,7 +275,6 @@ function Test-GetJobCredentialWithDefaultParam ($a1)
 function Test-GetJobCredentialWithAgentObject ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 	$jc2 = Create-JobCredentialForTest $a1
 
@@ -301,7 +299,6 @@ function Test-GetJobCredentialWithAgentObject ($a1)
 function Test-GetJobCredentialWithAgentResourceId ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 	$jc2 = Create-JobCredentialForTest $a1
 
@@ -314,7 +311,7 @@ function Test-GetJobCredentialWithAgentResourceId ($a1)
 	Assert-AreEqual $resp.UserName $jc1.UserName
 
 	# Test job credential resource id - get credentials
-	$resp = Get-AzureRmSqlElasticJobCredential -AgentResourceId $a1
+	$resp = Get-AzureRmSqlElasticJobCredential -AgentResourceId $a1.ResourceId
 	Assert-True { $resp.Count -ge 2 }
 }
 
@@ -325,7 +322,6 @@ function Test-GetJobCredentialWithAgentResourceId ($a1)
 function Test-GetJobCredentialWithPiping ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 	$jc2 = Create-JobCredentialForTest $a1
 
@@ -337,7 +333,7 @@ function Test-GetJobCredentialWithPiping ($a1)
 	Assert-AreEqual $resp.CredentialName $jc1.CredentialName
 	Assert-AreEqual $resp.UserName $jc1.UserName
 
-	# Test piping - get all credentials
+	# Test piping - get all credentials - should have at least 2
 	$resp = $a1 | Get-AzureRmSqlElasticJobCredential
 	Assert-True { $resp.Count -ge 2 }
 }
@@ -349,7 +345,6 @@ function Test-GetJobCredentialWithPiping ($a1)
 function Test-RemoveJobCredentialWithDefaultParam ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test default parameters - Remove credential
@@ -368,7 +363,6 @@ function Test-RemoveJobCredentialWithDefaultParam ($a1)
 function Test-RemoveJobCredentialWithInputObject ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test input object
@@ -387,7 +381,6 @@ function Test-RemoveJobCredentialWithInputObject ($a1)
 function Test-RemoveJobCredentialWithResourceId ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 
 	# Test resource id
@@ -406,7 +399,6 @@ function Test-RemoveJobCredentialWithResourceId ($a1)
 function Test-RemoveJobCredentialWithPiping ($a1)
 {
 	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 	$jc1 = Create-JobCredentialForTest $a1
 	$jc2 = Create-JobCredentialForTest $a1
 
@@ -418,8 +410,8 @@ function Test-RemoveJobCredentialWithPiping ($a1)
 	Assert-AreEqual $resp.CredentialName $jc1.CredentialName
 	Assert-AreEqual $resp.UserName $jc1.UserName
 
-	# Test remove all
+	# Test remove all - should have removed at least 1
 	$all = $a1 | Get-AzureRmSqlElasticJobCredential
 	$resp = $all | Remove-AzureRmSqlElasticJobCredential
-	Assert-IsTrue { $resp.Count -ge 2 }
+	Assert-True { $resp.Count -ge 1 }
 }

@@ -239,7 +239,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
                 createTimeMax: this.CreateTimeMax,
                 endTimeMin: this.EndTimeMin,
                 endTimeMax: this.EndTimeMax,
-                isActive: this.Active);
+                isActive: this.Active.IsPresent ? this.Active : (bool?)null);
 
             return allStepExecutions;
         }

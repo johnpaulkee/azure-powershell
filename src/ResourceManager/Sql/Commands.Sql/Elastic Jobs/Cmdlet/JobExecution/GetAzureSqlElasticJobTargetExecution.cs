@@ -206,6 +206,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
                     stepName: this.StepName,
                     createTimeMin: this.CreateTimeMin,
                     createTimeMax: this.CreateTimeMax,
+                    isActive: this.Active.IsPresent ? this.Active : (bool?)null,
                     endTimeMin: this.EndTimeMin,
                     endTimeMax: this.EndTimeMax,
                     top: this.Count);
@@ -221,6 +222,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
                 jobExecutionId: Guid.Parse(this.JobExecutionId),
                 createTimeMin: this.CreateTimeMin,
                 createTimeMax: this.CreateTimeMax,
+                isActive: this.Active.IsPresent ? this.Active : (bool?)null,
                 endTimeMin: this.EndTimeMin,
                 endTimeMax: this.EndTimeMax,
                 top: this.Count);

@@ -22,6 +22,9 @@ function Test-CreateAgentWithDefaultParam
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $s1
+    $db2 = Create-DatabaseForTest $s1
+    $db3 = Create-DatabaseForTest $s1
+    $db4 = Create-DatabaseForTest $s1
     $agentName = Get-AgentName
 
     try
@@ -34,97 +37,37 @@ function Test-CreateAgentWithDefaultParam
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests creating an agent using database object
-#>
-function Test-CreateAgentWithDatabaseObject
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $s1
-    $agentName = Get-AgentName
-
-    try
-    {
         # Test using database object
-        $resp = New-AzureRmSqlElasticJobAgent -DatabaseObject $db1 -Name $agentName
+        $resp = New-AzureRmSqlElasticJobAgent -DatabaseObject $db2 -Name $agentName
         Assert-AreEqual $resp.AgentName $agentName
         Assert-AreEqual $resp.ServerName $s1.ServerName
-        Assert-AreEqual $resp.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp.DatabaseName $db2.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests creating an agent using database resource id
-#>
-function Test-CreateAgentWithDatabaseResourceId
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $s1
-    $agentName = Get-AgentName
-
-    try
-    {
         # Test using database resource id
-        $resp = New-AzureRmSqlElasticJobAgent -DatabaseResourceId $db1.ResourceId -Name $agentName
+        $resp = New-AzureRmSqlElasticJobAgent -DatabaseResourceId $db3.ResourceId -Name $agentName
         Assert-AreEqual $resp.AgentName $agentName
         Assert-AreEqual $resp.ServerName $s1.ServerName
-        Assert-AreEqual $resp.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp.DatabaseName $db3.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests creating an agent using piping
-#>
-function Test-CreateAgentWithPiping
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $s1
-    $agentName = Get-AgentName
-
-    try
-    {
         # Test piping - Create using piping
         $resp = $db1 | New-AzureRmSqlElasticJobAgent -Name $agentName
         Assert-AreEqual $resp.AgentName $agentName
         Assert-AreEqual $resp.ServerName $s1.ServerName
-        Assert-AreEqual $resp.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp.DatabaseName $db4.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
     }
     finally
     {
-        Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $rg1
     }
 }
 
@@ -135,7 +78,11 @@ function Test-CreateAgentWithPiping
 function Test-UpdateAgentWithDefaultParam
 {
     # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
+    # Setup
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $agentName = Get-AgentName
     $tags = @{ Octopus="Agent"}
 
     try
@@ -149,25 +96,7 @@ function Test-UpdateAgentWithDefaultParam
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
         Assert-AreEqual $resp.Tags.Octopus "Agent"
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests updating an agent with input object
-#>
-function Test-UpdateAgentWithInputObject
-{
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
-    $tags = @{ Octopus="Agent"}
-
-    try
-    {
         # Test using input object
         $resp = Set-AzureRmSqlElasticJobAgent -InputObject $a1 -Tag $tags
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -177,25 +106,7 @@ function Test-UpdateAgentWithInputObject
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
         Assert-AreEqual $resp.Tags.Octopus "Agent"
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests updating an agent with resource id
-#>
-function Test-UpdateAgentWithResourceId
-{
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
-    $tags = @{ Octopus="Agent"}
-
-    try
-    {
         # Test using resource id
         $resp = Set-AzureRmSqlElasticJobAgent -ResourceId $a1.ResourceId -Tag $tags
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -205,25 +116,7 @@ function Test-UpdateAgentWithResourceId
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
         Assert-AreEqual $resp.Tags.Octopus "Agent"
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests updating an agent with piping
-#>
-function Test-UpdateAgentWithPiping
-{
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
-    $tags = @{ Octopus="Agent"}
-
-    try
-    {
         # Test using piping
         $resp = $a1 | Set-AzureRmSqlElasticJobAgent -Tag $tags
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -236,7 +129,7 @@ function Test-UpdateAgentWithPiping
     }
     finally
     {
-        Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $rg1
     }
 }
 
@@ -247,7 +140,13 @@ function Test-UpdateAgentWithPiping
 function Test-GetAgentWithDefaultParam
 {
     # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
+    $rg1 = Create-ResourceGroupForTest
+    $s1 = Create-ServerForTest $rg1 "westus2"
+    $db1 = Create-DatabaseForTest $s1
+    $db2 = Create-DatabaseForTest $s1
+    $a1 = Create-AgentForTest $db1
+    $a2 = Create-AgentForTest $db2
+    $agentName = Get-AgentName
 
     try
     {
@@ -259,25 +158,7 @@ function Test-GetAgentWithDefaultParam
         Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests getting an agent with server object
-#>
-function Test-GetAgentWithServerObject
-{
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
-    $s1 = Get-AzureRmSqlServer -ServerName $a1.ServerName -ResourceGroupName $a1.ResourceGroupName
-
-    try
-    {
         # Test using input object
         $resp = Get-AzureRmSqlElasticJobAgent -ServerObject $s1 -AgentName $a1.AgentName
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -286,25 +167,7 @@ function Test-GetAgentWithServerObject
         Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests getting an agent with server resource id
-#>
-function Test-GetAgentWithServerResourceId
-{
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
-    $s1 = Get-AzureRmSqlServer -ServerName $a1.ServerName -ResourceGroupName $a1.ResourceGroupName
-
-    try
-    {
         # Test using server resource id
         $resp = Get-AzureRmSqlElasticJobAgent -ServerResourceId $s1.ResourceId -AgentName $a1.AgentName
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -313,27 +176,7 @@ function Test-GetAgentWithServerResourceId
         Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
         Assert-AreEqual $resp.Location $a1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests getting an agent with piping
-#>
-function Test-GetAgentWithPiping
-{
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
-    $s1 = Get-AzureRmSqlServer -ServerName $a1.ServerName -ResourceGroupName $a1.ResourceGroupName
-    $db2 = $s1 | New-AzureRmSqlDatabase -Name (Get-DatabaseName)
-    $a2 = $db2 | New-AzureRmSqlElasticJobAgent -Name (Get-AgentName)
-
-    try
-    {
         # Test using piping
         $resp = $s1 | Get-AzureRmSqlElasticJobAgent -Name $a1.AgentName
         Assert-AreEqual $resp.AgentName $a1.AgentName
@@ -348,7 +191,7 @@ function Test-GetAgentWithPiping
     }
     finally
     {
-        Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $rg1
     }
 }
 
@@ -362,7 +205,13 @@ function Test-RemoveAgentWithDefaultParam
     $rg1 = Create-ResourceGroupForTest
     $s1 = Create-ServerForTest $rg1 "westus2"
     $db1 = Create-DatabaseForTest $s1
+    $db2 = Create-DatabaseForTest $s1
+    $db3 = Create-DatabaseForTest $s1
+    $db4 = Create-DatabaseForTest $s1
     $a1 = Create-AgentForTest $db1
+    $a2 = Create-AgentForTest $db2
+    $a3 = Create-AgentForTest $db3
+    $a4 = Create-AgentForTest $db4
 
     try
     {
@@ -374,96 +223,36 @@ function Test-RemoveAgentWithDefaultParam
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests removing an agent with input object
-#>
-function Test-RemoveAgentWithInputObject
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $s1
-    $a1 = Create-AgentForTest $db1
-
-    try
-    {
         # Test using input object
-        $resp = Remove-AzureRmSqlElasticJobAgent -InputObject $a1
-        Assert-AreEqual $resp.AgentName $a1.AgentName
+        $resp = Remove-AzureRmSqlElasticJobAgent -InputObject $a2
+        Assert-AreEqual $resp.AgentName $a2.AgentName
         Assert-AreEqual $resp.ServerName $s1.ServerName
-        Assert-AreEqual $resp.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp.DatabaseName $db2.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests removing an agent with resource id
-#>
-function Test-RemoveAgentWithResourceId
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $s1
-    $a1 = Create-AgentForTest $db1
-
-    try
-    {
         # Test using resource id
-        $resp = Remove-AzureRmSqlElasticJobAgent -ResourceId $a1.ResourceId
-        Assert-AreEqual $resp.AgentName $a1.AgentName
+        $resp = Remove-AzureRmSqlElasticJobAgent -ResourceId $a3.ResourceId
+        Assert-AreEqual $resp.AgentName $a3.AgentName
         Assert-AreEqual $resp.ServerName $s1.ServerName
-        Assert-AreEqual $resp.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp.DatabaseName $db3.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
-    }
-    finally
-    {
-        Remove-ResourceGroupForTest $a1
-    }
-}
 
-<#
-    .SYNOPSIS
-    Tests removing an agent with piping
-#>
-function Test-RemoveAgentWithPiping
-{
-    # Setup
-    $rg1 = Create-ResourceGroupForTest
-    $s1 = Create-ServerForTest $rg1 "westus2"
-    $db1 = Create-DatabaseForTest $s1
-    $a1 = Create-AgentForTest $db1
-
-    try
-    {
         # Test using piping
         $resp = $a1 | Remove-AzureRmSqlElasticJobAgent
-        Assert-AreEqual $resp.AgentName $a1.AgentName
+        Assert-AreEqual $resp.AgentName $a4.AgentName
         Assert-AreEqual $resp.ServerName $s1.ServerName
-        Assert-AreEqual $resp.DatabaseName $db1.DatabaseName
+        Assert-AreEqual $resp.DatabaseName $db4.DatabaseName
         Assert-AreEqual $resp.ResourceGroupName $rg1.ResourceGroupName
         Assert-AreEqual $resp.Location $s1.Location
         Assert-AreEqual $resp.WorkerCount 100
     }
     finally
     {
-        Remove-ResourceGroupForTest $a1
+        Remove-ResourceGroupForTest $rg1
     }
 }

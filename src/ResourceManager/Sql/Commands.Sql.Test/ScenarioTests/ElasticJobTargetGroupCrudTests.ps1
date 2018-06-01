@@ -86,8 +86,6 @@ function Test-RemoveTargetGroup
 #>
 function Test-CreateTargetGroupWithDefaultParam ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
     # Test using default parameters
@@ -107,8 +105,6 @@ function Test-CreateTargetGroupWithDefaultParam ($a1)
 #>
 function Test-CreateTargetGroupWithAgentObject ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
     # Test using input object
@@ -128,8 +124,6 @@ function Test-CreateTargetGroupWithAgentObject ($a1)
 #>
 function Test-CreateTargetGroupWithAgentResourceId ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
     # Test using resource id
@@ -149,8 +143,6 @@ function Test-CreateTargetGroupWithAgentResourceId ($a1)
 #>
 function Test-CreateTargetGroupWithPiping ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tgName = Get-TargetGroupName
 
     # Test piping
@@ -170,8 +162,6 @@ function Test-CreateTargetGroupWithPiping ($a1)
 #>
 function Test-GetTargetGroupWithDefaultParam ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1
 
@@ -196,8 +186,6 @@ function Test-GetTargetGroupWithDefaultParam ($a1)
 #>
 function Test-GetTargetGroupWithAgentObject ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1
 
@@ -222,8 +210,6 @@ function Test-GetTargetGroupWithAgentObject ($a1)
 #>
 function Test-GetTargetGroupWithAgentResourceId ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1 
 
@@ -248,15 +234,13 @@ function Test-GetTargetGroupWithAgentResourceId ($a1)
 #>
 function Test-GetTargetGroupWithPiping ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
     # Test piping
     $resp = $a1 | Get-AzureRmSqlElasticJobTargetGroup -Name $tg.TargetGroupName
-    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-    Assert-AreEqual $resp.AgentName $a1.AgentName
-    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.ResourceGroupName $tg.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $tg.AgentName
+    Assert-AreEqual $resp.ServerName $tg.ServerName
     Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
     Assert-AreEqual $resp.Members.Count 0
 }
@@ -269,15 +253,13 @@ function Test-GetTargetGroupWithPiping ($a1)
 #>
 function Test-RemoveTargetGroupWithDefaultParam ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
     # Test using default parameters
     $resp = Remove-AzureRmSqlElasticJobTargetGroup -ResourceGroupName $a1.ResourceGroupName -ServerName $a1.ServerName -AgentName $a1.AgentName -Name $tg.TargetGroupName
-    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-    Assert-AreEqual $resp.AgentName $a1.AgentName
-    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.ResourceGroupName $tg.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $tg.AgentName
+    Assert-AreEqual $resp.ServerName $tg.ServerName
     Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
     Assert-AreEqual $resp.Members.Count 0
 }
@@ -290,15 +272,13 @@ function Test-RemoveTargetGroupWithDefaultParam ($a1)
 #>
 function Test-RemoveTargetGroupWithInputObject ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
     # Test using input object
     $resp = Remove-AzureRmSqlElasticJobTargetGroup -InputObject $tg
-    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-    Assert-AreEqual $resp.AgentName $a1.AgentName
-    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.ResourceGroupName $tg.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $tg.AgentName
+    Assert-AreEqual $resp.ServerName $tg.ServerName
     Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
     Assert-AreEqual $resp.Members.Count 0
 }
@@ -311,15 +291,13 @@ function Test-RemoveTargetGroupWithInputObject ($a1)
 #>
 function Test-RemoveTargetGroupWithResourceId ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
 
     # Test using resource id
     $resp = Remove-AzureRmSqlElasticJobTargetGroup -ResourceId $tg.ResourceId
-    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-    Assert-AreEqual $resp.AgentName $a1.AgentName
-    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.ResourceGroupName $tg.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $tg.AgentName
+    Assert-AreEqual $resp.ServerName $tg.ServerName
     Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
     Assert-AreEqual $resp.Members.Count 0
 }
@@ -332,21 +310,19 @@ function Test-RemoveTargetGroupWithResourceId ($a1)
 #>
 function Test-RemoveTargetGroupWithPiping ($a1)
 {
-    # Setup
-    $a1 = Create-ElasticJobAgentTestEnvironment
     $tg = Create-TargetGroupForTest $a1
     $tg2 = Create-TargetGroupForTest $a1
 
     # Test piping
     $resp = $tg | Remove-AzureRmSqlElasticJobTargetGroup
-    Assert-AreEqual $resp.ResourceGroupName $a1.ResourceGroupName
-    Assert-AreEqual $resp.AgentName $a1.AgentName
-    Assert-AreEqual $resp.ServerName $a1.ServerName
+    Assert-AreEqual $resp.ResourceGroupName $tg.ResourceGroupName
+    Assert-AreEqual $resp.AgentName $tg.AgentName
+    Assert-AreEqual $resp.ServerName $tg.ServerName
     Assert-AreEqual $resp.TargetGroupName $tg.TargetGroupName
     Assert-AreEqual $resp.Members.Count 0
 
     # Test remove all
     $all = $a1 | Get-AzureRmSqlElasticJobTargetGroup
     $resp = $all | Remove-AzureRmSqlElasticJobTargetGroup
-    Assert-True { $resp.Count -ge 2 }
+    Assert-True { $resp.Count -ge 1 }
 }

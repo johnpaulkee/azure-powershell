@@ -180,10 +180,10 @@ Creates the basic test environment needed to perform the Elastic Job agent tests
 #>
 function Create-ElasticJobAgentTestEnvironment ()
 {
-	$resourceGroupName = "ElasticJobsPowershellTestRg"
-	$serverName = "ElasticJobsPowershellServer"
-	$agentName = "ElasticJobsPowershellAgent"
-	$dbName = "ElasticJobsPowershellDb"
+	$resourceGroupName = "powershell"
+	$serverName = "jpagentserver"
+	$agentName = "jpagent"
+	$dbName = "jpdb1"
 
 	try
 	{

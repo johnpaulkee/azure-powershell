@@ -34,6 +34,13 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
             RunPowerShellTest("Test-StartJob");
         }
 
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestJobStartWait()
+        {
+            RunPowerShellTest("Test-StartJobWait");
+        }
+
         #endregion
 
         #region Stop Job Tests
@@ -63,6 +70,7 @@ namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestJobStepExecutionGet()
+
         {
             RunPowerShellTest("Test-GetJobStepExecution");
         }

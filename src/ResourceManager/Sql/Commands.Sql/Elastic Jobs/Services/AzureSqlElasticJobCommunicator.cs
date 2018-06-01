@@ -378,7 +378,6 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Services
             GetCurrentSqlClient().JobExecutions.Cancel(resourceGroupName, serverName, agentName, jobName, jobExecutionId);
         }
 
-
         #region Job Step Executions
 
         /// <summary>

@@ -49,7 +49,7 @@ function Test-AddTarget
 	}
 	finally
 	{
-		#Remove-ResourceGroupForTest $a1
+		Remove-ResourceGroupForTest $a1
 	}
 }
 
@@ -90,7 +90,7 @@ function Test-RemoveTarget
 	}
 	finally
 	{
-		#Remove-ResourceGroupForTest $a1
+		Remove-ResourceGroupForTest $a1
 	}
 }
 
