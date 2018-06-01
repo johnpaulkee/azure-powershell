@@ -32,16 +32,20 @@ Remove-AzureRmSqlElasticJobStep [-ResourceId] <String> [-DefaultProfile <IAzureC
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Removes a job step from a job
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Removes a job step from a job
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $jobStep | Remove-AzureRmSqlElasticJobStep
+
+JobName StepName StepId TargetGroupName CredentialName Output ExecutionOptions   CommandText
+------- -------- ------ --------------- -------------- ------ ----------------   -----------
+job1    step1    1      tg1             cred1                 (43200,10,1,120,2) SELECT 1
 ```
 
-{{ Add example description here }}
+Removes a job step from a job
 
 ## PARAMETERS
 

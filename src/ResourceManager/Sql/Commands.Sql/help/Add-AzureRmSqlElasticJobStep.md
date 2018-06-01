@@ -103,16 +103,20 @@ Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-Cred
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Adds a job step to a job
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Adds a step to a job
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> > $job | Add-AzureRmSqlElasticJobStep -Name step1 -TargetGroupName tg1 -CredentialName cred1 -CommandText "SELECT 1"
+
+JobName StepName StepId TargetGroupName CredentialName Output ExecutionOptions   CommandText
+------- -------- ------ --------------- -------------- ------ ----------------   -----------
+job1    step1    1      tg1             cred1                 (43200,10,1,120,2) SELECT 1
 ```
 
-{{ Add example description here }}
+Adds a job step to a job
 
 ## PARAMETERS
 
@@ -177,7 +181,7 @@ Accept wildcard characters: False
 ```
 
 ### -InitialRetryIntervalSeconds
-{{Fill InitialRetryIntervalSeconds Description}}
+The initial retry interval seconds
 
 ```yaml
 Type: Int32
@@ -237,7 +241,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumRetryIntervalSeconds
-{{Fill MaximumRetryIntervalSeconds Description}}
+The maximum retry interval seconds
 
 ```yaml
 Type: Int32
@@ -357,7 +361,7 @@ Accept wildcard characters: False
 ```
 
 ### -RetryAttempts
-{{Fill RetryAttempts Description}}
+The retry attempts
 
 ```yaml
 Type: Int32
@@ -372,7 +376,7 @@ Accept wildcard characters: False
 ```
 
 ### -RetryIntervalBackoffMultiplier
-{{Fill RetryIntervalBackoffMultiplier Description}}
+The retry interval back off multiplier
 
 ```yaml
 Type: Double
@@ -429,7 +433,7 @@ Accept wildcard characters: False
 ```
 
 ### -TimeoutSeconds
-{{Fill TimeoutSeconds Description}}
+The time out seconds
 
 ```yaml
 Type: Int32

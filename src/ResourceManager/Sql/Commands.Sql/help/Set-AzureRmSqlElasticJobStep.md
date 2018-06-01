@@ -103,16 +103,20 @@ Set-AzureRmSqlElasticJobStep [-TargetGroupName <String>] [-CredentialName <Strin
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Updates a job step from a job
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Updates a job step's target group for a job
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $jobStep | Set-AzureRmSqlElasticJobStep -TargetGroupName tg2
+
+JobName StepName StepId TargetGroupName CredentialName Output ExecutionOptions   CommandText
+------- -------- ------ --------------- -------------- ------ ----------------   -----------
+job1    step1    1      tg2             cred1                 (43200,10,1,120,2) SELECT 1
 ```
 
-{{ Add example description here }}
+Updates a job step from a job
 
 ## PARAMETERS
 
