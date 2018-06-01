@@ -31,71 +31,30 @@ namespace Microsoft.Azure.Commands.Sql.Common
     public abstract class AzureSqlElasticJobsCmdletBase<IO, M, A> : AzureSqlCmdletBase<M, A>
     {
         /// <summary>
-        /// The parameter sets
+        /// The shared parameter sets
         /// </summary>
         protected const string DefaultParameterSet = "Default Parameter Set"; // used as (default) parameter set mostly
         protected const string InputObjectParameterSet = "Input Object Parameter Set";
         protected const string ResourceIdParameterSet = "Resource Id Parameter Set";
 
-        /// <summary>
-        /// Gets or sets the server name
-        /// </summary>
         public virtual string ServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent server name (used in target)
-        /// </summary>
         public virtual string AgentServerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent name
-        /// </summary>
         public virtual string AgentName { get; set; }
-
-        /// <summary>
-        /// Gets or sets job name
-        /// </summary>
         public virtual string JobName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job step name
-        /// </summary>
         public virtual string StepName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the job execution id
-        /// </summary>
         public virtual string JobExecutionId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the target group name
-        /// </summary>
         public virtual string TargetGroupName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the credential name
-        /// </summary>
         public virtual string CredentialName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shard map name
-        /// </summary>
         public virtual string ShardMapName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the refresh credential name
-        /// </summary>
         public virtual string RefreshCredentialName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the elastic pool name
-        /// </summary>
         public virtual string ElasticPoolName { get; set; }
+        public virtual string DatabaseName { get; set; }
 
         /// <summary>
-        /// Gets or sets the database name
+        /// Elastic Jobs Resource Id Templates
         /// </summary>
-        public virtual string DatabaseName { get; set; }
+        private const string targetGroupResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}";
+        private const string credentialResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}";
 
         /// <summary>
         /// Initializes the input from model object
@@ -223,8 +182,32 @@ namespace Microsoft.Azure.Commands.Sql.Common
             }
         }
 
-        private const string targetGroupResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/targetGroups/{4}";
-        private const string credentialResourceIdTemplate = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/jobAgents/{3}/credentials/{4}";
+        /// <summary>
+        /// Clear properties amongst completing an execution
+        /// We need to clear the properties because in piping scenario, existing property values carry over.
+        /// </summary>
+        public override void ExecuteCmdlet()
+        {
+            base.ExecuteCmdlet();
+            ClearProperties();
+        }
+
+        protected void ClearProperties()
+        {
+            this.ResourceGroupName = null;
+            this.ServerName = null;
+            this.AgentServerName = null;
+            this.AgentName = null;
+            this.JobName = null;
+            this.StepName = null;
+            this.JobExecutionId = null;
+            this.TargetGroupName = null;
+            this.CredentialName = null;
+            this.DatabaseName = null;
+            this.ShardMapName = null;
+            this.ElasticPoolName = null;
+            this.RefreshCredentialName = null;
+        }
 
         /// <summary>
         /// Creates the target group id

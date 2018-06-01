@@ -180,27 +180,10 @@ Creates the basic test environment needed to perform the Elastic Job agent tests
 #>
 function Create-ElasticJobAgentTestEnvironment ()
 {
-	$resourceGroupName = "powershell"
-	$serverName = "jpagentserver"
-	$agentName = "jpagent"
-	$dbName = "jpdb1"
-
-	try
-	{
-		# Try fetching existing agent to speed up tests
-		$agent = Get-AzureRmSqlElasticJobAgent -ResourceGroupName $resourceGroupName -ServerName $serverName -Name $agentName
-	}
-	catch
-	{
-		# If agent doesn't exist, then create rg, server, db, and agent
-		$location = Get-Location "Microsoft.Sql" "operations" "West US 2"
-		$rg = New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
-		$adminCred = Get-ServerCredential
-		$server = New-AzureRmSqlServer -ResourceGroupName $rg.ResourceGroupName -ServerName $serverName -Location $location -SqlAdministratorCredentials $adminCred
-		$server | New-AzureRmSqlServerFirewallRule -AllowAllAzureIPs
-		$db = New-AzureRmSqlDatabase -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $dbName
-		$agent = New-AzureRmSqlElasticJobAgent -ResourceGroupName $rg.ResourceGroupName -ServerName $server.ServerName -DatabaseName $db.DatabaseName -Name $agentName
-	}
+	$rg1 = Create-ResourceGroupForTest
+	$s1 = Create-ServerForTest $rg1 "westus2"
+	$db1 = Create-DatabaseForTest $s1
+	$agent = Create-AgentForTest $db1
 
 	return $agent
 }

@@ -16,7 +16,7 @@
     .SYNOPSIS
     Tests creating an agent using default parameters
 #>
-function Test-CreateAgentWithDefaultParam
+function Test-CreateAgent
 {
     # Setup
     $rg1 = Create-ResourceGroupForTest
@@ -73,9 +73,9 @@ function Test-CreateAgentWithDefaultParam
 
 <#
     .SYNOPSIS
-    Tests updating an agent with default param
+    Tests updating an agent
 #>
-function Test-UpdateAgentWithDefaultParam
+function Test-UpdateAgent
 {
     # Setup
     # Setup
@@ -137,7 +137,7 @@ function Test-UpdateAgentWithDefaultParam
     .SYNOPSIS
     Tests getting an agent
 #>
-function Test-GetAgentWithDefaultParam
+function Test-GetAgent
 {
     # Setup
     $rg1 = Create-ResourceGroupForTest
@@ -197,9 +197,9 @@ function Test-GetAgentWithDefaultParam
 
 <#
     .SYNOPSIS
-    Tests removing an agent with default param
+    Tests removing an agent
 #>
-function Test-RemoveAgentWithDefaultParam
+function Test-RemoveAgent
 {
     # Setup
     $rg1 = Create-ResourceGroupForTest
