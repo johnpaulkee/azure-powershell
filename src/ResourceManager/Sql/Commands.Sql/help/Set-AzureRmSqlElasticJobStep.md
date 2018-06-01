@@ -116,6 +116,15 @@ JobName StepName StepId TargetGroupName CredentialName Output ExecutionOptions  
 job1    step1    1      tg2             cred1                 (43200,10,1,120,2) SELECT 1
 ```
 
+### Example 2 - Updates a job step's T-SQL script for a job
+```powershell
+PS C:\> $jobStep | Set-AzureRmSqlElasticJobStep -CommandText "SELECT 2"
+
+JobName StepName StepId TargetGroupName CredentialName Output ExecutionOptions   CommandText
+------- -------- ------ --------------- -------------- ------ ----------------   -----------
+job1    step1    1      tg1             cred1                 (43200,10,1,120,2) SELECT 2
+```
+
 Updates a job step from a job
 
 ## PARAMETERS
