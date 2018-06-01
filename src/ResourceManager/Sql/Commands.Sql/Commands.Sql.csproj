@@ -534,11 +534,7 @@
     </ProjectReference>
     <Reference Include="Microsoft.Azure.Management.Sql, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-<<<<<<< HEAD
-      <HintPath>..\..\..\packages\Microsoft.Azure.Management.Sql.1.15.0-preview\lib\net452\Microsoft.Azure.Management.Sql.dll</HintPath>
-=======
       <HintPath>..\..\..\packages\Microsoft.Azure.Management.Sql.1.16.0-preview\lib\net452\Microsoft.Azure.Management.Sql.dll</HintPath>
->>>>>>> v4_elasticjobs
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Storage">
