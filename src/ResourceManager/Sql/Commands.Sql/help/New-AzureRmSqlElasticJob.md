@@ -77,16 +77,20 @@ New-AzureRmSqlElasticJob [-Name] <String> [-IntervalType] <JobScheduleReccuringS
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **New-AzureRmSqlElasticJob** cmdlet creates a new job
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Creates a new job
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $agent | New-AzureRmSqlElasticJob -Name job1
+
+JobName Version Description StartTime           EndTime                ScheduleType Interval Enabled
+------- ------- ----------- ---------           -------                ------------ -------- -------
+job1    0                   6/1/2018 9:46:29 PM 12/31/9999 11:59:59 AM Once                  False
 ```
 
-{{ Add example description here }}
+Creates a new job
 
 ## PARAMETERS
 

@@ -76,16 +76,20 @@ Set-AzureRmSqlElasticJob [-StartTime <DateTime>] [-EndTime <DateTime>] [-Resourc
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Set-AzureRmSqlElasticJob** cmdlet updates a job
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Updates a job to start an hour from now and repeat every 1 hour
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $job | Set-AzureRmSqlElasticJob -IntervalType Hour -IntervalCount 1 -StartTime (Get-Date).AddHours(1) -Enable
+
+JobName Version Description StartTime            EndTime                ScheduleType Interval Enabled
+------- ------- ----------- ---------            -------                ------------ -------- -------
+job1    0                   6/1/2018 10:50:15 PM 12/31/9999 11:59:59 AM Recurring    PT1H     True
 ```
 
-{{ Add example description here }}
+Updates a job
 
 ## PARAMETERS
 

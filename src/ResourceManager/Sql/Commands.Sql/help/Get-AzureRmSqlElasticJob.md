@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-AzureRmSqlElasticJob
 
 ## SYNOPSIS
-Gets a job
+Gets one or more jobs
 
 ## SYNTAX
 
@@ -31,16 +31,20 @@ Get-AzureRmSqlElasticJob [-Name <String>] [-AgentResourceId] <String>
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Get-AzureRmSqlElasticJob** cmdlet gets one or more jobs
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Gets a job
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $agent | Get-AzureRmSqlElasticJob -Name job1
+
+JobName Version Description StartTime           EndTime                ScheduleType Interval Enabled
+------- ------- ----------- ---------           -------                ------------ -------- -------
+job1    0                   6/1/2018 9:46:29 PM 12/31/9999 11:59:59 AM Once                  False
 ```
 
-{{ Add example description here }}
+Gets a job
 
 ## PARAMETERS
 
