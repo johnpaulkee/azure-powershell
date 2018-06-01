@@ -19,7 +19,7 @@ Get-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String
  [<CommonParameters>]
 ```
 
-### Default get job step version parameter set
+### Get Job Step Version Parameter Set
 ```
 Get-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-JobName] <String> -Name <String> [-Version] <Int32> [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
@@ -32,7 +32,7 @@ Get-AzureRmSqlElasticJobStep [-Name <String>] [-JobObject] <AzureSqlElasticJobMo
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job object get job step version parameter set
+### Get Job Step Version Parameter Set Using Job Object
 ```
 Get-AzureRmSqlElasticJobStep -Name <String> [-Version] <Int32> [-JobObject] <AzureSqlElasticJobModel>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -44,7 +44,7 @@ Get-AzureRmSqlElasticJobStep [-Name <String>] [-JobResourceId] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Job resource id get job step version parameter set
+### Get Job Step Version Parameter Set Using Job Resource Id
 ```
 Get-AzureRmSqlElasticJobStep -Name <String> [-Version] <Int32> [-JobResourceId] <String>
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -69,7 +69,7 @@ The agent name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default get job step version parameter set
+Parameter Sets: Default Parameter Set, Get Job Step Version Parameter Set
 Aliases:
 
 Required: True
@@ -99,7 +99,7 @@ The job name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default get job step version parameter set
+Parameter Sets: Default Parameter Set, Get Job Step Version Parameter Set
 Aliases:
 
 Required: True
@@ -114,7 +114,7 @@ The job input object
 
 ```yaml
 Type: AzureSqlElasticJobModel
-Parameter Sets: Input Object Parameter Set, Job object get job step version parameter set
+Parameter Sets: Input Object Parameter Set, Get Job Step Version Parameter Set Using Job Object
 Aliases:
 
 Required: True
@@ -129,7 +129,7 @@ The job resource id
 
 ```yaml
 Type: String
-Parameter Sets: Resource Id Parameter Set, Job resource id get job step version parameter set
+Parameter Sets: Resource Id Parameter Set, Get Job Step Version Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -156,7 +156,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: Default get job step version parameter set, Job object get job step version parameter set, Job resource id get job step version parameter set
+Parameter Sets: Get Job Step Version Parameter Set, Get Job Step Version Parameter Set Using Job Object, Get Job Step Version Parameter Set Using Job Resource Id
 Aliases: StepName
 
 Required: True
@@ -171,7 +171,7 @@ The resource group name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default get job step version parameter set
+Parameter Sets: Default Parameter Set, Get Job Step Version Parameter Set
 Aliases:
 
 Required: True
@@ -186,7 +186,7 @@ The server name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default get job step version parameter set
+Parameter Sets: Default Parameter Set, Get Job Step Version Parameter Set
 Aliases:
 
 Required: True
@@ -201,7 +201,7 @@ The job step name
 
 ```yaml
 Type: Int32
-Parameter Sets: Default get job step version parameter set
+Parameter Sets: Get Job Step Version Parameter Set
 Aliases:
 
 Required: True
@@ -213,7 +213,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: Int32
-Parameter Sets: Job object get job step version parameter set
+Parameter Sets: Get Job Step Version Parameter Set Using Job Object
 Aliases:
 
 Required: True
@@ -225,7 +225,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: Int32
-Parameter Sets: Job resource id get job step version parameter set
+Parameter Sets: Get Job Step Version Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True

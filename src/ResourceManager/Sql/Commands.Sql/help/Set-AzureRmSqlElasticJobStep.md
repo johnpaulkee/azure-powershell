@@ -23,7 +23,7 @@ Set-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Default remove output parameter set
+### Set Job Step With Remove Output Parameter Set
 ```
 Set-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-JobName] <String> [-Name] <String> [-RemoveOutput] [-TargetGroupName <String>] [-CredentialName <String>]
@@ -33,7 +33,7 @@ Set-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String
  [<CommonParameters>]
 ```
 
-### Default add database resource id parameter set
+### Set Job Step With Add Output Parameter Set
 ```
 Set-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-JobName] <String> [-Name] <String> [-TargetGroupName <String>] [-CredentialName <String>]
@@ -44,7 +44,7 @@ Set-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Input Object remove output parameter set
+### Set Job Step With Remove Output Parameter Set Using Job Object
 ```
 Set-AzureRmSqlElasticJobStep [-RemoveOutput] [-TargetGroupName <String>] [-CredentialName <String>]
  [-CommandText <String>] [-StepId <Int32>] [-TimeoutSeconds <Int32>] [-RetryAttempts <Int32>]
@@ -53,7 +53,7 @@ Set-AzureRmSqlElasticJobStep [-RemoveOutput] [-TargetGroupName <String>] [-Crede
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Resource id remove output parameter set
+### Set Job Step With Remove Output Parameter Set Using Job Resource Id
 ```
 Set-AzureRmSqlElasticJobStep [-RemoveOutput] [-TargetGroupName <String>] [-CredentialName <String>]
  [-CommandText <String>] [-StepId <Int32>] [-TimeoutSeconds <Int32>] [-RetryAttempts <Int32>]
@@ -82,7 +82,7 @@ Set-AzureRmSqlElasticJobStep [-TargetGroupName <String>] [-CredentialName <Strin
  [-Confirm] [<CommonParameters>]
 ```
 
-### Input Object add database resource id parameter set
+### Set Job Step With Add Output Parameter Set Using Job Object
 ```
 Set-AzureRmSqlElasticJobStep [-TargetGroupName <String>] [-CredentialName <String>] [-CommandText <String>]
  [-StepId <Int32>] [-TimeoutSeconds <Int32>] [-RetryAttempts <Int32>] [-InitialRetryIntervalSeconds <Int32>]
@@ -92,7 +92,7 @@ Set-AzureRmSqlElasticJobStep [-TargetGroupName <String>] [-CredentialName <Strin
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Resource id add database resource id parameter set
+### Set Job Step With Add Output Parameter Set Using Job Resource Id
 ```
 Set-AzureRmSqlElasticJobStep [-TargetGroupName <String>] [-CredentialName <String>] [-CommandText <String>]
  [-StepId <Int32>] [-TimeoutSeconds <Int32>] [-RetryAttempts <Int32>] [-InitialRetryIntervalSeconds <Int32>]
@@ -121,7 +121,7 @@ The agent name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default remove output parameter set, Default add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Remove Output Parameter Set, Set Job Step With Add Output Parameter Set
 Aliases:
 
 Required: True
@@ -196,7 +196,7 @@ The job step object
 
 ```yaml
 Type: AzureSqlElasticJobStepModel
-Parameter Sets: Input Object remove output parameter set, Input Object Parameter Set, Input Object add database resource id parameter set
+Parameter Sets: Set Job Step With Remove Output Parameter Set Using Job Object, Input Object Parameter Set, Set Job Step With Add Output Parameter Set Using Job Object
 Aliases:
 
 Required: True
@@ -211,7 +211,7 @@ The job name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default remove output parameter set, Default add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Remove Output Parameter Set, Set Job Step With Add Output Parameter Set
 Aliases:
 
 Required: True
@@ -241,7 +241,7 @@ The step name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default remove output parameter set, Default add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Remove Output Parameter Set, Set Job Step With Add Output Parameter Set
 Aliases: StepName
 
 Required: True
@@ -256,7 +256,7 @@ The output credential name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default add database resource id parameter set, Input Object Parameter Set, Resource Id Parameter Set, Input Object add database resource id parameter set, Resource id add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Add Output Parameter Set, Input Object Parameter Set, Resource Id Parameter Set, Set Job Step With Add Output Parameter Set Using Job Object, Set Job Step With Add Output Parameter Set Using Job Resource Id
 Aliases:
 
 Required: False
@@ -286,7 +286,7 @@ The output database resource id
 
 ```yaml
 Type: String
-Parameter Sets: Default add database resource id parameter set, Input Object add database resource id parameter set, Resource id add database resource id parameter set
+Parameter Sets: Set Job Step With Add Output Parameter Set, Set Job Step With Add Output Parameter Set Using Job Object, Set Job Step With Add Output Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -301,7 +301,7 @@ The output schema name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default add database resource id parameter set, Input Object Parameter Set, Resource Id Parameter Set, Input Object add database resource id parameter set, Resource id add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Add Output Parameter Set, Input Object Parameter Set, Resource Id Parameter Set, Set Job Step With Add Output Parameter Set Using Job Object, Set Job Step With Add Output Parameter Set Using Job Resource Id
 Aliases:
 
 Required: False
@@ -316,7 +316,7 @@ The output table name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default add database resource id parameter set, Input Object Parameter Set, Resource Id Parameter Set, Input Object add database resource id parameter set, Resource id add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Add Output Parameter Set, Input Object Parameter Set, Resource Id Parameter Set, Set Job Step With Add Output Parameter Set Using Job Object, Set Job Step With Add Output Parameter Set Using Job Resource Id
 Aliases:
 
 Required: False
@@ -331,7 +331,7 @@ The flag to indicate whether to remove output
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Default remove output parameter set, Input Object remove output parameter set, Resource id remove output parameter set
+Parameter Sets: Set Job Step With Remove Output Parameter Set, Set Job Step With Remove Output Parameter Set Using Job Object, Set Job Step With Remove Output Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -346,7 +346,7 @@ The resource group name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default remove output parameter set, Default add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Remove Output Parameter Set, Set Job Step With Add Output Parameter Set
 Aliases:
 
 Required: True
@@ -361,7 +361,7 @@ The job step resource id
 
 ```yaml
 Type: String
-Parameter Sets: Resource id remove output parameter set, Resource Id Parameter Set, Resource id add database resource id parameter set
+Parameter Sets: Set Job Step With Remove Output Parameter Set Using Job Resource Id, Resource Id Parameter Set, Set Job Step With Add Output Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -406,7 +406,7 @@ The server name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default remove output parameter set, Default add database resource id parameter set
+Parameter Sets: Default Parameter Set, Set Job Step With Remove Output Parameter Set, Set Job Step With Add Output Parameter Set
 Aliases:
 
 Required: True

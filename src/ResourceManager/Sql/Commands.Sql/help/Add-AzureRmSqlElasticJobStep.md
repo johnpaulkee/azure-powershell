@@ -22,7 +22,7 @@ Add-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String
  [<CommonParameters>]
 ```
 
-### Default job step output database object parameter set
+### Add Job Step With Output Database Object Parameter Set
 ```
 Add-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-JobName] <String> [-Name] <String> [-TargetGroupName] <String> [-CredentialName] <String>
@@ -33,7 +33,7 @@ Add-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String
  [<CommonParameters>]
 ```
 
-### Default job step output database id parameter set
+### Add Job Step With Output Database Resource Id Parameter Set
 ```
 Add-AzureRmSqlElasticJobStep [-ResourceGroupName] <String> [-ServerName] <String> [-AgentName] <String>
  [-JobName] <String> [-Name] <String> [-TargetGroupName] <String> [-CredentialName] <String>
@@ -53,7 +53,7 @@ Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-Cred
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Input object job step output database object parameter set
+### Add Job Step With Output Database Object Parameter Set Using Job Object
 ```
 Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-CredentialName] <String>
  [-CommandText] <String> [-OutputDatabaseObject] <AzureSqlDatabaseModel> [-OutputCredentialName] <String>
@@ -63,7 +63,7 @@ Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-Cred
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Input object job step output database id parameter set
+### Add Job Step With Output Database Id Parameter Set Using Job Object
 ```
 Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-CredentialName] <String>
  [-CommandText] <String> [-OutputDatabaseResourceId] <String> [-OutputCredentialName] <String>
@@ -82,7 +82,7 @@ Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-Cred
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Resource id job step output database object parameter set
+### Add Job Step With Output Database Object Parameter Set Using Job Resource Id
 ```
 Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-CredentialName] <String>
  [-CommandText] <String> [-OutputDatabaseObject] <AzureSqlDatabaseModel> [-OutputCredentialName] <String>
@@ -92,7 +92,7 @@ Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-Cred
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### Resource id job step output database id parameter set
+### Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 ```
 Add-AzureRmSqlElasticJobStep [-Name] <String> [-TargetGroupName] <String> [-CredentialName] <String>
  [-CommandText] <String> [-OutputDatabaseResourceId] <String> [-OutputCredentialName] <String>
@@ -121,7 +121,7 @@ The agent name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default job step output database object parameter set, Default job step output database id parameter set
+Parameter Sets: Default Parameter Set, Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -196,7 +196,7 @@ The job name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default job step output database object parameter set, Default job step output database id parameter set
+Parameter Sets: Default Parameter Set, Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -211,7 +211,7 @@ The job object
 
 ```yaml
 Type: AzureSqlElasticJobModel
-Parameter Sets: Input Object Parameter Set, Input object job step output database object parameter set, Input object job step output database id parameter set
+Parameter Sets: Input Object Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Object, Add Job Step With Output Database Id Parameter Set Using Job Object
 Aliases:
 
 Required: True
@@ -226,7 +226,7 @@ The job resource id
 
 ```yaml
 Type: String
-Parameter Sets: Resource Id Parameter Set, Resource id job step output database object parameter set, Resource id job step output database id parameter set
+Parameter Sets: Resource Id Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Resource Id, Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -271,7 +271,7 @@ The output credential name
 
 ```yaml
 Type: String
-Parameter Sets: Default job step output database object parameter set, Default job step output database id parameter set, Input object job step output database object parameter set, Input object job step output database id parameter set, Resource id job step output database object parameter set, Resource id job step output database id parameter set
+Parameter Sets: Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Object, Add Job Step With Output Database Id Parameter Set Using Job Object, Add Job Step With Output Database Object Parameter Set Using Job Resource Id, Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -286,7 +286,7 @@ The output database object
 
 ```yaml
 Type: AzureSqlDatabaseModel
-Parameter Sets: Default job step output database object parameter set, Input object job step output database object parameter set, Resource id job step output database object parameter set
+Parameter Sets: Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Object, Add Job Step With Output Database Object Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -301,7 +301,7 @@ The output database resource id
 
 ```yaml
 Type: String
-Parameter Sets: Default job step output database id parameter set, Input object job step output database id parameter set, Resource id job step output database id parameter set
+Parameter Sets: Add Job Step With Output Database Resource Id Parameter Set, Add Job Step With Output Database Id Parameter Set Using Job Object, Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -316,7 +316,7 @@ The output schema name
 
 ```yaml
 Type: String
-Parameter Sets: Default job step output database object parameter set, Default job step output database id parameter set, Input object job step output database object parameter set, Input object job step output database id parameter set, Resource id job step output database object parameter set, Resource id job step output database id parameter set
+Parameter Sets: Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Object, Add Job Step With Output Database Id Parameter Set Using Job Object, Add Job Step With Output Database Object Parameter Set Using Job Resource Id, Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 Aliases:
 
 Required: False
@@ -331,7 +331,7 @@ The output table name
 
 ```yaml
 Type: String
-Parameter Sets: Default job step output database object parameter set, Default job step output database id parameter set, Input object job step output database object parameter set, Input object job step output database id parameter set, Resource id job step output database object parameter set, Resource id job step output database id parameter set
+Parameter Sets: Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Object, Add Job Step With Output Database Id Parameter Set Using Job Object, Add Job Step With Output Database Object Parameter Set Using Job Resource Id, Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -346,7 +346,7 @@ The resource group name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default job step output database object parameter set, Default job step output database id parameter set
+Parameter Sets: Default Parameter Set, Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -391,7 +391,7 @@ The server name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default job step output database object parameter set, Default job step output database id parameter set
+Parameter Sets: Default Parameter Set, Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set
 Aliases:
 
 Required: True
@@ -406,7 +406,7 @@ The target group name
 
 ```yaml
 Type: String
-Parameter Sets: Default Parameter Set, Default job step output database object parameter set, Default job step output database id parameter set, Input Object Parameter Set, Input object job step output database object parameter set, Input object job step output database id parameter set, Resource Id Parameter Set, Resource id job step output database id parameter set
+Parameter Sets: Default Parameter Set, Add Job Step With Output Database Object Parameter Set, Add Job Step With Output Database Resource Id Parameter Set, Input Object Parameter Set, Add Job Step With Output Database Object Parameter Set Using Job Object, Add Job Step With Output Database Id Parameter Set Using Job Object, Resource Id Parameter Set, Add Job Step With Output Database Id Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
@@ -418,7 +418,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: Resource id job step output database object parameter set
+Parameter Sets: Add Job Step With Output Database Object Parameter Set Using Job Resource Id
 Aliases:
 
 Required: True
