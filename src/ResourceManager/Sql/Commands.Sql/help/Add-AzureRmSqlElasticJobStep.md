@@ -8,7 +8,7 @@ schema: 2.0.0
 # Add-AzureRmSqlElasticJobStep
 
 ## SYNOPSIS
-Adds one or more job steps to a job
+Adds a job step to a job
 
 ## SYNTAX
 

@@ -18,11 +18,12 @@
 #>
 function Test-CreateJob
 {
-	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
 
 	try
 	{
+		# Setup
+		$a1 = Create-ElasticJobAgentTestEnvironment
+
 		Test-CreateJobWithDefaultParam $a1
 		Test-CreateJobWithAgentObject $a1
 		Test-CreateJobWithAgentResourceId $a1
@@ -40,11 +41,11 @@ function Test-CreateJob
 #>
 function Test-GetJob
 {
-	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
-
 	try
 	{
+			# Setup
+		$a1 = Create-ElasticJobAgentTestEnvironment
+
 		Test-GetJobWithDefaultParam $a1
 		Test-GetJobWithAgentObject $a1
 		Test-GetJobWithAgentResourceId $a1
@@ -62,11 +63,11 @@ function Test-GetJob
 #>
 function Test-UpdateJob
 {
-	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
-
 	try
 	{
+		# Setup
+		$a1 = Create-ElasticJobAgentTestEnvironment
+
 		Test-UpdateJobWithDefaultParam $a1
 		Test-UpdateJobWithInputObject $a1
 		Test-UpdateJobWithResourceId $a1
@@ -84,11 +85,11 @@ function Test-UpdateJob
 #>
 function Test-RemoveJob
 {
-	# Setup
-	$a1 = Create-ElasticJobAgentTestEnvironment
-
 	try
 	{
+			# Setup
+		$a1 = Create-ElasticJobAgentTestEnvironment
+
 		Test-RemoveJobWithDefaultParam $a1
 		Test-RemoveJobWithInputObject $a1
 		Test-RemoveJobWithResourceId $a1
@@ -104,7 +105,7 @@ function Test-RemoveJob
 	.SYNOPSIS
 	Tests creating a job with min parameters using default parameter sets
 #>
-function Test-CreateJobWithDefaultParam ($a1)
+function Test-CreateJobWithDefaultParam($a1)
 {
 	$startTime = Get-Date
 	$endTime = $startTime.AddHours(5)
@@ -185,7 +186,7 @@ function Test-CreateJobWithDefaultParam ($a1)
 	.SYNOPSIS
 	Tests creating a job with min parameters using agent object parameter sets
 #>
-function Test-CreateJobWithAgentObject ($a1)
+function Test-CreateJobWithAgentObject($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -267,7 +268,7 @@ function Test-CreateJobWithAgentObject ($a1)
 	.SYNOPSIS
 	Tests creating a job with min parameters using agent resource id parameter sets
 #>
-function Test-CreateJobWithAgentResourceId ($a1)
+function Test-CreateJobWithAgentResourceId($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -349,7 +350,7 @@ function Test-CreateJobWithAgentResourceId ($a1)
 	.SYNOPSIS
 	Tests creating a job with min parameters using agent resource id parameter sets
 #>
-function Test-CreateJobWithPiping ($a1)
+function Test-CreateJobWithPiping($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -431,7 +432,7 @@ function Test-CreateJobWithPiping ($a1)
 	.SYNOPSIS
 	Tests getting a job with default params
 #>
-function Test-GetJobWithDefaultParam ($a1)
+function Test-GetJobWithDefaultParam($a1)
 {
 	# Setup
 	$j1 = Create-JobForTest $a1
@@ -453,7 +454,7 @@ function Test-GetJobWithDefaultParam ($a1)
 	.SYNOPSIS
 	Tests getting a job using agent object
 #>
-function Test-GetJobWithAgentObject ($a1)
+function Test-GetJobWithAgentObject($a1)
 {
 	# Setup
 	$j1 = Create-JobForTest $a1
@@ -475,7 +476,7 @@ function Test-GetJobWithAgentObject ($a1)
 	.SYNOPSIS
 	Tests getting job with agent resource id
 #>
-function Test-GetJobWithAgentResourceId ($a1)
+function Test-GetJobWithAgentResourceId($a1)
 {
 	# Setup
 	$j1 = Create-JobForTest $a1
@@ -498,7 +499,7 @@ function Test-GetJobWithAgentResourceId ($a1)
 	.SYNOPSIS
 	Tests get job with piping agent object
 #>
-function Test-GetJobWithPiping ($a1)
+function Test-GetJobWithPiping($a1)
 {
 	# Setup
 	$j1 = Create-JobForTest $a1
@@ -520,7 +521,7 @@ function Test-GetJobWithPiping ($a1)
 	.SYNOPSIS
 	Tests updating a job with default param
 #>
-function Test-UpdateJobWithDefaultParam ($a1)
+function Test-UpdateJobWithDefaultParam($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -609,7 +610,7 @@ function Test-UpdateJobWithDefaultParam ($a1)
 	.SYNOPSIS
 	Tests updating a job with input object
 #>
-function Test-UpdateJobWithInputObject ($a1)
+function Test-UpdateJobWithInputObject($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -698,7 +699,7 @@ function Test-UpdateJobWithInputObject ($a1)
 	.SYNOPSIS
 	Tests updating a job with resource id
 #>
-function Test-UpdateJobWithResourceId ($a1)
+function Test-UpdateJobWithResourceId($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -788,7 +789,7 @@ function Test-UpdateJobWithResourceId ($a1)
 	.SYNOPSIS
 	Tests updating a job with piping
 #>
-function Test-UpdateJobWithPiping ($a1)
+function Test-UpdateJobWithPiping($a1)
 {
 	# Setup
 	$startTime = Get-Date
@@ -877,7 +878,7 @@ function Test-UpdateJobWithPiping ($a1)
 	.SYNOPSIS
 	Tests removing a job with min parameters using default parameter sets, input object parameter sets, and resource id parameter sets
 #>
-function Test-RemoveJobWithDefaultParam ($a1)
+function Test-RemoveJobWithDefaultParam($a1)
 {
 	$j1 = Create-JobForTest $a1
 
@@ -893,7 +894,7 @@ function Test-RemoveJobWithDefaultParam ($a1)
 	.SYNOPSIS
 	Tests removing a job with input object
 #>
-function Test-RemoveJobWithInputObject ($a1)
+function Test-RemoveJobWithInputObject($a1)
 {
 	$j1 = Create-JobForTest $a1
 
@@ -909,7 +910,7 @@ function Test-RemoveJobWithInputObject ($a1)
 	.SYNOPSIS
 	Tests removing a job with resource id
 #>
-function Test-RemoveJobWithResourceId ($a1)
+function Test-RemoveJobWithResourceId($a1)
 {
 	$j1 = Create-JobForTest $a1
 
@@ -925,7 +926,7 @@ function Test-RemoveJobWithResourceId ($a1)
 	.SYNOPSIS
 	Tests removing a job with min parameters using default parameter sets, input object parameter sets, and resource id parameter sets
 #>
-function Test-RemoveJobWithPiping ($a1)
+function Test-RemoveJobWithPiping($a1)
 {
 	$j1 = Create-JobForTest $a1
 

@@ -182,7 +182,7 @@ function Create-ElasticJobAgentTestEnvironment ()
 {
 	$rg1 = Create-ResourceGroupForTest
 	$s1 = Create-ServerForTest $rg1 "westus2"
-	$s1 | New-AzureRmSqlServerFirewallRule -AllowAllAzureIPs # allow azure ips
+	$s1fw = $s1 | New-AzureRmSqlServerFirewallRule -AllowAllAzureIPs # allow azure ips
 	$db1 = Create-DatabaseForTest $s1
 	$agent = Create-AgentForTest $db1
 	return $agent
