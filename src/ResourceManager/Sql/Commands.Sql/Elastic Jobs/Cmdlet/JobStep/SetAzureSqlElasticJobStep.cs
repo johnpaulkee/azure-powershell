@@ -36,12 +36,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <summary>
         /// The parameter sets
         /// </summary>
-        protected const string DefaultRemoveOutputParameterSet = "Default remove output parameter set";
-        protected const string DefaultAddDatabaseResourceIdParameterSet = "Default add database resource id parameter set";
-        protected const string InputObjectRemoveOutputParameterSet = "Input Object remove output parameter set";
-        protected const string InputObjectAddDatabaseResourceIdParameterSet = "Input Object add database resource id parameter set";
-        protected const string ResourceIdRemoveOutputParameterSet = "Resource id remove output parameter set";
-        protected const string ResourceIdAddDatabaseResourceIdParameterSet = "Resource id add database resource id parameter set";
+        protected const string DefaultRemoveOutputParameterSet = "Set Job Step With Remove Output Parameter Set";
+        protected const string DefaultAddDatabaseResourceIdParameterSet = "Set Job Step With Add Output Parameter Set";
+        protected const string JobObjectRemoveOutputParameterSet = "Set Job Step With Remove Output Parameter Set Using Job Object";
+        protected const string JobObjectAddDatabaseResourceIdParameterSet = "Set Job Step With Add Output Parameter Set Using Job Object";
+        protected const string JobResourceIdRemoveOutputParameterSet = "Set Job Step With Remove Output Parameter Set Using Job Resource Id";
+        protected const string JobResourceIdAddDatabaseResourceIdParameterSet = "Set Job Step With Add Output Parameter Set Using Job Resource Id";
 
         /// <summary>
         /// Gets or sets the resource group name
@@ -157,12 +157,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The flag to indicate whether to remove output")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectRemoveOutputParameterSet,
+            ParameterSetName = JobObjectRemoveOutputParameterSet,
             Position = 1,
             HelpMessage = "The flag to indicate whether to remove output")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdRemoveOutputParameterSet,
+            ParameterSetName = JobResourceIdRemoveOutputParameterSet,
             Position = 1,
             HelpMessage = "The flag to indicate whether to remove output")]
         public SwitchParameter RemoveOutput { get; set; }
@@ -248,12 +248,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output database resource id")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobObjectAddDatabaseResourceIdParameterSet,
             Position = 1,
             HelpMessage = "The output database resource id")]
         [Parameter(
             Mandatory = true,
-            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobResourceIdAddDatabaseResourceIdParameterSet,
             Position = 1,
             HelpMessage = "The output database resource id")]
         public string OutputDatabaseResourceId { get; set; }
@@ -275,7 +275,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output credential name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobObjectAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output credential name")]
         [Parameter(
             Mandatory = false,
@@ -283,7 +283,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output credential name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobResourceIdAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output credential name")]
         public string OutputCredentialName { get; set; }
 
@@ -304,7 +304,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output table name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobObjectAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output table name")]
         [Parameter(
             Mandatory = false,
@@ -312,7 +312,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output table name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobResourceIdAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output schema name")]
         public string OutputTableName { get; set; }
 
@@ -333,7 +333,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output schema name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobObjectAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output schema name")]
         [Parameter(
             Mandatory = false,
@@ -341,7 +341,7 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             HelpMessage = "The output schema name")]
         [Parameter(
             Mandatory = false,
-            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobResourceIdAddDatabaseResourceIdParameterSet,
             HelpMessage = "The output schema name")]
         public string OutputSchemaName { get; set; }
 
@@ -358,13 +358,13 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             Mandatory = true,
             Position = 0,
             ValueFromPipeline = true,
-            ParameterSetName = InputObjectRemoveOutputParameterSet,
+            ParameterSetName = JobObjectRemoveOutputParameterSet,
             HelpMessage = "The job step object")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipeline = true,
-            ParameterSetName = InputObjectAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobObjectAddDatabaseResourceIdParameterSet,
             HelpMessage = "The job step object")]
         [ValidateNotNullOrEmpty]
         public AzureSqlElasticJobStepModel InputObject { get; set; }
@@ -382,13 +382,13 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = ResourceIdRemoveOutputParameterSet,
+            ParameterSetName = JobResourceIdRemoveOutputParameterSet,
             HelpMessage = "The job step resource id")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
-            ParameterSetName = ResourceIdAddDatabaseResourceIdParameterSet,
+            ParameterSetName = JobResourceIdAddDatabaseResourceIdParameterSet,
             HelpMessage = "The job step resource id")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
