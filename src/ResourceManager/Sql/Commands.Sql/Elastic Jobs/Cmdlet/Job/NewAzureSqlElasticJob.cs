@@ -36,12 +36,12 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet
         /// <summary>
         /// The Parameter Set
         /// </summary>
-        protected const string AgentDefaultRunOnceParameterSet = "Agent Default Run Once Parameter Set";
-        protected const string AgentDefaultRecurringParameterSet = "Agent Default Recurring Parameter Set";
-        protected const string AgentObjectRunOnceParameterSet = "Agent Object Run Once Parameter Set";
-        protected const string AgentObjectRecurringParameterSet = "Agent Object Recurring Parameter Set";
-        protected const string AgentResourceIdRunOnceParameterSet = "Agent Resource Id Run Once Parameter Set";
-        protected const string AgentResourceIdRecurringParameterSet = "Agent Resource Id Recurring Parameter Set";
+        protected const string AgentDefaultRunOnceParameterSet = "New Job Run Once Parameter Set";
+        protected const string AgentDefaultRecurringParameterSet = "New Job Recurring Set";
+        protected const string AgentObjectRunOnceParameterSet = "New Job Run Once Parameter Set Using Agent Object";
+        protected const string AgentObjectRecurringParameterSet = "New Job Recurring Parameter Set Using Agent Object";
+        protected const string AgentResourceIdRunOnceParameterSet = "New Job Run Once Parameter Set Using Agent Resource Id";
+        protected const string AgentResourceIdRecurringParameterSet = "New Job Recurring Parameter Set Using Agent Resource Id";
 
         /// <summary>
         /// Gets or sets the resource group name

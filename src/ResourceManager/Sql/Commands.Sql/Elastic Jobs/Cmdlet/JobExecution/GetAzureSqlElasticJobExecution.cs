@@ -33,9 +33,9 @@ namespace Microsoft.Azure.Commands.Sql.ElasticJobs.Cmdlet.JobExecution
         /// <summary>
         /// The parameter sets
         /// </summary>
-        protected const string GetRootJobExecution = "The get root job execution parameter set";
-        protected const string GetRootJobExecutionByAgentObject = "The get root job execution by agent object parameter set";
-        protected const string GetRootJobExecutionByAgentResourceId = "The get root job execution by agent resource id parameter set";
+        protected const string GetRootJobExecution = "Get Job Execution Parameter Set";
+        protected const string GetRootJobExecutionByAgentObject = "Get Job Execution Parameter Set Using Agent Object";
+        protected const string GetRootJobExecutionByAgentResourceId = "Get Job Execution Parameter Set using Agent Resource Id";
 
         /// <summary>
         /// Gets or sets the resource group name
