@@ -57,16 +57,31 @@ Get-AzureRmSqlElasticJobExecution -JobName <String> [-JobExecutionId] <String> [
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Get-AzureRmSqlElasticJobExecution** cmdlet gets one or more job executions
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Gets one or more job executions across all jobs
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $agent | Get-AzureRmSqlElasticJobExecution -Count 3
+
+JobName JobExecutionId                       Lifecycle StartTime            EndTime
+------- --------------                       --------- ---------            -------
+job1    dab0ebe8-fd52-42e9-bacf-e5f27577039b Canceled  6/1/2018 10:13:56 PM 6/1/2018 10:13:59 PM
+job1    3bcfc912-20b2-411d-a2b7-6265d13fe272 Succeeded 6/1/2018 10:11:43 PM 6/1/2018 10:11:47 PM
+job2    433f798e-f35c-41de-a23c-f2b43801d7b4 Succeeded 6/1/2018 10:11:36 PM 6/1/2018 10:11:41 PM
 ```
 
-{{ Add example description here }}
+### Example 2 - Gets one or more job executions for a job
+```powershell
+PS C:\> $agent | Get-AzureRmSqlElasticJobExecution -Count 3 -JobName job2
+
+JobName JobExecutionId                       Lifecycle StartTime            EndTime
+------- --------------                       --------- ---------            -------
+job2    433f798e-f35c-41de-a23c-f2b43801d7b4 Succeeded 6/1/2018 10:11:36 PM 6/1/2018 10:11:41 PM
+```
+
+Gets one or more job executions
 
 ## PARAMETERS
 

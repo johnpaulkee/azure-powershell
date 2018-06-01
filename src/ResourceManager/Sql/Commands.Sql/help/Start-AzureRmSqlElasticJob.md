@@ -32,16 +32,20 @@ Start-AzureRmSqlElasticJob [-JobResourceId] <String> [-Wait] [-AsJob]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Start-AzureRmSqlElasticJob** cmdlet starts a job returning a new job execution
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Starts a job returning a new job execution
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $job | Start-AzureRmSqlElasticJob
+
+JobName JobExecutionId                       Lifecycle StartTime EndTime
+------- --------------                       --------- --------- -------
+job1    b93b3a90-987b-4565-b3d3-5fa1751fa9bc Created
 ```
 
-{{ Add example description here }}
+Starts a job returning a new job execution
 
 ## PARAMETERS
 

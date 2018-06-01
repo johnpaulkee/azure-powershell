@@ -56,16 +56,29 @@ Get-AzureRmSqlElasticJobStepExecution [-CreateTimeMin <DateTime>] [-CreateTimeMa
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+The **Get-AzureRmSqlElasticJobStepExecution** cmdlet gets one or more job step executions from a job execution
 
 ## EXAMPLES
 
-### Example 1
+### Example 1 - Gets one or more job step executions from a job executions
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $je | Get-AzureRmSqlElasticJobStepExecution
+
+JobName JobVersion StepName StepId JobExecutionId                       Lifecycle StartTime            EndTime
+------- ---------- -------- ------ --------------                       --------- ---------            -------
+job1    1          step1    1      3bcfc912-20b2-411d-a2b7-6265d13fe272 Succeeded 6/1/2018 10:11:44 PM 6/1/2018 10:11:47 PM
 ```
 
-{{ Add example description here }}
+### Example 2 - Gets one or more job step executions from a job execution, filtering by step name
+```powershell
+PS C:\> $je | Get-AzureRmSqlElasticJobStepExecution -StepName step1
+
+JobName JobVersion StepName StepId JobExecutionId                       Lifecycle StartTime            EndTime
+------- ---------- -------- ------ --------------                       --------- ---------            -------
+job1    1          step1    1      3bcfc912-20b2-411d-a2b7-6265d13fe272 Succeeded 6/1/2018 10:11:44 PM 6/1/2018 10:11:47 PM
+```
+
+Gets one or more job step executions
 
 ## PARAMETERS
 
