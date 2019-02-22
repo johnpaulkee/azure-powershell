@@ -195,8 +195,8 @@ Creates the basic test environment needed to perform the Sql data security tests
 function Create-BasicManagedTestEnvironmentWithParams ($params, $location)
 {
 	New-AzResourceGroup -Name $params.rgname -Location $location
-	
-	# Setup VNET 
+
+	# Setup VNET
 	$vnetName = "cl_initial"
 	$subnetName = "Cool"
 	$virtualNetwork1 = CreateAndGetVirtualNetworkForManagedInstance $vnetName $subnetName
@@ -229,7 +229,7 @@ function Create-DataMaskingTestEnvironment ($testSuffix)
     New-AzSqlServer -ResourceGroupName  $params.rgname -ServerName $params.serverName -ServerVersion "12.0" -Location "West Central US" -SqlAdministratorCredentials $credentials
 	New-AzSqlServerFirewallRule -ResourceGroupName  $params.rgname -ServerName $params.serverName -StartIpAddress 0.0.0.0 -EndIpAddress 255.255.255.255 -FirewallRuleName "ddmRule"
 	New-AzSqlDatabase -ResourceGroupName $params.rgname -ServerName $params.serverName -DatabaseName $params.databaseName
-	
+
 	if ([Microsoft.Azure.Test.HttpRecorder.HttpMockServer]::Mode -eq "Record")
 	{
 		$fullServerName = $params.serverName + ".database.windows.net"
@@ -392,6 +392,15 @@ function Get-DatabaseName
 Gets valid shard map name
 #>
 function Get-ShardMapName
+{
+	return getAssetName
+}
+
+<#
+.SYNOPSIS
+Gets valid instance pool name
+#>
+function Get-InstancePoolName
 {
 	return getAssetName
 }
@@ -567,7 +576,7 @@ function Get-ProviderLocation($provider)
 			if ($location -eq $null)
 			{
 				return "East US"
-			} 
+			}
             else
 			{
 				return $location.Locations[0]

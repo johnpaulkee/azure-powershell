@@ -18,6 +18,18 @@
 #>
 function Test-CreateInstancePool
 {
+    $location = Get-Location "Microsoft.Sql" "operations" "West US 2"
+    $rg1 = Create-ResourceGroupForTest
+
+    try
+    {
+        $instancePoolName = Get-InstancePoolName
+        $resp = New-AzSqlInstancePool -ResourceGroupName $rg1.ResourceGroupName -Name
+    }
+    finally
+    {
+        Remove-ResourceGroupForTest $rg1
+    }
 }
 
 <#

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using System.Text;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Azure.Commands.Sql.Instance_Pools.Model;
@@ -11,7 +10,7 @@ using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Cmdlet
 {
-    [Cmdlet(VerbsCommon.New, ResourceManager.Common.AzureRMConstants.AzureRMPrefix + "SqlElasticJobAgent",
+    [Cmdlet(VerbsCommon.New, ResourceManager.Common.AzureRMConstants.AzureRMPrefix + "SqlInstancePool",
         SupportsShouldProcess = true)]
     public class NewAzureSqlInstancePool : InstancePoolCmdletBase
     {
