@@ -11,6 +11,7 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Cmdlet
     /// Defines the Get-AzRmSqlInstancePool cmdlet
     /// </summary>
     [Cmdlet(VerbsCommon.Get, ResourceManager.Common.AzureRMConstants.AzureRMPrefix + "SqlInstancePool")]
+    [OutputType(typeof(AzureSqlInstancePoolModel))]
     public class GetAzureSqlInstancePool : InstancePoolCmdletBase
     {
         /// <summary>

@@ -68,5 +68,9 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
         /// </summary>
         public Dictionary<string, string> Tags { get; set; }
 
+        /// <summary>
+        /// Gets or sets the location of the instance pool
+        /// </summary>
+        public string Location { get; set; }
     }
 }
