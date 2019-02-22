@@ -79,9 +79,8 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// Gets a list of existing instance pools belonging to the provided resource group
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>
-        /// <param name="instancePoolName">The instance pool name</param>
         /// <returns>A list of instance pool entities</returns>
-        public List<AzureSqlInstancePoolModel> ListInstancePools(string resourceGroupName, string instancePoolName)
+        public List<AzureSqlInstancePoolModel> ListInstancePools(string resourceGroupName)
         {
             return null;
         }
