@@ -1,10 +1,72 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------------------
+//
+// Copyright Microsoft Corporation
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ----------------------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
 {
-    class AzureSqlInstancePoolModel
+    public class AzureSqlInstancePoolModel
     {
+        /// <summary>
+        /// Gets or sets the instance pool's resource group name
+        /// </summary>
+        public string ResourceGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool's type
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool's resource id
+        /// </summary>
+        public string ResourceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool name.
+        /// </summary>
+        public string InstancePoolName { get; set; }
+
+        /// <summary>
+        /// TODO: @joke determine if needed: Gets or sets the instance pool's state.
+        /// </summary>
+        public string State { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool's subnet id.
+        /// </summary>
+        public string SubnetId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool's vCores.
+        /// </summary>
+        public string VCores { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool's hardware family.
+        /// </summary>
+        public string HardwareFamily { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool's edition.
+        /// </summary>
+        public string Edition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tags associated with the instance pool.
+        /// </summary>
+        public Dictionary<string, string> Tags { get; set; }
+
     }
 }
