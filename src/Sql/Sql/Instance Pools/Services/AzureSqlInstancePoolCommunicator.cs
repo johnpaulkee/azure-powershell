@@ -51,6 +51,10 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
 
         #region Instance pool methods
 
+        public void CreateOrUpdateInstancePool(string resourceGroupName, string instancePoolName)
+        {
+        }
+
         #endregion
 
         /// <summary>
@@ -60,7 +64,7 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>The SQL Management client for the currently selected subscription.</returns>
         public static SqlManagementClient GetCurrentSqlClient()
         {
-            var sqlClient = AzureSession.Instance.ClientFactory.CreateArmClient<Management.Sql.SqlManagementClient>(Context, AzureEnvironment.Endpoint.ResourceManager);
+            var sqlClient = AzureSession.Instance.ClientFactory.CreateArmClient<SqlManagementClient>(Context, AzureEnvironment.Endpoint.ResourceManager);
             return sqlClient;
         }
     }

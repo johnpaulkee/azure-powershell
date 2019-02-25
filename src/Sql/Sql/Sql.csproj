@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PsModuleName>Sql</PsModuleName>
@@ -11,7 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Management.Sql" Version="1.25.0-preview" />
+    <PackageReference Include="Microsoft.Azure.Management.Sql" Version="1.28.0-preview">
+      <HintPath>O:\azure-sdk-for-net\src\SDKs\SqlManagement\Management.Sql\bin\Debug\net452\Microsoft.Azure.Management.Sql.dll</HintPath>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.19">
+      <HintPath>O:\azure-sdk-for-net\src\SDKs\SqlManagement\Management.Sql\bin\Debug\net452\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.19">
+      <HintPath>O:\azure-sdk-for-net\src\SDKs\SqlManagement\Management.Sql\bin\Debug\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
+    </PackageReference>
     <PackageReference Include="System.Security.Permissions" Version="4.5.0" />
   </ItemGroup>
 
