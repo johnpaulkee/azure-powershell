@@ -14,10 +14,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.Azure.Commands.Common.Authentication;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Management.Sql;
+using Microsoft.Azure.Management.Sql.Models;
+using Microsoft.Rest.Azure;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
 {
@@ -51,8 +54,60 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
 
         #region Instance pool methods
 
-        public void CreateOrUpdateInstancePool(string resourceGroupName, string instancePoolName)
+        /// <summary>
+        /// PUT: Creates an instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <param name="parameters">The instance pool parameters</param>
+        /// <returns>The created or updated instance pool</returns>
+        public InstancePool CreateOrUpdateInstancePool(string resourceGroupName, string instancePoolName, InstancePool parameters)
         {
+            return GetCurrentSqlClient().InstancePools.CreateOrUpdate(resourceGroupName, instancePoolName, parameters);
+        }
+
+        /// <summary>
+        /// PATCH: Updates an existing instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <param name="parameters">The instance pool update parameters</param>
+        /// <returns>An updated instance pool</returns>
+        public InstancePool UpdateInstancePool(string resourceGroupName, string instancePoolName,
+            InstancePoolUpdate parameters)
+        {
+            return GetCurrentSqlClient().InstancePools.Update(resourceGroupName, instancePoolName, parameters);
+        }
+
+        /// <summary>
+        /// Gets an instance pool associated to the provided resource group
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <returns>An existing instance pool</returns>
+        public InstancePool GetInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            return GetCurrentSqlClient().InstancePools.Get(resourceGroupName, instancePoolName);
+        }
+
+        /// <summary>
+        /// Lists the instance pools associated to the resource group
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <returns>A list of instance pools belong to the specified resource group</returns>
+        public IList<InstancePool> ListInstancePoolsByResourceGroup(string resourceGroupName)
+        {
+            return GetCurrentSqlClient().InstancePools.ListByResourceGroup(resourceGroupName).ToList();
+        }
+
+        /// <summary>
+        /// Deletes the instance pool associated to the resource group.
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        public void RemoveInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            GetCurrentSqlClient().InstancePools.Delete(resourceGroupName, instancePoolName);
         }
 
         #endregion

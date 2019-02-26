@@ -51,7 +51,7 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
         /// <summary>
         /// Gets or sets the instance pool's vCores.
         /// </summary>
-        public string VCores { get; set; }
+        public int VCores { get; set; }
 
         /// <summary>
         /// Gets or sets the instance pool's hardware family.
@@ -72,5 +72,10 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
         /// Gets or sets the location of the instance pool
         /// </summary>
         public string Location { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool license type
+        /// </summary>
+        public string LicenseType { get; set; }
     }
 }

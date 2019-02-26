@@ -544,4 +544,16 @@
   <data name="SetAzureSqlManagedInstanceTransparentDataEncryptionProtectorWarning" xml:space="preserve">
     <value>This command sets the key "{0}" as the protector, removing access to this key in the future may result in data loss on this managed instance. Learn about best practices at aka.ms/sqltdewithbyok. Do you want to proceed?</value>
   </data>
+  <data name="AzureInstancePoolExists" xml:space="preserve">
+    <value>Instance pool with name '{0}' already exists in resource group '{1}'</value>
+    <comment>Instance pools</comment>
+  </data>
+  <data name="AzureInstancePoolNotExists" xml:space="preserve">
+    <value>Instance pool '{0}' does not exist in resource group '{1}'</value>
+    <comment>Instance pools</comment>
+  </data>
+  <data name="RemoveInstancePoolWarning" xml:space="preserve">
+    <value>Are you sure you want to remove the instance pool '{0}' from resource group '{1}'</value>
+    <comment>Instance pools</comment>
+  </data>
 </root>

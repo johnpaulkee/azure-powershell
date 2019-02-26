@@ -12,8 +12,12 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
+using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
+using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Commands.Sql.Instance_Pools.Model;
+using Microsoft.Azure.Management.Sql.Models;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
 {
@@ -51,7 +55,25 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>The created or updated instance pool entity</returns>
         public AzureSqlInstancePoolModel UpsertInstancePool(AzureSqlInstancePoolModel model)
         {
-            return null;
+            var parameters = new InstancePool
+            {
+                Location = model.Location,
+                Tags = model.Tags,
+                LicenseType = model.LicenseType,
+                Sku = new Sku(
+                    name: Constants.GeneralPurposeGen5,
+                    tier: model.Edition,
+                    family: model.HardwareFamily),
+                SubnetId = model.SubnetId,
+                VCores = model.VCores
+            };
+
+            var resp = Communicator.CreateOrUpdateInstancePool(
+                resourceGroupName: model.ResourceGroupName,
+                instancePoolName: model.InstancePoolName,
+                parameters: parameters);
+
+            return CreateInstancePoolModelFromResponse(resp);
         }
 
         /// <summary>
@@ -61,7 +83,15 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>The updated instance pool entity</returns>
         public AzureSqlInstancePoolModel UpdateInstancePool(AzureSqlInstancePoolModel model)
         {
-            return null;
+            var parameters = new InstancePoolUpdate(
+                tags: model.Tags);
+
+            var resp = Communicator.UpdateInstancePool(
+                resourceGroupName: model.ResourceGroupName,
+                instancePoolName: model.InstancePoolName,
+                parameters: parameters);
+
+            return CreateInstancePoolModelFromResponse(resp);
         }
 
         /// <summary>
@@ -72,7 +102,8 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>An existing instance pool entity</returns>
         public AzureSqlInstancePoolModel GetInstancePool(string resourceGroupName, string instancePoolName)
         {
-            return null;
+            var resp = Communicator.GetInstancePool(resourceGroupName, instancePoolName);
+            return CreateInstancePoolModelFromResponse(resp);
         }
 
         /// <summary>
@@ -82,7 +113,8 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>A list of instance pool entities</returns>
         public List<AzureSqlInstancePoolModel> ListInstancePools(string resourceGroupName)
         {
-            return null;
+            var resp = Communicator.ListInstancePoolsByResourceGroup(resourceGroupName);
+            return resp.Select(CreateInstancePoolModelFromResponse).ToList();
         }
 
         /// <summary>
@@ -92,6 +124,37 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <param name="instancePoolName">The instance pool name</param>
         public void RemoveInstancePool(string resourceGroupName, string instancePoolName)
         {
+            Communicator.RemoveInstancePool(resourceGroupName, instancePoolName);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Creates an AzureSqlInstancePoolModel from an InstancePool response
+        /// </summary>
+        /// <param name="resp">The instance pool response</param>
+        /// <returns>An azure sql instance pool model</returns>
+        private static AzureSqlInstancePoolModel CreateInstancePoolModelFromResponse(InstancePool resp)
+        {
+            AzureSqlInstancePoolModel instancePool = new AzureSqlInstancePoolModel();
+
+            string[] segments = resp.Id.Split('/');
+            instancePool.ResourceGroupName = segments[4];
+            instancePool.InstancePoolName = resp.Name;
+            instancePool.Location = resp.Location;
+            instancePool.Tags = TagsConversionHelper.CreateTagDictionary(
+                TagsConversionHelper.CreateTagHashtable(resp.Tags), false);
+            instancePool.SubnetId = resp.SubnetId;
+            instancePool.LicenseType = resp.LicenseType;
+            instancePool.VCores = resp.VCores;
+            instancePool.Type = resp.Type;
+            instancePool.ResourceId = resp.Id;
+            instancePool.Edition = resp.Sku.Tier;
+            instancePool.HardwareFamily = resp.Sku.Family;
+
+            return instancePool;
         }
 
         #endregion

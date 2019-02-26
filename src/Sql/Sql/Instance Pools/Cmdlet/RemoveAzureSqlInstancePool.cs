@@ -58,7 +58,7 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Cmdlet
                 {
                     // The instance pool doesn't exist
                     throw new PSArgumentException(
-                        string.Format(Properties.Resources.AzureElasticJobAgentNotExists, this.Name, "InstancePoolName"));
+                        string.Format(Properties.Resources.AzureInstancePoolNotExists, this.Name, "InstancePoolName"));
                 }
 
                 // Unexpected exception encountered
