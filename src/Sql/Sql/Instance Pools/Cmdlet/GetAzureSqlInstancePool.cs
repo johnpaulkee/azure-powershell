@@ -18,7 +18,7 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Cmdlet
         /// Gets or sets the resource group name
         /// </summary>
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             Position = 0,
             HelpMessage = "The resource group name.")]
         public override string ResourceGroupName { get; set; }
@@ -42,13 +42,19 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Cmdlet
         {
             ICollection<AzureSqlInstancePoolModel> results = null;
 
-            // Returns a list of instance pools
-            if (this.Name == null)
+            if (this.ResourceGroupName == null)
             {
+                // Returns a list of instance pools by subscription id
+                results = ModelAdapter.List();
+            }
+            else if (this.Name == null)
+            {
+                // Returns a list of instance pools by resource group name
                 results = ModelAdapter.ListInstancePools(this.ResourceGroupName);
             }
             else
             {
+                // Returns a specific instance pool given its name
                 results = new List<AzureSqlInstancePoolModel>();
                 results.Add(ModelAdapter.GetInstancePool(this.ResourceGroupName, this.Name));
             }

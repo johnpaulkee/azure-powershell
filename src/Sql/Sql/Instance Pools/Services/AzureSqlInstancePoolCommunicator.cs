@@ -91,6 +91,15 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         }
 
         /// <summary>
+        /// Lists the instance pools associated to the subscription
+        /// </summary>
+        /// <returns>A list of instance pools belong to the specified subscription</returns>
+        public IList<InstancePool> ListInstancePools()
+        {
+            return GetCurrentSqlClient().InstancePools.List().ToList();
+        }
+
+        /// <summary>
         /// Lists the instance pools associated to the resource group
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>

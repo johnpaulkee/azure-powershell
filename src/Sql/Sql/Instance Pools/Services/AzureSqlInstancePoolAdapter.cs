@@ -107,6 +107,16 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         }
 
         /// <summary>
+        /// Gets a list of existing instance pools belonging to the customer subscription.
+        /// </summary>
+        /// <returns>A list of instance pool entities</returns>
+        public List<AzureSqlInstancePoolModel> List()
+        {
+            var resp = Communicator.ListInstancePools();
+            return resp.Select(CreateInstancePoolModelFromResponse).ToList();
+        }
+
+        /// <summary>
         /// Gets a list of existing instance pools belonging to the provided resource group
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>
