@@ -83,7 +83,7 @@
               <TableColumnItem>
                 <Alignment>Left</Alignment>
                 <PropertyName>TriggerType</PropertyName>
-              </TableColumnItem>     
+              </TableColumnItem>
               <TableColumnItem>
                 <Alignment>Left</Alignment>
                 <PropertyName>StartTime</PropertyName>
@@ -1821,6 +1821,79 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>EndTime</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Sql.Instance_Pools.Model.AzureSqlInstancePoolModel</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Sql.Instance_Pools.Model.AzureSqlInstancePoolModel</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>ResourceGroupName</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>InstancePoolName</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>VCores</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Edition</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>HardwareFamily</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>LicenseType</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Location</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>SubnetId</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Tags</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <Wrap/>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ResourceGroupName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>InstancePoolName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>VCores</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Edition</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>HardwareFamily</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>LicenseType</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Location</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  '(' + $_.SubnetId.Split('/')[-3] + ', ' + $_.SubnetId.Split('/')[-1] + ')'
+                </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Tags</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
