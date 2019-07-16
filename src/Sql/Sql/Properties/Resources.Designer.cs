@@ -250,6 +250,24 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Instance pool with name &apos;{0}&apos; already exists.
+        /// </summary>
+        internal static string AzureSqlInstancePoolExists {
+            get {
+                return ResourceManager.GetString("AzureSqlInstancePoolExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instance pool with name &apos;{0}&apos; does not exist.
+        /// </summary>
+        internal static string AzureSqlInstancePoolNotExists {
+            get {
+                return ResourceManager.GetString("AzureSqlInstancePoolNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About to process resource.
         /// </summary>
         internal static string BaseConfirmActionProcessMessage {
@@ -903,6 +921,15 @@ namespace Microsoft.Azure.Commands.Sql.Properties {
         internal static string RemoveElasticJobWarning {
             get {
                 return ResourceManager.GetString("RemoveElasticJobWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove the instance pool &apos;{0}&apos;?.
+        /// </summary>
+        internal static string RemoveInstancePoolWarning {
+            get {
+                return ResourceManager.GetString("RemoveInstancePoolWarning", resourceCulture);
             }
         }
         

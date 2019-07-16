@@ -14,11 +14,8 @@
 
 using Microsoft.Azure.Commands.Common.Authentication;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
-using Microsoft.Azure.Commands.Common.Authentication.Models;
-using Microsoft.Azure.Commands.Sql.Common;
 using Microsoft.Azure.Management.Internal.Resources;
 using Microsoft.Azure.Management.Sql;
-using Microsoft.Azure.Management.Sql.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,6 +70,17 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Services
         public IList<Management.Sql.Models.ManagedInstance> ListByResourceGroup(string resourceGroupName)
         {
             return GetCurrentSqlClient().ManagedInstances.ListByResourceGroup(resourceGroupName).ToList();
+        }
+
+        /// <summary>
+        /// Lists managed instances in an instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <returns></returns>
+        public IList<Management.Sql.Models.ManagedInstance> ListByInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            return GetCurrentSqlClient().ManagedInstances.ListByInstancePool(resourceGroupName, instancePoolName).ToList();
         }
 
         /// <summary>

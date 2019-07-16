@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.Azure.Management.Sql.Models;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
 {
@@ -39,11 +40,6 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
         public string InstancePoolName { get; set; }
 
         /// <summary>
-        /// TODO: @joke determine if needed: Gets or sets the instance pool's state.
-        /// </summary>
-        public string State { get; set; }
-
-        /// <summary>
         /// Gets or sets the instance pool's subnet id.
         /// </summary>
         public string SubnetId { get; set; }
@@ -51,12 +47,12 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
         /// <summary>
         /// Gets or sets the instance pool's vCores.
         /// </summary>
-        public string VCores { get; set; }
+        public int VCores { get; set; }
 
         /// <summary>
-        /// Gets or sets the instance pool's hardware family.
+        /// Gets or sets the instance pool's compute generation.
         /// </summary>
-        public string HardwareFamily { get; set; }
+        public string ComputeGeneration { get; set; }
 
         /// <summary>
         /// Gets or sets the instance pool's edition.
@@ -69,8 +65,18 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Model
         public Dictionary<string, string> Tags { get; set; }
 
         /// <summary>
+        /// Gets or sets the sku
+        /// </summary>
+        public Sku Sku { get; set; }
+
+        /// <summary>
         /// Gets or sets the location of the instance pool
         /// </summary>
         public string Location { get; set; }
+
+        /// <summary>
+        /// Gets or sets the license type
+        /// </summary>
+        public string LicenseType { get; set; }
     }
 }

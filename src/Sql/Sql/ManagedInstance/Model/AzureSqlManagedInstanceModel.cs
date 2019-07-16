@@ -97,5 +97,25 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Model
         /// Gets or sets the Managed Instance collation
         /// </summary>
         public string Collation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the edition
+        /// </summary>
+        public string Edition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hardware family
+        /// </summary>
+        public string HardwareFamily { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instance pool name
+        /// </summary>
+        public string InstancePoolName { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the instance has public data endpoint enabled
+        /// </summary>
+        public bool PublicDataEndpointEnabled { get; set; }
     }
 }

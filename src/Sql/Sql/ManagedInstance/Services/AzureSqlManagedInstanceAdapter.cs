@@ -14,15 +14,14 @@
 
 using Microsoft.Azure.Commands.Sql.ManagedInstance.Model;
 using Microsoft.Azure.Commands.Sql.ManagedInstance.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Permissions;
 using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.WindowsAzure.Commands.Common;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Azure.Commands.Sql.Instance_Pools.Model;
+using Microsoft.Azure.Commands.Sql.Instance_Pools.Services;
 
 namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
 {
@@ -89,13 +88,25 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
         }
 
         /// <summary>
+        /// Gets a list of all managed instances in an instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <returns>A list of managed instances in an instance pool</returns>
+        public List<AzureSqlManagedInstanceModel> ListManagedInstancesByInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            var resp = Communicator.ListByInstancePool(resourceGroupName, instancePoolName);
+            return resp.Select(CreateManagedInstanceModelFromResponse).ToList();
+        }
+
+        /// <summary>
         /// Upserts a managed instance
         /// </summary>
         /// <param name="model">The managed instance to upsert</param>
         /// <returns>The updated managed instance model</returns>
         public AzureSqlManagedInstanceModel UpsertManagedInstance(AzureSqlManagedInstanceModel model)
         {
-            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.FullyQualifiedDomainName, new Management.Sql.Models.ManagedInstance()
+            var parameters = new Management.Sql.Models.ManagedInstance()
             {
                 Location = model.Location,
                 Tags = model.Tags,
@@ -107,9 +118,19 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
                 SubnetId = model.SubnetId,
                 VCores = model.VCores,
                 Identity = model.Identity,
-                Collation = model.Collation
-            });
+                Collation = model.Collation,
+                InstancePoolId = model.InstancePoolName != null ?
+                    new ResourceIdentifier()
+                    {
+                        Subscription = Context.Subscription.Id,
+                        ResourceGroupName = model.ResourceGroupName,
+                        ParentResource = "providers/Microsoft.Sql/instancePools",
+                        ResourceName = model.InstancePoolName
+                    }.ToString() : null,
+                PublicDataEndpointEnabled = model.PublicDataEndpointEnabled,
+            };
 
+            var resp = Communicator.CreateOrUpdate(model.ResourceGroupName, model.FullyQualifiedDomainName, parameters);
             return CreateManagedInstanceModelFromResponse(resp);
         }
 
@@ -136,6 +157,18 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
         }
 
         /// <summary>
+        /// Gets the parent instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <returns>Gets the instance pool</returns>
+        public AzureSqlInstancePoolModel GetInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            AzureSqlInstancePoolAdapter instancePoolAdapter = new AzureSqlInstancePoolAdapter(Context);
+            return instancePoolAdapter.GetInstancePool(resourceGroupName, instancePoolName);
+        }
+
+        /// <summary>
         /// Deletes a managed instance
         /// </summary>
         /// <param name="resourceGroupName">The resource group the managed instance is in</param>
@@ -154,13 +187,7 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
         private static AzureSqlManagedInstanceModel CreateManagedInstanceModelFromResponse(Management.Sql.Models.ManagedInstance resp)
         {
             AzureSqlManagedInstanceModel managedInstance = new AzureSqlManagedInstanceModel();
-
-            // Extract the resource group name from the ID.
-            // ID is in the form:
-            // /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rgName/providers/Microsoft.Sql/managedInstances/managedInstanceName
-            string[] segments = resp.Id.Split('/');
-            managedInstance.ResourceGroupName = segments[4];
-
+            managedInstance.ResourceGroupName = new ResourceIdentifier(resp.Id).ResourceGroupName;
             managedInstance.ManagedInstanceName = resp.Name;
             managedInstance.Id = resp.Id;
             managedInstance.FullyQualifiedDomainName = resp.FullyQualifiedDomainName;
@@ -174,12 +201,14 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
             managedInstance.VCores = resp.VCores;
             managedInstance.StorageSizeInGB = resp.StorageSizeInGB;
             managedInstance.Collation = resp.Collation;
-
+            managedInstance.InstancePoolName = resp.InstancePoolId != null ? new ResourceIdentifier(resp.InstancePoolId).ResourceName : null;
+            managedInstance.HardwareFamily = resp.Sku.Family;
+            managedInstance.Edition = resp.Sku.Tier;
             Management.Internal.Resources.Models.Sku sku = new Management.Internal.Resources.Models.Sku();
             sku.Name = resp.Sku.Name;
             sku.Tier = resp.Sku.Tier;
-
             managedInstance.Sku = sku;
+            managedInstance.PublicDataEndpointEnabled = resp.PublicDataEndpointEnabled ?? false;
 
             return managedInstance;
         }

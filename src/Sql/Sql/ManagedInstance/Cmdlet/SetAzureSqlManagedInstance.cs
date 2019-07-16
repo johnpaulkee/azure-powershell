@@ -54,7 +54,7 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Cmdlet
             HelpMessage = "The instance object to remove")]
         [ValidateNotNullOrEmpty]
         [Alias("SqlInstance")]
-        public Model.AzureSqlManagedInstanceModel InputObject { get; set; }
+        public AzureSqlManagedInstanceModel InputObject { get; set; }
 
         /// <summary>
         /// Gets or sets the resource id of the instance
@@ -145,70 +145,28 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Cmdlet
         public SwitchParameter AssignIdentity { get; set; }
 
         /// <summary>
+        /// Gets or sets whether to place this instance in an instance pool
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The instance pool name")]
+        public string InstancePoolName { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether this instance should have public data endpoint enabled
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Flag indicating whether this instance should have a public data endpoint")]
+        public SwitchParameter PublicDataEndpointEnabled { get; set; }
+
+        /// <summary>
         /// Defines whether it is ok to skip the requesting of rule removal confirmation
         /// </summary>
         [Parameter(HelpMessage = "Skip confirmation message for performing the action")]
         public SwitchParameter Force { get; set; }
-        
-        /// <summary>
-        /// Get the instance to update
-        /// </summary>
-        /// <returns>The instance being updated</returns>
-        protected override IEnumerable<Model.AzureSqlManagedInstanceModel> GetEntity()
-        {
-            return new List<Model.AzureSqlManagedInstanceModel>() { ModelAdapter.GetManagedInstance(this.ResourceGroupName, this.Name) };
-        }
 
         /// <summary>
-        /// Constructs the model to send to the update API
+        /// Gets or sets whether or not to run this cmdlet in the background as a job
         /// </summary>
-        /// <param name="model">The result of the get operation</param>
-        /// <returns>The model to send to the update</returns>
-        protected override IEnumerable<Model.AzureSqlManagedInstanceModel> ApplyUserInputToModel(IEnumerable<Model.AzureSqlManagedInstanceModel> model)
-        {
-            AzureSqlManagedInstanceModel existingInstance = ModelAdapter.GetManagedInstance(this.ResourceGroupName, this.Name);
-            Management.Internal.Resources.Models.Sku Sku = new Management.Internal.Resources.Models.Sku();
-
-            if (Edition != null)
-            {
-                string computeGeneration = existingInstance.Sku.Name.Contains(Constants.ComputeGenerationGen4) ? Constants.ComputeGenerationGen4 : Constants.ComputeGenerationGen5;
-                string editionShort = Edition.Equals(Constants.GeneralPurposeEdition) ? "GP" : Edition.Equals(Constants.BusinessCriticalEdition) ? "BC" : "Unknown";
-                Sku.Name = editionShort + "_" + computeGeneration;
-                Sku.Tier = Edition;
-            }
-            else
-            {
-                Sku = null;
-            }
-
-            // Construct a new entity so we only send the relevant data to the Managed instance
-            List<Model.AzureSqlManagedInstanceModel> updateData = new List<Model.AzureSqlManagedInstanceModel>();
-            updateData.Add(new Model.AzureSqlManagedInstanceModel()
-            {
-                ResourceGroupName = this.ResourceGroupName,
-                ManagedInstanceName = this.Name,
-                FullyQualifiedDomainName = this.Name,
-                Location = model.FirstOrDefault().Location,
-                Sku = Sku,
-                AdministratorPassword = this.AdministratorPassword,
-                LicenseType = this.LicenseType,
-                StorageSizeInGB = this.StorageSizeInGB ?? model.FirstOrDefault().StorageSizeInGB,
-                VCores = this.VCore,
-                Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
-                Identity = model.FirstOrDefault().Identity ?? ResourceIdentityHelper.GetIdentityObjectFromType(this.AssignIdentity.IsPresent),
-            });
-            return updateData;
-        }
-
-        /// <summary>
-        /// Sends the instance update request to the service
-        /// </summary>
-        /// <param name="entity">The update parameters</param>
-        /// <returns>The response object from the service</returns>
-        protected override IEnumerable<Model.AzureSqlManagedInstanceModel> PersistChanges(IEnumerable<Model.AzureSqlManagedInstanceModel> entity)
-        {
-            return new List<Model.AzureSqlManagedInstanceModel>() { ModelAdapter.UpsertManagedInstance(entity.First()) };
-        }
+        [Parameter(Mandatory = false, HelpMessage = "Run cmdlet in the background")]
+        public SwitchParameter AsJob { get; set; }
 
         /// <summary>
         /// Entry point for the cmdlet
@@ -236,6 +194,70 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Cmdlet
             }
 
             base.ExecuteCmdlet();
+        }
+
+        /// <summary>
+        /// Get the instance to update
+        /// </summary>
+        /// <returns>The instance being updated</returns>
+        protected override IEnumerable<AzureSqlManagedInstanceModel> GetEntity()
+        {
+            return new List<AzureSqlManagedInstanceModel>() { ModelAdapter.GetManagedInstance(this.ResourceGroupName, this.Name) };
+        }
+
+        /// <summary>
+        /// Constructs the model to send to the update API
+        /// </summary>
+        /// <param name="model">The result of the get operation</param>
+        /// <returns>The model to send to the update</returns>
+        protected override IEnumerable<AzureSqlManagedInstanceModel> ApplyUserInputToModel(IEnumerable<AzureSqlManagedInstanceModel> model)
+        {
+            AzureSqlManagedInstanceModel existingInstance = ModelAdapter.GetManagedInstance(this.ResourceGroupName, this.Name);
+            Management.Internal.Resources.Models.Sku Sku = new Management.Internal.Resources.Models.Sku();
+
+            if (Edition != null)
+            {
+                string computeGeneration = existingInstance.Sku.Name.Contains(Constants.ComputeGenerationGen4) ? Constants.ComputeGenerationGen4 : Constants.ComputeGenerationGen5;
+                string editionShort = Edition.Equals(Constants.GeneralPurposeEdition) ? "GP" : Edition.Equals(Constants.BusinessCriticalEdition) ? "BC" : "Unknown";
+                Sku.Name = editionShort + "_" + computeGeneration;
+                Sku.Tier = Edition;
+            }
+            else
+            {
+                Sku = null;
+            }
+
+            // Construct a new entity so we only send the relevant data to the Managed instance
+            List<AzureSqlManagedInstanceModel> updateData = new List<AzureSqlManagedInstanceModel>();
+            updateData.Add(new AzureSqlManagedInstanceModel()
+            {
+                ResourceGroupName = this.ResourceGroupName,
+                ManagedInstanceName = this.Name,
+                FullyQualifiedDomainName = this.Name,
+                Location = model.FirstOrDefault().Location,
+                Sku = Sku,
+                AdministratorPassword = this.AdministratorPassword,
+                LicenseType = this.LicenseType,
+                StorageSizeInGB = this.StorageSizeInGB ?? model.FirstOrDefault().StorageSizeInGB,
+                VCores = this.VCore,
+                Tags = TagsConversionHelper.CreateTagDictionary(Tag, validate: true),
+                Identity = model.FirstOrDefault().Identity ?? ResourceIdentityHelper.GetIdentityObjectFromType(this.AssignIdentity.IsPresent),
+                InstancePoolName = this.InstancePoolName,
+                PublicDataEndpointEnabled = this.PublicDataEndpointEnabled.IsPresent
+            });
+            return updateData;
+        }
+
+        /// <summary>
+        /// Sends the instance update request to the service
+        /// </summary>
+        /// <param name="entity">The update parameters</param>
+        /// <returns>The response object from the service</returns>
+        protected override IEnumerable<AzureSqlManagedInstanceModel> PersistChanges(IEnumerable<AzureSqlManagedInstanceModel> entity)
+        {
+            return new List<AzureSqlManagedInstanceModel>() {
+                ModelAdapter.UpsertManagedInstance(entity.First())
+            };
         }
     }
 }

@@ -12,12 +12,11 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Azure.Commands.Common.Authentication;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
 using Microsoft.Azure.Management.Sql;
+using Microsoft.Azure.Management.Sql.Models;
+using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
 {
@@ -49,9 +48,57 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
             }
         }
 
-        #region Instance pool methods
+        /// <summary>
+        /// Creates or updates an instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <param name="parameters">The instance pool parameters</param>
+        /// <returns>The created or updated instance pool</returns>
+        public InstancePool UpsertInstancePool(string resourceGroupName, string instancePoolName, InstancePool parameters)
+        {
+            return GetCurrentSqlClient().InstancePools.CreateOrUpdate(resourceGroupName, instancePoolName, parameters);
+        }
 
-        #endregion
+        /// <summary>
+        /// Returns the fetched instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        /// <returns>Returns the instance pool</returns>
+        public InstancePool GetInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            return GetCurrentSqlClient().InstancePools.Get(resourceGroupName, instancePoolName);
+        }
+
+        /// <summary>
+        /// Returns a list of instance pools by resource group
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <returns>A list of instance pools by resource group</returns>
+        public IEnumerable<InstancePool> ListByResourceGroup(string resourceGroupName)
+        {
+            return GetCurrentSqlClient().InstancePools.ListByResourceGroup(resourceGroupName);
+        }
+
+        /// <summary>
+        /// Returns a list of instance pools by subscription
+        /// </summary>
+        /// <returns>A list of instance pools across the customer's subscription</returns>
+        public IEnumerable<InstancePool> List()
+        {
+            return GetCurrentSqlClient().InstancePools.List();
+        }
+
+        /// <summary>
+        /// Deletes the instance pool
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group name</param>
+        /// <param name="instancePoolName">The instance pool name</param>
+        public void RemoveInstancePool(string resourceGroupName, string instancePoolName)
+        {
+            GetCurrentSqlClient().InstancePools.Delete(resourceGroupName, instancePoolName);
+        }
 
         /// <summary>
         /// Retrieve the SQL Management client for the currently selected subscription, adding the session and request

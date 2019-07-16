@@ -12,8 +12,12 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Azure.Commands.Common.Authentication.Abstractions;
+using Microsoft.Azure.Commands.ResourceManager.Common.Tags;
 using Microsoft.Azure.Commands.Sql.Instance_Pools.Model;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Azure.Management.Sql.Models;
 
 namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
 {
@@ -51,17 +55,17 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>The created or updated instance pool entity</returns>
         public AzureSqlInstancePoolModel UpsertInstancePool(AzureSqlInstancePoolModel model)
         {
-            return null;
-        }
-
-        /// <summary>
-        /// Updates an existing instance pool
-        /// </summary>
-        /// <param name="model">The existing instance pool entity</param>
-        /// <returns>The updated instance pool entity</returns>
-        public AzureSqlInstancePoolModel UpdateInstancePool(AzureSqlInstancePoolModel model)
-        {
-            return null;
+            var result = Communicator.UpsertInstancePool(model.ResourceGroupName, model.InstancePoolName,
+                new InstancePool()
+                {
+                    LicenseType = model.LicenseType,
+                    Sku = model.Sku,
+                    Location = model.Location,
+                    SubnetId = model.SubnetId,
+                    Tags = model.Tags,
+                    VCores = model.VCores
+                });
+            return CreateInstancePoolModelFromResponse(result);
         }
 
         /// <summary>
@@ -72,7 +76,8 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <returns>An existing instance pool entity</returns>
         public AzureSqlInstancePoolModel GetInstancePool(string resourceGroupName, string instancePoolName)
         {
-            return null;
+            var result = Communicator.GetInstancePool(resourceGroupName, instancePoolName);
+            return CreateInstancePoolModelFromResponse(result);
         }
 
         /// <summary>
@@ -80,9 +85,16 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// </summary>
         /// <param name="resourceGroupName">The resource group name</param>
         /// <returns>A list of instance pool entities</returns>
-        public List<AzureSqlInstancePoolModel> ListInstancePools(string resourceGroupName)
+        public List<AzureSqlInstancePoolModel> ListInstancePoolsByResourceGroup(string resourceGroupName)
         {
-            return null;
+            var result = Communicator.ListByResourceGroup(resourceGroupName);
+            return result.Select(CreateInstancePoolModelFromResponse).ToList();
+        }
+
+        public List<AzureSqlInstancePoolModel> List()
+        {
+            var result = Communicator.List();
+            return result.Select(CreateInstancePoolModelFromResponse).ToList();
         }
 
         /// <summary>
@@ -92,6 +104,27 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Services
         /// <param name="instancePoolName">The instance pool name</param>
         public void RemoveInstancePool(string resourceGroupName, string instancePoolName)
         {
+            Communicator.RemoveInstancePool(resourceGroupName, instancePoolName);
+        }
+
+        public AzureSqlInstancePoolModel CreateInstancePoolModelFromResponse(
+            InstancePool instancePoolResp)
+        {
+            return new AzureSqlInstancePoolModel()
+            {
+                Edition = instancePoolResp.Sku.Tier,
+                ComputeGeneration = instancePoolResp.Sku.Family,
+                InstancePoolName = instancePoolResp.Name,
+                Location = instancePoolResp.Location,
+                ResourceGroupName = new ResourceIdentifier(instancePoolResp.Id).ResourceGroupName,
+                ResourceId = instancePoolResp.Id,
+                SubnetId = instancePoolResp.SubnetId,
+                Tags = TagsConversionHelper.CreateTagDictionary(TagsConversionHelper.CreateTagHashtable(instancePoolResp.Tags), false),
+                Type = instancePoolResp.Type,
+                VCores = instancePoolResp.VCores,
+                LicenseType = instancePoolResp.LicenseType,
+                Sku = instancePoolResp.Sku,
+            };
         }
 
         #endregion
