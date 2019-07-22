@@ -98,8 +98,8 @@ namespace Microsoft.Azure.Commands.Sql.Instance_Pools.Cmdlet
         /// </summary>
         [Parameter(Mandatory = false,
             HelpMessage = "The tags to associate with the instance")]
-        [Alias("Tags")]
-        public Hashtable Tag { get; set; }
+        [Alias("Tag")]
+        public Hashtable Tags { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to run this cmdlet in the background as a job
